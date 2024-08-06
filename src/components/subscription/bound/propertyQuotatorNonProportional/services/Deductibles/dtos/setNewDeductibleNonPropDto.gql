@@ -1,0 +1,5 @@
+mutation setNewDeductibleNonProp($id_subscription: ID!) {
+  setNewDeductibleNonProp(id_subscription: $id_subscription) {
+    statusCode
+  }
+}

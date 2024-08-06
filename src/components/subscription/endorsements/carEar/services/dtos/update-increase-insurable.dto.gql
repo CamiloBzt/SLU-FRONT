@@ -1,0 +1,8 @@
+mutation updateIncreaseInsurable($id: ID!, $column: String!, $data: String!) {
+  updateIncreaseInsurable(id: $id, column: $column, data: $data) {
+    statusCode
+    message
+    error
+    response
+  }
+}

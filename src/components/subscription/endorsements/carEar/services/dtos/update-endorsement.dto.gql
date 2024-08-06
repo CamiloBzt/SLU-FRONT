@@ -1,0 +1,8 @@
+mutation updateEndorsement($id: ID!, $column: String!, $data: String!) {
+  updateEndorsement(id: $id, column: $column, data: $data) {
+    statusCode
+    message
+    error
+    response
+  }
+}

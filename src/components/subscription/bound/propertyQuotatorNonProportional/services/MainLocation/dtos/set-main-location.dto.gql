@@ -1,0 +1,16 @@
+mutation setMainLocation(
+  $id_subscription: ID!
+  $column: String!
+  $data: String!
+) {
+  setMainLocation(
+    id_subscription: $id_subscription
+    column: $column
+    data: $data
+  ) {
+    statusCode
+    message
+    error
+    response
+  }
+}

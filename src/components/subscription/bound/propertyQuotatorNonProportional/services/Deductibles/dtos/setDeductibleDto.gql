@@ -1,0 +1,5 @@
+mutation setDeductibleProperty($id: ID!, $column: String!, $value: String!) {
+  setDeductibleProperty(id: $id, column: $column, value: $value) {
+    statusCode
+  }
+}

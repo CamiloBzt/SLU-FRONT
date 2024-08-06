@@ -1,0 +1,8 @@
+mutation createEndorsement($id: ID!) {
+  createEndorsement(id: $id) {
+    statusCode
+    message
+    error
+    response
+  }
+}

@@ -1,0 +1,8 @@
+query getBoundClaims($subscription_id: ID!, $type: String!) {
+    getBoundClaims(subscription_id: $subscription_id, type: $type) {
+      statusCode
+      message
+      error
+      response
+    }
+}

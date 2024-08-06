@@ -1,0 +1,19 @@
+import gql from 'graphql-tag';
+
+export default gql`
+  mutation updateChange(
+    $tableName: String!
+    $column: String!
+    $dataValue: String!
+    $id: Int!
+  ) {
+    updateChange(
+      tableName: $tableName
+      column: $column
+      dataValue: $dataValue
+      id: $id
+    ) {
+      statusCode
+    }
+  }
+`;

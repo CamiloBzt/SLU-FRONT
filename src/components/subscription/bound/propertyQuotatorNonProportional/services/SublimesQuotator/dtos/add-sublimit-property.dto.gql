@@ -1,0 +1,8 @@
+mutation addSublimitProperty($id: ID!, $id_subscription: ID!) {
+  addSublimitProperty(id: $id, id_subscription: $id_subscription) {
+    statusCode
+    message
+    error
+    response
+  }
+}

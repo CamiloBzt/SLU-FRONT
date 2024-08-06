@@ -1,0 +1,8 @@
+query getNatcatDocumentList($subscription_id: ID!) {
+  getNatcatDocumentList(subscription_id: $subscription_id) {
+    statusCode
+    message
+    response
+    error
+  }
+}

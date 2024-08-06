@@ -1,0 +1,8 @@
+query getPmlPropertyById($id_subscription: ID!) {
+  getPmlPropertyById(id_subscription: $id_subscription) {
+    statusCode
+    message
+    error
+    response
+  }
+}

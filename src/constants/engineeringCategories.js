@@ -1,0 +1,42 @@
+export const engineeringCategories = [
+    {
+        id: 1,
+        description: 'Very Low',
+        earthquake: 0.0116666666666667,
+        hydro: 0.0116666666666667,
+        flood: 0.0116666666666667,
+        other: 0.0116666666666667,
+    },
+    {
+        id: 2,
+        description: 'Low',
+        earthquake: 0.0291666666666667,
+        hydro: 0.0350000,
+        flood: 0.0175000,
+        other: 0.0175,
+    },
+    {
+        id: 3,
+        description: 'Medium',
+        earthquake: 0.0525000,
+        hydro: 0.221666666666667,
+        flood: 0.0291666666666667,
+        other: 0.0291666666666667,
+    },
+    {
+        id: 4,
+        description: 'High',
+        earthquake: 0.0729166666666667,
+        hydro: 0.35,
+        flood: 0.0408333333333333,
+        other: 0.0408333333333333,
+    },
+    {
+        id: 5,
+        description: 'Very High',
+        earthquake: 0.0991666666666667,
+        hydro: 0.466666666666667,
+        flood: 0.116666666666667,
+        other: 0.116666666666667,
+    },
+];

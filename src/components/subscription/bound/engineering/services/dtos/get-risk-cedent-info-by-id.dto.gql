@@ -1,0 +1,8 @@
+query getRiskCedentInfoById($idSubscription: ID!) {
+  getRiskCedentInfoById(idSubscription: $idSubscription) {
+    statusCode
+    message
+    error
+    response
+  }
+}

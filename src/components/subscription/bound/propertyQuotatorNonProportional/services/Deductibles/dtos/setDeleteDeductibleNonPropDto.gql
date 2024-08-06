@@ -1,0 +1,5 @@
+mutation setDeleteDeductibleNonProp($id: ID!) {
+  setDeleteDeductibleNonProp(id: $id) {
+    statusCode
+  }
+}

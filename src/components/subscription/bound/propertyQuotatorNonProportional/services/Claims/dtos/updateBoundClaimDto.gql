@@ -1,0 +1,10 @@
+mutation updateBoundClaim(
+    $id: ID!
+    $column: String!
+    $value: String!
+    $type: String!
+  ) {
+    updateBoundClaim(id: $id, column: $column, value: $value, type: $type) {
+      statusCode
+    }
+  }

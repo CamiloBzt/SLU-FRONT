@@ -1,0 +1,8 @@
+query getEndorsements($id: ID!) {
+  getEndorsements(id: $id) {
+    statusCode
+    message
+    error
+    response
+  }
+}

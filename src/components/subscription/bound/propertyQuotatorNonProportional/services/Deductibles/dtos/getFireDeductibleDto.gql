@@ -1,0 +1,8 @@
+query getFireDeductible($id: ID) {
+  getFireDeductible(id: $id) {
+    statusCode
+    message
+    error
+    response
+  }
+}

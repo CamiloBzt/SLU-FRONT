@@ -1,0 +1,8 @@
+query getCatalog($name: String) {
+  getCatalog(name: $name) {
+    statusCode
+    message
+    error
+    response
+  }
+}

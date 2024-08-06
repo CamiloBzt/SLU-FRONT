@@ -1,0 +1,8 @@
+mutation deleteNatcatDocument($id_document: ID!) {
+  deleteNatcatDocument(id_document: $id_document) {
+    statusCode
+    message
+    response
+    error
+  }
+}

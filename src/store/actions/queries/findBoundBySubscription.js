@@ -1,0 +1,12 @@
+import gql from 'graphql-tag';
+
+export default gql`
+  query findBoundBySubscription($id: Int!, $type: Int) {
+    findBoundBySubscription(id: $id, type: $type) {
+      statusCode
+      message
+      error
+      response
+    }
+  }
+`;

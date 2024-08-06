@@ -1,0 +1,16 @@
+mutation setRiskCedentInfo(
+  $idSubscription: ID!
+  $column: String!
+  $data: String!
+) {
+  setRiskCedentInfo(
+    idSubscription: $idSubscription
+    column: $column
+    data: $data
+  ) {
+    statusCode
+    message
+    error
+    response
+  }
+}

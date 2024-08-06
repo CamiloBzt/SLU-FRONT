@@ -1,0 +1,5 @@
+mutation setFireDeductibleProperty($id: ID!, $column: String!, $value: Int!) {
+  setFireDeductibleProperty(id: $id, column: $column, value: $value) {
+    statusCode
+  }
+}

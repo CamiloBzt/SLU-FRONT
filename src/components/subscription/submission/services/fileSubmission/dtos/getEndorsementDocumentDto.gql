@@ -1,0 +1,8 @@
+query getEndorsementDocument($subscription_id: ID!, $filename: String!) {
+  getEndorsementDocument(subscription_id: $subscription_id, filename: $filename) {
+    statusCode
+    message
+    response
+    error
+  }
+}

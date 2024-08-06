@@ -1,0 +1,8 @@
+query getDeductiblesById($id: ID) {
+  getDeductiblesById(id: $id) {
+    statusCode
+    message
+    error
+    response
+  }
+}

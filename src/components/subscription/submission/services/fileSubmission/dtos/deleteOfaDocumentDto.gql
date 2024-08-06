@@ -1,0 +1,8 @@
+mutation deleteOfaDocument($id_document: ID!) {
+  deleteOfaDocument(id_document: $id_document) {
+    statusCode
+    message
+    response
+    error
+  }
+}

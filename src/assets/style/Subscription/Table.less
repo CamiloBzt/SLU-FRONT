@@ -1,0 +1,178 @@
+@WidthColTable: 12.5%; //ANCHO DE LAS COLUMNAS
+@BorderTable: solid 1px black; //BORDES DE LAS TABLAS
+//CONTENEDOR GENERAL DE LA TABLA
+.SubscriptionTable {
+  width: 100%;
+  height: auto;
+  @media(max-width: 650px)
+  {overflow-x: hidden;}
+
+  //TITULO DE LA TABLA
+  .TableTitle {
+    width: 100%;
+    height: 50px;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  //CONTENEDOR D ELA TABLA
+  .TableContent {
+    width: 100%;
+    height: auto;
+    @media(max-width: 650px){
+      overflow-x: auto !important;
+    }
+    //CABEZA DE LA TABLA
+    .TableHeadContent {
+      width: 100%;
+      height: 60px;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+      
+
+      //NOMBRES DE LAS TABLAS
+      .TableHeadName {
+        width: @WidthColTable;
+        height: 100%;
+        font-weight: bold;
+      }
+
+      //ESPACIO EN BLANCO
+      .scrollSpace{
+        display: none;
+        width: 5px;
+        height: 100%;
+      }
+    }
+
+    //CUERPO DE LA TABLA
+    .TableBodyContent {
+      width: 100%;
+      height: 370px;
+      border-radius: 15px;
+      padding-top: 10px;
+      background: white;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      align-content: flex-start;
+      flex-wrap: wrap;
+      overflow-y: auto;
+      padding-bottom: 10px;
+
+
+      //CONTENEDOR DE LAS FILAS DE LA TABLA
+      .TableContentInner{
+        width: 100%; 
+        height: 100%; 
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        .TableBodyContSn {
+          width: 100%;
+          height: 50px;
+          position: relative;
+          &:hover{
+            background:rgba(0,105,186,0.1);
+            .image-icon {
+              opacity: 1;
+            }
+            ::after{
+              content: "";
+              width: 4px;
+              height: 100%;
+              position:absolute;
+              left: 0; top: 0;
+              background:#0069BA;
+              z-index: 1000;
+            }
+            i{
+              color: #003D6D !important;
+            }
+            .endorsements-icon {
+              img {
+                opacity: 1 !important;
+                transition: .1s;
+              }
+            }
+          }
+
+          //INFORMACION DE LA TABLA
+          .TableBodyText {
+            width: @WidthColTable;
+            height: 100%;
+          }
+          .TableBodyTextLink {
+            width: @WidthColTable;
+            height: 100%;
+            font-weight: bold;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  //Boton 
+  .ButtonTableCont{
+    width: 100%;
+    height: auto;
+    margin-top: 25px;
+    .Btn{
+      width: 217px;
+      height: 40px;
+      color: white !important;
+      text-transform: none;
+      font-weight: normal;
+      letter-spacing: normal;
+      @media(max-width: 650px){
+        width: 100%;
+      }
+    }
+  }
+}
+.image-icon {
+  opacity: 0.2;
+}
+@media (max-width: 600px) {
+  .SubscriptionTable {
+    overflow-y: auto;
+
+    //TITULO DE LA TABLA
+    .TableTitle {
+      height: 30px;
+      font-size: 17px;
+    }
+
+    //CONTROLES DE LA TABLA EN MOVILES
+    .TableControlsCont {
+      width: 65px;
+      height: 30px;
+      border: solid 1px black;
+      border-radius: 15px;
+
+      .ControlBtn {
+        width: 45%;
+        height: 100%;
+      }
+    }
+
+    .TableContent {
+      //CABEZA DE LA TABLE
+      .TableHeadContent {
+        width: 1200px;
+      }
+      //CUERPO DE LA TABLA
+      .TableBodyContent {
+        width: 1200px;
+      }
+    }
+    //CARGAR MAS
+    .LoadMoreContent {
+      .loadMoreButton {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+mutation singleUpload($file: Upload!, $path: String!) {
+  singleUpload(file: $file, path: $path) {
+    filename
+    mimetype
+    encoding
+    uri
+  }
+}

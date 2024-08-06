@@ -1,0 +1,8 @@
+query getEndorsementIncreaseInsurable($id: ID!) {
+  getEndorsementIncreaseInsurable(id: $id) {
+    statusCode
+    message
+    error
+    response
+  }
+}

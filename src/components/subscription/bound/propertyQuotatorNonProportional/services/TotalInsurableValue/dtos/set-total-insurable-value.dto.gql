@@ -1,0 +1,16 @@
+mutation setTotalInsurableValue(
+  $id_subscription: ID!
+  $column: String!
+  $data: String!
+) {
+  setTotalInsurableValue(
+    id_subscription: $id_subscription
+    column: $column
+    data: $data
+  ) {
+    statusCode
+    message
+    error
+    response
+  }
+}

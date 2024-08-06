@@ -1,0 +1,8 @@
+mutation saveOfaDocument($subscription_id: ID!, $doc_s3: String!) {
+  saveOfaDocument(subscription_id: $subscription_id, doc_s3: $doc_s3) {
+    statusCode
+    message
+    response
+    error
+  }
+}

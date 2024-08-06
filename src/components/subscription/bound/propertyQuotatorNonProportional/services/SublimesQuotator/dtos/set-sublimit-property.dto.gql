@@ -1,0 +1,8 @@
+mutation setSublimitProperty($id: ID!, $column: String!, $value: String!) {
+  setSublimitProperty(id: $id, column: $column, value: $value) {
+    statusCode
+    message
+    error
+    response
+  }
+}

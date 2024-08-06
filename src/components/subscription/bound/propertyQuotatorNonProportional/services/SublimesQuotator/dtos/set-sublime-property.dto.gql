@@ -1,0 +1,8 @@
+mutation setSublimeProperty($id: ID!, $column: String!, $value: String!) {
+  setSublimeProperty(id: $id, column: $column, value: $value) {
+    statusCode
+    message
+    error
+    response
+  }
+}

@@ -1,0 +1,7 @@
+mutation setNewFireDeductible($deductible_id: ID!, $id_subscription: ID!) {
+  setNewFireDeductible(deductible_id: $deductible_id, id_subscription: $id_subscription) {
+    statusCode
+    message
+    response
+  }
+}

@@ -1,0 +1,8 @@
+query getEndorsementReductionInsurable($id: ID!) {
+  getEndorsementReductionInsurable(id: $id) {
+    statusCode
+    message
+    error
+    response
+  }
+}

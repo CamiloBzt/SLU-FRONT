@@ -1,0 +1,40 @@
+export default {
+  list: [],
+  listTable: [],
+  accountInformation: [],
+  claims_denials: [],
+  totalClaim: {
+    lossAdjuster: '',
+    claimCurrency: '',
+    rateChange: '',
+    claimReserveUsd: '',
+    amountExcludingAdjustingFee: '',
+    adjustingFee: '',
+    deductible: '',
+    adjustingFeeSlu: '',
+    salvage: '',
+    totalIncurred: '',
+  },
+  sluClaim: {
+    sluShare: '',
+    sluClaimReserve: '',
+    amountPaidAdjustingFee: '',
+    adjustingFeeSlu: '',
+    deductibleSlu: '',
+    excess: '',
+    consultantFeeSlu: '',
+    bankingFee: '',
+    salvageSlu: '',
+    totalAmountSlu: '',
+    totalIncurredSlu: '',
+  },
+  selected: undefined,
+  table:{
+    list:[],
+    limit:10,
+    offset: 0,
+    query: '',
+    filter: '',
+    filterSearch: 's.reference'
+  }
+};

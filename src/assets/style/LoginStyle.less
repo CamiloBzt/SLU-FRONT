@@ -1,0 +1,117 @@
+.LoginComponent {
+  width: 500px;
+  height: 100%;
+
+  //EFECTO GLASSFORM
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
+  position: relative;
+
+  *{
+    font-family: avenir;
+  }
+  //TITULO
+  h2 {
+    width: 70%;
+    text-align: center;
+    font-weight: 600;
+    font-size: 25px;
+  }
+  p {
+    width: 70%;
+    text-align: center;
+    font-size: 15px;
+  }
+
+  //CAMBIAR IDIOMA
+  .LanguageSelectCont {
+    width: 35%;
+    height: 45px;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    border-top-left-radius: solid 5px;
+    border-bottom-left-radius: solid 5px;
+
+    .LanguageSelect {
+      height: 100% !important;
+    }
+  }
+  //LOGO
+  .LogoLogin {
+    height: 11%;
+  }
+
+  //INPUTS
+  .inputMargin{
+    margin-top: 5px;
+  }
+  .InputContent {
+    width: 100%;
+    height: 65px;
+    position:relative;
+
+    .v-text-field.v-text-field--enclosed .v-text-field__details {
+      padding: 0!important;
+    }
+
+
+    .LabelInputSlu {
+      width: 90%;
+      margin-left: 5%;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 3px;
+      display: none;
+    }
+
+    input::placeholder{
+      color: red #A8BFD9;
+    }
+  }
+
+  .LoginForm {
+    width: 70%;
+    margin: 0 auto;
+
+    .RememberPassword{
+      width: 100%;
+      height: 50px !important;
+      *{color: #003D6D !important;}
+    }
+
+  }
+
+  
+  //BOTON
+  .FinishButtonCont {
+    width: 100%;
+    height: 40px;
+    //BOTON
+    .FinishButton {
+      font-weight: normal;
+      width: 100% !important;
+      color:#FFFFFF!important;
+      text-transform: none !important;
+    }
+  }
+  .ForgotPassword {
+    width: 70%;
+    height: 40px;
+    text-align: center;
+    font-weight: lighter;
+    font-size: 14px;
+  }
+}
+
+@media(max-width: 650px)
+{
+.LoginComponent{
+  width: 100%;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+}

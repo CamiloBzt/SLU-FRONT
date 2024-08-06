@@ -1,0 +1,8 @@
+mutation updateEndorsementMovement($id: ID!, $data: String!) {
+  updateEndorsementMovement(id: $id, data: $data) {
+    statusCode
+    message
+    error
+    response
+  }
+}

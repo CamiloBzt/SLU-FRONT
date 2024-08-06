@@ -1,0 +1,8 @@
+mutation addSublimeProperty($id_subscription: ID!) {
+  addSublimeProperty(id_subscription: $id_subscription) {
+    statusCode
+    message
+    error
+    response
+  }
+}

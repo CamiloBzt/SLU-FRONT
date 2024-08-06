@@ -1,0 +1,8 @@
+query getTotalInsurableValueById($id_subscription: ID!) {
+  getTotalInsurableValueById(id_subscription: $id_subscription) {
+    statusCode
+    message
+    error
+    response
+  }
+}

@@ -1,0 +1,16 @@
+mutation setEndorsementPolicy(
+  $id_subscription: ID!
+  $column: String!
+  $data: String!
+) {
+  setEndorsementPolicy(
+    id_subscription: $id_subscription
+    column: $column
+    data: $data
+  ) {
+    statusCode
+    message
+    error
+    response
+  }
+}

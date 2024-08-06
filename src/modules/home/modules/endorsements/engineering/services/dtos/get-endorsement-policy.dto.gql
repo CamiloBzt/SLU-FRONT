@@ -1,0 +1,8 @@
+query getEndorsementPolicy($id: ID!) {
+  getEndorsementPolicy(id: $id) {
+    statusCode
+    message
+    error
+    response
+  }
+}
