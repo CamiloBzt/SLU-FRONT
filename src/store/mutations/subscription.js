@@ -1,12 +1,25 @@
-import RATES from '../../constants/rates';
-import BOUND from '../../constants/bound';
+import RATES from "../../constants/rates";
+import BOUND from "../../constants/bound";
 /**
  * @typedef {Object} State
  * @property {Array} contactsInformation
  * @property {Object} accountInformation
  */
 export default {
-  saveAccountInformation(state, { insuredName, name, country, typeOfRisk, activity, currency, broker, cedent, contacts }) {
+  saveAccountInformation(
+    state,
+    {
+      insuredName,
+      name,
+      country,
+      typeOfRisk,
+      activity,
+      currency,
+      broker,
+      cedent,
+      contacts,
+    }
+  ) {
     state.accountInformation = {
       insuredName,
       name,
@@ -32,22 +45,46 @@ export default {
   },
   RESET_ACCOUNT_INFORMATION(state) {
     state.accountInformation = {
-      insuredName: '',
-      name: '',
-      country: '',
-      typeOfRisk: '',
-      activity: '',
-      currency: '',
-      broker: '',
-      cedent: '',
+      insuredName: "",
+      name: "",
+      country: "",
+      typeOfRisk: "",
+      activity: "",
+      currency: "",
+      broker: "",
+      cedent: "",
     };
+  },
+  RESET_CORRESPONDENCE_DOCUMENTS(state) {
+    state.correspondenceDocuments = [
+      {
+        description: "Correspondence Documents",
+        id: 21,
+        key: "correspondence",
+        name: "Correspondence Document",
+        text: "Upload the next document",
+        value: 1,
+      },
+    ];
+  },
+  RESET_SLIP_DOCUMENTS(state) {
+    state.slipDocuments = [
+      {
+        description: "Slip Documents",
+        id: 20,
+        key: "slip",
+        name: "Slip Final",
+        text: "Upload the next document",
+        value: 1,
+      },
+    ];
   },
   RESET_CEDENT_INFORMATION(state) {
     state.cedentInformation = {
-      cedentName: '',
-      cedentEmail: '',
-      cedentNumber: '',
-      cedentAddress: '',
+      cedentName: "",
+      cedentEmail: "",
+      cedentNumber: "",
+      cedentAddress: "",
     };
   },
   RESET_CONTACTS_INFORMATION(state) {
@@ -97,7 +134,7 @@ export default {
     state.facultativeReference = facultativeReference;
   },
   RESET_SUBSCRIPTION_REFERENCE(state) {
-    state.nameReference = '';
+    state.nameReference = "";
   },
   set_upload_document(state, { document }) {
     state.document = document;
@@ -134,7 +171,9 @@ export default {
     arrayDocuments.forEach((item, index) => {
       state.documents.forEach((doc, num) => {
         if (doc.id == item.catalog_document_id) {
-          const docsIndex = state.docs.findIndex((e) => e.id == item.catalog_document_id);
+          const docsIndex = state.docs.findIndex(
+            (e) => e.id == item.catalog_document_id
+          );
 
           if (docsIndex !== -1) {
             state.docs[docsIndex] = state.documents[num];
@@ -149,20 +188,20 @@ export default {
     if (arrayDocuments.length != 0) {
       arrayDocuments.forEach((item, index) => {
         if (index == 0) {
-          item.text = 'Slip Final';
+          item.text = "Slip Final";
         } else {
-          item.text = 'Slip Document';
+          item.text = "Slip Document";
         }
       });
       state.slipDocuments = arrayDocuments;
     } else {
       state.slipDocuments = [
         {
-          description: 'Slip Documents',
+          description: "Slip Documents",
           id: 20,
-          key: 'slip',
-          name: 'Slip Final',
-          text: 'Upload the next document',
+          key: "slip",
+          name: "Slip Final",
+          text: "Upload the next document",
           value: 1,
         },
       ];
@@ -171,7 +210,7 @@ export default {
   setCorrespondenceDocuments(state, arrayDocuments) {
     if (arrayDocuments.length != 0) {
       arrayDocuments.forEach((item, index) => {
-        item.text = 'Correspondence Document';
+        item.text = "Correspondence Document";
       });
       state.correspondenceDocuments = arrayDocuments;
     }
@@ -189,20 +228,24 @@ export default {
     state.modalCreateBrokerOrCedent = !state.modalCreateBrokerOrCedent;
   },
   setModalRate(state, type) {
-    if (type == 'Other Line of Risks Modal') {
+    if (type == "Other Line of Risks Modal") {
       state.modalRate = !state.modalRate;
-    } else if (type == 'Car & Ear Modal') {
+    } else if (type == "Car & Ear Modal") {
       state.modalRateCarEar = !state.modalRateCarEar;
-    } else if (type == 'close') {
+    } else if (type == "close") {
       state.modalRate = false;
       state.modalRateCarEar = false;
     }
   },
   setModalCreateCompany(state, manualChange) {
-    if (typeof manualChange === 'undefined') state.modalCreateCompany = !state.modalCreateCompany;
+    if (typeof manualChange === "undefined")
+      state.modalCreateCompany = !state.modalCreateCompany;
     else state.modalCreateCompany = manualChange;
   },
-  saveQuotation(state, { insuredName, currency, exchangeRate, inceptionDate, expiryDate }) {
+  saveQuotation(
+    state,
+    { insuredName, currency, exchangeRate, inceptionDate, expiryDate }
+  ) {
     state.quotation = {
       insuredName,
       currency,
@@ -214,7 +257,7 @@ export default {
   setStateQuotation(state, { key, value }) {
     state.quotation = {
       ...state.quotation,
-      [key]: value
+      [key]: value,
     };
   },
   setStateDeductions(state, { key, value }) {
@@ -223,7 +266,7 @@ export default {
   setStatePremium(state, { key, value }) {
     state.premium = {
       ...state.premium,
-      [key]: `${value}`
+      [key]: `${value}`,
     };
   },
   setStateTobe(state, { key, value }) {
@@ -261,14 +304,14 @@ export default {
   },
   RESET_QUOTATION(state) {
     state.quotation = {
-      insuredName: '',
-      currency: '',
+      insuredName: "",
+      currency: "",
       exchangeRate: null,
-      inceptionDate: '',
-      expiryDate: '',
+      inceptionDate: "",
+      expiryDate: "",
       tivTarifadorSelect: null,
-      catRate: '',
-      premiumRate: null
+      catRate: "",
+      premiumRate: null,
     };
   },
   setStatelayerSelect(state, value) {
@@ -322,7 +365,7 @@ export default {
   SET_BOUND_INSURABLE(state, { key, value }) {
     state.boundInsurable = {
       ...state.boundInsurable,
-      [key]: `${value}`
+      [key]: `${value}`,
     };
   },
   RESET_BOUND_ENG_DEDUCTIBLES(state) {
@@ -392,7 +435,6 @@ export default {
     state.boundPml[key] = value;
   },
   saveCheckPaymentInformation(state, payload) {
-    console.log(payload);
     state.checkPayment.value1.paymentDate = payload.payment_date1;
     state.checkPayment.value2.paymentDate = payload.payment_date2;
     state.checkPayment.value3.paymentDate = payload.payment_date3;
@@ -404,6 +446,6 @@ export default {
     state.checkPayment.value3.value = payload.invoice3;
   },
   setBoundClaims(state, payload) {
-    state.boundClaims = payload
+    state.boundClaims = payload;
   },
 };

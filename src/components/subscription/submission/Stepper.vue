@@ -98,6 +98,11 @@ export default {
   },
 
   async beforeMount() {
+    if (!this.$route.params.subscriptionId) {
+      this.underwritersTable = [];
+      this.showBoundButton = false;
+      return;
+    }
     this.showBoundButton = this.facultativeReference !== null ? true : false;
     this.quotationType =
       await SubscriptionService.getTypeQuotationBySubscription(
@@ -182,7 +187,9 @@ export default {
         (isNotBound && path === 7)
       )
         return;
-
+      if (!this.subscription_id && (path === 2 || path === 6 || path === 7)) {
+        return;
+      }
       if (this.$route.path != paths[path - 1]) {
         if (path == 3 && this.$route.path != paths[0]) {
           if (this.quotationType === 1) {

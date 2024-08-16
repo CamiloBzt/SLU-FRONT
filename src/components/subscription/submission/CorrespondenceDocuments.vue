@@ -8,9 +8,16 @@
     />
 
     <v-expansion-panels class="ExpansionComponent ExpansionBordered mt-6">
-      <v-expansion-panel @change="$emit('panel-event')" :disabled="loadingPanel">
+      <v-expansion-panel
+        @change="$emit('panel-event')"
+        :disabled="loadingPanel"
+      >
         <!--TITULO DEL ACORDEON-->
-        <v-expansion-panel-header @click="changeStateCorrespondence()" class="ExpansionTitle" expand-icon="">
+        <v-expansion-panel-header
+          @click="changeStateCorrespondence()"
+          class="ExpansionTitle"
+          expand-icon=""
+        >
           Correspondence
           <div class="ExpansionState HideOnMovil">
             {{ stateExpansiveMessageCorr }}
@@ -21,7 +28,7 @@
             </v-icon>
           </template>
         </v-expansion-panel-header>
-  
+
         <!--CONTENIDO DEL ACORDEON-->
         <v-expansion-panel-content>
           <div class="ExpandContent">
@@ -29,7 +36,9 @@
             <div class="InputsContentFh">
               <div
                 class="InputFileContent mb-4"
-                :class="{ 'drag-border': dragBorder && dragBorderId == item.id }"
+                :class="{
+                  'drag-border': dragBorder && dragBorderId == item.id,
+                }"
                 v-for="(item, index) in correspondenceDocuments"
                 :key="index"
                 @dragenter.prevent="dragIn(item.id)"
@@ -38,14 +47,19 @@
                 @drop.prevent="dragDrop($event, 'input1', item, item.id)"
               >
                 <!--LABEL-->
-                <label class="InputFileLabel d-flex align-center justify-center">
+                <label
+                  class="InputFileLabel d-flex align-center justify-center"
+                >
                   <input
                     @change="closeConfirmationModal($event, 'input1', item)"
                     class="HideInputFile"
                     type="file"
                   />
-  
-                  <div v-if="item.text == 'Upload the next document'" class="emptyFileInfo d-flex justify-center align-center flex-column">
+
+                  <div
+                    v-if="item.text == 'Upload the next document'"
+                    class="emptyFileInfo d-flex justify-center align-center flex-column"
+                  >
                     <p>
                       Upload the <b>Correspondence {{ item.value }}</b> document
                     </p>
@@ -59,25 +73,32 @@
                     </div>
                   </div>
                 </label>
-  
+
                 <!--BORRAR-->
-                <div @click="DeleteFile(index, item)" class="InputDeletContBtn d-flex justify-center align-center">
+                <div
+                  @click="DeleteFile(index, item)"
+                  class="InputDeletContBtn d-flex justify-center align-center"
+                >
                   <v-icon>mdi-trash-can-outline</v-icon>
                 </div>
-  
+
                 <!--DESCARGAR-->
-                <div class="DownloadCont d-flex justify-center align-center" @click="download(item)">
-                  <v-icon>
-                    mdi-download
-                  </v-icon>
+                <div
+                  class="DownloadCont d-flex justify-center align-center"
+                  @click="download(item)"
+                >
+                  <v-icon> mdi-download </v-icon>
                 </div>
               </div>
-  
+
               <div class="emptyFileContent d-flex justify-start align-center">
-                <v-btn text rounded class="moreButton" @click="addCorrespondence()">
-                  <v-icon class="mr-2">
-                    mdi-plus-circle
-                  </v-icon>
+                <v-btn
+                  text
+                  rounded
+                  class="moreButton"
+                  @click="addCorrespondence()"
+                >
+                  <v-icon class="mr-2"> mdi-plus-circle </v-icon>
                   Add More Documents
                 </v-btn>
               </div>
@@ -90,13 +111,13 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
-  // Components
-import ConfirmationModal from '@/components/ConfirmationModal';
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+// Components
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default {
-  name: 'CarDocuments',
+  name: "CarDocuments",
   mixins: [stateExpansiveManager],
   components: {
     ConfirmationModal,
@@ -104,7 +125,7 @@ export default {
   data() {
     return {
       //VARIABLES DE LOS ARCHIVOS
-      fileName1: '',
+      fileName1: "",
       technicalMemory: null,
       loadingPanel: false,
       // Modal de confirmacion
@@ -112,15 +133,22 @@ export default {
       selectedItemData: [],
       // Drag & Drop
       dragBorder: false,
-      dragBorderId: 0
+      dragBorderId: 0,
     };
   },
   computed: {
-    ...mapGetters(['correspondenceDocuments', 'document', 'subscription_id', 'nameReference', 'type', 'downloadDocUrl']),
+    ...mapGetters([
+      "correspondenceDocuments",
+      "document",
+      "subscription_id",
+      "nameReference",
+      "type",
+      "downloadDocUrl",
+    ]),
   },
   async mounted() {
     /* set loadings (data) */
-    const lpa = 'loadingPanel';
+    const lpa = "loadingPanel";
 
     /* loaders to true */
     this[lpa] = !this[lpa];
@@ -131,17 +159,18 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setCorrespondenceDocument',
-      'registerIdSubscription',
-      'updateDataSubscription',
-      'save',
-      'upload',
-      'downloadDocument',
-      'delete',
-      'CorrespondenceDocumentsSubscription',
-      'DownloadDoc',
+      "setCorrespondenceDocument",
+      "registerIdSubscription",
+      "updateDataSubscription",
+      "save",
+      "upload",
+      "downloadDocument",
+      "delete",
+      "CorrespondenceDocumentsSubscription",
+      "DownloadDoc",
+      "resetCorrespondenceDocuments",
     ]),
-    ...mapMutations(['setLoading']),
+    ...mapMutations(["setLoading"]),
     /*
     CARGAMOS Y GUARDAMOS LAS IMAGENES,
     RECIBE POR PARAMETROS EL EVENTO Y EL 
@@ -173,7 +202,7 @@ export default {
         };
         reader.readAsDataURL(file);
       } else {
-        this.addNotification({ type: 'danger', text: 'Max 30 MB' });
+        this.addNotification({ type: "danger", text: "Max 30 MB" });
         this.setLoading();
       }
     },
@@ -182,33 +211,59 @@ export default {
       /* GUARDAMOS
           LA INFORMACIÓN DEL ARCHIVO
         */
-      var datos = file.name.split('.', 2);
+      var datos = file.name.split(".", 2);
       this.nameReference
         ? this.save({
-          document_id: item.id,
-          subscription_id:
-          this.subscription_id, type: datos[1],
-          docS3: item.doc_s3
-        }).finally(() => {
-            this.upload({ file: file, path: 'COT_' + this.subscription_id + '/' + this.type + '/' + this.document })
+            document_id: item.id,
+            subscription_id: this.subscription_id,
+            type: datos[1],
+            docS3: item.doc_s3,
+          }).finally(() => {
+            this.upload({
+              file: file,
+              path:
+                "COT_" +
+                this.subscription_id +
+                "/" +
+                this.type +
+                "/" +
+                this.document,
+            })
               .then((res) => {
-                res.error ? this.DeleteFile(item) : (item.uri = res.singleUpload.uri), (item.doc_s3 = this.document);
+                res.error
+                  ? this.DeleteFile(item)
+                  : (item.uri = res.singleUpload.uri),
+                  (item.doc_s3 = this.document);
                 this.setLoading();
               })
               .catch((e) => {
                 this.setLoading();
               });
           })
-        : this.updateDataSubscription({ reference: 'COT-' + this.subscription_id }).finally(() => {
+        : this.updateDataSubscription({
+            reference: "COT-" + this.subscription_id,
+          }).finally(() => {
             this.save({
               document_id: item.id,
               subscription_id: this.subscription_id,
               type: datos[1],
-              docS3: item.doc_s3
+              docS3: item.doc_s3,
             }).finally(() => {
-              this.upload({ file: file, path: 'COT_' + this.subscription_id + '/' + this.type + '/' + this.document })
+              this.upload({
+                file: file,
+                path:
+                  "COT_" +
+                  this.subscription_id +
+                  "/" +
+                  this.type +
+                  "/" +
+                  this.document,
+              })
                 .then((res) => {
-                  res.error ? this.DeleteFile(item) : (item.uri = res.singleUpload.uri), (item.doc_s3 = this.document);
+                  res.error
+                    ? this.DeleteFile(item)
+                    : (item.uri = res.singleUpload.uri),
+                    (item.doc_s3 = this.document);
                   this.setLoading();
                 })
                 .catch((e) => {
@@ -226,14 +281,16 @@ export default {
     EL ARCHIVO QUE ELIMINAREMOS
     */
     DeleteFile(index, item) {
-      if (item.text == 'Upload the next document') {
+      if (item.text == "Upload the next document") {
         this.correspondenceDocuments.splice(index, 1);
       } else {
         this.setLoading();
         try {
           this.delete(item.doc_s3)
             .then((res) => {
-              res.error ? this.setLoading() : this.correspondenceDocuments.splice(index, 1);
+              res.error
+                ? this.setLoading()
+                : this.correspondenceDocuments.splice(index, 1);
               this.setLoading();
             })
             .catch((e) => {
@@ -241,17 +298,17 @@ export default {
             });
         } catch (e) {
           this.setLoading();
-          console.error('Could not be deleted');
+          console.error("Could not be deleted");
         }
       }
     },
     addCorrespondence() {
       var correspondenceDoc = {
-        description: 'Correspondence Documents',
+        description: "Correspondence Documents",
         id: 21,
-        key: 'correspondence',
-        name: 'Correspondence Document',
-        text: 'Upload the next document',
+        key: "correspondence",
+        name: "Correspondence Document",
+        text: "Upload the next document",
         value: this.correspondenceDocuments.length + 1,
       };
       this.setCorrespondenceDocument(correspondenceDoc);
@@ -261,20 +318,29 @@ export default {
       if (item.uri) {
         this.downloadDocument(item.uri, item.text);
       } else if (item.doc_s3) {
-        await this.DownloadDoc({ path: 'COT_' + this.subscription_id + '/' + this.type + '/' + item.doc_s3 });
+        await this.DownloadDoc({
+          path:
+            "COT_" + this.subscription_id + "/" + this.type + "/" + item.doc_s3,
+        });
         this.downloadDocument(this.downloadDocUrl);
       }
     },
     async loadDocs() {
       if (this.subscription_id) {
-        await this.CorrespondenceDocumentsSubscription({ subscription_id: parseInt(this.subscription_id) });
+        await this.CorrespondenceDocumentsSubscription({
+          subscription_id: parseInt(this.subscription_id),
+        });
+      } else {
+        this.resetCorrespondenceDocuments();
       }
     },
     closeConfirmationModal(...args) {
       const doc_s3 = args[2].doc_s3 ? args[2].doc_s3 : args[2].document;
       this.selectedItemData = args;
-      const file = this.selectedItemData[0].target.files ? this.selectedItemData[0].target.files[0] : this.selectedItemData[0].dataTransfer.files[0]
-      this.selectedItemData[0] = file
+      const file = this.selectedItemData[0].target.files
+        ? this.selectedItemData[0].target.files[0]
+        : this.selectedItemData[0].dataTransfer.files[0];
+      this.selectedItemData[0] = file;
 
       if (doc_s3) {
         this.showConfirmationModal = !this.showConfirmationModal;
@@ -296,29 +362,29 @@ export default {
       this.selectedItemData = [];
     },
     dragIn(dragBorderId) {
-      this.dragBorder = true
-      this.dragBorderId = dragBorderId
+      this.dragBorder = true;
+      this.dragBorderId = dragBorderId;
     },
     dragDrop(e, input, item, dragBorderId) {
-      this.dragBorder = false
-      this.dragBorderId = dragBorderId ? dragBorderId : 0
-      
+      this.dragBorder = false;
+      this.dragBorderId = dragBorderId ? dragBorderId : 0;
+
       if (e) {
-        this.closeConfirmationModal(e, input, item)
-        this.cleanDragData(e)
+        this.closeConfirmationModal(e, input, item);
+        this.cleanDragData(e);
       }
     },
     cleanDragData(e) {
-      if (e.dataTransfer.items) e.dataTransfer.items.clear()
-      else e.dataTransfer.clearData()
-    }
+      if (e.dataTransfer.items) e.dataTransfer.items.clear();
+      else e.dataTransfer.clearData();
+    },
   },
 };
 </script>
 <style lang="less" scoped>
 //ESTILOS GENERALES DEL ACORDEON
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/FilesStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/FilesStyle.less";
 
 .drag-border {
   border: solid 1px var(--lightColor2);
