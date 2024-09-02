@@ -192,9 +192,14 @@ export default {
           if (this.subscription_id != null) {
             this.saveFile(file, item, inputName);
           } else {
-            this.registerIdSubscription({}).finally(() => {
-              this.saveFile(file, item, inputName);
+            this.setLoading();
+            this.addNotification({
+              type: "warning",
+              text: "Please create the subscription before uploading files.",
             });
+            // this.registerIdSubscription({}).finally(() => {
+            //   this.saveFile(file, item, inputName);
+            // });
           }
 
           item.text = item.name;

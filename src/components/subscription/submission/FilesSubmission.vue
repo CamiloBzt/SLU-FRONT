@@ -7,10 +7,21 @@
       @confirmAction="confirmLoadImage"
     />
 
-    <v-expansion-panels v-model="ActivePanel" class="ExpansionComponent ExpansionBordered mt-6" :class="[ActiveShadow ? '' : 'RemoveShadow']">
-      <v-expansion-panel :disabled="loadingPanel" @change="$emit('panel-event')">
+    <v-expansion-panels
+      v-model="ActivePanel"
+      class="ExpansionComponent ExpansionBordered mt-6"
+      :class="[ActiveShadow ? '' : 'RemoveShadow']"
+    >
+      <v-expansion-panel
+        :disabled="loadingPanel"
+        @change="$emit('panel-event')"
+      >
         <!--TITULO DEL ACORDEON-->
-        <v-expansion-panel-header @click="changeStateCorrespondenceDoc()" class="ExpansionTitle" expand-icon="">
+        <v-expansion-panel-header
+          @click="changeStateCorrespondenceDoc()"
+          class="ExpansionTitle"
+          expand-icon=""
+        >
           Documents
           <div v-if="ActiveShadow" class="ExpansionState HideOnMovil">
             {{ stateExpansiveMessageDoc }}
@@ -29,7 +40,9 @@
               <!--INPUTS DE ARCHIVOS-->
               <div
                 class="InputFileContent mb-4"
-                :class="{ 'drag-border': dragBorder && dragBorderId == item.id }"
+                :class="{
+                  'drag-border': dragBorder && dragBorderId == item.id,
+                }"
                 v-for="item in docs"
                 :key="item.id"
                 @dragenter.prevent="dragIn(item.id)"
@@ -38,10 +51,19 @@
                 @drop.prevent="dragDrop($event, 'input1', item, item.id)"
               >
                 <!--LABEL-->
-                <label class="InputFileLabel d-flex align-center justify-center">
-                  <input @change="closeConfirmationModal($event, 'input1', item)" class="HideInputFile" type="file" />
+                <label
+                  class="InputFileLabel d-flex align-center justify-center"
+                >
+                  <input
+                    @change="closeConfirmationModal($event, 'input1', item)"
+                    class="HideInputFile"
+                    type="file"
+                  />
 
-                  <div v-if="item.text == 'Upload the next document'" class="emptyFileInfo d-flex justify-center align-center flex-column">
+                  <div
+                    v-if="item.text == 'Upload the next document'"
+                    class="emptyFileInfo d-flex justify-center align-center flex-column"
+                  >
                     <p>
                       Upload the <b>{{ item.name }}</b> document
                     </p>
@@ -56,11 +78,17 @@
                   </div>
                 </label>
                 <!--BORRAR-->
-                <div @click="DeleteFile('input1', item)" class="InputDeletContBtn d-flex justify-center align-center">
+                <div
+                  @click="DeleteFile('input1', item)"
+                  class="InputDeletContBtn d-flex justify-center align-center"
+                >
                   <v-icon> mdi-trash-can-outline </v-icon>
                 </div>
                 <!--DESCARGAR-->
-                <div class="DownloadCont d-flex justify-center align-center" @click="download(item)">
+                <div
+                  class="DownloadCont d-flex justify-center align-center"
+                  @click="download(item)"
+                >
                   <v-icon> mdi-download </v-icon>
                 </div>
               </div>
@@ -87,7 +115,9 @@
         </v-expansion-panel-content>
         <v-expansion-panel-content v-else>
           <div class="ExpandContent">
-            <div>You must select a Line of Risk first to view this section.</div>
+            <div>
+              You must select a Line of Risk first to view this section.
+            </div>
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -95,19 +125,29 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 // Components
-import ConfirmationModal from '@/components/ConfirmationModal';
-import AppMultipleFile from '@/application/components/AppMultipleFile';
+import ConfirmationModal from "@/components/ConfirmationModal";
+import AppMultipleFile from "@/application/components/AppMultipleFile";
 // Services
 // import { getOfaDocs } from './services/bound/mock-ofa-docs.service'
 // import { getNatcatDocs } from './services/bound/mock-natcat-docs.service.js'
-import { getOfaDocs, saveOfaDocumentBD, uploadOfaDocumentAWS, deleteOfaDocumentAWSBD } from './services/fileSubmission/ofa-docs.service';
-import { getNatcatDocs, saveNatcatDocumentBD, uploadNatcatDocumentAWS, deleteNatcatDocumentAWSBD } from './services/fileSubmission/natcat-docs.service.js';
+import {
+  getOfaDocs,
+  saveOfaDocumentBD,
+  uploadOfaDocumentAWS,
+  deleteOfaDocumentAWSBD,
+} from "./services/fileSubmission/ofa-docs.service";
+import {
+  getNatcatDocs,
+  saveNatcatDocumentBD,
+  uploadNatcatDocumentAWS,
+  deleteNatcatDocumentAWSBD,
+} from "./services/fileSubmission/natcat-docs.service.js";
 
 export default {
-  name: 'FilesSubmission',
+  name: "FilesSubmission",
   mixins: [stateExpansiveManager],
   components: {
     ConfirmationModal,
@@ -134,7 +174,7 @@ export default {
       arrayFilesOfa: [],
       arrayFilesNatcat: [],
       // type doc
-      type: 'documents',
+      type: "documents",
       // subscription
       subscription_id: null,
     };
@@ -155,11 +195,19 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['documents', 'document', 'accountInformation', 'nameReference', 'docs', 'risk_type', 'downloadDocUrl']),
+    ...mapGetters([
+      "documents",
+      "document",
+      "accountInformation",
+      "nameReference",
+      "docs",
+      "risk_type",
+      "downloadDocUrl",
+    ]),
     ActiveShadow: function () {
       const parent = this.$parent;
       const parentComponentName = parent.$options.name;
-      if (parentComponentName == 'v-expansion-panel-content') {
+      if (parentComponentName == "v-expansion-panel-content") {
         return false;
       } else {
         return true;
@@ -169,7 +217,7 @@ export default {
       get() {
         const parent = this.$parent;
         const parentComponentName = parent.$options.name;
-        if (parentComponentName == 'v-expansion-panel-content') return 0;
+        if (parentComponentName == "v-expansion-panel-content") return 0;
         else return 1;
       },
       set() {},
@@ -180,41 +228,41 @@ export default {
     this.subscription_id = Number(this.$route.params.subscriptionId);
     if (this.subscription_id) {
       this.arrayFilesOfa = await getOfaDocs({
-        subscription_id: this.subscription_id || '0',
+        subscription_id: this.subscription_id || "0",
       });
       this.arrayFilesNatcat = await getNatcatDocs({
-        subscription_id: this.subscription_id || '0',
+        subscription_id: this.subscription_id || "0",
       });
     }
   },
 
   async mounted() {
     /* set loadings (data) */
-    const lpa = 'loadingPanel';
+    const lpa = "loadingPanel";
 
     /* loaders to true */
     this[lpa] = !this[lpa];
 
     await this.checkSubscriptionStored();
-    await this.getCatalogByDocuments({ name: 'documents' });
+    await this.getCatalogByDocuments({ name: "documents" });
     await this.loadDocs();
 
     this[lpa] = false;
   },
   methods: {
     ...mapActions([
-      'registerIdSubscription',
-      'updateDataSubscription',
-      'save',
-      'upload',
-      'delete',
-      'DocumentsSubscriptionRisk',
-      'checkSubscriptionStored',
-      'getCatalogByDocuments',
-      'DownloadDoc',
-      'downloadDocument',
+      "registerIdSubscription",
+      "updateDataSubscription",
+      "save",
+      "upload",
+      "delete",
+      "DocumentsSubscriptionRisk",
+      "checkSubscriptionStored",
+      "getCatalogByDocuments",
+      "DownloadDoc",
+      "downloadDocument",
     ]),
-    ...mapMutations(['setLoading', 'addNotification', 'setDocuments']),
+    ...mapMutations(["setLoading", "addNotification", "setDocuments"]),
     /*
     CARGAMOS Y GUARDAMOS LAS IMAGENES,
     RECIBE POR PARAMETROS EL EVENTO Y EL
@@ -234,13 +282,18 @@ export default {
           let blobImage = new Blob([e.target.result]);
           let imageUrl = window.URL.createObjectURL(blobImage);
 
-          if ( !isNaN(this.subscription_id) ) {
+          if (!isNaN(this.subscription_id)) {
             this.saveFile(file, item, inputName);
           } else {
-            this.registerIdSubscription({}).finally(() => {
-              this.subscription_id = this.$store.state.subscription_id;
-              this.saveFile(file, item, inputName);
+            this.setLoading();
+            this.addNotification({
+              type: "warning",
+              text: "Please create the subscription before uploading files.",
             });
+            // this.registerIdSubscription({}).finally(() => {
+            //   this.subscription_id = this.$store.state.subscription_id;
+            //   this.saveFile(file, item, inputName);
+            // });
           }
 
           item.text = item.name;
@@ -248,7 +301,7 @@ export default {
         };
         reader.readAsDataURL(file);
       } else {
-        this.addNotification({ type: 'danger', text: 'Max 30 MB' });
+        this.addNotification({ type: "danger", text: "Max 30 MB" });
         this.setLoading();
       }
     },
@@ -257,7 +310,7 @@ export default {
       /* GUARDAMOS
           LA INFORMACIÓN DEL ARCHIVO
         */
-      var datos = file.name.split('.', 2);
+      var datos = file.name.split(".", 2);
 
       this.nameReference
         ? this.save({
@@ -268,10 +321,19 @@ export default {
           }).finally(() => {
             this.upload({
               file: file,
-              path: 'COT_' + this.subscription_id + '/' + this.type + '/' + this.document,
+              path:
+                "COT_" +
+                this.subscription_id +
+                "/" +
+                this.type +
+                "/" +
+                this.document,
             })
               .then((res) => {
-                res.error ? this.DeleteFile(inputName, item) : (item.uri = res.singleUpload.uri), (item.document = this.document);
+                res.error
+                  ? this.DeleteFile(inputName, item)
+                  : (item.uri = res.singleUpload.uri),
+                  (item.document = this.document);
                 this.setLoading();
               })
               .catch((e) => {
@@ -279,7 +341,7 @@ export default {
               });
           })
         : this.updateDataSubscription({
-            reference: 'COT-' + this.subscription_id,
+            reference: "COT-" + this.subscription_id,
           }).finally(() => {
             this.save({
               document_id: item.id,
@@ -289,10 +351,19 @@ export default {
             }).finally(() => {
               this.upload({
                 file: file,
-                path: 'COT_' + this.subscription_id + '/' + this.type + '/' + this.document,
+                path:
+                  "COT_" +
+                  this.subscription_id +
+                  "/" +
+                  this.type +
+                  "/" +
+                  this.document,
               })
                 .then((res) => {
-                  res.error ? this.DeleteFile(inputName, item) : (item.uri = res.singleUpload.uri), (item.document = this.document);
+                  res.error
+                    ? this.DeleteFile(inputName, item)
+                    : (item.uri = res.singleUpload.uri),
+                    (item.document = this.document);
                   this.setLoading();
                 })
                 .catch((e) => {
@@ -319,13 +390,13 @@ export default {
           this.delete(doc_s3)
             .then((res) => {
               if (!res.error) {
-                item.text = 'Upload the next document';
-                item.uri = '';
-                item.doc_s3 = '';
-                item.document = '';
+                item.text = "Upload the next document";
+                item.uri = "";
+                item.doc_s3 = "";
+                item.document = "";
               }
               this.setLoading();
-              this.$emit('deleteImage', {
+              this.$emit("deleteImage", {
                 imageNumber: inputName,
               });
               vm.$forceUpdate();
@@ -343,7 +414,8 @@ export default {
         this.downloadDocument(item.uri, item.text);
       } else if (item.doc_s3) {
         await this.DownloadDoc({
-          path: 'COT_' + this.subscription_id + '/' + this.type + '/' + item.doc_s3,
+          path:
+            "COT_" + this.subscription_id + "/" + this.type + "/" + item.doc_s3,
         });
         this.downloadDocument(this.downloadDocUrl);
       }
@@ -371,18 +443,28 @@ export default {
     closeConfirmationModal(...args) {
       const doc_s3 = args[2].doc_s3 ? args[2].doc_s3 : args[2].document;
       this.selectedItemData = args;
-      const file = this.selectedItemData[0].target.files ? this.selectedItemData[0].target.files[0] : this.selectedItemData[0].dataTransfer.files[0];
+      const file = this.selectedItemData[0].target.files
+        ? this.selectedItemData[0].target.files[0]
+        : this.selectedItemData[0].dataTransfer.files[0];
       this.selectedItemData[0] = file;
 
       if (doc_s3) {
         this.showConfirmationModal = !this.showConfirmationModal;
       } else {
-        this.loadImage(file, this.selectedItemData[1], this.selectedItemData[2]);
+        this.loadImage(
+          file,
+          this.selectedItemData[1],
+          this.selectedItemData[2]
+        );
         this.selectedItemData = [];
       }
     },
     confirmLoadImage() {
-      this.loadImage(this.selectedItemData[0], this.selectedItemData[1], this.selectedItemData[2]);
+      this.loadImage(
+        this.selectedItemData[0],
+        this.selectedItemData[1],
+        this.selectedItemData[2]
+      );
       this.selectedItemData = [];
     },
     dragIn(dragBorderId) {
@@ -411,10 +493,10 @@ export default {
       const newId = this.arrayFilesOfa.length + 1;
       const emptyFile = {
         id: newId,
-        fileName: 'New Document',
-        downloadLink: '#',
-        errorMessage: '',
-        status: 'uploaded',
+        fileName: "New Document",
+        downloadLink: "#",
+        errorMessage: "",
+        status: "uploaded",
       };
       this.arrayFilesOfa.push(emptyFile);
     },
@@ -424,8 +506,8 @@ export default {
         if (obj.id === id) {
           return {
             id: id,
-            fileName: '',
-            downloadLink: '#',
+            fileName: "",
+            downloadLink: "#",
             loaded: false,
             error: true,
             errorMessage: errorMessage,
@@ -445,14 +527,17 @@ export default {
           return {
             id: id,
             fileName,
-            downloadLink: '#',
-            status: 'loaded',
-            errorMessage: '',
+            downloadLink: "#",
+            status: "loaded",
+            errorMessage: "",
           };
         }
         return obj;
       });
-      const resSa = await saveOfaDocumentBD({ subscription_id: this.subscription_id, doc_s3: fileName });
+      const resSa = await saveOfaDocumentBD({
+        subscription_id: this.subscription_id,
+        doc_s3: fileName,
+      });
       const resUp = await uploadOfaDocumentAWS({ file: file, path: fileName });
       this.arrayFilesOfa.forEach((e) => {
         if (e.id === id) {
@@ -468,11 +553,11 @@ export default {
         if (obj.id === id) {
           return {
             id: id,
-            fileName: '',
-            downloadLink: '',
+            fileName: "",
+            downloadLink: "",
             loaded: false,
             error: false,
-            errorMessage: '',
+            errorMessage: "",
             loading: status,
             uploaded: false,
           };
@@ -498,10 +583,10 @@ export default {
       const newId = this.arrayFilesNatcat.length + 1;
       const emptyFile = {
         id: newId,
-        fileName: 'New Document',
-        downloadLink: '#',
-        errorMessage: '',
-        status: 'uploaded',
+        fileName: "New Document",
+        downloadLink: "#",
+        errorMessage: "",
+        status: "uploaded",
       };
       this.arrayFilesNatcat.push(emptyFile);
     },
@@ -511,8 +596,8 @@ export default {
         if (obj.id === id) {
           return {
             id: id,
-            fileName: '',
-            downloadLink: '#',
+            fileName: "",
+            downloadLink: "#",
             loaded: false,
             error: true,
             errorMessage: errorMessage,
@@ -532,15 +617,21 @@ export default {
           return {
             id: id,
             fileName,
-            downloadLink: '#',
-            status: 'loaded',
-            errorMessage: '',
+            downloadLink: "#",
+            status: "loaded",
+            errorMessage: "",
           };
         }
         return obj;
       });
-      const resSa = await saveNatcatDocumentBD({ subscription_id: this.subscription_id, doc_s3: fileName });
-      const resUp = await uploadNatcatDocumentAWS({ file: file, path: fileName });
+      const resSa = await saveNatcatDocumentBD({
+        subscription_id: this.subscription_id,
+        doc_s3: fileName,
+      });
+      const resUp = await uploadNatcatDocumentAWS({
+        file: file,
+        path: fileName,
+      });
       this.arrayFilesNatcat.forEach((e) => {
         if (e.id === id) {
           e.id = resSa.id;
@@ -555,11 +646,11 @@ export default {
         if (obj.id === id) {
           return {
             id: id,
-            fileName: '',
-            downloadLink: '',
+            fileName: "",
+            downloadLink: "",
             loaded: false,
             error: false,
-            errorMessage: '',
+            errorMessage: "",
             loading: status,
             uploaded: false,
           };
@@ -578,7 +669,7 @@ export default {
     },
   },
   watch: {
-    'accountInformation.typeOfRisk': {
+    "accountInformation.typeOfRisk": {
       handler(value) {
         this.loadDocs();
       },
@@ -588,8 +679,8 @@ export default {
 </script>
 <style lang="less" scoped>
 //ESTILOS GENERALES DEL ACORDEON
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/FilesStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/FilesStyle.less";
 .ExpansionComponent {
   z-index: 0;
 }

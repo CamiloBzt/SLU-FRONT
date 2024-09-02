@@ -81,20 +81,16 @@
             </div>
           </div>
         </div>
-        
+
         <!-- SI ES MENOR QUE EL LIMITE DE ARCHIVOS PERMITIMOS AGREGAR MAS -->
         <div v-if="!limit" class="button">
-          <input 
-            @change="uploadFile($event, arrayFilesNatcat.length + 1)" 
-            id="fileUpload" 
-            type="file" 
+          <input
+            @change="uploadFile($event, arrayFilesNatcat.length + 1)"
+            id="fileUpload"
+            type="file"
             hidden
           />
-          <v-btn 
-            @click="chooseFiles()" 
-            class="button__btn" 
-            depressed
-          >
+          <v-btn @click="chooseFiles()" class="button__btn" depressed>
             <v-icon> mdi-plus-circle </v-icon>
             Add New Document
           </v-btn>
@@ -125,7 +121,6 @@ import {
   getDocsEndorsements,
   getDocEndorsements,
 } from "@/components/subscription/submission/services/fileSubmission/natcat-docs.service.js";
-
 
 export default {
   name: "DocumentsEndorsement",
@@ -189,9 +184,14 @@ export default {
           if (!isNaN(this.subscription_id)) {
             this.saveFile(file, item, inputName);
           } else {
-            this.registerIdSubscription({}).finally(() => {
-              this.subscription_id = this.$store.state.subscription_id;
-              this.saveFile(file, item, inputName);
+            // this.registerIdSubscription({}).finally(() => {
+            //   this.subscription_id = this.$store.state.subscription_id;
+            //   this.saveFile(file, item, inputName);
+            // });
+            this.setLoading();
+            this.addNotification({
+              type: "warning",
+              text: "Please create the submission before uploading documents.",
             });
           }
 
@@ -240,9 +240,12 @@ export default {
               })
               .finally(async () => {
                 if (this.subscription_id) {
-                  this.arrayFilesEndorsement.push(await getDocEndorsements({
-                    subscription_id: this.subscription_id, filename: fileName
-                  }))
+                  this.arrayFilesEndorsement.push(
+                    await getDocEndorsements({
+                      subscription_id: this.subscription_id,
+                      filename: fileName,
+                    })
+                  );
                 }
                 if (this.arrayFilesEndorsement.length >= 25) {
                   this.limit = true;
@@ -282,9 +285,12 @@ export default {
                 })
                 .finally(async () => {
                   if (this.subscription_id) {
-                    this.arrayFilesEndorsement.push(await getDocEndorsements({
-                      subscription_id: this.subscription_id, filename: fileName
-                    }))
+                    this.arrayFilesEndorsement.push(
+                      await getDocEndorsements({
+                        subscription_id: this.subscription_id,
+                        filename: fileName,
+                      })
+                    );
                   }
                   if (this.arrayFilesEndorsement.length >= 25) {
                     this.limit = true;
@@ -328,8 +334,10 @@ export default {
             })
             .finally(async () => {
               if (this.subscription_id) {
-                  const ind = this.arrayFilesEndorsement.map(e => e.id).indexOf(item.id);
-                  this.arrayFilesEndorsement.splice(ind, 1)
+                const ind = this.arrayFilesEndorsement
+                  .map((e) => e.id)
+                  .indexOf(item.id);
+                this.arrayFilesEndorsement.splice(ind, 1);
               }
               if (this.arrayFilesEndorsement.length >= 25) {
                 this.limit = true;
@@ -343,8 +351,6 @@ export default {
       }
     },
     async download(item) {
-      console.log(item);
-      console.log(item.uri);
       if (item.uri) {
         this.downloadDocument(item.uri, item.text);
       } else if (item.doc_s3) {
@@ -421,9 +427,9 @@ export default {
     },
     /* Invoca al input con el clic*/
     chooseFiles() {
-        document.getElementById("fileUpload").click()
+      document.getElementById("fileUpload").click();
     },
-    
+
     /* Sube un nuevo archivo */
     uploadFile(event, id, multiple = false) {
       let fileList = "";
@@ -460,7 +466,6 @@ export default {
     // Modifica el array de documentos OFA para añadir un nuevo input de tipo file
     addFileOfa() {
       const restantes = 25 - arrayFilesEndorsement.length;
-      console.log(first);
       if (this.arrayFilesEndorsement.length < restantes) {
         const newId = this.arrayFilesEndorsement.length + 1;
         const emptyFile = {
@@ -604,9 +609,9 @@ export default {
         return obj;
       });
       await this.saveNewDocumentEndorsement({
-            type: this.$store.endorsmentType,
-            docS3: fileName,
-      })
+        type: this.$store.endorsmentType,
+        docS3: fileName,
+      });
       const resSa = await saveEndorsementDocumentBD({
         subscription_id: this.subscription_id,
         doc_s3: fileName,
@@ -616,8 +621,6 @@ export default {
         path: fileName,
       });
       this.arrayFilesNatcat.forEach((e) => {
-        console.log({ eid: e.id });
-        console.log({ id });
         if (e.id === id) {
           e.id = resSa.id;
           e.downloadLink = resUp;
@@ -625,9 +628,12 @@ export default {
       });
       this.subscription_id = Number(this.$route.params.id);
       if (this.subscription_id) {
-        this.arrayFilesEndorsement.push(await getDocEndorsements({
-          subscription_id: this.subscription_id, filename: fileName
-        }))
+        this.arrayFilesEndorsement.push(
+          await getDocEndorsements({
+            subscription_id: this.subscription_id,
+            filename: fileName,
+          })
+        );
       }
       if (this.arrayFilesEndorsement.length >= 25) {
         this.limit = true;
@@ -662,8 +668,8 @@ export default {
       });
       const res = await this.deleteEndorsement(id).finally(async () => {
         if (this.subscription_id) {
-          const ind = this.arrayFilesEndorsement.map(e => e.id).indexOf(id);
-          this.arrayFilesEndorsement.splice(ind, 1)
+          const ind = this.arrayFilesEndorsement.map((e) => e.id).indexOf(id);
+          this.arrayFilesEndorsement.splice(ind, 1);
         }
         if (this.arrayFilesEndorsement.length >= 25) {
           this.limit = true;
@@ -1191,23 +1197,23 @@ export default {
   border-radius: 10px;
 }
 
-.button{
+.button {
   width: 32.5%;
   height: 50px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding-bottom: 10px;
-  &__btn{
+  &__btn {
     width: 50%;
     height: 100%;
     border-radius: 10px;
     background: transparent;
     justify-content: space-around;
-    color: #003D6D;
+    color: #003d6d;
     letter-spacing: normal;
-    i{
-      font-size:24px;
+    i {
+      font-size: 24px;
     }
   }
 }

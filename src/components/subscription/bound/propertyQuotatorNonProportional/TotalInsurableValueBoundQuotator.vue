@@ -64,7 +64,7 @@
 
         <!--Valores de  Bi-->
         <div class="line mt-2">
-          <div class="label">Bi</div>
+          <div class="label">BI</div>
 
           <div class="input-row">
             <currency-input
@@ -546,8 +546,7 @@ export default {
           this.quotationInsured = this.realData.quotationInsured;
           this.layers = this.realData.layers;
           this.totalInsurableValue = {
-            stocksRate:
-              this.realData.boundNonPropTotalInsurableValue.stocksRate,
+            stocksRate: this.realData.quotationInsured.stockPercentaje,
           };
         }
       );

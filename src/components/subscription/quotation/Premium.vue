@@ -21,7 +21,7 @@
 
         <!--CONTENIDO-->
         <div class="Row Label">Property Damage</div>
-        <div class="Row Label">ALOP</div>
+        <div class="Row Label">BI</div>
         <div class="Row Label" v-if="displayStocks">Stocks</div>
         <div class="Row Total">Total</div>
       </div>
@@ -522,6 +522,13 @@ export default {
       });
       this.checkPremium("businessInterruptionRate");
     }, 1200),
+    "premium.stockRate": debounce(function (value) {
+      this.setStatePremium({
+        key: "stockRate",
+        value,
+      });
+      this.checkPremium("stockRate");
+    }, 1200),
   },
   validations: {
     premium: {
@@ -568,10 +575,6 @@ export default {
     ...mapActions(["saveQuotationColumn"]),
     async checkPremium(column) {
       this.$v.premium[column].$touch();
-      // console.log(
-      //   this.$v.premium[column].$invalid,
-      //   this.$v.premium[column].$error
-      // );
       if (this.$v.premium[column].$invalid || this.$v.premium[column].$error)
         return;
       await this.saveQuotationColumn({

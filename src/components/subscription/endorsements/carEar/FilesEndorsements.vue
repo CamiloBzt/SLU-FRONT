@@ -7,10 +7,18 @@
       @confirmAction="confirmLoadImage"
     />
 
-    <v-expansion-panels v-model="ActivePanel" class="ExpansionComponent ExpansionBordered mt-6" :class="[ActiveShadow ? '' : 'RemoveShadow']">
+    <v-expansion-panels
+      v-model="ActivePanel"
+      class="ExpansionComponent ExpansionBordered mt-6"
+      :class="[ActiveShadow ? '' : 'RemoveShadow']"
+    >
       <v-expansion-panel :disabled="loadingPanel">
         <!--TITULO DEL ACORDEON-->
-        <v-expansion-panel-header @click="changeStateCorrespondenceDoc()" class="ExpansionTitle" expand-icon="">
+        <v-expansion-panel-header
+          @click="changeStateCorrespondenceDoc()"
+          class="ExpansionTitle"
+          expand-icon=""
+        >
           Documents
           <div v-if="ActiveShadow" class="ExpansionState HideOnMovil">
             {{ stateExpansiveMessageDoc }}
@@ -25,23 +33,29 @@
         <!--CONTENIDO DEL ACORDEON-->
         <v-expansion-panel-content v-if="docs.length > 0">
           <div class="ExpandContent">
-            <div class="TitleFiles">{{ settings[movementsValue] }} Documents:</div>
+            <div class="TitleFiles">
+              {{ settings[movementsValue] }} Documents:
+            </div>
             <div class="InputsContentFh">
               <!--INPUTS DE ARCHIVOS-->
-              <div class="InputFileContent mb-4" v-for="(item, key) in currentDocs" :key="item.id">
+              <div
+                class="InputFileContent mb-4"
+                v-for="(item, key) in currentDocs"
+                :key="item.id"
+              >
                 <!--LABEL-->
-                <label class="InputFileLabel d-flex align-center justify-center">
-                  <input @change="closeConfirmationModal($event, 'input1', item)" class="HideInputFile" type="file" />
+                <label
+                  class="InputFileLabel d-flex align-center justify-center"
+                >
+                  <input
+                    @change="closeConfirmationModal($event, 'input1', item)"
+                    class="HideInputFile"
+                    type="file"
+                  />
 
                   <div
                     v-if="item.text == 'Upload the next document'"
-                    class="
-                      emptyFileInfo
-                      d-flex
-                      justify-center
-                      align-center
-                      flex-column
-                    "
+                    class="emptyFileInfo d-flex justify-center align-center flex-column"
                   >
                     <p>
                       Upload the <b>{{ item.name }}</b> document
@@ -49,7 +63,7 @@
                   </div>
                   <div v-else class="NameFileCont">
                     <div class="FileName">
-                      {{ key === 0 ? 'Signature' : 'Support' }}
+                      {{ key === 0 ? "Signature" : "Support" }}
                     </div>
                     <div class="FileImage">
                       <img class="image" src="@/assets/img/document.png" />
@@ -58,12 +72,18 @@
                 </label>
 
                 <!--BORRAR-->
-                <div @click="DeleteFile('input1', item)" class="InputDeletContBtn d-flex justify-center align-center">
+                <div
+                  @click="DeleteFile('input1', item)"
+                  class="InputDeletContBtn d-flex justify-center align-center"
+                >
                   <v-icon> mdi-trash-can-outline </v-icon>
                 </div>
 
                 <!--DESCARGAR-->
-                <div class="DownloadCont d-flex justify-center align-center" @click="download(item)">
+                <div
+                  class="DownloadCont d-flex justify-center align-center"
+                  @click="download(item)"
+                >
                   <v-icon> mdi-download </v-icon>
                 </div>
               </div>
@@ -75,12 +95,12 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
-import ConfirmationModal from '@/components/ConfirmationModal';
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default {
-  name: 'FilesSubmission',
+  name: "FilesSubmission",
   mixins: [stateExpansiveManager],
   components: {
     ConfirmationModal,
@@ -99,16 +119,16 @@ export default {
       // Modal de confirmacion
       showConfirmationModal: false,
       selectedItemData: [],
-      currentColumnDoc: '',
+      currentColumnDoc: "",
       settings: {
-        0: '',
-        1: 'New Insurance Policy',
-        2: 'Increase Insurable Risk',
-        3: 'Reduction Of Insurable',
-        4: 'Movement Without Premium',
-        5: 'Change Of Share',
-        6: 'Internal Adjustment',
-        7: 'Summary',
+        0: "",
+        1: "New Insurance Policy",
+        2: "Increase Insurable Risk",
+        3: "Reduction Of Insurable",
+        4: "Movement Without Premium",
+        5: "Change Of Share",
+        6: "Internal Adjustment",
+        7: "Summary",
       },
     };
   },
@@ -138,29 +158,29 @@ export default {
       console.log(val);
     },
     movementsValue(v) {
-      console.log('a', v);
+      console.log("a", v);
     },
     endorsementData(v) {
-      console.log('e', v);
+      console.log("e", v);
     },
   },
   computed: {
     ...mapGetters([
-      'documents',
-      'document',
-      'accountInformation',
-      'subscription_id',
-      'nameReference',
-      'type',
-      'docs',
-      'risk_type',
-      'downloadDocUrl',
-      'endorsementsDocuments',
+      "documents",
+      "document",
+      "accountInformation",
+      "subscription_id",
+      "nameReference",
+      "type",
+      "docs",
+      "risk_type",
+      "downloadDocUrl",
+      "endorsementsDocuments",
     ]),
-    ActiveShadow: function() {
+    ActiveShadow: function () {
       const parent = this.$parent;
       const parentComponentName = parent.$options.name;
-      if (parentComponentName == 'v-expansion-panel-content') {
+      if (parentComponentName == "v-expansion-panel-content") {
         return false;
       } else {
         return true;
@@ -170,7 +190,7 @@ export default {
       get() {
         const parent = this.$parent;
         const parentComponentName = parent.$options.name;
-        if (parentComponentName == 'v-expansion-panel-content') return 0;
+        if (parentComponentName == "v-expansion-panel-content") return 0;
         return 1;
       },
       set() {},
@@ -178,46 +198,46 @@ export default {
     signature: {
       get() {
         const parent = this.$parent.$parent.$parent.$parent;
-        if (!parent.$refs.componente) return '';
-        return parent.$refs.componente.signature || '';
+        if (!parent.$refs.componente) return "";
+        return parent.$refs.componente.signature || "";
       },
     },
     support: {
       get() {
         const parent = this.$parent.$parent.$parent.$parent;
-        if (!parent.$refs.componente) return '';
-        return parent.$refs.componente.support || '';
+        if (!parent.$refs.componente) return "";
+        return parent.$refs.componente.support || "";
       },
     },
   },
   async mounted() {
     /* set loadings (data) */
-    const lpa = 'loadingPanel';
+    const lpa = "loadingPanel";
 
     /* loaders to true */
     this[lpa] = !this[lpa];
 
     await this.checkSubscriptionStored();
-    await this.getCatalogByDocuments({ name: 'documents' });
+    await this.getCatalogByDocuments({ name: "documents" });
     await this.loadDocs();
 
     this[lpa] = false;
   },
   methods: {
     ...mapActions([
-      'registerIdSubscription',
-      'updateDataSubscription',
-      'save',
-      'upload',
-      'delete',
-      'DocumentsSubscriptionRisk',
-      'checkSubscriptionStored',
-      'getCatalogByDocuments',
-      'DownloadDoc',
-      'downloadDocument',
-      'saveMovement',
+      "registerIdSubscription",
+      "updateDataSubscription",
+      "save",
+      "upload",
+      "delete",
+      "DocumentsSubscriptionRisk",
+      "checkSubscriptionStored",
+      "getCatalogByDocuments",
+      "DownloadDoc",
+      "downloadDocument",
+      "saveMovement",
     ]),
-    ...mapMutations(['setLoading', 'addNotification', 'setDocuments']),
+    ...mapMutations(["setLoading", "addNotification", "setDocuments"]),
     /*
     CARGAMOS Y GUARDAMOS LAS IMAGENES,
     RECIBE POR PARAMETROS EL EVENTO Y EL
@@ -241,9 +261,14 @@ export default {
           if (this.subscription_id != null) {
             this.saveFile(ev.target.files[0], item, inputName);
           } else {
-            this.registerIdSubscription({}).finally(() => {
-              this.saveFile(ev.target.files[0], item, inputName);
+            this.setLoading();
+            this.addNotification({
+              type: "warning",
+              text: "Please create the subscription before uploading files.",
             });
+            // this.registerIdSubscription({}).finally(() => {
+            //   this.saveFile(ev.target.files[0], item, inputName);
+            // });
           }
 
           item.text = item.name;
@@ -251,7 +276,7 @@ export default {
         };
         reader.readAsDataURL(file);
       } else {
-        this.addNotification({ type: 'danger', text: 'Max 30 MB' });
+        this.addNotification({ type: "danger", text: "Max 30 MB" });
         this.setLoading();
       }
     },
@@ -260,7 +285,7 @@ export default {
       /* GUARDAMOS
           LA INFORMACIÓN DEL ARCHIVO
         */
-      var datos = file.name.split('.', 2);
+      var datos = file.name.split(".", 2);
 
       this.nameReference
         ? this.save({
@@ -270,25 +295,31 @@ export default {
           }).finally(() => {
             this.upload({
               file: file,
-              path: 'COT_' + this.subscription_id + '/ENDORSEMENTS_FILES/' + this.document,
+              path:
+                "COT_" +
+                this.subscription_id +
+                "/ENDORSEMENTS_FILES/" +
+                this.document,
             })
               .then(async (res) => {
                 if (res.error) {
                   this.DeleteFile(inputName, item);
-                  throw new Error('Error uploading file');
+                  throw new Error("Error uploading file");
                 }
                 item.uri = res.singleUpload.uri;
                 item.document = this.document;
                 this.setLoading();
-                const column = item.key.endsWith('_signature') ? 'signature' : 'support';
-                this.$emit('updateDocs', column, item.uri);
+                const column = item.key.endsWith("_signature")
+                  ? "signature"
+                  : "support";
+                this.$emit("updateDocs", column, item.uri);
               })
               .catch((e) => {
                 this.setLoading();
               });
           })
         : this.updateDataSubscription({
-            reference: 'COT-' + this.subscription_id,
+            reference: "COT-" + this.subscription_id,
           }).finally(() => {
             this.save({
               document_id: item.id,
@@ -297,10 +328,17 @@ export default {
             }).finally(() => {
               this.upload({
                 file: file,
-                path: 'COT_' + this.subscription_id + '/ENDORSEMENTS_FILES/' + this.document,
+                path:
+                  "COT_" +
+                  this.subscription_id +
+                  "/ENDORSEMENTS_FILES/" +
+                  this.document,
               })
                 .then((res) => {
-                  res.error ? this.DeleteFile(inputName, item) : (item.uri = res.singleUpload.uri), (item.document = this.document);
+                  res.error
+                    ? this.DeleteFile(inputName, item)
+                    : (item.uri = res.singleUpload.uri),
+                    (item.document = this.document);
                   this.setLoading();
                 })
                 .catch((e) => {
@@ -327,13 +365,13 @@ export default {
           this.delete(doc_s3)
             .then((res) => {
               if (!res.error) {
-                item.text = 'Upload the next document';
-                item.uri = '';
-                item.doc_s3 = '';
-                item.document = '';
+                item.text = "Upload the next document";
+                item.uri = "";
+                item.doc_s3 = "";
+                item.document = "";
               }
               this.setLoading();
-              this.$emit('deleteImage', {
+              this.$emit("deleteImage", {
                 imageNumber: inputName,
               });
               vm.$forceUpdate();
@@ -351,7 +389,11 @@ export default {
         this.downloadDocument(item.uri, item.text);
       } else if (item.doc_s3) {
         await this.DownloadDoc({
-          path: 'COT_' + this.subscription_id + '/ENDORSEMENTS_FILES/' + item.doc_s3,
+          path:
+            "COT_" +
+            this.subscription_id +
+            "/ENDORSEMENTS_FILES/" +
+            item.doc_s3,
         });
         this.downloadDocument(this.downloadDocUrl);
       }
@@ -376,17 +418,25 @@ export default {
       if (doc_s3) {
         this.showConfirmationModal = !this.showConfirmationModal;
       } else {
-        this.loadImage(this.selectedItemData[0], this.selectedItemData[1], this.selectedItemData[2]);
+        this.loadImage(
+          this.selectedItemData[0],
+          this.selectedItemData[1],
+          this.selectedItemData[2]
+        );
         this.selectedItemData = [];
       }
     },
     confirmLoadImage() {
-      this.loadImage(this.selectedItemData[0], this.selectedItemData[1], this.selectedItemData[2]);
+      this.loadImage(
+        this.selectedItemData[0],
+        this.selectedItemData[1],
+        this.selectedItemData[2]
+      );
       this.selectedItemData = [];
     },
     isDocument(key) {
-      if (key === 0 && this.signature == '') return true;
-      if (key === 1 && this.support == '') return true;
+      if (key === 0 && this.signature == "") return true;
+      if (key === 1 && this.support == "") return true;
       return false;
     },
   },
@@ -394,6 +444,6 @@ export default {
 </script>
 <style lang="less" scoped>
 //ESTILOS GENERALES DEL ACORDEON
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/FilesStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/FilesStyle.less";
 </style>

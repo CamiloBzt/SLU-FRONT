@@ -11,7 +11,7 @@
         <div class="LabelsColumn">
           <div class="LabelsColumn__TitleSpace" />
           <div class="LabelsColumn__Labels">Property Damage</div>
-          <div class="LabelsColumn__Labels">ALOP</div>
+          <div class="LabelsColumn__Labels">BI</div>
           <div class="LabelsColumn__Labels" v-if="displayStocks">Stocks</div>
         </div>
 

@@ -14,7 +14,7 @@
         <textarea class="textNote" v-model="text" />
         <template #no-result>
           <div class="dim">
-            {{ loading ? 'Loading...' : 'No result' }}
+            {{ loading ? "Loading..." : "No result" }}
           </div>
         </template>
 
@@ -40,9 +40,9 @@
   </div>
 </template>
 <script>
-import VTooltip from 'v-tooltip';
-import { Mentionable } from 'vue-mention';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import VTooltip from "v-tooltip";
+import { Mentionable } from "vue-mention";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     VTooltip,
@@ -50,35 +50,35 @@ export default {
   },
   data() {
     return {
-      text: '',
+      text: "",
       items: [],
       loading: false,
-    }
+    };
   },
   computed: {
-    ...mapGetters(['mentionsObject', 'subscription_id', 'user']),
+    ...mapGetters(["mentionsObject", "subscription_id", "user"]),
   },
   methods: {
-    ...mapActions(['usersName', 'registerIdSubscription', 'saveNote']),
-    ...mapMutations(['setLoading']),
+    ...mapActions(["usersName", "registerIdSubscription", "saveNote"]),
+    ...mapMutations(["setLoading"]),
     async showData() {
       if (this.text) {
         this.setLoading();
 
         const users_ids = this.items.filter((item, index) => {
-            return this.items.indexOf(item) === index;
-        })
-        
+          return this.items.indexOf(item) === index;
+        });
+
         if (this.subscription_id != null) {
           this.saveNote({
             description: this.text,
             subscription_id: this.subscription_id,
-            users_ids
+            users_ids,
           })
             .then((res) => {
               if (res) {
-                this.text = ''
-                this.items = []
+                this.text = "";
+                this.items = [];
               }
               this.setLoading();
               this.$forceUpdate();
@@ -87,40 +87,45 @@ export default {
               this.setLoading();
             });
         } else {
-          await this.registerIdSubscription({}).finally(() => {
-            this.saveNote({
-              description: this.text,
-              subscription_id: this.subscription_id,
-              users_ids
-            })
-              .then((res) => {
-                if (res) {
-                  this.text = '';
-                  this.items = []
-                }
-                this.setLoading();
-                this.$forceUpdate();
-              })
-              .catch((e) => {
-                this.setLoading();
-              });
+          this.setLoading();
+          this.addNotification({
+            type: "warning",
+            text: "Please create the submission before sending notes.",
           });
+          // await this.registerIdSubscription({}).finally(() => {
+          //   this.saveNote({
+          //     description: this.text,
+          //     subscription_id: this.subscription_id,
+          //     users_ids
+          //   })
+          //     .then((res) => {
+          //       if (res) {
+          //         this.text = '';
+          //         this.items = []
+          //       }
+          //       this.setLoading();
+          //       this.$forceUpdate();
+          //     })
+          //     .catch((e) => {
+          //       this.setLoading();
+          //     });
+          // });
         }
       }
     },
-    async loadIssues(searchText = '') {
+    async loadIssues(searchText = "") {
       this.loading = true;
       await this.usersName({ name: searchText });
       this.loading = false;
     },
     apply(item) {
-      this.items.push(item.id)
-    }
+      this.items.push(item.id);
+    },
   },
 };
 </script>
 <style lang="less">
-@import '~@/assets/style/mentions.less';
+@import "~@/assets/style/mentions.less";
 //CREAR NOTA
 .AddNotesComponent {
   width: 100%;
@@ -163,7 +168,7 @@ export default {
 
 .btn {
   text-transform: none;
-  color: #003D6D;
+  color: #003d6d;
   font-weight: 500 !important;
   letter-spacing: normal;
 }
