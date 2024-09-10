@@ -5,21 +5,37 @@
     </div>
 
     <div class="InputsCont d-flex flex-wrap align-start">
-      <div 
+      <div
         v-for="(payment, index) in paymentsWarranty"
         :key="index"
-        class="Line d-flex justify-space-between align-center">
+        class="Line d-flex justify-space-between align-center"
+      >
         <div class="Row">
           <v-text-field
-            @input="updateInstallmentName(payment.id, index)"
-            v-model="payment.name"
-            :label="'Installment ' + payment.id"
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'installment',
+                value: payment.installment,
+                index: index + 1,
+              })
+            "
+            v-model="payment.installment"
+            :label="'Installment ' + (index + 1)"
             type="number"
           />
         </div>
         <div class="Row">
           <v-text-field
-            v-model="payment.percentage"
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'percent',
+                value: payment.percent,
+                index: index + 1,
+              })
+            "
+            v-model="payment.percent"
             label="Percentage"
             type="number"
           />
@@ -35,7 +51,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="payment.paymentDate"
+                v-model="payment.date"
                 label="PPW Due Date"
                 v-bind="attrs"
                 v-on="on"
@@ -44,31 +60,53 @@
             <v-date-picker
               no-title
               color="#003D6D"
-              v-model="payment.paymentDate"
+              v-model="payment.date"
+              @change="
+                updatePayment({
+                  id: payment.id,
+                  column: 'ppw_date',
+                  value: payment.date,
+                  index: index + 1,
+                })
+              "
               @input="payment.showCalendar = false"
             />
           </v-menu>
         </div>
         <div class="Row">
           <v-select
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'id_payment_clause',
+                value: payment.idClause + '',
+                index: index + 1,
+              })
+            "
+            v-model="payment.idClause"
             label="Clause"
+            item-value="id"
+            item-text="clause"
+            :items="clauseList"
           />
         </div>
         <div class="remove-button">
-          <v-btn 
-          text 
-          @click="removePaymentWarranty(payment.id)"
+          <v-btn
+            text
+            @click="
+              [removePaymentWarranty(payment.id), deletePayment(payment.id)]
+            "
           >
             <v-icon> mdi-delete </v-icon>
           </v-btn>
         </div>
       </div>
       <div class="finishButtonCont d-flex justify-start align-center">
-        <v-btn 
+        <v-btn
           :disabled="addPaymentDisabled"
-          rounded 
-          large 
-          text 
+          rounded
+          large
+          text
           class="finishBtn"
           @click="addPaymentWarranty()"
         >
@@ -79,101 +117,131 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import { getAnalysisById } from './services/InputsRiskQuotator/inputs-risk-quotator.service.js';
+import { mapGetters } from "vuex";
+import { getAnalysisById } from "./services/InputsRiskQuotator/inputs-risk-quotator.service.js";
+import PaymentService from "@/modules/home/services/payments.service";
 
 export default {
-  name: 'PremiumPaymentWarranty',
+  name: "PremiumPaymentWarranty",
+  inject: ["deepDisabled"],
   data() {
     return {
+      subscriptionId: this.$route.params.subscriptionId,
+      clauseList: [],
       paymentsWarranty: [],
       addPaymentDisabled: false,
       menu: false,
-      exampleCalendar: '',
-      quotation: {},
+      exampleCalendar: "",
     };
   },
 
   async beforeMount() {
-    const analysisServices = await getAnalysisById({ id_subscription: this.subscription_id })
+    this.clauseList = await PaymentService.getClauses();
+    this.paymentsWarranty = await PaymentService.getPayments(
+      this.subscriptionId
+    );
+    const analysisServices = await getAnalysisById({
+      id_subscription: this.subscriptionId,
+    });
     this.quotation = {
-      inceptionDate: analysisServices.Quotation.inception_date
-    }
-  
+      inceptionDate: analysisServices.Quotation.inception_date,
+    };
   },
 
   computed: {
-    ...mapGetters([
-      'subscription_id',
-    ]),
+    ...mapGetters(["quotation"]),
   },
 
   methods: {
-
-    sumarDias(id, index){
-
+    sumarDias(id, index) {
       // Obtener el objeto de pago correspondiente
-      const payment = this.paymentsWarranty.find(p => p.id === id);
+      const payment = this.paymentsWarranty.find((p) => p.id === id);
 
       // Obtener la cantidad de días a sumar
-      const dias = +(payment.name);
-      //const dias = +(payment.installment);
+      const dias = +payment.installment;
 
-      // Crear un objeto de fecha 
+      // Crear un objeto de fecha
       const arrDate = this.quotation.inceptionDate.split("-");
       const resultado = new Date(`${arrDate[1]}-${arrDate[2]}-${arrDate[0]}`);
 
       // Agregar la cantidad de días indicada a la fecha
       resultado.setDate(resultado.getDate() + dias);
 
-      // Actualizar la fecha paymentDate
-      payment.paymentDate = resultado.toISOString().slice(0, 10);
-      //payment.date = resultado.toISOString().slice(0, 10)
+      // Actualizar la fecha
+      payment.date = resultado.toISOString().slice(0, 10);
 
       // Guardar en BD
-      /*this.updatePayment({
-        id:payment.id,
-        column:'ppw_date',
+      this.updatePayment({
+        id: payment.id,
+        column: "ppw_date",
         value: payment.date,
-        index: index
-      })*/
+        index: index,
+      });
+    },
 
+    async updatePayment({ id, column, value, index }) {
+      const subscriptionId = this.subscriptionId;
+      const paymentResponse = await PaymentService.addOrUpdatePayment(
+        {
+          id,
+          column,
+          value,
+        },
+        index,
+        subscriptionId
+      );
+
+      // asignar el id al objeto payment si el id es nulo
+      if (id === null) {
+        const payment = this.paymentsWarranty[index - 1];
+        payment.id = paymentResponse.id;
+      }
+
+      // sumar los dias
+      if (column === "installment") {
+        const paymentId = id || paymentResponse.id;
+        this.sumarDias(paymentId, index);
+      }
+    },
+
+    async deletePayment(id) {
+      const subscriptionId = this.subscriptionId;
+      await PaymentService.deletePayment(id, subscriptionId);
     },
 
     addPaymentWarranty() {
       // setear la fecha por default
       const defaultDate = this.quotation.inceptionDate;
 
-      if(this.paymentsWarranty.length < 4)  {
-        const totalPaymentsSaved = this.paymentsWarranty.length
+      if (this.paymentsWarranty.length < 4) {
+        const totalPaymentsSaved = this.paymentsWarranty.length;
         const newPayment = {
-          id: totalPaymentsSaved + 1,
-          name: '',
-          percentage: '',
-          paymentDate:defaultDate,
-          showCalendar:false
-        }
-        const addPayments = [...this.paymentsWarranty, newPayment]
-        this.paymentsWarranty = addPayments
+          id: null,
+          paymentIndex: totalPaymentsSaved + 1,
+          installment: "",
+          percent: "",
+          date: defaultDate,
+          idClause: "",
+          showCalendar: false,
+        };
+        const addPayments = [...this.paymentsWarranty, newPayment];
+        this.paymentsWarranty = addPayments;
       }
-      if(this.paymentsWarranty.length === 4) this.addPaymentDisabled = true
+      if (this.paymentsWarranty.length === 4) this.addPaymentDisabled = true;
     },
+
     removePaymentWarranty(idToDelete) {
-      const newArray = this.paymentsWarranty.filter((item) => item.id !== idToDelete);
-      this.paymentsWarranty = newArray
-      if(this.paymentsWarranty.length < 4) this.addPaymentDisabled = false
+      const newArray = this.paymentsWarranty.filter(
+        (item) => item.id !== idToDelete
+      );
+      this.paymentsWarranty = newArray;
+      if (this.paymentsWarranty.length < 4) this.addPaymentDisabled = false;
     },
-    
-    updateInstallmentName(id, index) {
-       // this.paymentsWarranty[id].name // Este es el numero de installment y su nuevo valor
-       this.sumarDias(id, index)
-    }
-    
-  }
-}
+  },
+};
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/Subscription/Bound.less";
 
 .Cont {
   width: 100%;
@@ -203,20 +271,22 @@ export default {
         justify-content: center;
         align-items: flex-end;
         align-content: flex-end;
-        i {color: #003D6D;}
+        i {
+          color: #003d6d;
+        }
       }
     }
   }
 }
 .finishBtn {
-  background: #003D6D;
+  background: #003d6d;
   color: white;
   height: 40px;
   width: 200px;
   font-size: 15px;
 }
-button.v-btn--disabled  {
-  opacity: .5 !important;
+button.v-btn--disabled {
+  opacity: 0.5 !important;
 }
 .theme--light.v-btn.v-btn--disabled {
   color: white !important;

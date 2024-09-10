@@ -34,7 +34,12 @@
             <currency-input
               :options="currencyOptions"
               v-model="mainLocation.businessInterruption"
-              @blur="saveField('business_interruption', mainLocation.businessInterruption)"
+              @blur="
+                saveField(
+                  'business_interruption',
+                  mainLocation.businessInterruption
+                )
+              "
               type="number"
             />
           </div>
@@ -68,7 +73,9 @@
 
         <div class="line border-bottom">
           <div class="input-row label bold-text">Total</div>
-          <div class="input-row bold-text justify-start">{{ formatter.format(total) }}</div>
+          <div class="input-row bold-text justify-start">
+            {{ formatter.format(total) }}
+          </div>
           <div class="input-row bold-text justify-start">
             {{ formatter.format(totalUsd) }} USD
           </div>
@@ -79,20 +86,23 @@
 </template>
 <script>
 /* libs */
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import Decimal from 'decimal.js';
-import numeral from 'numeral'
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import Decimal from "decimal.js";
+import numeral from "numeral";
 /* debounce */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 /* components */
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* services */
-import { getMainLocation, saveMainLocation } from './services/MainLocation/main-location.service'
+import {
+  getMainLocation,
+  saveMainLocation,
+} from "./services/MainLocation/main-location.service";
 
 export default {
   name: "MainLocation",
   components: { CurrencyInput },
-  data () {
+  data() {
     return {
       mainLocation: {
         damage: "",
@@ -111,112 +121,131 @@ export default {
         currencyDisplay: "narrowSymbol",
         locale: "en-US",
       },
-      formatter: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      formatter: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       }),
     };
   },
   computed: {
-    ...mapState({ 
+    ...mapState({
       realMainLocation: (state) => state.mainLocation,
     }),
     damageUsd: {
-      get () {
+      get() {
         // const percentDivided = Decimal.div(this.exchangeRate, 100)
-        const percentDivided = Decimal(this.exchangeRate)
-        const result = Decimal.div(this.mainLocation.damage || 0, percentDivided)
-        this.mainLocation.damageUsd = result.toNumber()
+        const percentDivided = Decimal(this.exchangeRate);
+        const result = Decimal.div(
+          this.mainLocation.damage || 0,
+          percentDivided
+        );
+        this.mainLocation.damageUsd = result.toNumber();
 
-        return this.mainLocation.damageUsd
-      }, set () { }
+        return this.mainLocation.damageUsd;
+      },
+      set() {},
     },
     businessInterruptionUsd: {
-      get () {
+      get() {
         // const percentDivided = Decimal.div(this.exchangeRate, 100)
-        const percentDivided = Decimal(this.exchangeRate)
-        const result = Decimal.div(this.mainLocation.businessInterruption || 0, percentDivided)
-        this.mainLocation.businessInterruptionUsd = result.toNumber()
+        const percentDivided = Decimal(this.exchangeRate);
+        const result = Decimal.div(
+          this.mainLocation.businessInterruption || 0,
+          percentDivided
+        );
+        this.mainLocation.businessInterruptionUsd = result.toNumber();
 
-        return this.mainLocation.businessInterruptionUsd
-      }, set () { }
+        return this.mainLocation.businessInterruptionUsd;
+      },
+      set() {},
     },
     stocksUsd: {
-      get () {
+      get() {
         // const percentDivided = Decimal.div(this.exchangeRate, 100)
-        const percentDivided = Decimal(this.exchangeRate)
-        const result = Decimal.div(this.mainLocation.stocks || 0, percentDivided)
-        this.mainLocation.stocksUsd = result.toNumber()
+        const percentDivided = Decimal(this.exchangeRate);
+        const result = Decimal.div(
+          this.mainLocation.stocks || 0,
+          percentDivided
+        );
+        this.mainLocation.stocksUsd = result.toNumber();
 
-        return this.mainLocation.stocksUsd
-      }, set () { }
+        return this.mainLocation.stocksUsd;
+      },
+      set() {},
     },
-    total () {
-      const total = Decimal.sum(Decimal(this.mainLocation.damage || 0), Decimal(this.mainLocation.businessInterruption || 0), Decimal(this.mainLocation.stocks || 0))
-      this.mainLocation.total = total.toNumber()
+    total() {
+      const total = Decimal.sum(
+        Decimal(this.mainLocation.damage || 0),
+        Decimal(this.mainLocation.businessInterruption || 0),
+        Decimal(this.mainLocation.stocks || 0)
+      );
+      this.mainLocation.total = total.toNumber();
 
-      return this.mainLocation.total
+      return this.mainLocation.total;
     },
-    totalUsd () {
-      const total = Decimal.sum(this.damageUsd, this.businessInterruptionUsd, this.stocksUsd)
-      this.mainLocation.totalUsd = total.toNumber()
+    totalUsd() {
+      const total = Decimal.sum(
+        this.damageUsd,
+        this.businessInterruptionUsd,
+        this.stocksUsd
+      );
+      this.mainLocation.totalUsd = total.toNumber();
 
-      return this.mainLocation.totalUsd
+      return this.mainLocation.totalUsd;
     },
   },
-  beforeMount () {
-    this.subscriptionId = this.$route.params?.subscriptionId
+  async beforeMount() {
+    this.subscriptionId = this.$route.params?.subscriptionId;
     if (this.subscriptionId) {
-      Promise.all([
-        this.getMainLocation(this.subscriptionId)     
-      ]).finally(() => { 
-        this.exchangeRate = numeral(
-          (`${data?.quotation.exchangeRate}` || '$0').replace(/[^0-9.]/g, '')
-        ).value() || 0
-        this.mainLocation = data?.boundNonPropMainLocation
-      })
+      const data = await getMainLocation(this.subscriptionId);
+      this.exchangeRate =
+        numeral(
+          (`${data?.quotation.exchangeRate}` || "$0").replace(/[^0-9.]/g, "")
+        ).value() || 0;
+      this.mainLocation = data?.boundNonPropMainLocation;
     }
   },
   methods: {
-    ...mapActions([
-      'getMainLocation'
-    ]),
-    async saveField (column, value) {
+    async saveField(column, value) {
       if (this.subscriptionId)
         await saveMainLocation(this.subscriptionId, column, value);
     },
   },
   watch: {
-    'mainLocation.damageUsd': {
+    "mainLocation.damageUsd": {
       handler: debounce(function (value) {
-        saveMainLocation(this.subscriptionId, 'damage_usd', value)
+        saveMainLocation(this.subscriptionId, "damage_usd", value);
       }, 1000),
     },
-    'mainLocation.businessInterruptionUsd': {
+    "mainLocation.businessInterruptionUsd": {
       handler: debounce(function (value) {
-        saveMainLocation(this.subscriptionId, 'business_interruption_usd', value)
+        saveMainLocation(
+          this.subscriptionId,
+          "business_interruption_usd",
+          value
+        );
       }, 1000),
     },
-    'mainLocation.stocksUsd': {
+    "mainLocation.stocksUsd": {
       handler: debounce(function (value) {
-        saveMainLocation(this.subscriptionId, 'stocks_usd', value)
+        saveMainLocation(this.subscriptionId, "stocks_usd", value);
       }, 1000),
     },
-    'mainLocation.total': {
+    "mainLocation.total": {
       handler: debounce(function (value) {
-        saveMainLocation(this.subscriptionId, 'total', value)
+        saveMainLocation(this.subscriptionId, "total", value);
       }, 1000),
     },
-    'mainLocation.totalUsd': {
+    "mainLocation.totalUsd": {
       handler: debounce(function (value) {
-        saveMainLocation(this.subscriptionId, 'total_usd', value)
+        saveMainLocation(this.subscriptionId, "total_usd", value);
       }, 1000),
     },
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/BoundRefactored.less';
+@import "~@/assets/style/Subscription/BoundRefactored.less";
 
 .main-location-cont {
   width: 100%;

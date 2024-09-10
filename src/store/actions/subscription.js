@@ -452,43 +452,36 @@ export default {
     /* agregar los resets de documentos si es necesario */
     removeKeyFromStorage("subscriptionData", "subscriptionId");
   },
-  async getSubscriptionList({ commit }, payload) {
+  async getSubscriptionList({ commit, state }, payload) {
     try {
-      const {
-        limit,
-        offset,
-        query1,
-        query2,
-        query3,
-        filterOrderBy = [["s.id", "desc"]],
-        filterSearch1 = "s.reference",
-        filterSearch2 = "s.reference",
-        filterSearch3 = "s.reference",
-      } = payload;
+      const { limit, offset } = payload;
 
-      const {
-        data: { getSubscriptionList },
-      } = await apolloClient.query({
-        query: getAllSubscriptionQuery,
-        variables: {
-          limit,
-          offset,
-          query1,
-          query2,
-          query3,
-          filterOrderBy,
-          filterSearch1,
-          filterSearch2,
-          filterSearch3,
-        },
-        fetchPolicy: "no-cache",
-      });
-      const { statusCode, message, response } = getSubscriptionList;
+      const page = Math.ceil(offset / limit) + 1;
 
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (state.subscriptionPages && state.subscriptionPages[page]) {
+        commit("setSubscriptionList", state.subscriptionPages[page]);
+      } else {
+        const {
+          data: { getSubscriptionList },
+        } = await apolloClient.query({
+          query: getAllSubscriptionQuery,
+          variables: {
+            limit,
+            offset,
+          },
+          fetchPolicy: "no-cache",
+        });
 
-      commit("setSubscriptionList", response);
+        const { statusCode, message, response } = getSubscriptionList;
+
+        if (statusCode != 200)
+          throw new Error(`Failed fetching data: ${message}`);
+
+        commit("cacheSubscriptionPage", { page, data: response });
+
+        commit("setSubscriptionList", response);
+      }
+
       commit("setSubscriptionListPagination", payload);
     } catch ({ message }) {
       const messageToDisplay =

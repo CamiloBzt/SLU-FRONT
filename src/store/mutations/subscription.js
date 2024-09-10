@@ -145,8 +145,24 @@ export default {
   set_correspondence_document(state, correspondenceDocuments) {
     state.correspondenceDocuments.push(correspondenceDocuments);
   },
+  cacheSubscriptionPage(state, { page, data }) {
+    if (!state.subscription.subscriptionPages) {
+      state.subscription.subscriptionPages = {};
+    }
+    state.subscription.subscriptionPages[page] = data;
+  },
   setSubscriptionList(state, payload) {
-    state.subscription.table.list = JSON.parse(payload);
+    const page = Math.ceil(payload.offset / payload.limit) + 1;
+
+    if (
+      state.subscription.subscriptionPages &&
+      state.subscription.subscriptionPages[page]
+    ) {
+      state.subscription.table.list =
+        state.subscription.subscriptionPages[page];
+    } else {
+      state.subscription.table.list = JSON.parse(payload);
+    }
   },
   setSubscriptionListPagination(state, payload) {
     state.subscription.table.limit = payload.limit;

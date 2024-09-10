@@ -366,7 +366,7 @@ export default {
         const op = this.propertyBusinessRate.mul(
           this.totalInsurableValue.stocksRate || 0
         );
-        return op;
+        return op / 100;
       },
       set() {},
     },

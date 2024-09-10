@@ -27,7 +27,8 @@
       </div>
 
       <div class="InputContent d-flex justify-end align-center">
-        <span class="LabelInput"> Business Interruption </span>
+        <span class="LabelInput" v-if="isPro"> Business Interruption </span>
+        <span class="LabelInput" v-if="!isPro"> ALOP </span>
 
         <div class="InputContainer">
           <!-- <v-text-field class="ml-3" v-model="tivNon.businessInterruption" type="number" prefix="$" @blur="calculeUSD()"></v-text-field> -->
@@ -153,7 +154,8 @@
       </div>
 
       <div class="InputContent d-flex justify-start align-center">
-        <span class="LabelInput"> Business Interruption </span>
+        <span class="LabelInput" v-if="isPro"> Business Interruption </span>
+        <span class="LabelInput" v-if="!isPro"> ALOP </span>
 
         <div class="InputContainer">
           <currency-input
@@ -309,6 +311,9 @@ export default {
       "accountInformation",
       "currencies",
     ]),
+    isPro() {
+      return this.accountInformation.typeOfRisk === 3;
+    },
     currentCurrency: {
       get() {
         if (

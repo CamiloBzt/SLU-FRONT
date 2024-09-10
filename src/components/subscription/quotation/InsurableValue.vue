@@ -11,7 +11,8 @@
         <div class="LabelsColumn">
           <div class="LabelsColumn__TitleSpace" />
           <div class="LabelsColumn__Labels">Property Damage</div>
-          <div class="LabelsColumn__Labels">BI</div>
+          <div class="LabelsColumn__Labels" v-if="isPro">BI</div>
+          <div class="LabelsColumn__Labels" v-if="!isPro">ALOP</div>
           <div class="LabelsColumn__Labels" v-if="displayStocks">Stocks</div>
         </div>
 
@@ -42,7 +43,8 @@
 
           <div class="InputLine">
             <!--LABEL-->
-            <div class="inputLabel ShowFlexOnMovil">ALOP</div>
+            <div class="inputLabel ShowFlexOnMovil" v-if="isPro">BI</div>
+            <div class="inputLabel ShowFlexOnMovil" v-if="!isPro">ALOP</div>
             <!--INPUT-->
             <div class="inputCont">
               <!-- <v-text-field v-model="tiv.businessInterruption" type="number" prefix="$" @blur="calcule()" text /> -->
@@ -114,7 +116,8 @@
           </div>
           <div class="InputLine">
             <!--LABEL-->
-            <div class="inputLabel ShowFlexOnMovil">ALOP</div>
+            <div class="inputLabel ShowFlexOnMovil" v-if="isPro">BI</div>
+            <div class="inputLabel ShowFlexOnMovil" v-if="!isPro">ALOP</div>
             <!--INPUT-->
             <div class="inputCont">
               <!-- <v-text-field v-model="tiv.businessInterruptionUsd" type="number" prefix="$" @blur="calcule()" text /> -->
@@ -223,6 +226,9 @@ export default {
       const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return true;
       return false;
+    },
+    isPro() {
+      return this.accountInformation.typeOfRisk === 3;
     },
     // currency
     currentCurrency: {

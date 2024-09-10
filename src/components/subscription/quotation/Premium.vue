@@ -21,7 +21,8 @@
 
         <!--CONTENIDO-->
         <div class="Row Label">Property Damage</div>
-        <div class="Row Label">BI</div>
+        <div class="Row Label" v-if="isPro">BI</div>
+        <div class="Row Label" v-if="!isPro">ALOP</div>
         <div class="Row Label" v-if="displayStocks">Stocks</div>
         <div class="Row Total">Total</div>
       </div>
@@ -55,7 +56,8 @@
           </div>
         </div>
         <div class="Row Content">
-          <div class="Label">ALOP</div>
+          <div class="Label" v-if="isPro">BI</div>
+          <div class="Label" v-if="!isPro">ALOP</div>
           <div class="Input">
             <v-text-field
               type="number"
@@ -117,7 +119,8 @@
           </div>
         </div>
         <div class="Row Content">
-          <div class="Label">ALOP</div>
+          <div class="Label" v-if="isPro">BI</div>
+          <div class="Label" v-if="!isPro">ALOP</div>
           <div class="Input">
             <currency-input
               v-model="premiumBusinessInterruption"
@@ -168,7 +171,8 @@
           </div>
         </div>
         <div class="Row Content">
-          <div class="Label">ALOP</div>
+          <div class="Label" v-if="isPro">BI</div>
+          <div class="Label" v-if="!isPro">ALOP</div>
           <div class="Input">
             <currency-input
               v-model="premiumBusinessInterruptionUsd"
@@ -274,6 +278,9 @@ export default {
       const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return true;
       return false;
+    },
+    isPro() {
+      return this.accountInformation.typeOfRisk === 3;
     },
     currentCurrency: {
       get() {
