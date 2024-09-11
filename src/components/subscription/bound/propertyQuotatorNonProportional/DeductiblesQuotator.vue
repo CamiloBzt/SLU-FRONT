@@ -200,7 +200,7 @@
           <!--Coverage B // ALOP-->
           <div class="DynamicItemsContent mt-8" v-if="this.showAlopLines">
             <div class="InputTitle d-flex justify-start align-center align-end">
-              ALOP Coverage B, Earthquake, Tremor or Volcanic Eruption
+              BI Coverage B, Earthquake, Tremor or Volcanic Eruption
             </div>
             <div
               class="InputsCont d-flex justify-space-between align-start flex-wrap"
@@ -209,14 +209,13 @@
                 <v-text-field
                   type="number"
                   suffix="DAY(S)"
-                  v-model.trim="$v.boundPropDeductibles.alopEarthquake.$model"
+                  v-model.trim="item.alopEarthquake"
                   @blur="
-                    SET_BOUND_PROP_DED({
-                      index: deductibleIndex,
-                      key: 'alopEarthquake',
-                      value: $v.boundPropDeductibles.alopEarthquake.$model,
-                    });
-                    checkField('alopEarthquake');
+                    saveValue(
+                      deductibleId,
+                      'alopEarthquake',
+                      item.alopEarthquake
+                    )
                   "
                 />
               </div>
@@ -225,7 +224,7 @@
           <!--Hydrometeorological Risk // ALOP-->
           <div class="DynamicItemsContent mt-7" v-if="this.showAlopLines">
             <div class="InputTitle d-flex justify-start align-center align-end">
-              ALOP Hidrometeorological Risk
+              BI Hidrometeorological Risk
             </div>
             <div
               class="InputsCont d-flex justify-space-between align-start flex-wrap"
@@ -234,15 +233,8 @@
                 <v-text-field
                   type="number"
                   suffix="DAY(S)"
-                  v-model.trim="$v.boundPropDeductibles.alopHidro.$model"
-                  @blur="
-                    SET_BOUND_PROP_DED({
-                      index: deductibleIndex,
-                      key: 'alopHidro',
-                      value: $v.boundPropDeductibles.alopHidro.$model,
-                    });
-                    checkField('alopHidro');
-                  "
+                  v-model.trim="item.alopHidro"
+                  @blur="saveValue(deductibleId, 'alopHidro', item.alopHidro)"
                 />
               </div>
             </div>
@@ -392,6 +384,7 @@
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
+
 <script>
 import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* components */
@@ -400,14 +393,18 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import { mapGetters } from "vuex";
 
 // Services
-import {
-  setFireDeductibleProperty,
-  setDeductible,
-  setNewFireDeductible,
-  getFireDeductible,
-  setDeleteFireDeductibleNonProp,
-} from "./services/Deductibles/deductibles.js";
 import { getCatalog } from "@/constants/catalogs/services/catalogs.service.js";
+import {
+  getFireDeductible,
+  setDeductible,
+  setDeleteFireDeductibleNonProp,
+  setFireDeductibleProperty,
+  setNewFireDeductible,
+} from "./services/Deductibles/deductibles.js";
+
+import NetPremiumNonPro from "@/application/class/NetPremiumNONPRO";
+import Decimal from "@/lib/decimal";
+import { getNetPremiumOriginalCurrencyById } from "./services/NetPremiunProperty/net-premiun-property.service.js";
 
 export default {
   name: "Deductibles",
@@ -447,9 +444,20 @@ export default {
         locale: "en-US",
       },
       boundNonPropDeductibles: [],
+      subscriptionId: this.$route.params.subscriptionId,
+      sluLine: 0,
+      premium: {},
+      deductions: {},
+      isColombia: true,
+      currencyOptions: {
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
+      },
     };
   },
   async beforeMount() {
+    await this.getInitialValues();
     const catalogUnderlying = await getCatalog({ name: "underlying_cats" });
     this.catalogUnderlying = catalogUnderlying ? catalogUnderlying : [];
     const catalogUnderlyingAplica = await getCatalog({
@@ -482,13 +490,137 @@ export default {
   },
   computed: {
     ...mapGetters(["mliv", "tiv", "subscription_id"]),
+    calculates() {
+      return new NetPremiumNonPro(
+        this.premium,
+        this.deductions,
+        this.sluLine,
+        false
+      );
+    },
     showAlopLines() {
-      if (this.mliv.bi) return true;
-      return false;
+      // Si biSluShare es mayor que 0, mostrar líneas ALOP
+      return this.calculates.biSluShare() > 0;
     },
   },
 
   methods: {
+    async getInitialValues() {
+      //Services
+      const netPremium = await getNetPremiumOriginalCurrencyById({
+        id_subscription: this.subscription_id,
+      });
+
+      //Calc
+      if (netPremium !== undefined) {
+        this.netPremium = { ...this.netPremium, ...netPremium };
+        const selectedLayer = netPremium.Layers[0] ? netPremium.Layers[0] : {};
+        //Need parseFloat
+        const sluLine = selectedLayer.slu_share
+          ? parseFloat(selectedLayer.slu_share.replace(/[^0-9.]/g, ""))
+          : 0;
+        this.sluLine = sluLine;
+
+        const premium = selectedLayer.premium
+          ? parseFloat(selectedLayer.premium.replace(/[^0-9.]/g, ""))
+          : 0;
+        const total = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.total.replace(/[^0-9.]/g, "")
+            )
+          : 0;
+        const propertyDamage = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.property_damage.replace(
+                /[^0-9.]/g,
+                ""
+              )
+            )
+          : 0;
+        const businessInterruption = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.business_interruption.replace(
+                /[^0-9.]/g,
+                ""
+              )
+            )
+          : 0;
+        const stock = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.stock.replace(/[^0-9.]/g, "")
+            )
+          : 0;
+        const porcentaje =
+          netPremium.QuotationInsured &&
+          netPremium.QuotationInsured.stock_percentaje
+            ? parseFloat(
+                netPremium.QuotationInsured.stock_percentaje.replace(
+                  /[^0-9.]/g,
+                  ""
+                )
+              )
+            : 0;
+        //Not need parseFloat
+        const brokerage = netPremium.Quotation
+          ? netPremium.Quotation.brokerage
+          : 0;
+        const taxes = netPremium.Quotation ? netPremium.Quotation.taxes : 0;
+        const eng = netPremium.Quotation ? netPremium.Quotation.eng : 0;
+        const fronting = netPremium.Quotation
+          ? netPremium.Quotation.fronting
+          : 0;
+        const premiumReserve = netPremium.Quotation
+          ? netPremium.Quotation.premium_reserve
+          : 0;
+        const lta = netPremium.Quotation ? netPremium.Quotation.lta : 0;
+        const others = netPremium.Quotation ? netPremium.Quotation.others : 0;
+        const deductionType = netPremium.Quotation
+          ? netPremium.Quotation.deduction_type
+          : "As Incurred";
+
+        const rate = !isNaN((premium / total) * 1000)
+          ? (premium / total) * 1000
+          : 0;
+        const rateStock = !isNaN((premium / total) * 10 * porcentaje)
+          ? (premium / total) * 10 * porcentaje
+          : 0;
+
+        //premium en original currency
+
+        const premiumDamage =
+          Decimal.mul(propertyDamage, rate).div(1000).toNumber() || 0;
+        const premiumBI = !isNaN((businessInterruption * rate) / 1000)
+          ? (businessInterruption * rate) / 1000
+          : 0;
+        const premiumStock =
+          Decimal.mul(stock, rateStock).div(1000).toNumber() || 0;
+        const exchange = netPremium.Quotation
+          ? parseFloat(
+              netPremium.Quotation.exchange_rate.replace(/[^0-9.]/g, "")
+            )
+          : 0;
+
+        this.deductions = {
+          brokerage,
+          taxes,
+          eng,
+          fronting,
+          premiumReserve,
+          lta,
+          others,
+          deductionType,
+        };
+
+        this.premium = {
+          propertyDamage: premiumDamage,
+          businessInterruption: premiumBI,
+          stock: premiumStock,
+          propertyDamageUsd: Decimal.div(premiumDamage, exchange).toNumber(),
+          businessInterruptionUsd: Decimal.div(premiumBI, exchange).toNumber(),
+          stockUsd: Decimal.div(premiumStock, exchange).toNumber(),
+        };
+      }
+    },
     async saveValue(index, key, value) {
       await setDeductible({ id: index, column: key, value: value.toString() });
     },

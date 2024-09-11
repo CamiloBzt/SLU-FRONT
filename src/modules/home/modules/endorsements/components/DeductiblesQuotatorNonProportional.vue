@@ -14,16 +14,27 @@
     <div class="ExpandContent justify-center">
       <div class="TitleCont d-flex justify-space-between align-center">
         <h5>Location</h5>
-        <v-btn text rounded @click="deleteDeductibleLocation(deductibles.underlyingCatDeductibles.id)">
+        <v-btn
+          text
+          rounded
+          @click="
+            deleteDeductibleLocation(deductibles.underlyingCatDeductibles.id)
+          "
+        >
           <v-icon> mdi-delete </v-icon>
           Delete This Location
         </v-btn>
       </div>
       <!--Coverage B // ALOP-->
       <div class="DynamicItemsContent">
-        <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
+        <div
+          class="InputsCont d-flex justify-space-between align-start flex-wrap"
+        >
           <div class="InputRow">
-            <v-text-field v-model.trim="item.location" @blur="onUnderlyingCatDeductiblesChange" />
+            <v-text-field
+              v-model.trim="item.location"
+              @blur="onUnderlyingCatDeductiblesChange"
+            />
           </div>
         </div>
       </div>
@@ -32,62 +43,121 @@
       </div>
 
       <!--Coverage B-->
-      <div class="InputTitle d-flex justify-start align-center align-end">Tremor or Volcanic Eruption</div>
-      <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
+      <div class="InputTitle d-flex justify-start align-center align-end">
+        Tremor or Volcanic Eruption
+      </div>
+      <div
+        class="InputsCont d-flex justify-space-between align-start flex-wrap"
+      >
         <div class="InputRow Small">
-          <v-select v-model.trim="item.volcanic_eruption" @blur="onUnderlyingCatDeductiblesChange" :items="catalogUnderlying" item-text="data"
-            item-value="id" clearable :disabled="catalogUnderlying.length === 0"></v-select>
+          <v-select
+            v-model.trim="item.volcanic_eruption"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :items="catalogUnderlying"
+            item-text="data"
+            item-value="id"
+            clearable
+            :disabled="catalogUnderlying.length === 0"
+          ></v-select>
         </div>
         <div class="InputRow Large">
-          <v-select v-model.trim="item.total_volcanic" @blur="onUnderlyingCatDeductiblesChange" :items="catalogUnderlyingAplica" item-text="data"
-            label="Total value" item-value="id" clearable :disabled="catalogUnderlyingAplica.length === 0"></v-select>
+          <v-select
+            v-model.trim="item.total_volcanic"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :items="catalogUnderlyingAplica"
+            item-text="data"
+            label="Total value"
+            item-value="id"
+            clearable
+            :disabled="catalogUnderlyingAplica.length === 0"
+          ></v-select>
         </div>
         <div class="InputRow">
           <v-text-field value="Minimum" readonly />
         </div>
         <div class="InputRow">
-          <currency-input v-model.trim="item.minimum_volcanic" @blur="onUnderlyingCatDeductiblesChange" :options="currencyOptions" />
+          <currency-input
+            v-model.trim="item.minimum_volcanic"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :options="currencyOptions"
+          />
         </div>
         <div class="InputRow">
           <v-text-field value="Maximum" readonly />
         </div>
         <div class="InputRow">
-          <currency-input v-model.trim="item.maximum_volcanic" @blur="onUnderlyingCatDeductiblesChange" :options="currencyOptions" />
+          <currency-input
+            v-model.trim="item.maximum_volcanic"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :options="currencyOptions"
+          />
         </div>
       </div>
       <!--Hydrometeorological Risk-->
-      <div class="InputTitle d-flex justify-start align-end mt-7">Hidrometeorological Risk</div>
-      <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
+      <div class="InputTitle d-flex justify-start align-end mt-7">
+        Hidrometeorological Risk
+      </div>
+      <div
+        class="InputsCont d-flex justify-space-between align-start flex-wrap"
+      >
         <div class="InputRow Small">
-          <v-select v-model.trim="item.hidrometeorological" @blur="onUnderlyingCatDeductiblesChange" :items="catalogUnderlying" item-text="data"
-            item-value="id" clearable :disabled="catalogUnderlying.length === 0"></v-select>
+          <v-select
+            v-model.trim="item.hidrometeorological"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :items="catalogUnderlying"
+            item-text="data"
+            item-value="id"
+            clearable
+            :disabled="catalogUnderlying.length === 0"
+          ></v-select>
         </div>
         <div class="InputRow Large">
-          <v-select v-model.trim="item.total_hidrometeorological" @blur="onUnderlyingCatDeductiblesChange" :items="catalogUnderlyingAplica"
-            item-text="data" label="Total value" item-value="id" clearable
-            :disabled="catalogUnderlyingAplica.length === 0"></v-select>
+          <v-select
+            v-model.trim="item.total_hidrometeorological"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :items="catalogUnderlyingAplica"
+            item-text="data"
+            label="Total value"
+            item-value="id"
+            clearable
+            :disabled="catalogUnderlyingAplica.length === 0"
+          ></v-select>
         </div>
         <div class="InputRow">
           <v-text-field value="Minimum" readonly />
         </div>
         <div class="InputRow">
-          <currency-input v-model.trim="item.minimum_hidrometeorological" @blur="onUnderlyingCatDeductiblesChange" :options="currencyOptions" />
+          <currency-input
+            v-model.trim="item.minimum_hidrometeorological"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :options="currencyOptions"
+          />
         </div>
         <div class="InputRow">
           <v-text-field value="Maximum" readonly />
         </div>
         <div class="InputRow">
-          <currency-input v-model.trim="item.maximum_hidrometeorological" @blur="onUnderlyingCatDeductiblesChange" :options="currencyOptions" />
+          <currency-input
+            v-model.trim="item.maximum_hidrometeorological"
+            @blur="onUnderlyingCatDeductiblesChange"
+            :options="currencyOptions"
+          />
         </div>
       </div>
 
       <!--Coverage B // ALOP-->
       <div class="DynamicItemsContent mt-8" v-if="this.showAlopLines">
-        <div class="InputTitle d-flex justify-start align-center align-end">ALOP Coverage B, Earthquake, Tremor or
-          Volcanic Eruption</div>
-        <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
+        <div class="InputTitle d-flex justify-start align-center align-end">
+          BI Coverage B, Earthquake, Tremor or Volcanic Eruption
+        </div>
+        <div
+          class="InputsCont d-flex justify-space-between align-start flex-wrap"
+        >
           <div class="InputRow">
-            <v-text-field type="number" suffix="DAY(S)" v-model.trim="$v.boundPropDeductibles.alopEarthquake.$model"
+            <v-text-field
+              type="number"
+              suffix="DAY(S)"
+              v-model.trim="$v.boundPropDeductibles.alopEarthquake.$model"
               @blur="
                 /*SET_BOUND_PROP_DED({
                   index: deductibleIndex,
@@ -95,23 +165,33 @@
                   value: $v.boundPropDeductibles.alopEarthquake.$model,
                 });
               checkField('alopEarthquake');*/
-              " />
+              "
+            />
           </div>
         </div>
       </div>
       <!--Hydrometeorological Risk // ALOP-->
       <div class="DynamicItemsContent mt-7" v-if="this.showAlopLines">
-        <div class="InputTitle d-flex justify-start align-center align-end">ALOP Hidrometeorological Risk</div>
-        <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
+        <div class="InputTitle d-flex justify-start align-center align-end">
+          BI Hidrometeorological Risk
+        </div>
+        <div
+          class="InputsCont d-flex justify-space-between align-start flex-wrap"
+        >
           <div class="InputRow">
-            <v-text-field type="number" suffix="DAY(S)" v-model.trim="$v.boundPropDeductibles.alopHidro.$model" @blur="
-              /*SET_BOUND_PROP_DED({
+            <v-text-field
+              type="number"
+              suffix="DAY(S)"
+              v-model.trim="$v.boundPropDeductibles.alopHidro.$model"
+              @blur="
+                /*SET_BOUND_PROP_DED({
                 index: deductibleIndex,
                 key: 'alopHidro',
                 value: $v.boundPropDeductibles.alopHidro.$model,
               });
             checkField('alopHidro');*/
-            " />
+              "
+            />
           </div>
         </div>
       </div>
@@ -122,15 +202,29 @@
       </div>
 
       <!--Contenedor de deducibles-->
-      <div class="UnderlyingCont d-flex align-start flex-wrap" v-for="(item, index) in boundNonPropDeductibles"
-        :key="index">
+      <div
+        class="UnderlyingCont d-flex align-start flex-wrap"
+        v-for="(item, index) in boundNonPropDeductibles"
+        :key="index"
+      >
         <!--Fila con todos los inputs-->
         <div class="LineItems">
           <div class="Row">
-            <v-autocomplete v-model.trim="item.underlying_fire" :filter="filter" :hide-no-data="!item.search"
-              :items="catalogUnderlyingFire" :search-input.sync="item.search" @change="" hide-selected item-text="data"
+            <v-autocomplete
+              v-model.trim="item.underlying_fire"
+              :filter="filter"
+              :hide-no-data="!item.search"
+              :items="catalogUnderlyingFire"
+              :search-input.sync="item.search"
+              @change=""
+              hide-selected
+              item-text="data"
               @blur="onUnderlyingFireECDeductiblesChange"
-              item-value="id" label="Search for an option" clearable :disabled="catalogUnderlyingFire.length === 0">
+              item-value="id"
+              label="Search for an option"
+              clearable
+              :disabled="catalogUnderlyingFire.length === 0"
+            >
               <template v-slot:no-data>
                 <v-list-item>
                   <span class="subheading">Creating new </span>
@@ -149,34 +243,68 @@
           </div>
 
           <div class="Row Small">
-            <v-select v-model.trim="item.underlying_fire_number" @blur="onUnderlyingFireECDeductiblesChange" :items="catalogUnderlying" item-text="data"
-              item-value="id" clearable :disabled="catalogUnderlying.length === 0"></v-select>
+            <v-select
+              v-model.trim="item.underlying_fire_number"
+              @blur="onUnderlyingFireECDeductiblesChange"
+              :items="catalogUnderlying"
+              item-text="data"
+              item-value="id"
+              clearable
+              :disabled="catalogUnderlying.length === 0"
+            ></v-select>
           </div>
           <div class="Row Large">
-            <v-select v-model.trim="item.underlying_fire_total" @blur="onUnderlyingFireECDeductiblesChange" :items="catalogUnderlyingFireAplica"
-              item-text="data" label="Total value" item-value="id" clearable
-              :disabled="catalogUnderlyingFireAplica.length === 0"></v-select>
+            <v-select
+              v-model.trim="item.underlying_fire_total"
+              @blur="onUnderlyingFireECDeductiblesChange"
+              :items="catalogUnderlyingFireAplica"
+              item-text="data"
+              label="Total value"
+              item-value="id"
+              clearable
+              :disabled="catalogUnderlyingFireAplica.length === 0"
+            ></v-select>
           </div>
           <div class="Row">
             <v-text-field value="Minimum" readonly />
           </div>
           <div class="Row">
-            <currency-input :options="currencyOptions" v-model.trim="item.underlying_fire_minimum" @blur="onUnderlyingFireECDeductiblesChange" />
+            <currency-input
+              :options="currencyOptions"
+              v-model.trim="item.underlying_fire_minimum"
+              @blur="onUnderlyingFireECDeductiblesChange"
+            />
           </div>
           <div class="Row">
             <v-text-field value="Maximum" readonly />
           </div>
           <div class="Row">
-            <currency-input :options="currencyOptions" v-model.trim="item.underlying_fire_maximum" @blur="onUnderlyingFireECDeductiblesChange" />
+            <currency-input
+              :options="currencyOptions"
+              v-model.trim="item.underlying_fire_maximum"
+              @blur="onUnderlyingFireECDeductiblesChange"
+            />
           </div>
           <!-- botón de eliminado (debug only) -->
-          <v-icon small @click="()=>removeFireDeductible(item.id)" class="mt-4"> mdi-minus-circle </v-icon>
+          <v-icon
+            small
+            @click="() => removeFireDeductible(item.id)"
+            class="mt-4"
+          >
+            mdi-minus-circle
+          </v-icon>
         </div>
       </div>
 
       <!--Boton para añadir deducible-->
       <div class="ButtonCont">
-        <v-btn class="Btn" text rounded @click="addFireDeductible" :loading="buttonLoader">
+        <v-btn
+          class="Btn"
+          text
+          rounded
+          @click="addFireDeductible"
+          :loading="buttonLoader"
+        >
           <v-icon class="mr-2"> mdi-plus-circle </v-icon>
           Add Deductible
         </v-btn>
@@ -188,11 +316,11 @@
   </div>
 </template>
 <script>
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 //Tienda
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 // Services
 // import {
@@ -202,10 +330,10 @@ import { mapGetters } from 'vuex';
 //   getFireDeductible,
 //   setDeleteFireDeductibleNonProp,
 // } from './services/Deductibles/deductibles.js';
-import { getCatalog } from '@/constants/catalogs/services/catalogs.service.js';
+import { getCatalog } from "@/constants/catalogs/services/catalogs.service.js";
 
 export default {
-  name: 'DeductiblesQuotatorNonProportional',
+  name: "DeductiblesQuotatorNonProportional",
   components: { CurrencyInput },
   mixins: [stateExpansiveManager],
   // inject: ['deepDisabled'],
@@ -221,71 +349,86 @@ export default {
     },*/
 
     deductibles: {
-      type:Object,
+      type: Object,
     },
   },
   data() {
-    const underlyingCatDeductibles = this.deductibles.underlyingCatDeductibles
-    const underlyingFireECDeductibles = this.deductibles.underlyingFireEcDeductibles
+    const underlyingCatDeductibles = this.deductibles.underlyingCatDeductibles;
+    const underlyingFireECDeductibles =
+      this.deductibles.underlyingFireEcDeductibles;
     return {
       catalogUnderlying: [],
       catalogUnderlyingAplica: [],
       catalogUnderlyingValues: [],
       catalogUnderlyingFire: [],
       catalogUnderlyingFireAplica: [],
-      underlyingFireSelect: '',
-      underlyingFireNumberSelect: '',
-      underlyingFireAplicaSelect: '',
+      underlyingFireSelect: "",
+      underlyingFireNumberSelect: "",
+      underlyingFireAplicaSelect: "",
       buttonLoader: false,
       search: null,
-      model: '',
+      model: "",
       editing: null,
       prueba: 0,
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
 
       boundNonPropDeductibles: underlyingFireECDeductibles.map((u, index) => {
         return {
-          id: index+1, // id para manipular el array
+          id: index + 1, // id para manipular el array
           search: null,
           data: null,
           ...u,
         };
       }),
 
-      showAlopLines:false,
+      showAlopLines: false,
 
       item: {
         ...underlyingCatDeductibles,
       },
-
     };
   },
   async beforeMount() {
-    const catalogUnderlying = await getCatalog({ name: 'underlying_cats' });
+    const catalogUnderlying = await getCatalog({ name: "underlying_cats" });
     this.catalogUnderlying = catalogUnderlying ? catalogUnderlying : [];
-    const catalogUnderlyingAplica = await getCatalog({ name: 'underlying_cat_aplica' });
-    this.catalogUnderlyingAplica = catalogUnderlyingAplica ? catalogUnderlyingAplica : [];
-    const catalogUnderlyingValues = await getCatalog({ name: 'underlying_cat_values' });
-    this.catalogUnderlyingValues = catalogUnderlyingValues ? catalogUnderlyingValues : [];
-    const catalogUnderlyingFire = await getCatalog({ name: 'underlying_fire_quotator' });
-    this.catalogUnderlyingFire = catalogUnderlyingFire ? catalogUnderlyingFire : [];
-    const catalogUnderlyingFireAplica = await getCatalog({ name: 'underlying_fire_aplica' });
-    this.catalogUnderlyingFireAplica = catalogUnderlyingFireAplica ? catalogUnderlyingFireAplica : [];
+    const catalogUnderlyingAplica = await getCatalog({
+      name: "underlying_cat_aplica",
+    });
+    this.catalogUnderlyingAplica = catalogUnderlyingAplica
+      ? catalogUnderlyingAplica
+      : [];
+    const catalogUnderlyingValues = await getCatalog({
+      name: "underlying_cat_values",
+    });
+    this.catalogUnderlyingValues = catalogUnderlyingValues
+      ? catalogUnderlyingValues
+      : [];
+    const catalogUnderlyingFire = await getCatalog({
+      name: "underlying_fire_quotator",
+    });
+    this.catalogUnderlyingFire = catalogUnderlyingFire
+      ? catalogUnderlyingFire
+      : [];
+    const catalogUnderlyingFireAplica = await getCatalog({
+      name: "underlying_fire_aplica",
+    });
+    this.catalogUnderlyingFireAplica = catalogUnderlyingFireAplica
+      ? catalogUnderlyingFireAplica
+      : [];
   },
   computed: {
     //...mapGetters(['mliv', 'tiv', 'subscription_id']),
-
   },
 
   methods: {
-    deleteDeductibleLocation(id){
-      this.$emit('deleteThisDeductibleLocationNonProp', id)
+    deleteDeductibleLocation(id) {
+      this.$emit("deleteThisDeductibleLocationNonProp", id);
     },
-    onUnderlyingCatDeductiblesChange(){
+    onUnderlyingCatDeductiblesChange() {
       const underlyingCatDeductibles = {
         location: this.item.location,
         volcanicEruption: this.item.volcanic_eruption,
@@ -296,32 +439,36 @@ export default {
         totalHidrometeorological: this.item.total_hidrometeorological,
         minimumHidrometeorological: this.item.minimum_hidrometeorological,
         maximumHidrometeorological: this.item.maximum_hidrometeorological,
-      }
+      };
 
-      this.$emit("setTechnicalConditionsUpdate", {underlyingCatDeductibles});
+      this.$emit("setTechnicalConditionsUpdate", { underlyingCatDeductibles });
     },
 
-    onUnderlyingFireECDeductiblesChange(){
-      const underlyingFireEcDeductibles = this.boundNonPropDeductibles.map(u => {
-        return {
-          underlyingFire: u.underlying_fire,
-          underlyingFireNumber: u.underlying_fire_number,
-          underlyingFireTotal: u.underlying_fire_total,
-          underlyingFireMinimum: u.underlying_fire_minimum,
-          underlyingFireMaximum: u.underlying_fire_maximum,
+    onUnderlyingFireECDeductiblesChange() {
+      const underlyingFireEcDeductibles = this.boundNonPropDeductibles.map(
+        (u) => {
+          return {
+            underlyingFire: u.underlying_fire,
+            underlyingFireNumber: u.underlying_fire_number,
+            underlyingFireTotal: u.underlying_fire_total,
+            underlyingFireMinimum: u.underlying_fire_minimum,
+            underlyingFireMaximum: u.underlying_fire_maximum,
+          };
         }
-      })
+      );
 
-      this.$emit("setTechnicalConditionsUpdate", {underlyingFireEcDeductibles});
+      this.$emit("setTechnicalConditionsUpdate", {
+        underlyingFireEcDeductibles,
+      });
     },
 
-    addFireDeductible(){
+    addFireDeductible() {
       const highestId = this.boundNonPropDeductibles.reduce((prev, current) => {
-        return (current.id > prev) ? current.id : prev;
+        return current.id > prev ? current.id : prev;
       }, 0);
 
       this.boundNonPropDeductibles.push({
-        id: 1+highestId, // id para manipular el array
+        id: 1 + highestId, // id para manipular el array
         underlying_fire: 0,
         search: null,
         data: null,
@@ -329,11 +476,13 @@ export default {
         underlying_fire_total: 0,
         underlying_fire_minimum: 0,
         underlying_fire_maximum: 0,
-      })
+      });
     },
 
-    removeFireDeductible(index){
-      this.boundNonPropDeductibles = this.boundNonPropDeductibles.filter(u => u.id != index)
+    removeFireDeductible(index) {
+      this.boundNonPropDeductibles = this.boundNonPropDeductibles.filter(
+        (u) => u.id != index
+      );
       this.onUnderlyingFireECDeductiblesChange();
     },
 
@@ -351,10 +500,13 @@ export default {
     // },
     filter(item, queryText, itemText) {
       if (item.header) return false;
-      const hasValue = (val) => (val != null ? val : '');
+      const hasValue = (val) => (val != null ? val : "");
       const text = hasValue(itemText);
       const query = hasValue(queryText);
-      return text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
+      return (
+        text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) >
+        -1
+      );
     },
     // async deleteFireDeductible(id) {
     //   await setDeleteFireDeductibleNonProp({ id: id });
@@ -364,8 +516,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 
 .InputTitle {
   width: 95%;
