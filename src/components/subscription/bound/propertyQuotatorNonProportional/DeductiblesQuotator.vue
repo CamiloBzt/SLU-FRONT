@@ -209,12 +209,12 @@
                 <v-text-field
                   type="number"
                   suffix="DAY(S)"
-                  v-model.trim="item.alopEarthquake"
+                  v-model.trim="item.alop_earthquake"
                   @blur="
                     saveValue(
                       deductibleId,
-                      'alopEarthquake',
-                      item.alopEarthquake
+                      'alop_earthquake',
+                      item.alop_earthquake
                     )
                   "
                 />
@@ -233,8 +233,14 @@
                 <v-text-field
                   type="number"
                   suffix="DAY(S)"
-                  v-model.trim="item.alopHidro"
-                  @blur="saveValue(deductibleId, 'alopHidro', item.alopHidro)"
+                  v-model.trim="item.alop_hidrometeorological"
+                  @blur="
+                    saveValue(
+                      deductibleId,
+                      'alop_hidrometeorological',
+                      item.alop_hidrometeorological
+                    )
+                  "
                 />
               </div>
             </div>

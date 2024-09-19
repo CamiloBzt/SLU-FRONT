@@ -53,7 +53,7 @@ export default {
 
       this.getSubscriptionList(this.pagination).then(() => {
         var table = document.querySelector(".TableContentInner");
-        table.scrollTop = table.scrollHeight - table.clientHeight;
+        table.scrollTop = table.clientHeight - table.scrollHeight;
       });
     },
   },
