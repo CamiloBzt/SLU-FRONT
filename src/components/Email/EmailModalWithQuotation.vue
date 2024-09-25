@@ -32,7 +32,11 @@
               :account="nameReference"
               :reference="nameReference"
             />
-            <CcParticipantsQuotation ref="ccClose" :ccParticipants="ccParticipants" v-model="ccParticipants" />
+            <CcParticipantsQuotation
+              ref="ccClose"
+              :ccParticipants="ccParticipants"
+              v-model="ccParticipants"
+            />
             <CcoParticipantsQuotation
               ref="ccoClose"
               :ccoParticipants="ccoParticipants"
@@ -66,11 +70,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
-import EmailEditor from "@/components/Email/EmailEditor.vue";
 import CcParticipantsQuotation from "@/components/Email/CCParticipantsQuotation.vue";
 import CcoParticipantsQuotation from "@/components/Email/CCoParticipantsQuotation.vue";
+import EmailEditor from "@/components/Email/EmailEditor.vue";
 import EmailHeader from "@/components/Email/EmailHeader.vue";
 
 /* mixins */
@@ -92,30 +96,29 @@ export default {
     },
     item: {
       type: Number | String,
-    }
+    },
   },
   data() {
     return {
       /* Datos que se envían a las partes que conforman el componente para redactar correos */
       loadingLanguages: false,
       ccParticipants: [],
-      htmlTemp: '',
+      htmlTemp: "",
       ccValue: null, //cc que elige el usuario
 
       //CCO Participants
-      ccoParticipants: [
-      ],
+      ccoParticipants: [],
       ccoValue: null, //cco que elige el usuario,
       showModal: false,
-      attachmentFiles: []
+      attachmentFiles: [],
     };
   },
   async mounted() {
     await this.getSignatureByEmail({
-      email: JSON.parse(localStorage.getItem('accountOutlook')).username
-    })
+      email: JSON.parse(localStorage.getItem("accountOutlook")).username,
+    });
 
-    this.ccParticipants = this.contactsInformation.map(e => e.email)
+    this.ccParticipants = this.contactsInformation.map((e) => e.email);
 
     /* set loadings (data) */
     const lla = "loadingLanguages";
@@ -136,13 +139,13 @@ export default {
       "subscription_id",
       "selectedLang",
       "lang",
-      'contactsInformation',
-      'userSignature'
+      "contactsInformation",
+      "userSignature",
     ]),
     ...mapState({
-      htmlTemplate: state => state.htmlTemplate,
-      selectedLang: state => state.selectedLang,
-      template: state => state.currentEmailTemplate
+      htmlTemplate: (state) => state.htmlTemplate,
+      selectedLang: (state) => state.selectedLang,
+      template: (state) => state.currentEmailTemplate,
     }),
     /* html template */
     currentLang: {
@@ -150,26 +153,26 @@ export default {
         return this.selectedLang;
       },
       async set(value) {
-        this.SET_SELECTED_TEMPLATE_LANG(value)
-        this.SET_LANG_MAIL_TEMPLATE(value)
+        this.SET_SELECTED_TEMPLATE_LANG(value);
+        this.SET_LANG_MAIL_TEMPLATE(value);
         await this.setTemplateLang(this.item);
       },
     },
   },
   methods: {
     ...mapActions([
-      'setEmailTemplate',
-      'getEmailTemplate',
-      'sendEmailAction',
-      'getCatalogByName',
-      'setCurrentTemplateLanguage',
-      'getCurrentTemplateLanguage',
-      'resetTemplateLang',
-      'sendEmail',
-      'getTemplateEmail',
-      'getSignatureByEmail'
+      "setEmailTemplate",
+      "getEmailTemplate",
+      "sendEmailAction",
+      "getCatalogByName",
+      "setCurrentTemplateLanguage",
+      "getCurrentTemplateLanguage",
+      "resetTemplateLang",
+      "sendEmail",
+      "getTemplateEmail",
+      "getSignatureByEmail",
     ]),
-    ...mapMutations(['SET_LANG_MAIL_TEMPLATE', 'SET_SELECTED_TEMPLATE_LANG']),
+    ...mapMutations(["SET_LANG_MAIL_TEMPLATE", "SET_SELECTED_TEMPLATE_LANG"]),
     async send() {
       this.sendEmail();
     },
@@ -209,7 +212,7 @@ export default {
         body: this.template,
         cc,
         cco,
-        attachmentFiles: this.attachmentFiles
+        attachmentFiles: this.attachmentFiles,
       };
 
       await this.sendEmailAction({ emailData });
@@ -221,8 +224,8 @@ export default {
       this.ccoValue = null;
     },
     getAttachmentFiles(attachmentFiles) {
-      this.attachmentFiles = attachmentFiles
-    }
+      this.attachmentFiles = attachmentFiles;
+    },
   },
 };
 </script>

@@ -23,7 +23,13 @@
         <div>
           <v-icon>mdi-paperclip</v-icon>
         </div>
-        <input ref="filesInput" @change="getFilesUpload($event)" multiple type="file" name="" />
+        <input
+          ref="filesInput"
+          @change="getFilesUpload($event)"
+          multiple
+          type="file"
+          name=""
+        />
       </label>
 
       <div class="ButtonsGroup d-flex justify-start align-center">
@@ -31,35 +37,83 @@
           <v-icon>mdi-format-text</v-icon>
         </v-btn>
 
-        <v-btn icon large class="Btn" :class="{ activeBtn: bold }" @click="activeEditor('bold')">
+        <v-btn
+          icon
+          large
+          class="Btn"
+          :class="{ activeBtn: bold }"
+          @click="activeEditor('bold')"
+        >
           <v-icon>mdi-format-bold</v-icon>
         </v-btn>
 
-        <v-btn icon large class="Btn" :class="{ activeBtn: italic }" @click="activeEditor('italic')">
+        <v-btn
+          icon
+          large
+          class="Btn"
+          :class="{ activeBtn: italic }"
+          @click="activeEditor('italic')"
+        >
           <v-icon>mdi-format-italic</v-icon>
         </v-btn>
 
-        <v-btn icon large class="Btn" :class="{ activeBtn: underline }" @click="activeEditor('underline')">
+        <v-btn
+          icon
+          large
+          class="Btn"
+          :class="{ activeBtn: underline }"
+          @click="activeEditor('underline')"
+        >
           <v-icon>mdi-format-underline</v-icon>
         </v-btn>
 
         <div class="lineSeparator"></div>
 
-        <v-btn icon large class="Btn" :class="{ activeBtn: alignCenter }" @click="activeEditor('alignCenter')">
+        <v-btn
+          icon
+          large
+          class="Btn"
+          :class="{ activeBtn: alignCenter }"
+          @click="activeEditor('alignCenter')"
+        >
           <v-icon>mdi-format-align-center</v-icon>
         </v-btn>
-        <v-btn icon large class="Btn" :class="{ activeBtn: alignJusty }" @click="activeEditor('alignJusty')">
+        <v-btn
+          icon
+          large
+          class="Btn"
+          :class="{ activeBtn: alignJusty }"
+          @click="activeEditor('alignJusty')"
+        >
           <v-icon>mdi-format-align-justify</v-icon>
         </v-btn>
-        <v-btn icon large class="Btn" :class="{ activeBtn: alignLeft }" @click="activeEditor('alignLeft')">
+        <v-btn
+          icon
+          large
+          class="Btn"
+          :class="{ activeBtn: alignLeft }"
+          @click="activeEditor('alignLeft')"
+        >
           <v-icon>mdi-format-align-left</v-icon>
         </v-btn>
-        <v-btn class="colorBtn" icon large :class="{ activeBtn: alignRight }" @click="activeEditor('alignRight')">
+        <v-btn
+          class="colorBtn"
+          icon
+          large
+          :class="{ activeBtn: alignRight }"
+          @click="activeEditor('alignRight')"
+        >
           <v-icon>mdi-format-align-right</v-icon>
         </v-btn>
       </div>
 
-      <v-btn v-if="currentRouteName == 'Quotation non proportional'" large icon class="floatButton colorBtn activeBtn" @click="save()">
+      <v-btn
+        v-if="currentRouteName == 'Quotation non proportional'"
+        large
+        icon
+        class="floatButton colorBtn activeBtn"
+        @click="save()"
+      >
         <v-icon>mdi-content-save</v-icon>
       </v-btn>
     </div>
@@ -84,15 +138,15 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import { Editor, EditorContent } from '@tiptap/vue-2';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import { getCurrentPathName } from '@/mixins/subscription.js';
+import { mapActions, mapGetters } from "vuex";
+import { Editor, EditorContent } from "@tiptap/vue-2";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import { getCurrentPathName } from "@/mixins/subscription.js";
 
 export default {
-  name: 'emailEditor',
+  name: "emailEditor",
   components: {
     EditorContent,
   },
@@ -122,21 +176,21 @@ export default {
   },
   props: {
     htmlEmail: {
-      type: Number,
+      type: String,
     },
     userSignature: {
       type: String,
-      default: '',
+      default: "",
     },
-    sendMail:{
-      type:Object
+    sendMail: {
+      type: Object,
     },
-    fileUpload:{
-      type:Array
-    }
+    fileUpload: {
+      type: Array,
+    },
   },
   computed: {
-    ...mapGetters(['subscription_id']),
+    ...mapGetters(["subscription_id"]),
     currentFiles: {
       get() {
         return this.filesUpload.length;
@@ -144,88 +198,94 @@ export default {
     },
   },
   mounted() {
-    this.createEditor()
+    this.createEditor();
   },
   beforeDestroy() {
     this.editor.destroy();
   },
   methods: {
-    ...mapActions(['setEmailTemplate', 'attachFile', 'deleteAttached']),
-    createEditor(){
+    ...mapActions(["setEmailTemplate", "attachFile", "deleteAttached"]),
+    createEditor() {
       this.editor = new Editor({
-      extensions: [
-        StarterKit,
-        Underline,
-        TextAlign.configure({
-          types: ['heading', 'paragraph'],
-        }),
-      ],
-      content: this.htmlEmail,
+        extensions: [
+          StarterKit,
+          Underline,
+          TextAlign.configure({
+            types: ["heading", "paragraph"],
+          }),
+        ],
+        content: this.htmlEmail,
 
-      // GUARDAR EL HTML DEL CORREO
-      onUpdate: () => {
-        this.setEmailTemplate({ description: `${this.editor.getHTML()} ${this.userSignature}` });
-      },
-    });
+        // GUARDAR EL HTML DEL CORREO
+        onUpdate: () => {
+          this.setEmailTemplate({
+            description: `${this.editor.getHTML()} ${this.userSignature}`,
+          });
+        },
+      });
 
-      this.setEmailTemplate({ description: `${this.editor.getHTML()} ${this.userSignature}` });
+      this.setEmailTemplate({
+        description: `${this.editor.getHTML()} ${this.userSignature}`,
+      });
     },
     activeEditor(typeEvent) {
       switch (typeEvent) {
-        case 'bold':
+        case "bold":
           this.bold = !this.bold;
           this.editor.chain().focus().toggleBold().run();
           break;
 
-        case 'italic':
+        case "italic":
           this.italic = !this.italic;
           this.editor.chain().focus().toggleItalic().run();
           break;
 
-        case 'underline':
+        case "underline":
           this.underline = !this.underline;
           this.editor.chain().focus().toggleUnderline().run();
           break;
 
-        case 'alignCenter':
+        case "alignCenter":
           this.alignCenter = !this.alignCenter;
           this.alignJusty = false;
           this.alignRight = false;
           this.alignLeft = false;
-          this.editor.chain().focus().setTextAlign('center').run();
+          this.editor.chain().focus().setTextAlign("center").run();
           break;
 
-        case 'alignJusty':
+        case "alignJusty":
           this.alignJusty = !this.alignJusty;
           this.alignRight = false;
           this.alignLeft = false;
           this.alignCenter = false;
-          this.editor.chain().focus().setTextAlign('justify').run();
+          this.editor.chain().focus().setTextAlign("justify").run();
           break;
 
-        case 'alignRight':
+        case "alignRight":
           this.alignRight = !this.alignRight;
           this.alignLeft = false;
           this.alignJusty = false;
           this.alignCenter = false;
-          this.editor.chain().focus().setTextAlign('right').run();
+          this.editor.chain().focus().setTextAlign("right").run();
           break;
 
-        case 'alignLeft':
+        case "alignLeft":
           this.alignLeft = !this.alignLeft;
           this.alignRight = false;
           this.alignJusty = false;
           this.alignCenter = false;
-          this.editor.chain().focus().setTextAlign('left').run();
+          this.editor.chain().focus().setTextAlign("left").run();
           break;
       }
     },
     getFilesUpload(event) {
       /*Obtener archivos subidos*/
-      const fileData = event.target.files ? event.target.files : event.dataTransfer.files;
+      const fileData = event.target.files
+        ? event.target.files
+        : event.dataTransfer.files;
 
       this.attachmentFiles = [...fileData];
-      this.$emit('attachmentFiles', this.attachmentFiles);
+      this.$emit("attachmentFiles", this.attachmentFiles);
 
       Array.from(fileData).forEach((file) => {
         const fileName = file.name;
@@ -250,8 +310,10 @@ export default {
     },
     async saveFiles(file, index) {
       try {
-        const datos = file.name.split('.', 2);
-        const filename = `${new Date().getTime().toString()}.${datos[datos.length - 1]}`;
+        const datos = file.name.split(".", 2);
+        const filename = `${new Date().getTime().toString()}.${
+          datos[datos.length - 1]
+        }`;
         const responseFile = await this.attachFile({
           file,
           path: `SUB_${this.subscription_id}/attachedFiles/${filename}`,
@@ -275,9 +337,9 @@ export default {
         this.filesUpload.splice(index, 1);
 
         this.attachmentFiles.splice(index, 1);
-        this.$emit('attachmentFiles', this.attachmentFiles);
+        this.$emit("attachmentFiles", this.attachmentFiles);
       } catch (e) {
-        console.error('Could not be deleted');
+        console.error("Could not be deleted");
       }
     },
     save() {
@@ -300,16 +362,16 @@ export default {
       else e.dataTransfer.clearData();
     },
   },
-  watch:{
+  watch: {
     //actualizar el contenido del html del editor
-    htmlEmail:function(value){
-      const isSame = this.editor.getHTML() === value
+    htmlEmail: function (value) {
+      const isSame = this.editor.getHTML() === value;
       if (isSame) {
-        return
+        return;
       }
-      this.editor.commands.setContent(value, false)
-    }
-  }
+      this.editor.commands.setContent(value, false);
+    },
+  },
 };
 </script>
 

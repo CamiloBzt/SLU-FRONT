@@ -46,10 +46,7 @@
             <h5>Cat Sublimes</h5>
           </div>
           <v-row class="mt-4">
-            <v-col
-              :cols="12"
-              sm="6"
-            >
+            <v-col :cols="12" sm="6">
               <div class="input-row">
                 <!--sublime-label-->
                 <div class="sublime-label">
@@ -70,11 +67,7 @@
                 </div>
               </div>
             </v-col>
-            <v-col
-              :cols="12"
-              sm="6"
-              v-if="true"
-            >
+            <v-col :cols="12" sm="6" v-if="true">
               <div class="input-row">
                 <!--sublime-label-->
                 <div class="sublime-label">Valor numérico</div>
@@ -87,10 +80,7 @@
                 </div>
               </div>
             </v-col>
-            <v-col
-              :cols="12"
-              sm="6"
-            >
+            <v-col :cols="12" sm="6">
               <div class="input-row">
                 <!--sublime-label-->
                 <div class="sublime-label">
@@ -110,11 +100,7 @@
                 </div>
               </div>
             </v-col>
-            <v-col
-              :cols="12"
-              sm="6"
-              v-if="true"
-            >
+            <v-col :cols="12" sm="6" v-if="true">
               <div class="input-row">
                 <!--sublime-label-->
                 <div class="sublime-label">Valor Default</div>
@@ -135,7 +121,6 @@
             <h5>All Other Sublimits</h5>
           </div>
           <div class="wrapper horizontal-scroll">
-
             <div class="sublimits-cont">
               <SublimitsQuotator
                 v-for="(subitem, index) in SublimitsArray"
@@ -146,17 +131,11 @@
                 :key="index"
               />
             </div>
-
           </div>
 
           <!--Boton para añadir sublimits-->
           <div class="button-cont">
-            <v-btn
-              class="Btn"
-              text
-              rounded
-              @click="addSublimit()"
-            >
+            <v-btn class="Btn" text rounded @click="addSublimit()">
               <v-icon class="mr-2"> mdi-plus-circle </v-icon>
               Add Sublimits
             </v-btn>
@@ -172,14 +151,21 @@ import { stateExpansiveManager } from "@/mixins/subscription.js";
 import SublimitsQuotator from "./SublimitsQuotator.vue";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* services */
-import { getCatalog, saveSublime } from './services/SublimesQuotator/sublime-quotator.service'
-import { saveSublimit, getSublimits, addSublimit } from './services/SublimesQuotator/sublimit-quotator.service'
+import {
+  getCatalog,
+  saveSublime,
+} from "./services/SublimesQuotator/sublime-quotator.service";
+import {
+  saveSublimit,
+  getSublimits,
+  addSublimit,
+} from "./services/SublimesQuotator/sublimit-quotator.service";
 
 export default {
   name: "SublimesQuotator",
   mixins: [stateExpansiveManager],
   components: { CurrencyInput, SublimitsQuotator },
-  data () {
+  data() {
     return {
       inputValue: "",
       USD: 10.0,
@@ -197,38 +183,40 @@ export default {
   props: {
     sublimeIndex: {
       type: String | Number,
-      required: true
+      required: true,
     },
     item: {
       type: Object,
-      required: true
+      required: true,
     },
   },
-  inject: ['subscription'],
-  async beforeMount () {
-    this.items = await getCatalog('sublimits')
-    this.otherDeductibles = await getCatalog('other_deductibles')
+  inject: ["subscription"],
+  async beforeMount() {
+    this.items = await getCatalog("sublimits");
+    this.otherDeductibles = await getCatalog("other_deductibles");
     this.SublimitsArray = await getSublimits(this.item.id);
   },
   methods: {
-    async saveField (column, value) {
+    async saveField(column, value) {
       await saveSublime(this.item.id, column, value);
     },
-    async addSublimit () {
-      const data = await addSublimit(this.item.id, this.subscription.subscriptionId)
+    async addSublimit() {
+      const data = await addSublimit(
+        this.item.id,
+        this.subscription.subscriptionId
+      );
       if (data) this.SublimitsArray = await getSublimits(this.item.id);
     },
-    async deleteSublimit (id, index) {
-      const { message } = await saveSublimit(id, 'active', false)
-      if (message === "success")
-        this.SublimitsArray.splice(index, 1)
+    async deleteSublimit(id, index) {
+      const { message } = await saveSublimit(id, "active", false);
+      if (message === "success") this.SublimitsArray.splice(index, 1);
     },
   },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyleRefactored.less';
-@import '~@/assets/style/Subscription/BoundRefactored.less';
+@import "~@/assets/style/AccordionStyleRefactored.less";
+@import "~@/assets/style/Subscription/BoundRefactored.less";
 
 .sublime-label {
   width: 100%;

@@ -15,32 +15,31 @@ export default {
     state.currentEmailTemplate = "";
   },
   SET_MAIL_CC_PARTICIPANTS(state, ccParticipants) {
-    console.log('asignando los particimaptne')
-
     state.ccParticipants = ccParticipants.reduce((accum, item) => {
-      accum.push(item.email)
+      accum.push(item.email);
       return accum;
     }, []);
-    console.log(state.ccParticipants)
   },
-  SET_MAIL_TEMPLATE (state, template) {
-    state.currentEmailTemplateQuotation = template
-    if(state.selectedLang === 'es') {
-      state.htmlTemplate = template.htmlTemplateEs
+  SET_MAIL_TEMPLATE(state, template) {
+    state.currentEmailTemplateQuotation = template;
+    if (state.selectedLang === "es") {
+      state.htmlTemplate = template.htmlTemplateEs;
       state.currentEmailTemplate = template.htmlTemplateEs;
     } else {
-      state.htmlTemplate =  template.htmlTemplate
+      state.htmlTemplate = template.htmlTemplate;
       state.currentEmailTemplate = template.htmlTemplate;
     }
   },
-  SET_LANG_MAIL_TEMPLATE (state, lang) {
+  SET_LANG_MAIL_TEMPLATE(state, lang) {
     state.selectedLang = lang;
-    if(state.selectedLang === 'es') {
-      state.htmlTemplate = state.currentEmailTemplateQuotation.htmlTemplateEs
-      state.currentEmailTemplate = state.currentEmailTemplateQuotation.htmlTemplateEs;
+    if (state.selectedLang === "es") {
+      state.htmlTemplate = state.currentEmailTemplateQuotation.htmlTemplateEs;
+      state.currentEmailTemplate =
+        state.currentEmailTemplateQuotation.htmlTemplateEs;
     } else {
-      state.htmlTemplate =  state.currentEmailTemplateQuotation.htmlTemplate
-      state.currentEmailTemplate = state.currentEmailTemplateQuotation.htmlTemplate;
+      state.htmlTemplate = state.currentEmailTemplateQuotation.htmlTemplate;
+      state.currentEmailTemplate =
+        state.currentEmailTemplateQuotation.htmlTemplate;
     }
-  }
+  },
 };

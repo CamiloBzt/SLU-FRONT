@@ -36,27 +36,27 @@
 </template>
 
 <script>
-import { formValidations } from '@/mixins/formValidations';
+import { formValidations } from "@/mixins/formValidations";
 /* vuelidate mixin & validators */
-import { validationMixin } from 'vuelidate';
-import { helpers, email, requiredIf } from 'vuelidate/lib/validators';
+import { validationMixin } from "vuelidate";
+import { helpers, email, requiredIf } from "vuelidate/lib/validators";
 
 /**vuex */
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 
 /*Servicios */
-import mailTemplatesServices from '@/application/services/mailTemplates.service'
+import mailTemplatesServices from "@/application/services/mailTemplates.service";
 
-const isOptional = (value) => !helpers.req(value) || value.indexOf('cool') >= 0;
+const isOptional = (value) => !helpers.req(value) || value.indexOf("cool") >= 0;
 
 export default {
-  name: 'participants',
+  name: "participants",
   mixins: [validationMixin, formValidations],
   data() {
     return {
-      subscriptionId:null,
-      dato: '',
-      contacts:[]
+      subscriptionId: null,
+      dato: "",
+      contacts: [],
     };
   },
   props: {
@@ -64,17 +64,15 @@ export default {
       type: Array,
     },
   },
-  methods:{
-    ...mapActions([
-      'getContactsBySubscriptionId'
-    ])
+  methods: {
+    ...mapActions(["getContactsBySubscriptionId"]),
   },
   methods: {
     inputText(event) {
       this.dato = event;
     },
     keydown(event) {
-      if (event.key === 'Enter' || event.key == 'Tab') {
+      if (event.key === "Enter" || event.key == "Tab") {
         const value = this.$v.dato;
         if (value.$invalid || value.$error) return;
         this.ccParticipants.push(value.$model);
@@ -92,10 +90,12 @@ export default {
       email,
     },
   },
-  async beforeMount(){
-    this.subscriptionId = this.$route.params.subscriptionId 
-    this.contacts = await  mailTemplatesServices.getContactsBySubscription(this.subscriptionId)
-  }
+  async beforeMount() {
+    this.subscriptionId = this.$route.params.subscriptionId;
+    this.contacts = await mailTemplatesServices.getContactsBySubscription(
+      this.subscriptionId
+    );
+  },
 };
 </script>
 

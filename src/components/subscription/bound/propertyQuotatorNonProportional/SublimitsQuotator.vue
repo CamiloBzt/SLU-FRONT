@@ -1,31 +1,35 @@
 <template>
   <div class="input-line mt-4">
-    <div class="row-large">
+    <v-col cols="12" sm="6" md="6">
       <v-select
         v-model.trim="sublimit.otherDeductiblesSelect"
-        @blur="saveField('other_deductibles_select', sublimit.otherDeductiblesSelect)"
+        @blur="
+          saveField('other_deductibles_select', sublimit.otherDeductiblesSelect)
+        "
         :items="otherDeductibles"
         item-text="data"
         item-value="id"
         clearable
       ></v-select>
-    </div>
-    <div class="line-row">
+    </v-col>
+    <v-col cols="12" sm="6" md="2">
       <currency-input
         v-model.trim="sublimit.otherDeductiblesValue"
-        @blur="saveField('other_deductibles_value', sublimit.otherDeductiblesValue)"
+        @blur="
+          saveField('other_deductibles_value', sublimit.otherDeductiblesValue)
+        "
         label="Original Currency"
         :options="currencyOptions"
       />
-    </div>
-    <div class="line-row">
+    </v-col>
+    <v-col cols="12" sm="6" md="2">
       <currency-input
         v-model.trim="otherDeductiblesValueUsd"
         label="USD"
         disabled
         :options="currencyOptions"
       />
-    </div>
+    </v-col>
     <!-- botón de eliminado (debug only) -->
     <v-icon
       small
@@ -39,13 +43,13 @@
 
 <script>
 /* libs */
-import { debounce } from 'lodash';
-import Decimal from 'decimal.js';
-import numeral from 'numeral'
+import { debounce } from "lodash";
+import Decimal from "decimal.js";
+import numeral from "numeral";
 /* components */
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* service */
-import { saveSublimit } from './services/SublimesQuotator/sublimit-quotator.service'
+import { saveSublimit } from "./services/SublimesQuotator/sublimit-quotator.service";
 
 export default {
   name: "SublimitsQuotator",
@@ -53,18 +57,18 @@ export default {
   props: {
     sublimit: {
       type: Object,
-      required: true
+      required: true,
     },
     index: {
       type: [Number, String, Symbol],
-      required: true
+      required: true,
     },
     otherDeductibles: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
-  inject: ['quotation'],
+  inject: ["quotation"],
   data: () => ({
     currencyOptions: {
       currency: "MXN",
@@ -74,28 +78,34 @@ export default {
   }),
   computed: {
     otherDeductiblesValueUsd: {
-      get () {
-        const op = new Decimal(numeral(
-          (`${this.sublimit.otherDeductiblesValue}` || '$0').replace(/[^0-9.]/g, '')
-        ).value() || 0).div(this.quotation.exchangeRate);
+      get() {
+        const op = new Decimal(
+          numeral(
+            (`${this.sublimit.otherDeductiblesValue}` || "$0").replace(
+              /[^0-9.]/g,
+              ""
+            )
+          ).value() || 0
+        ).div(this.quotation.exchangeRate);
         this.sublimit.otherDeductiblesValueUsd = op.toNumber();
 
-        return this.sublimit.otherDeductiblesValueUsd
-      }, set () { }
-    }
+        return this.sublimit.otherDeductiblesValueUsd;
+      },
+      set() {},
+    },
   },
   methods: {
-    async saveField (column, value) {
+    async saveField(column, value) {
       await saveSublimit(this.sublimit.id, column, value);
     },
   },
   watch: {
-    'otherDeductiblesValueUsd': {
+    otherDeductiblesValueUsd: {
       handler: debounce(function (value) {
-        this.saveField('other_deductibles_value_usd', value)
+        this.saveField("other_deductibles_value_usd", value);
       }, 1000),
-      deep: true
-    }
+      deep: true,
+    },
   },
-}
+};
 </script>

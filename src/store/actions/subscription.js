@@ -741,7 +741,7 @@ export default {
 
   async getAnalysisById({ commit, state }, id_subscription) {
     const variables = {
-      id_subscription,
+      id_subscription: parseInt(id_subscription, 10),
     };
     const {
       data: { getAnalysisById },

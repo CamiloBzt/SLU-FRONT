@@ -31,26 +31,26 @@
 </template>
 
 <script>
-import { formValidations } from '@/mixins/formValidations';
+import { formValidations } from "@/mixins/formValidations";
 /* vuelidate mixin & validators */
-import { validationMixin } from 'vuelidate';
-import { helpers } from 'vuelidate/lib/validators';
+import { validationMixin } from "vuelidate";
+import { helpers } from "vuelidate/lib/validators";
 
-const isOptional = (value) => !helpers.req(value) || value.indexOf('cool') >= 0;
+const isOptional = (value) => !helpers.req(value) || value.indexOf("cool") >= 0;
 
 export default {
-  name: 'ccParticipantsQuotation',
+  name: "ccParticipantsQuotation",
   mixins: [validationMixin, formValidations],
   data() {
     return {
       select: this.ccParticipants,
-      dato: '',
+      dato: "",
     };
   },
   props: {
     ccParticipants: {
       type: Array,
-      default: []
+      default: [],
     },
   },
   validations: {
@@ -60,7 +60,7 @@ export default {
   },
   watch: {
     select(newValue) {
-      this.$emit('input', newValue);
+      this.$emit("input", newValue);
     },
     value(newValue) {
       this.ccParticipants = value;
@@ -71,7 +71,7 @@ export default {
       this.dato = event;
     },
     keydown(event) {
-      if (event.key === 'Enter' || event.key == 'Tab') {
+      if (event.key === "Enter" || event.key == "Tab") {
         const regex =
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!regex.test(String(this.dato).toLowerCase())) return false;
@@ -79,8 +79,8 @@ export default {
       }
     },
     clickauto() {
-      this.dato = '';
-      this.$refs.autoComplete.search = '';
+      this.dato = "";
+      this.$refs.autoComplete.search = "";
     },
     selectedSearchedCandidate(event) {
       console.log(event);

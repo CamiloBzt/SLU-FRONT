@@ -39,7 +39,7 @@
               <div class="InputRow">
                 <v-text-field
                   v-model.trim="item.location"
-                  @blur="saveValue(deductibleId, 'location', item.location)"
+                  @blur="saveValue(subscription_id, 'location', item.location)"
                 />
               </div>
             </div>
@@ -60,7 +60,7 @@
                 v-model.trim="item.volcanic_eruption"
                 @blur="
                   saveValue(
-                    deductibleId,
+                    subscription_id,
                     'volcanic_eruption',
                     item.volcanic_eruption
                   )
@@ -77,7 +77,11 @@
               <v-select
                 v-model.trim="item.total_volcanic"
                 @blur="
-                  saveValue(deductibleId, 'total_volcanic', item.total_volcanic)
+                  saveValue(
+                    subscription_id,
+                    'total_volcanic',
+                    item.total_volcanic
+                  )
                 "
                 :items="catalogUnderlyingAplica"
                 item-text="data"
@@ -95,7 +99,7 @@
                 v-model.trim="item.minimum_volcanic"
                 @blur="
                   saveValue(
-                    deductibleId,
+                    subscription_id,
                     'minimum_volcanic',
                     item.minimum_volcanic
                   )
@@ -111,7 +115,7 @@
                 v-model.trim="item.maximum_volcanic"
                 @blur="
                   saveValue(
-                    deductibleId,
+                    subscription_id,
                     'maximum_volcanic',
                     item.maximum_volcanic
                   )
@@ -132,7 +136,7 @@
                 v-model.trim="item.hidrometeorological"
                 @blur="
                   saveValue(
-                    deductibleId,
+                    subscription_id,
                     'hidrometeorological',
                     item.hidrometeorological
                   )
@@ -150,9 +154,9 @@
                 v-model.trim="item.total_hidrometeorological"
                 @blur="
                   saveValue(
-                    deductibleId,
+                    subscription_id,
                     'total_hidrometeorological',
-                    item.total_hidrometeorological
+                    parseInt(item.total_hidrometeorological)
                   )
                 "
                 :items="catalogUnderlyingAplica"
@@ -171,7 +175,7 @@
                 v-model.trim="item.minimum_hidrometeorological"
                 @blur="
                   saveValue(
-                    deductibleId,
+                    subscription_id,
                     'minimum_hidrometeorological',
                     item.minimum_hidrometeorological
                   )
@@ -187,7 +191,7 @@
                 v-model.trim="item.maximum_hidrometeorological"
                 @blur="
                   saveValue(
-                    deductibleId,
+                    subscription_id,
                     'maximum_hidrometeorological',
                     item.maximum_hidrometeorological
                   )
@@ -212,7 +216,7 @@
                   v-model.trim="item.alop_earthquake"
                   @blur="
                     saveValue(
-                      deductibleId,
+                      subscription_id,
                       'alop_earthquake',
                       item.alop_earthquake
                     )
@@ -236,7 +240,7 @@
                   v-model.trim="item.alop_hidrometeorological"
                   @blur="
                     saveValue(
-                      deductibleId,
+                      subscription_id,
                       'alop_hidrometeorological',
                       item.alop_hidrometeorological
                     )
