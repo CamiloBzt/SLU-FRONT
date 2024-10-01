@@ -302,14 +302,16 @@ export default {
         return newValue;
       },
       get() {
-        //quita el $ y transforma a valor numero para que la operación no de error
-        const propertyDamageRate = this.premium.propertyDamageRate
-          ? parseFloat(this.premium.propertyDamageRate.replace("$", ""))
-          : 0;
+        const propertyDamageRate =
+          typeof this.premium.propertyDamageRate === "string"
+            ? parseFloat(this.premium.propertyDamageRate.replace("$", ""))
+            : this.premium.propertyDamageRate || 0;
+
         const op = Decimal.mul(
           this.tiv.propertyDamage || 0,
           propertyDamageRate || 0
         ).div(1000);
+
         return op;
       },
     },
@@ -318,9 +320,11 @@ export default {
         return newValue;
       },
       get() {
-        const propertyDamageRate = this.premium.propertyDamageRate
-          ? parseFloat(this.premium.propertyDamageRate.replace("$", ""))
-          : 0;
+        const propertyDamageRate =
+          typeof this.premium.propertyDamageRate === "string"
+            ? parseFloat(this.premium.propertyDamageRate.replace("$", ""))
+            : this.premium.propertyDamageRate || 0;
+
         const op = Decimal.mul(
           this.tiv.propertyDamageUsd || 0,
           propertyDamageRate || 0

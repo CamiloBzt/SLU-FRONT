@@ -8,7 +8,9 @@
     <!--PARTE IZQUIERDA-->
     <div class="ExchangeCont d-flex justify-end align-content-start flex-wrap">
       <!--TITULO-->
-      <div class="TitleCont d-flex justify-end align-content-center align-center">
+      <div
+        class="TitleCont d-flex justify-end align-content-center align-center"
+      >
         <h5>Original currency</h5>
       </div>
 
@@ -37,7 +39,10 @@
             :options="currencyOptions"
             @blur="
               $v.toBeDefined.limitedInsured.$touch();
-              setStateTobe('limitedInsured', $v.toBeDefined.limitedInsured.$model);
+              setStateTobe(
+                'limitedInsured',
+                $v.toBeDefined.limitedInsured.$model
+              );
               checkTobeColumn('limitedInsured');
             "
             @input="$v.toBeDefined.limitedInsured.$touch()"
@@ -100,9 +105,13 @@
     </div>
 
     <!--PARTE DERECHA-->
-    <div class="ExchangeCont d-flex justify-start align-content-start flex-wrap">
+    <div
+      class="ExchangeCont d-flex justify-start align-content-start flex-wrap"
+    >
       <!--TITULO-->
-      <div class="TitleCont d-flex justify-start align-content-center align-center">
+      <div
+        class="TitleCont d-flex justify-start align-content-center align-center"
+      >
         <h5 class="TitleColRight">USD</h5>
       </div>
 
@@ -120,7 +129,9 @@
             :placeholder="limitedInsured"
             suffix="USD"
             readonly
-            :error-messages="quotationValids('toBeDefined', 'limitedInsuredUsd')"
+            :error-messages="
+              quotationValids('toBeDefined', 'limitedInsuredUsd')
+            "
           ></v-text-field>
         </div>
       </div>
@@ -175,36 +186,36 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from "vuex";
 /* vuelidate mixin & validations */
-import { validationMixin } from 'vuelidate';
-import { required, requiredIf } from 'vuelidate/lib/validators';
+import { validationMixin } from "vuelidate";
+import { required, requiredIf } from "vuelidate/lib/validators";
 /* project validations (in some cases depends on vuelidate) */
-import { formValidations } from '@/mixins/formValidations';
-import { Percentage } from '@/constants/validations';
+import { formValidations } from "@/mixins/formValidations";
+import { Percentage } from "@/constants/validations";
 /* currency component */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* lodash */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 /* libs */
-import Decimal from 'decimal.js';
+import Decimal from "decimal.js";
 
 export default {
-  name: 'ToBe',
+  name: "ToBe",
   components: { CurrencyInput },
   mixins: [formValidations, validationMixin],
   data() {
     return {
-      limitedInsured: '0',
-      sluShare: '0',
-      limitSlu: '0',
-      premiumSlu: '0',
-      usdCurrency: 'USD',
-      totalPremiumUsd: '0',
+      limitedInsured: "0",
+      sluShare: "0",
+      limitSlu: "0",
+      premiumSlu: "0",
+      usdCurrency: "USD",
+      totalPremiumUsd: "0",
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
       roe: 0.2,
       value: 1234,
@@ -214,11 +225,23 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['toBeDefined', 'quotation', 'accountInformation', 'currencies', 'premium']),
+    ...mapGetters([
+      "toBeDefined",
+      "quotation",
+      "accountInformation",
+      "currencies",
+      "premium",
+    ]),
     currentCurrency: {
       get() {
-        if (this.accountInformation.currency && this.currencies && this.currencies.length > 0) {
-          const currencyObj = this.currencies.find((v) => v.id === this.accountInformation.currency);
+        if (
+          this.accountInformation.currency &&
+          this.currencies &&
+          this.currencies.length > 0
+        ) {
+          const currencyObj = this.currencies.find(
+            (v) => v.id === this.accountInformation.currency
+          );
           return currencyObj;
         }
         return 0;
@@ -226,11 +249,15 @@ export default {
     },
     usdLimitedInsured: {
       get() {
-        const op = (Decimal.div(this.toBeDefined.limitedInsured || 0, this.quotation.exchangeRate || 0)).toNumber() || 0;
+        const op =
+          Decimal.div(
+            this.toBeDefined.limitedInsured || 0,
+            this.quotation.exchangeRate || 0
+          ).toNumber() || 0;
 
-        const formatter = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
+        const formatter = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
         });
         return op === Infinity ? formatter.format(0) : formatter.format(op);
       },
@@ -238,12 +265,12 @@ export default {
     usdLimitSlu: {
       get() {
         const fracc = this.$v.toBeDefined.sluShare.$model / 100;
-        const curr = Number(this.usdLimitedInsured.replace(/[^0-9.-]+/g, ''));
+        const curr = Number(this.usdLimitedInsured.replace(/[^0-9.-]+/g, ""));
         const op = curr * fracc || 0;
 
-        const formatter = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
+        const formatter = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
         });
 
         return op === Infinity ? formatter.format(0) : formatter.format(op);
@@ -253,9 +280,9 @@ export default {
       get() {
         const fracc = this.$v.toBeDefined.sluShare.$model / 100;
         const op = this.toBeDefined.limitedInsured * fracc;
-        const formatter = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
+        const formatter = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
         });
 
         return formatter.format(op);
@@ -266,32 +293,35 @@ export default {
     this.calculatePremium();
   },
   watch: {
-    originalPremiumSlu: debounce(function (val) {
-      this.$v.toBeDefined.premiumSlu.$model = val;
-      this.setStateTobe('premiumSlu', val);
-      this.checkTobeColumn('premiumSlu');
-    }, 1000),
-    usdPremiumSlu: debounce(function (val) {
-      this.$v.toBeDefined.premiumSluUsd.$model = val;
-      this.setStateTobe('premiumSluUsd', val);
-      this.checkTobeColumn('premiumSluUsd');
-    }, 1000),
     originalLimitSlu: debounce(function (val) {
       this.$v.toBeDefined.limitSlu.$model = val;
-      this.setStateTobe('limitSlu', val);
-      this.checkTobeColumn('limitSlu');
+      this.setStateTobe("limitSlu", val);
+      this.checkTobeColumn("limitSlu");
     }, 1000),
     usdLimitSlu: debounce(function (val) {
       this.$v.toBeDefined.limitSluUsd.$model = val;
-      this.setStateTobe('limitSluUsd', val);
-      this.checkTobeColumn('limitSluUsd');
+      this.setStateTobe("limitSluUsd", val);
+      this.checkTobeColumn("limitSluUsd");
     }, 1000),
     usdLimitedInsured: debounce(function (val) {
       this.$v.toBeDefined.limitedInsuredUsd.$model = val;
-      this.setStateTobe('limitedInsuredUsd', val);
-      this.checkTobeColumn('limitedInsuredUsd');
+      this.setStateTobe("limitedInsuredUsd", val);
+      this.checkTobeColumn("limitedInsuredUsd");
     }, 1000),
-    'toBeDefined.sluShare': debounce(function (val) {
+    usdPremiumSlu: debounce(function (val) {
+      this.$v.toBeDefined.premiumSluUsd.$model = val;
+      this.setStateTobe("premiumSluUsd", val);
+      this.checkTobeColumn("premiumSluUsd");
+    }, 1000),
+    originalPremiumSlu: debounce(function (val) {
+      this.$v.toBeDefined.premiumSlu.$model = val;
+      this.setStateTobe("premiumSlu", val);
+      this.checkTobeColumn("premiumSlu");
+    }, 1000),
+    "toBeDefined.limitedInsured": debounce(function (val) {
+      this.calculatePremium();
+    }, 1),
+    "toBeDefined.sluShare": debounce(function (val) {
       this.calculatePremium();
     }, 1),
   },
@@ -327,8 +357,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setStateTobe']),
-    ...mapActions(['saveQuotationColumn', 'createToBeDefined']),
+    ...mapMutations(["setStateTobe"]),
+    ...mapActions(["saveQuotationColumn", "createToBeDefined"]),
     async submitForm() {
       try {
         this.$v.$touch();
@@ -355,29 +385,58 @@ export default {
       this.$v.toBeDefined[column].$touch();
       if (this.$v.toBeDefined[column].$invalid) return;
       await this.saveQuotationColumn({
-        table: 'tobe',
-        parent: 'toBeDefined',
+        table: "tobe",
+        parent: "toBeDefined",
         column,
       });
     },
     calculatePremium() {
       const fracc = this.toBeDefined.sluShare / 100;
-      const curr1 = this.toBeDefined.limitedInsuredUsd ? (this.premium.totalUsd ? this.premium.totalUsd.replace(/[^0-9.-]+/g, '') : 0) : 0;
+
+      // Asegurarnos de que limitedInsured sea un número válido para el cálculo
+      const originalLimitedInsured = this.toBeDefined.limitedInsured
+        ? Number(
+            String(this.toBeDefined.limitedInsured).replace(/[^0-9.-]+/g, "")
+          ) || 0
+        : 0;
+
+      // Asegurarnos de que limitedInsuredUsd también sea válido
+      const usdLimitedInsured =
+        Decimal.div(
+          originalLimitedInsured,
+          this.quotation.exchangeRate || 1
+        ).toNumber() || 0;
+
+      // Cálculo del Premium en USD
+      const curr1 = this.premium.totalUsd
+        ? Number(this.premium.totalUsd.replace(/[^0-9.-]+/g, "")) || 0
+        : 0;
       const op1 = curr1 * fracc;
-      const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+
+      // Cálculo del Premium en la moneda original
+      const curr = this.premium.totalInsured
+        ? Number(this.premium.totalInsured.replace(/[^0-9.-]+/g, "")) || 0
+        : 0;
+      const op = curr * fracc;
+
+      // Actualizar valores de Premium
+      const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       });
 
-      const curr = this.premium.totalInsured ? Number(this.premium.totalInsured.replace(/[^0-9.-]+/g, '')) : 0;
-      const op = curr * fracc;
       this.usdPremiumSlu = formatter.format(op1);
       this.originalPremiumSlu = formatter.format(op);
 
-      this.setStateTobe('premiumSlu', this.originalPremiumSlu);
-      this.checkTobeColumn('premiumSlu');
-      this.setStateTobe('premiumSluUsd', this.usdPremiumSlu);
-      this.checkTobeColumn('premiumSluUsd');
+      // Asegurar que los valores se actualicen en Vuex
+      this.setStateTobe("premiumSlu", this.originalPremiumSlu);
+      this.checkTobeColumn("premiumSlu");
+      this.setStateTobe("premiumSluUsd", this.usdPremiumSlu);
+      this.checkTobeColumn("premiumSluUsd");
+
+      // Asegurar que los valores se actualicen en el componente
+      this.$set(this.toBeDefined, "limitedInsuredUsd", usdLimitedInsured);
+      this.$set(this.toBeDefined, "limitedInsured", originalLimitedInsured);
     },
   },
 };

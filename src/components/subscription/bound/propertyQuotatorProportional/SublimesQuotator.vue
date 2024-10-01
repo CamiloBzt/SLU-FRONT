@@ -21,11 +21,7 @@
           <!--Location-->
           <div class="TitleCont d-flex justify-space-between align-center">
             <h5>Location</h5>
-            <v-btn
-              text
-              rounded
-              @click="deleteSublime()"
-            >
+            <v-btn text rounded @click="deleteSublime()">
               <v-icon> mdi-delete </v-icon>
               Delete This Location
             </v-btn>
@@ -68,10 +64,7 @@
                 ></v-select>
               </div>
             </v-col>
-            <v-col
-              :cols="6"
-              v-if="displayHiddenCoverageB"
-            >
+            <v-col :cols="6" v-if="displayHiddenCoverageB">
               <div class="InputRow">
                 <!--Label-->
                 <div class="Label">Valor numérico</div>
@@ -108,19 +101,13 @@
                 </div>
               </div>
             </v-col>
-            <v-col
-              :cols="6"
-              v-if="displayHiddenCoverageC"
-            >
+            <v-col :cols="6" v-if="displayHiddenCoverageC">
               <div class="InputRow">
                 <!--Label-->
                 <div class="Label">Valor Default</div>
                 <!--Input-->
                 <div class="InputCont">
-                  <v-text-field
-                    v-model="inputValue"
-                    readonly
-                  />
+                  <v-text-field v-model="inputValue" readonly />
                 </div>
               </div>
             </v-col>
@@ -207,11 +194,7 @@
                 />
               </div>
               <!-- botón de eliminado (debug only) -->
-              <v-icon
-                small
-                @click="removeField(index)"
-                class="mt-4"
-              >
+              <v-icon small @click="removeField(index)" class="mt-4">
                 mdi-minus-circle
               </v-icon>
             </div>
@@ -219,12 +202,7 @@
 
           <!--Boton para añadir sublimits-->
           <div class="ButtonCont">
-            <v-btn
-              class="Btn"
-              text
-              rounded
-              @click="addSublimits()"
-            >
+            <v-btn class="Btn" text rounded @click="addSublimits()">
               <v-icon class="mr-2"> mdi-plus-circle </v-icon>
               Add Sublimits
             </v-btn>
@@ -235,32 +213,32 @@
   </v-expansion-panels>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* validations */
-import { required, requiredIf } from 'vuelidate/lib/validators';
+import { required, requiredIf } from "vuelidate/lib/validators";
 /* lodash */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 /* numbers */
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 
 export default {
-  name: 'SublimesQuotator',
+  name: "SublimesQuotator",
   mixins: [stateExpansiveManager],
-  inject: ['deepDisabled'],
+  inject: ["deepDisabled"],
   components: { CurrencyInput },
-  data () {
+  data() {
     return {
-      sublimits1: '',
-      sublimits2: '',
+      sublimits1: "",
+      sublimits2: "",
       allOtherSublimits: [],
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
     };
   },
@@ -272,123 +250,163 @@ export default {
       type: String | Number,
     },
   },
-  async beforeMount () {
-    await Promise.all([this.getCatalogByName({ name: 'sublimits' }), this.getCatalogByName({ name: 'other_deductibles' })]);
+  async beforeMount() {
+    await Promise.all([
+      this.getCatalogByName({ name: "sublimits" }),
+      this.getCatalogByName({ name: "other_deductibles" }),
+    ]);
   },
-  async mounted () {
-    await this.loadMultipleDeductiblesEng({ table: 'boundSublimitsProp' });
+  async mounted() {
+    await this.loadMultipleDeductiblesEng({ table: "boundSublimitsProp" });
   },
   computed: {
-    ...mapGetters(['otherDeductibles', 'sublimits', 'subscription_id', 'quotation']),
+    ...mapGetters([
+      "otherDeductibles",
+      "sublimits",
+      "subscription_id",
+      "quotation",
+    ]),
     ...mapGetters({
-      currentSublimes: 'boundSublimesProp',
-      currentSublimits: 'boundSublimitsProp',
+      currentSublimes: "boundSublimesProp",
+      currentSublimits: "boundSublimitsProp",
     }),
-    boundSublimes () {
+    boundSublimes() {
       return this.currentSublimes[this.sublimeIndex];
     },
-    boundSublimitsProp () {
-      const data = Array.from(this.currentSublimits).filter((v) => v.sublimeId == this.sublimeId);
+    boundSublimitsProp() {
+      const data = Array.from(this.currentSublimits).filter(
+        (v) => v.sublimeId == this.sublimeId
+      );
       return data;
     },
     computedUsd: {
-      get () {
+      get() {
         const arr = this.boundSublimitsProp.map((i) => {
-          const mynumber = new Decimal(numeral((`${i.otherDeductiblesValue}` || '$0').replace(/[^0-9.]/g, '')).value() || 0);
-          const op = mynumber.div(numeral(this.quotation.exchangeRate || 0).value() || 0);
+          const mynumber = new Decimal(
+            numeral(
+              (`${i.otherDeductiblesValue}` || "$0").replace(/[^0-9.]/g, "")
+            ).value() || 0
+          );
+          const op = mynumber.div(
+            numeral(this.quotation.exchangeRate || 0).value() || 0
+          );
           return op.toNumber();
         });
         return arr;
       },
     },
-    displayHiddenCoverageB () {
-      const valid = [4, '4'];
-      const comparison = valid.includes(this.$v.boundSublimes.sublimits1.$model);
+    displayHiddenCoverageB() {
+      const valid = [4, "4"];
+      const comparison = valid.includes(
+        this.$v.boundSublimes.sublimits1.$model
+      );
       if (comparison) return true;
       return false;
     },
-    displayHiddenCoverageC () {
-      const valid = [4, '4'];
-      const comparison = valid.includes(this.$v.boundSublimes.sublimits2.$model);
+    displayHiddenCoverageC() {
+      const valid = [4, "4"];
+      const comparison = valid.includes(
+        this.$v.boundSublimes.sublimits2.$model
+      );
       if (comparison) return true;
       return false;
     },
-    inputValue () {
-      if (this.displayHiddenCoverageC) return 'Strike, Riot & Commotion';
-      return '';
+    inputValue() {
+      if (this.displayHiddenCoverageC) return "Strike, Riot & Commotion";
+      return "";
     },
   },
   watch: {
     inputValue: debounce(function (val) {
       this.$v.boundSublimes.sublimitsValue2.$model = val;
-      this.SET_BOUND_ENG('sublimitsValue2', val);
-      this.checkField('sublimitsValue2');
+      this.SET_BOUND_ENG("sublimitsValue2", val);
+      this.checkField("sublimitsValue2");
     }, 1000),
   },
   methods: {
     ...mapActions([
-      'saveBoundColumn',
-      'loadMultipleDeductiblesEng',
-      'saveEngDeductibleColumn',
-      'addNewFieldBound',
-      'getCatalogByName',
-      'updateSublimeProperty',
-      'createSublimitProperty',
+      "saveBoundColumn",
+      "loadMultipleDeductiblesEng",
+      "saveEngDeductibleColumn",
+      "addNewFieldBound",
+      "getCatalogByName",
+      "updateSublimeProperty",
+      "createSublimitProperty",
     ]),
-    ...mapMutations(['SET_BOUND_ENG']),
-    computedOnUsd (index, column = 'otherDeductiblesValueUsd') {
-      this.$v.boundSublimitsProp.$each[index][column].$model = this.computedUsd[index];
+    ...mapMutations(["SET_BOUND_ENG"]),
+    computedOnUsd(index, column = "otherDeductiblesValueUsd") {
+      this.$v.boundSublimitsProp.$each[index][column].$model =
+        this.computedUsd[index];
       this.checkMultipleField(index, column);
     },
-    async checkField (column) {
+    async checkField(column) {
       this.$v.boundSublimes[column].$touch();
       const id = this.$v.boundSublimes.$model.id;
-      console.log(this.$v.boundSublimes[column].$invalid, this.$v.boundSublimes[column].$error);
-      if (this.$v.boundSublimes[column].$invalid || this.$v.boundSublimes[column].$error) return;
+      console.log(
+        this.$v.boundSublimes[column].$invalid,
+        this.$v.boundSublimes[column].$error
+      );
+      if (
+        this.$v.boundSublimes[column].$invalid ||
+        this.$v.boundSublimes[column].$error
+      )
+        return;
 
       await this.updateSublimeProperty({
         id: this.sublimeId,
         column,
       });
     },
-    async checkMultipleField (index, column) {
-      if (this.$v.boundSublimitsProp.$each[index][column].$invalid || this.$v.boundSublimitsProp.$each[index][column].$error) return;
+    async checkMultipleField(index, column) {
+      if (
+        this.$v.boundSublimitsProp.$each[index][column].$invalid ||
+        this.$v.boundSublimitsProp.$each[index][column].$error
+      )
+        return;
       const value = this.$v.boundSublimitsProp.$each[index][column].$model;
       const id = this.$v.boundSublimitsProp.$each[index].$model.id;
 
-      if (this.$v.boundSublimitsProp.$each[index].otherDeductiblesValue.$model) {
-        this.$v.boundSublimitsProp.$each[index].otherDeductiblesValueUsd.$model = Decimal(
+      if (
+        this.$v.boundSublimitsProp.$each[index].otherDeductiblesValue.$model
+      ) {
+        this.$v.boundSublimitsProp.$each[
+          index
+        ].otherDeductiblesValueUsd.$model = Decimal(
           this.$v.boundSublimitsProp.$each[index].otherDeductiblesValue.$model
         ).mul(this.quotation.exchangeRate);
       }
       await this.saveEngDeductibleColumn({
-        table: 'boundSublimitsProp',
+        table: "boundSublimitsProp",
         key: column,
         value,
         id,
       });
     },
-    async addSublimits () {
+    async addSublimits() {
       await this.createSublimitProperty(this.sublimeId);
-      await this.loadMultipleDeductiblesEng({ table: 'boundSublimitsProp' });
+      await this.loadMultipleDeductiblesEng({ table: "boundSublimitsProp" });
     },
-    async deleteSublime () {
-      this.$emit('deleteSublime', this.sublimeId);
+    async deleteSublime() {
+      this.$emit("deleteSublime", this.sublimeId);
     },
-    removeField (index) {
+    async removeField(index) {
       const id = this.$v.boundSublimitsProp.$each[index].$model.id;
       this.boundSublimitsProp.splice(index, 1);
       this.saveEngDeductibleColumn({
-        table: 'boundSublimitsProp',
-        key: 'active',
+        table: "boundSublimitsProp",
+        key: "active",
         value: false,
         id,
+      }).then(async () => {
+        await this.loadMultipleDeductiblesEng({ table: "boundSublimitsProp" });
       });
     },
-    numberWithDotsElement (e) {
+    numberWithDotsElement(e) {
       let val = e.target.value;
-      let onlyNumbers = val.toString().replace(/[^0-9]+/g, '');
-      let newVal = /^\d+$/.test(onlyNumbers) ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+      let onlyNumbers = val.toString().replace(/[^0-9]+/g, "");
+      let newVal = /^\d+$/.test(onlyNumbers)
+        ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        : "";
       e.target.value = newVal;
     },
   },
@@ -419,8 +437,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 
 .LocationCont {
   .flex();

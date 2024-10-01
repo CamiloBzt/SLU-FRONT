@@ -394,7 +394,7 @@ export default {
       get() {
         const percent = Decimal.div(this.stocksPremiumRate || 0, 100);
         const mult = new Decimal(this.quotationInsured.stock || 0).mul(percent);
-        const result = Decimal.div(mult || 0, 1000);
+        const result = Decimal.div(mult || 0, 10);
         return result.toNumber();
       },
       set() {},
