@@ -88,9 +88,7 @@
             </div>
             <div class="InputRow Large">
               <v-select
-                v-model.trim="
-                  $v.boundPropDeductibles.underlyingCatAplicaSelect.$model
-                "
+                v-model.trim="underlyingCatAplicaSelectValue"
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
@@ -116,9 +114,7 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundPropDeductibles.underlyingCatValuesSelect.$model
-                "
+                v-model.trim="underlyingCatValuesSelectValue"
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
@@ -160,9 +156,7 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundPropDeductibles.underlyingCatValuesSelectTwo.$model
-                "
+                v-model.trim="underlyingCatValuesSelectTwoValue"
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
@@ -240,9 +234,7 @@
             </div>
             <div class="InputRow Large">
               <v-select
-                v-model.trim="
-                  $v.boundPropDeductibles.underlyingHidroAplicaSelect.$model
-                "
+                v-model.trim="underlyingHidroAplicaSelectValue"
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
@@ -269,9 +261,7 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundPropDeductibles.underlyingHidroValuesSelect.$model
-                "
+                v-model.trim="underlyingHidroValuesSelectValue"
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
@@ -314,9 +304,7 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundPropDeductibles.underlyingHidroValuesSelectTwo.$model
-                "
+                v-model.trim="underlyingHidroValuesSelectTwoValue"
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
@@ -633,6 +621,36 @@ export default {
     showAlopLines() {
       if (this.mliv.bi) return true;
       return false;
+    },
+    underlyingCatAplicaSelectValue() {
+      return parseInt(
+        this.$v.boundPropDeductibles.underlyingCatAplicaSelect.$model
+      );
+    },
+    underlyingCatValuesSelectValue() {
+      return parseInt(
+        this.$v.boundPropDeductibles.underlyingCatValuesSelect.$model
+      );
+    },
+    underlyingCatValuesSelectTwoValue() {
+      return parseInt(
+        this.$v.boundPropDeductibles.underlyingCatValuesSelectTwo.$model
+      );
+    },
+    underlyingHidroAplicaSelectValue() {
+      return parseInt(
+        this.$v.boundPropDeductibles.underlyingHidroAplicaSelect.$model
+      );
+    },
+    underlyingHidroValuesSelectValue() {
+      return parseInt(
+        this.$v.boundPropDeductibles.underlyingHidroValuesSelect.$model
+      );
+    },
+    underlyingHidroValuesSelectTwoValue() {
+      return parseInt(
+        this.$v.boundPropDeductibles.underlyingHidroValuesSelectTwo.$model
+      );
     },
   },
   async mounted() {
