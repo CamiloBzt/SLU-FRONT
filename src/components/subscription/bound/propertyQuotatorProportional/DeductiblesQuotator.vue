@@ -88,13 +88,16 @@
             </div>
             <div class="InputRow Large">
               <v-select
-                v-model.trim="underlyingCatAplicaSelectValue"
+                v-model.trim="
+                  $v.boundPropDeductibles.underlyingCatAplicaSelect.$model
+                "
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
                     key: 'underlyingCatAplicaSelect',
-                    value:
-                      $v.boundPropDeductibles.underlyingCatAplicaSelect.$model,
+                    value: parseInt(
+                      $v.boundPropDeductibles.underlyingCatAplicaSelect.$model
+                    ),
                   });
                   checkField('underlyingCatAplicaSelect');
                 "
@@ -114,13 +117,16 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="underlyingCatValuesSelectValue"
+                v-model.trim="
+                  $v.boundPropDeductibles.underlyingCatValuesSelect.$model
+                "
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
                     key: 'underlyingCatValuesSelect',
-                    value:
-                      $v.boundPropDeductibles.underlyingCatValuesSelect.$model,
+                    value: parseInt(
+                      $v.boundPropDeductibles.underlyingCatValuesSelect.$model
+                    ),
                   });
                   checkField('underlyingCatValuesSelect');
                 "
@@ -156,14 +162,17 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="underlyingCatValuesSelectTwoValue"
+                v-model.trim="
+                  $v.boundPropDeductibles.underlyingCatValuesSelectTwo.$model
+                "
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
                     key: 'underlyingCatValuesSelectTwo',
-                    value:
+                    value: parseInt(
                       $v.boundPropDeductibles.underlyingCatValuesSelectTwo
-                        .$model,
+                        .$model
+                    ),
                   });
                   checkField('underlyingCatValuesSelectTwo');
                 "
@@ -234,14 +243,16 @@
             </div>
             <div class="InputRow Large">
               <v-select
-                v-model.trim="underlyingHidroAplicaSelectValue"
+                v-model.trim="
+                  $v.boundPropDeductibles.underlyingHidroAplicaSelect.$model
+                "
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
                     key: 'underlyingHidroAplicaSelect',
-                    value:
-                      $v.boundPropDeductibles.underlyingHidroAplicaSelect
-                        .$model,
+                    value: parseInt(
+                      $v.boundPropDeductibles.underlyingHidroAplicaSelect.$model
+                    ),
                   });
                   checkField('underlyingHidroAplicaSelect');
                 "
@@ -261,14 +272,16 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="underlyingHidroValuesSelectValue"
+                v-model.trim="
+                  $v.boundPropDeductibles.underlyingHidroValuesSelect.$model
+                "
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
                     key: 'underlyingHidroValuesSelect',
-                    value:
-                      $v.boundPropDeductibles.underlyingHidroValuesSelect
-                        .$model,
+                    value: parseInt(
+                      $v.boundPropDeductibles.underlyingHidroValuesSelect.$model
+                    ),
                   });
                   checkField('underlyingHidroValuesSelect');
                 "
@@ -304,14 +317,17 @@
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="underlyingHidroValuesSelectTwoValue"
+                v-model.trim="
+                  $v.boundPropDeductibles.underlyingHidroValuesSelectTwo.$model
+                "
                 @blur="
                   SET_BOUND_PROP_DED({
                     index: deductibleIndex,
                     key: 'underlyingHidroValuesSelectTwo',
-                    value:
+                    value: parseInt(
                       $v.boundPropDeductibles.underlyingHidroValuesSelectTwo
-                        .$model,
+                        .$model
+                    ),
                   });
                   checkField('underlyingHidroValuesSelectTwo');
                 "
@@ -621,36 +637,6 @@ export default {
     showAlopLines() {
       if (this.mliv.bi) return true;
       return false;
-    },
-    underlyingCatAplicaSelectValue() {
-      return parseInt(
-        this.$v.boundPropDeductibles.underlyingCatAplicaSelect.$model
-      );
-    },
-    underlyingCatValuesSelectValue() {
-      return parseInt(
-        this.$v.boundPropDeductibles.underlyingCatValuesSelect.$model
-      );
-    },
-    underlyingCatValuesSelectTwoValue() {
-      return parseInt(
-        this.$v.boundPropDeductibles.underlyingCatValuesSelectTwo.$model
-      );
-    },
-    underlyingHidroAplicaSelectValue() {
-      return parseInt(
-        this.$v.boundPropDeductibles.underlyingHidroAplicaSelect.$model
-      );
-    },
-    underlyingHidroValuesSelectValue() {
-      return parseInt(
-        this.$v.boundPropDeductibles.underlyingHidroValuesSelect.$model
-      );
-    },
-    underlyingHidroValuesSelectTwoValue() {
-      return parseInt(
-        this.$v.boundPropDeductibles.underlyingHidroValuesSelectTwo.$model
-      );
     },
   },
   async mounted() {
