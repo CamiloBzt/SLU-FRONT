@@ -397,7 +397,23 @@ export default {
     state.boundInsurable = value;
   },
   setStateCompleteBUCED(state, value) {
-    state.boundEngCatDeductibles = value;
+    state.boundEngCatDeductibles = value.map((data) => {
+      return {
+        ...data,
+        underlyingCatAplicaSelect:
+          parseInt(data.underlyingCatAplicaSelect, 10) || 0,
+        underlyingCatValuesSelect:
+          parseInt(data.underlyingCatValuesSelect, 10) || 0,
+        underlyingCatValuesSelectTwo:
+          parseInt(data.underlyingCatValuesSelectTwo, 10) || 0,
+        underlyingHidroAplicaSelect:
+          parseInt(data.underlyingHidroAplicaSelect, 10) || 0,
+        underlyingHidroValuesSelect:
+          parseInt(data.underlyingHidroValuesSelect, 10) || 0,
+        underlyingHidroValuesSelectTwo:
+          parseInt(data.underlyingHidroValuesSelectTwo, 10) || 0,
+      };
+    });
   },
   resetStateCompleteBUCED(state) {
     state.boundEngCatDeductibles = BOUND.boundEngCatDeductibles[0];
