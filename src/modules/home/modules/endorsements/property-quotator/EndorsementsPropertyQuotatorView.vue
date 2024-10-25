@@ -256,13 +256,16 @@
 
     <div v-if="endorsementHistory">
       <div
-        class="formatEndorsementHistoryTable"
+        class="formatEndorsementHistoryTable overflow-auto"
         v-if="
           listEndorsement.find((element) => element.id === idDinamyc)
             .EndorsementType.type !== 'Movement without premium'
         "
       >
         <div class="inner-title">Endorsement Report</div>
+        <div v-if="informationCard && informationCard.report">
+          <EndorsementReportCompleteTable :report="cleanReport" />
+        </div>
         <div
           class="files-submit flex justify-content-start align-items-start align-content-start"
           v-if="endorsementHistory"
@@ -350,6 +353,7 @@ import EndorsementDocuments from "../components/EndorsementDocuments.vue";
 import EndorsementHistoryTable from "../components/EndorsementHistoryTable.vue";
 import AdmittedPremiumTableHistory from "../components/AdmittedPremiumTableHistory.vue";
 import AppFile from "../components/AppFile.vue";
+import EndorsementReportCompleteTable from "./components/EndorsementReportCompleteTable.vue";
 import TableEndorsementMovement from "../components/TableEndorsementMovement.vue";
 import TableEndorsementDeductions from "../components/TableEndorsementDeductions.vue";
 import ChangeOfTechnicalConditions from "./components/ChangeOfTechnicalConditions.vue";
@@ -366,6 +370,7 @@ export default {
   name: "EndorsementsView",
   components: {
     AppFile,
+    EndorsementReportCompleteTable,
     AppCloseAccount,
     BarNavGeneral,
     InclusionRisk,
@@ -397,8 +402,8 @@ export default {
   },
   data() {
     return {
-      newShare: '',
-      newExchangeRate: '',
+      newShare: "",
+      newExchangeRate: "",
       selectedEndorsementId: 0,
       onCreatrEndorsement: false,
       idEndorsementDinamic: null,
@@ -584,8 +589,10 @@ export default {
         await this.saveEndorsmentType(this.movementsValue);
       }
     },
-    async backToCreateEndorsement() {      
-      this.$refs.targetTopCreateEndorsement.scrollIntoView({ behavior: 'smooth' });
+    async backToCreateEndorsement() {
+      this.$refs.targetTopCreateEndorsement.scrollIntoView({
+        behavior: "smooth",
+      });
       this.onCreatrEndorsement = false;
       this.movementsValue = "";
       this.disabledSelect = false;
@@ -616,7 +623,11 @@ export default {
       this.showInfoEndorsement = true;
       this.reloadEndorsementData = this.reloadEndorsementData + 1;
     },
-    async changeDateEndorsementAndShare(selectedDate, shareModified, exchangeRateModified) {
+    async changeDateEndorsementAndShare(
+      selectedDate,
+      shareModified,
+      exchangeRateModified
+    ) {
       this.newShare = shareModified;
       this.newExchangeRate = exchangeRateModified;
       this.dateSaved = selectedDate;
@@ -743,7 +754,7 @@ export default {
           this.detailValues[0].premiumBi2 = this.informationCard.report.endorsementReportData.movementValues.biUsd
           this.detailValues[0].premiumStocks2 = this.informationCard.report.endorsementReportData.movementValues.stocksUsd
           this.detailValues[0].premiumTotal2 = this.informationCard.report.endorsementReportData.movementValues.totalUsd
-          
+
           this.premiumSlu[0].premiumDamage = this.informationCard.report.endorsementReportData.premium.propertyDamage
           this.premiumSlu[0].premiumBi = this.informationCard.report.endorsementReportData.premium.businessInterruption
           this.premiumSlu[0].premiumStocks = this.informationCard.report.endorsementReportData.premium.stock
@@ -752,7 +763,7 @@ export default {
           this.premiumSlu[0].premiumBi2 = this.informationCard.report.endorsementReportData.premium.businessInterruptionUsd
           this.premiumSlu[0].premiumStocks2 = this.informationCard.report.endorsementReportData.premium.stockUsd
           this.premiumSlu[0].premiumTotal2 = this.informationCard.report.endorsementReportData.premium.totalUsd
-          
+
           this.netPremium[0].premiumDamage = this.informationCard.report.endorsementReportData.netPremium.damageNet
           this.netPremium[0].premiumBi = this.informationCard.report.endorsementReportData.netPremium.biNet
           this.netPremium[0].premiumStocks = this.informationCard.report.endorsementReportData.netPremium.stocksNet
@@ -813,10 +824,18 @@ export default {
     console.log("listEndorsement =>", this.listEndorsement);
     if (!this.accountComplete) router.back();
 
-    this.newShare = this.accountComplete.tiv.boundInsurableProp.sluLine.toString();
-    this.newExchangeRate = this.accountComplete.deductibles.exchangeRate.toString();
+    this.newShare =
+      this.accountComplete.tiv.boundInsurableProp.sluLine.toString();
+    this.newExchangeRate =
+      this.accountComplete.deductibles.exchangeRate.toString();
 
     //if (!this.accountComplete.reference.includes("PRO")) router.back();
+  },
+
+  computed: {
+    cleanReport() {
+      return Object.assign({}, this.informationCard.report);
+    },
   },
 };
 </script>
