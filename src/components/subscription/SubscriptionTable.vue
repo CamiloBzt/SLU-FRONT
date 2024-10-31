@@ -157,8 +157,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
 import moment from "moment";
+import { mapActions, mapState } from "vuex";
 import router from "../../router";
 moment.locale("es");
 export default {
@@ -197,7 +197,7 @@ export default {
         item.risk_type === "Eraction All Risk"
           ? "engineering"
           : "property-quotator";
-      router.push(`endorsements/${accountType}/${id}`);
+      router.push(`/endorsements/${accountType}/${id}`);
     },
     moveRightTable() {
       this.sideScroll("right", 25, 100, 10);
@@ -231,7 +231,6 @@ export default {
       }
     },
     setSubscriptionInfo(item) {
-      console.log("Carga de item", item);
       this.loadSubscription(item);
       this.$router.push(`/underwriting/${item.id}/submission`);
     },
