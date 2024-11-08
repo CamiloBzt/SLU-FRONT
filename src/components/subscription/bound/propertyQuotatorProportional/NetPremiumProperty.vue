@@ -20,13 +20,25 @@
         <div class="input input--title">SLU Share</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageSluShare()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageSluShare()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biSluShare()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biSluShare()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksSluShare()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksSluShare()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">
           {{ calculates.sluShareTotal() }}
@@ -38,16 +50,28 @@
         <div class="input input--title">Brokerage</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageBrokerage()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageBrokerage()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biBrokerage()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biBrokerage()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksBrokerage()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksBrokerage()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">
-          {{ calculates.brokerageTotal() }} 
+          {{ calculates.brokerageTotal() }}
         </div>
       </div>
 
@@ -56,13 +80,25 @@
         <div class="input input--title">Taxes</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageTaxes()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageTaxes()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biTaxes()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biTaxes()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksTaxes()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksTaxes()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">
           {{ calculates.taxesTotal() }}
@@ -74,13 +110,25 @@
         <div class="input input--title">Engineering Fees</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageEng()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageEng()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biEng()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biEng()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksEng()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksEng()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">
           {{ calculates.engTotal() }}
@@ -92,13 +140,25 @@
         <div class="input input--title">Fronting Fee</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageFronting()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageFronting()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biFronting()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biFronting()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksFronting()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksFronting()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">
           {{ calculates.frontingTotal() }}
@@ -110,13 +170,25 @@
         <div class="input input--title">Premium Reserve</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageColombia()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageColombia()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biColombia()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biColombia()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksColombia()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksColombia()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">
           {{ calculates.colombiaTotal() }}
@@ -127,13 +199,25 @@
         <div class="input input--title">LTA</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageLTA()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageLTA()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biLTA()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biLTA()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksLTA()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksLTA()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">{{ calculates.LTATotal() }}</div>
       </div>
@@ -143,13 +227,25 @@
         <div class="input input--title">Others</div>
         <div class="divider" />
         <div class="input">
-          <currency-input :value="calculates.damageOther()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.damageOther()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biOther()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.biOther()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksOther()" :options="currencyOptions" disabled />
+          <currency-input
+            :value="calculates.stocksOther()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">{{ calculates.otherTotal() }}</div>
       </div>
@@ -159,13 +255,25 @@
         <div class="input input--title">Net premium</div>
         <div class="divider" />
         <div class="input">
-          <currency-input  :value="calculates.damageNet()"  :options="currencyOptions" disabled/>
+          <currency-input
+            :value="calculates.damageNet()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biNet()"  :options="currencyOptions" disabled/>
+          <currency-input
+            :value="calculates.biNet()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksNet()"  :options="currencyOptions" disabled/>
+          <currency-input
+            :value="calculates.stocksNet()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input input--total">{{ calculates.netTotal() }}</div>
       </div>
@@ -174,88 +282,103 @@
         <div class="input input--title">Net premium excluding fronting</div>
         <div class="divider" />
         <div class="input">
-          <currency-input  
-            :value="calculates.damageNetPremiumExcludingFronting()"  
-            :options="currencyOptions" disabled
+          <currency-input
+            :value="calculates.damageNetPremiumExcludingFronting()"
+            :options="currencyOptions"
+            disabled
           />
         </div>
         <div class="input">
-          <currency-input 
-          :value="calculates.businessInterNetPremiumExcludingFronting()"  
-          :options="currencyOptions" disabled
+          <currency-input
+            :value="calculates.businessInterNetPremiumExcludingFronting()"
+            :options="currencyOptions"
+            disabled
           />
         </div>
         <div class="input">
-          <currency-input 
-            :value="calculates.stockNetPremiumExcludingFronting()"  
-            :options="currencyOptions" disabled
+          <currency-input
+            :value="calculates.stockNetPremiumExcludingFronting()"
+            :options="currencyOptions"
+            disabled
           />
         </div>
-        <div class="input input--total">{{ calculates.totalNetPremiumExcludingFronting() }}</div>
+        <div class="input input--total">
+          {{ calculates.totalNetPremiumExcludingFronting() }}
+        </div>
       </div>
 
       <div class="table__column">
         <div class="input input--title">SLU Premium to be invoiced</div>
         <div class="divider" />
         <div class="input">
-          <currency-input  :value="calculates.damageSluPremiumToBeInvoiced()"  
-          :options="currencyOptions" disabled
-        />
-        </div>
-        <div class="input">
-          <currency-input :value="calculates.businessInterSluPremiumToBeInvoiced()"  
-          :options="currencyOptions" disabled
+          <currency-input
+            :value="calculates.damageSluPremiumToBeInvoiced()"
+            :options="currencyOptions"
+            disabled
           />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stockSluPremiumToBeInvoiced()"  
-          :options="currencyOptions" disabled
+          <currency-input
+            :value="calculates.businessInterSluPremiumToBeInvoiced()"
+            :options="currencyOptions"
+            disabled
           />
         </div>
-        <div class="input input--total">{{ calculates.totalSluPremiumToBeInvoiced() }}</div>
+        <div class="input">
+          <currency-input
+            :value="calculates.stockSluPremiumToBeInvoiced()"
+            :options="currencyOptions"
+            disabled
+          />
+        </div>
+        <div class="input input--total">
+          {{ calculates.totalSluPremiumToBeInvoiced() }}
+        </div>
       </div>
-
-
-      
     </div>
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from "vuex";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 
 /**services */
-import NetPremiumService from '@/modules/home/services/net-premium.service'
+import NetPremiumService from "@/modules/home/services/net-premium.service";
 
 /**strategies */
-import netPremiumStrategy from  '../class/NetPremiumPRO'
+import netPremiumStrategy from "../class/NetPremiumPRO";
 
 export default {
-  name: 'NetPremiumProperty',
+  name: "NetPremiumProperty",
   components: { CurrencyInput },
   data() {
     return {
       subscriptionId: this.$route.params.subscriptionId,
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
-      formatter: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      formatter: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       }),
     };
   },
   async beforeMount() {
-  
-    await this.getCatalogByName({ name: 'type_coverages' });
-    await this.getCatalogByName({ name: 'apply_sir' });
-
+    await this.getCatalogByName({ name: "type_coverages" });
+    await this.getCatalogByName({ name: "apply_sir" });
   },
   computed: {
-    ...mapGetters(['deductions', 'premium', 'accountInformation', 'risk_type', 'toBeDefined', 'quotation']),
+    ...mapGetters([
+      "deductions",
+      "premium",
+      "accountInformation",
+      "risk_type",
+      "toBeDefined",
+      "quotation",
+    ]),
     ...mapState({
       boundInsurableProp(state) {
         if (this.propEng) return state.boundInsurableProp;
@@ -267,7 +390,7 @@ export default {
       },
     }),
     isNonProportional() {
-      const valids = [2, '2'];
+      const valids = [2, "2"];
       if (valids.includes(this.quotation.typeQuotation)) {
         return true;
       }
@@ -276,42 +399,51 @@ export default {
     // tipo de riesgo
     selectedRisk: {
       get() {
-        if (this.accountInformation.typeOfRisk && this.risk_type && this.risk_type.length > 0) {
-          const typeObj = this.risk_type.find((v) => v.id === this.accountInformation.typeOfRisk);
+        if (
+          this.accountInformation.typeOfRisk &&
+          this.risk_type &&
+          this.risk_type.length > 0
+        ) {
+          const typeObj = this.risk_type.find(
+            (v) => v.id === this.accountInformation.typeOfRisk
+          );
           return typeObj;
         }
         return 0;
       },
     },
     selectedRiskKey() {
-      return this.selectedRisk.key || '';
+      return this.selectedRisk.key || "";
     },
     typeSelect() {
-      const valid = ['PRO', 'CPE', 'CECR'];
+      const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return 1;
       return 2;
     },
     propEng() {
-      const valid = ['PRO', 'CPE', 'CECR'];
+      const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return true;
       return false;
     },
     // country
     isColombia() {
       const country = this.accountInformation.country;
-      const valids = [13, '13'];
+      const valids = [13, "13"];
       if (valids.includes(country)) return true;
       return false;
     },
     /**
      * @template {typeof import('../class/NetPremiumPRO') } T
-     * 
+     *
      * @returns {T}
      */
-    calculates(){
-      return  new netPremiumStrategy(
-          this.premium, this.deductions,  this.boundInsurableProp, false
-        )
+    calculates() {
+      return new netPremiumStrategy(
+        this.premium,
+        this.deductions,
+        this.boundInsurableProp,
+        false
+      );
     },
     // vuex aliases
     premiumDamage: {
@@ -331,16 +463,20 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCatalogByName']),
+    ...mapActions(["getCatalogByName"]),
   },
- async updated () {
-    const data =  this.calculates.getData()
-    await NetPremiumService.addOrUpdateNetPremium(this.subscriptionId, data, false)
-  }
+  async updated() {
+    const data = this.calculates.getData();
+    await NetPremiumService.addOrUpdateNetPremium(
+      this.subscriptionId,
+      data,
+      false
+    );
+  },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/Subscription/Bound.less";
 .back {
   background: red;
 }

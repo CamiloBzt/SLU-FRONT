@@ -94,10 +94,26 @@ class NetPremiumEng {
     this.data.allRiskEng = result;
     return result;
   }
+  allRiskLta() {
+    const sluShare = this.allRiskSluShare();
+    const result = calculateProperty(this.deductions.lta, sluShare);
+
+    this.data.allRiskLta = result;
+    return result;
+  }
+  allRiskOthers() {
+    const sluShare = this.allRiskSluShare();
+    const result = calculateProperty(this.deductions.others, sluShare);
+
+    this.data.allRiskOthers = result;
+    return result;
+  }
 
   allRiskFronting() {
     const value = Decimal.sub(this.allRiskSluShare(), this.allRiskBrokerage())
       .sub(this.allRiskTaxes())
+      .sub(this.allRiskLta())
+      .sub(this.allRiskOthers())
       .toNumber();
     const result = calculateProperty(this.deductions.fronting, value);
     this.data.allRiskFronting = result;
@@ -170,12 +186,10 @@ class NetPremiumEng {
   }
 
   allRiskNetSLUExcludingSurveyFees() {
-    const value = Decimal.sub(this.allRiskSluShare(), this.allRiskBrokerage())
-      .sub(this.allRiskTaxes())
-      .sub(this.allRiskEng())
-      .sub(this.allRiskFronting())
-      .sub(this.allRiskColombia())
-      .toNumber();
+    const value = Decimal.sub(
+      this.allRiskNetSLU(),
+      this.allRiskColombia()
+    ).toNumber();
 
     this.data.allRiskNetSLUExcludingSurveyFees = value;
     return value;
@@ -248,8 +262,8 @@ class NetPremiumEng {
   allRiskNetSLU() {
     const value = Decimal.sub(this.allRiskSluShare(), this.allRiskBrokerage())
       .sub(this.allRiskTaxes())
-      .sub(this.allRiskEng())
-      .sub(this.allRiskFronting())
+      .sub(this.allRiskLta())
+      .sub(this.allRiskOthers())
       .toNumber();
     return value;
   }
@@ -272,7 +286,9 @@ class NetPremiumEng {
   allRiskNetSLUExcludingFronting() {
     const value = Decimal.sub(this.allRiskSluShare(), this.allRiskBrokerage())
       .sub(this.allRiskTaxes())
-      .sub(this.allRiskEng())
+      .sub(this.allRiskFronting())
+      .sub(this.allRiskLta())
+      .sub(this.allRiskOthers())
       .toNumber();
     return value;
   }

@@ -85,58 +85,58 @@
                 />
               </div>
               <div v-if="showInfoEndorsement">
-              <MovementValues
-                type="Inclusion Risk"
-                :accountComplete="accountComplete"
-                :insurableRiskData="insurableRisk"
-                ref="componente"
-                @onResultados="onResultados"
-              />
+                <MovementValues
+                  type="Inclusion Risk"
+                  :accountComplete="accountComplete"
+                  :insurableRiskData="insurableRisk"
+                  ref="componente"
+                  @onResultados="onResultados"
+                />
 
-              <div class="input-row w-100 d-flex flex-wrap">
-                <div class="input-col">
-                  <div class="inner-title">Additional</div>
-                  <div class="input-cont">
-                    <v-autocomplete
-                      label="Clause"
-                      v-model="clause"
-                      :items="clauseList"
-                      item-value="clause"
-                      item-text="clause"
-                    />
+                <div class="input-row w-100 d-flex flex-wrap">
+                  <div class="input-col">
+                    <div class="inner-title">Additional</div>
+                    <div class="input-cont">
+                      <v-autocomplete
+                        label="Clause"
+                        v-model="clause"
+                        :items="clauseList"
+                        item-value="clause"
+                        item-text="clause"
+                      />
+                    </div>
+                    <div v-if="!clause" class="error-message">
+                      Please select a clause.
+                    </div>
                   </div>
-                  <div v-if="!clause" class="error-message">
-                    Please select a clause.
-                  </div>
-                </div>
-                <div class="input-col">
-                  <div class="inner-title" style="opacity: 0">|</div>
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menu3"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
+                  <div class="input-col">
+                    <div class="inner-title" style="opacity: 0">|</div>
+                    <div class="input-cont">
+                      <v-menu
+                        v-model="menu3"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="premiumPaymentDate"
+                            label="Premium payment date"
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
                           v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                        @input="menu3 = false"
-                      ></v-date-picker>
-                    </v-menu>
+                          @input="menu3 = false"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             </v-stepper-content>
 
             <v-stepper-content step="2">
@@ -268,13 +268,28 @@
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments"  v-show="e1 == 1 || e1 == 3" />
-      <AdmittedPremiumTable v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" />
+      <EndorsementDocuments
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
+      <AdmittedPremiumTable
+        v-if="e1 == 2"
+        @setTotalPremium="setTotalPremium"
+        :detailValues="totalPremium"
+        :exchangeRate="accountComplete.deductibles.exchangeRate"
+      />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)"
-          :disabled="validationFirstStep">
+        <v-btn
+          :outlined="e1 == 3 ? false : true"
+          rounded
+          large
+          :text="e1 == 3 ? true : false"
+          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 3 ? 'none' : '#003D6D'"
+          @click="goNext(e1)"
+          :disabled="validationFirstStep"
+        >
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -334,7 +349,7 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: {type: Boolean}
+    showInfoEndorsement: { type: Boolean },
   },
   data() {
     return {
@@ -440,10 +455,10 @@ export default {
       effectiveDateError: false,
       endDateError: false,
       premiumPaymentDateError: true,
-      endorsmentReporData:{},
-      isEdited:{},
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
+      endorsmentReporData: {},
+      isEdited: {},
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
     };
   },
   async beforeMount() {
@@ -469,30 +484,35 @@ export default {
   watch: {
     e1: async function () {
       if (this.e1 === 1) {
-        this.isEdited = {}
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Cancel';
+        this.isEdited = {};
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Cancel";
       }
       if (this.e1 === 2) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Return";
       }
       if (this.e1 === 3) {
-        this.buttonTitle = 'Finalize'
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Finalize";
+        this.buttonTitleBack = "Return";
         const premiumOriginal = this.detailValues.find((el) => el.id === 1);
         const premiumUSD = this.detailValues.find((el) => el.id === 2);
 
-        const tivModificado =  {
-            propertyDamageMovement: this.movementValues[0].damage,
-            businessInterruptionMovement:this.movementValues[0].bi,
-            stockMovement:this.movementValues[0].stocks,
+        const tivModificado = {
+          propertyDamageMovement: this.movementValues[0].damage,
+          businessInterruptionMovement: this.movementValues[0].bi,
+          stockMovement: this.movementValues[0].stocks,
 
-            propertyDamageRate:this.accountComplete.tiv.premium.propertyDamageRate,
-            businessInterruptionRate:this.accountComplete.tiv.premium.businessInterruptionRate,
-            stockRate:this.accountComplete.tiv.premium.stockRate,
-            stockPercentaje:(this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) /100,
-          }
+          propertyDamageRate:
+            this.accountComplete.tiv.premium.propertyDamageRate,
+          businessInterruptionRate:
+            this.accountComplete.tiv.premium.businessInterruptionRate,
+          stockRate: this.accountComplete.tiv.premium.stockRate,
+          stockPercentaje:
+            (this.accountComplete.tiv.premium.stockPercentaje ||
+              this.accountComplete.tiv.insurable.porcentaje ||
+              0) / 100,
+        };
 
         const dates = {
           effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
@@ -506,20 +526,19 @@ export default {
         };
 
         const options = {
-          isEdited:this.isEdited,
+          isEdited: this.isEdited,
           dataEdited: {
             // totalPremium
-            premiumDamage:this.totalPremium[0].premiumDamage,
-            premiumBi:this.totalPremium[0].premiumBi,
-            premiumStocks:this.totalPremium[0].premiumStocks,
+            premiumDamage: this.totalPremium[0].premiumDamage,
+            premiumBi: this.totalPremium[0].premiumBi,
+            premiumStocks: this.totalPremium[0].premiumStocks,
 
             // premiumSlu
-            sluDamage:this.totalPremium[0].sluDamage,
-            sluBi:this.totalPremium[0].sluBi,
-            sluStocks:this.totalPremium[0].sluStocks,
-
+            sluDamage: this.totalPremium[0].sluDamage,
+            sluBi: this.totalPremium[0].sluBi,
+            sluStocks: this.totalPremium[0].sluStocks,
           },
-        }
+        };
 
         // Obteniendo los calculos de Net premium
         const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
@@ -586,10 +605,15 @@ export default {
               movementValuesUSD.stocks,
           },
           premium: {
-            propertyDamageRate:this.accountComplete.tiv.premium.propertyDamageRate,
-            businessInterruptionRate:this.accountComplete.tiv.premium.businessInterruptionRate,
-            stockRate:this.accountComplete.tiv.premium.stockRate,
-            stockPercentaje:(this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) /100,
+            propertyDamageRate:
+              this.accountComplete.tiv.premium.propertyDamageRate,
+            businessInterruptionRate:
+              this.accountComplete.tiv.premium.businessInterruptionRate,
+            stockRate: this.accountComplete.tiv.premium.stockRate,
+            stockPercentaje:
+              (this.accountComplete.tiv.premium.stockPercentaje ||
+                this.accountComplete.tiv.insurable.porcentaje ||
+                0) / 100,
 
             propertyDamage: this.totalPremium[0].premiumDamage,
 
@@ -597,17 +621,25 @@ export default {
 
             stock: this.totalPremium[0].premiumStocks,
 
-            total:this.totalPremium[0].premiumTotal,
+            total: this.totalPremium[0].premiumTotal,
 
             totalInsured: this.totalPremium[0].premiumTotal,
 
-            propertyDamageUsd: (this.totalPremium[0].premiumDamage / this.accountComplete.deductibles.exchangeRate),
+            propertyDamageUsd:
+              this.totalPremium[0].premiumDamage /
+              this.accountComplete.deductibles.exchangeRate,
 
-            businessInterruptionUsd: (this.totalPremium[0].premiumBi / this.accountComplete.deductibles.exchangeRate),
+            businessInterruptionUsd:
+              this.totalPremium[0].premiumBi /
+              this.accountComplete.deductibles.exchangeRate,
 
-            stockUsd: (this.totalPremium[0].premiumStocks / this.accountComplete.deductibles.exchangeRate),
+            stockUsd:
+              this.totalPremium[0].premiumStocks /
+              this.accountComplete.deductibles.exchangeRate,
 
-            totalUsd: (this.totalPremium[0].premiumTotal / this.accountComplete.deductibles.exchangeRate),
+            totalUsd:
+              this.totalPremium[0].premiumTotal /
+              this.accountComplete.deductibles.exchangeRate,
           },
           boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
           deductibles: this.accountComplete.deductibles,
@@ -625,7 +657,6 @@ export default {
             stocksSluShare: resultUSD.data.stocksPremiumSlu,
             sluShareTotal: resultUSD.data.totalPremiumSlu,
           },
-
         };
 
         // Guardar los valores de netPremium
@@ -674,19 +705,17 @@ export default {
     activarVistaDatos() {
       this.$refs.componente.reciboLllamada();
     },
-    setTotalPremium({id, value, concept}){
+    setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
       totalPremium[concept] = value;
 
-      if (concept !== 'premiumTotal' & concept !== 'sluTotal') {
+      if ((concept !== "premiumTotal") & (concept !== "sluTotal")) {
         this.isEdited[concept] = true;
       }
     },
     onResultados(datasMV) {
-      // console.log(datasMV);
       this.movementValues = datasMV;
       this.detailValues.map((value, index) => {
-
         value.premiumDamage =
           datasMV[index].totalDamage + datasMV[index].damage;
 
@@ -701,24 +730,31 @@ export default {
 
       const premiumOriginal = this.detailValues.find((el) => el.id === 1);
 
-      const tivModificado =  {
+      const tivModificado = {
         propertyDamageMovement: this.movementValues[0].damage,
-        businessInterruptionMovement:this.movementValues[0].bi,
-        stockMovement:this.movementValues[0].stocks,
+        businessInterruptionMovement: this.movementValues[0].bi,
+        stockMovement: this.movementValues[0].stocks,
 
-        propertyDamageRate:this.accountComplete.tiv.premium.propertyDamageRate,
-        businessInterruptionRate:this.accountComplete.tiv.premium.businessInterruptionRate,
-        stockRate:this.accountComplete.tiv.premium.stockRate,
-        stockPercentaje:(this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) /100,
-      }
+        propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
+        businessInterruptionRate:
+          this.accountComplete.tiv.premium.businessInterruptionRate,
+        stockRate: this.accountComplete.tiv.premium.stockRate,
+        stockPercentaje:
+          (this.accountComplete.tiv.premium.stockPercentaje ||
+            this.accountComplete.tiv.insurable.porcentaje ||
+            0) / 100,
+      };
 
       const dates = {
-        effetiveDate:new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0,10),
-        expiryDate:new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10),
-        endormenteffetiveDate: new Date (this.effectiveDate),
-        movementEndDate:new Date(this.expiryDateReal),
-      }
-
+        effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
+          .toISOString()
+          .substring(0, 10),
+        expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
+          .toISOString()
+          .substring(0, 10),
+        endormenteffetiveDate: new Date(this.effectiveDate),
+        movementEndDate: new Date(this.expiryDateReal),
+      };
 
       const totalPremium = new netPremiumInclusionRisk(
         tivModificado,
@@ -740,13 +776,40 @@ export default {
       premiumOriginal2.sluDamage = totalPremium.damagePremiumSlu();
       premiumOriginal2.sluBi = totalPremium.biPremiumSlu();
       premiumOriginal2.sluStocks = totalPremium.stocksPremiumSlu();
-      premiumOriginal2.sluTotal = +(totalPremium
+      premiumOriginal2.sluTotal = +totalPremium
         .totalPremiumSlu()
-        .replace("$", "").replace(',',''));
+        .replace("$", "")
+        .replace(",", "");
+
+      const totalPremiumUsd = new netPremiumInclusionRisk(
+        tivModificado,
+        this.accountComplete.deductibles,
+        this.accountComplete.tiv?.boundInsurableProp.sluLine,
+        true,
+        dates
+      );
+
+      const retultTotalPremiumUsd = totalPremiumUsd.totalPremium();
+
+      const premiumOriginal2Usd = this.totalPremium.find((el) => el.id === 2);
+
+      premiumOriginal2Usd.premiumDamage =
+        retultTotalPremiumUsd.damageTotalPremiumUsd;
+      premiumOriginal2Usd.premiumBi = retultTotalPremiumUsd.biTotalPremiumUsd;
+      premiumOriginal2Usd.premiumStocks =
+        retultTotalPremiumUsd.stockTotalPremiumUsd;
+      premiumOriginal2Usd.premiumTotal = retultTotalPremiumUsd.totalUsd;
+
+      premiumOriginal2Usd.sluDamage = totalPremiumUsd.damagePremiumSlu();
+      premiumOriginal2Usd.sluBi = totalPremiumUsd.biPremiumSlu();
+      premiumOriginal2Usd.sluStocks = totalPremiumUsd.stocksPremiumSlu();
+      premiumOriginal2Usd.sluTotal = +totalPremiumUsd
+        .totalPremiumSlu()
+        .replace("$", "")
+        .replace(",", "");
     },
     async stepone() {
       this.e1 = 2;
-      console.log(this.e1);
     },
 
     async nextStep() {
@@ -780,7 +843,7 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
     async submit() {
@@ -795,7 +858,10 @@ export default {
         this.netPremium.originalValues.netTotal
       );
 
-      const newNetPremium = Decimal.add(originalNetPremium,netPremiumMovement).toNumber();
+      const newNetPremium = Decimal.add(
+        originalNetPremium,
+        netPremiumMovement
+      ).toNumber();
 
       const netPremiumDifference = netPremiumMovement;
 
@@ -805,28 +871,30 @@ export default {
 
       // actualizando tiv.insurable de account complete
       const tivUpdate = {
-        insurable:{
+        insurable: {
           propertyDamage: tivTotal.premiumDamage,
           businessInterruption: tivTotal.premiumBi,
           stock: tivTotal.premiumStocks,
 
-          propertyDamageUsd:tivTotalUsd.premiumDamage,
-          businessInterruptionUsd:tivTotalUsd.premiumBi,
-          stockUsd:tivTotalUsd.premiumStocks,
+          propertyDamageUsd: tivTotalUsd.premiumDamage,
+          businessInterruptionUsd: tivTotalUsd.premiumBi,
+          stockUsd: tivTotalUsd.premiumStocks,
 
-          total:tivTotal.premiumTotal,
-          totalUsd:tivTotalUsd.premiumTotal,
+          total: tivTotal.premiumTotal,
+          totalUsd: tivTotalUsd.premiumTotal,
 
-          porcentaje: this.accountComplete.tiv.insurable.porcentaje
+          porcentaje: this.accountComplete.tiv.insurable.porcentaje,
         },
-        premium:{
-          propertyDamageRate:this.accountComplete.tiv.premium.propertyDamageRate,
-          businessInterruptionRate:this.accountComplete.tiv.premium.businessInterruptionRate,
-          stockRate:this.accountComplete.tiv.premium.stockRate,
-          stockPercentaje:this.accountComplete.tiv.premium.stockPercentaje,
+        premium: {
+          propertyDamageRate:
+            this.accountComplete.tiv.premium.propertyDamageRate,
+          businessInterruptionRate:
+            this.accountComplete.tiv.premium.businessInterruptionRate,
+          stockRate: this.accountComplete.tiv.premium.stockRate,
+          stockPercentaje: this.accountComplete.tiv.premium.stockPercentaje,
         },
         boundInsurableProp: this.accountComplete.tiv.boundInsurableProp,
-      }
+      };
 
       // guardar la cuenta actualizada en BD
       const accountCompleteResponse =
@@ -834,10 +902,10 @@ export default {
           ...this.accountComplete,
           deductibles: this.accountComplete.deductibles,
           tiv: tivUpdate,
-          netPremium:{
-            originalValues:{
-              netTotal:newNetPremium,
-            }
+          netPremium: {
+            originalValues: {
+              netTotal: newNetPremium,
+            },
           },
           technicalConditions: this.accountComplete.technical_conditions,
           cartera: {
@@ -856,9 +924,9 @@ export default {
         accountId: accountCompleteResponse.id,
         effectiveDate: this.effectiveDate,
         report: {
-          endorsmentReporData:{
+          endorsmentReporData: {
             ...this.endorsmentReporData,
-            additionalInfo:{},
+            additionalInfo: {},
           },
           cartera: {
             ...this.accountComplete.cartera,
@@ -874,14 +942,10 @@ export default {
     },
 
     async endDateValidation(event, incomingDate) {
-      
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.expiryDateReal)
-      ) {
+      if (Date.parse(incomingDate) >= Date.parse(this.expiryDateReal)) {
         this.endDateError = true;
       } else {
-        await this.changeDateEndorsement(incomingDate)
+        await this.changeDateEndorsement(incomingDate);
         this.endDateError = false;
       }
     },
@@ -895,10 +959,10 @@ export default {
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.e1 = 2;
-        this.activarVistaDatos()
+        this.activarVistaDatos();
       } else if (e1 == 2) {
         this.e1 = 3;
       } else if (e1 == 3) {
@@ -907,7 +971,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -916,22 +980,19 @@ export default {
         this.e1 = 2;
       }
     },
-
   },
 
   computed: {
     validationFirstStep() {
-
       const showInfoEndorsement = this.showInfoEndorsement;
       const clause = Boolean(this.clause);
-      const endDateError = !this.endDateError
+      const endDateError = !this.endDateError;
 
-      const result = !( showInfoEndorsement & clause & endDateError);
+      const result = !(showInfoEndorsement & clause & endDateError);
 
       return result;
-    }
-  }
-
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

@@ -231,6 +231,7 @@
       >
         <EndorsementHistoryTable
           :clause="clause"
+          :effectiveDate="effectiveDate"
           :detailValues="totalPremiumHistoryTable"
         />
         <AdmittedPremiumTableHistory :detailValues="totalPremium" />
@@ -412,6 +413,7 @@ export default {
       admittedPremiumEndorsement5: "$10,900",
       description: "Este es un gran ejemplo para hacer pruebas",
       clause: "",
+      effectiveDate: "",
       idDinamyc: 0,
       dateSaved: "",
       showInfoEndorsement: false,
@@ -663,6 +665,8 @@ export default {
 
       this.clause = this.informationCard.report.cartera.clausula;
 
+      this.effectiveDate = this.informationCard.effective_date;
+
       this.endorsementDocuments = this.informationCard.EndorsementDocuments;
 
       this.idEndorsementDinamic = this.informationCard.id;
@@ -729,21 +733,21 @@ export default {
           this.informationCard.report.endorsmentReporData.netPremium.sluShareTotal;
 
         this.totalPremium[1].premiumDamage =
-          this.informationCard.report.endorsmentReporData.premium.propertyDamage;
+          this.informationCard.report.endorsmentReporData.premium.propertyDamageUsd;
         this.totalPremium[1].premiumBi =
-          this.informationCard.report.endorsmentReporData.premium.businessInterruption;
+          this.informationCard.report.endorsmentReporData.premium.businessInterruptionUsd;
         this.totalPremium[1].premiumStocks =
-          this.informationCard.report.endorsmentReporData.premium.stock;
+          this.informationCard.report.endorsmentReporData.premium.stockUsd;
         this.totalPremium[1].premiumTotal =
-          this.informationCard.report.endorsmentReporData.premium.total;
+          this.informationCard.report.endorsmentReporData.premium.totalUsd;
         this.totalPremium[1].sluDamage =
-          this.informationCard.report.endorsmentReporData.netPremium.damageSluShare;
+          this.informationCard.report.endorsmentReporData.netPremiumUSD.damageSluShare;
         this.totalPremium[1].sluBi =
-          this.informationCard.report.endorsmentReporData.netPremium.biSluShare;
+          this.informationCard.report.endorsmentReporData.netPremiumUSD.biSluShare;
         this.totalPremium[1].sluStocks =
-          this.informationCard.report.endorsmentReporData.netPremium.stocksSluShare;
+          this.informationCard.report.endorsmentReporData.netPremiumUSD.stocksSluShare;
         this.totalPremium[1].sluTotal =
-          this.informationCard.report.endorsmentReporData.netPremium.sluShareTotal;
+          this.informationCard.report.endorsmentReporData.netPremiumUSD.sluShareTotal;
         // } else if(this.listEndorsement.find(element => element.id === this.idDinamyc).EndorsementType.type === 'Deductions Change'){
 
         /*  this.detailValues[0].premiumDamage = this.informationCard.report.endorsementReportData.movementValues.damage

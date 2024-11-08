@@ -41,7 +41,7 @@
           />
         </div>
         <div class="input input--total">
-           {{ calculates.sluShareTotal() }}
+          {{ calculates.sluShareTotal() }}
         </div>
       </div>
 
@@ -117,10 +117,10 @@
           />
         </div>
         <div class="input">
-          <currency-input 
-            :value="calculates.biEng()" 
-            :options="currencyOptions" 
-            disabled 
+          <currency-input
+            :value="calculates.biEng()"
+            :options="currencyOptions"
+            disabled
           />
         </div>
         <div class="input">
@@ -206,11 +206,11 @@
           />
         </div>
         <div class="input">
-          <currency-input 
-            :value="calculates.biLTA()" 
-            :options="currencyOptions" 
-            disabled 
-            />
+          <currency-input
+            :value="calculates.biLTA()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
           <currency-input
@@ -220,8 +220,8 @@
           />
         </div>
         <div class="input input--total">
-            {{ calculates.LTATotal() }}
-          </div>
+          {{ calculates.LTATotal() }}
+        </div>
       </div>
 
       <!-- Others -->
@@ -251,7 +251,7 @@
         </div>
         <div class="input input--total">
           {{ calculates.otherTotal() }}
-          </div>
+        </div>
       </div>
 
       <!-- Net premium -->
@@ -266,11 +266,11 @@
           />
         </div>
         <div class="input">
-          <currency-input 
-            :value="calculates.biNet()" 
-            :options="currencyOptions" 
-            disabled 
-            />
+          <currency-input
+            :value="calculates.biNet()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
           <currency-input
@@ -298,15 +298,15 @@
           />
         </div>
         <div class="input">
-          <currency-input 
+          <currency-input
             :value="calculates.businessInterNetPremiumExcludingFronting()"
-            :options="currencyOptions" 
-            disabled 
-            />
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
           <currency-input
-          :value="calculates.stockNetPremiumExcludingFronting()"
+            :value="calculates.stockNetPremiumExcludingFronting()"
             :options="currencyOptions"
             disabled
           />
@@ -330,11 +330,11 @@
           />
         </div>
         <div class="input">
-          <currency-input 
-            :value="calculates.businessInterSluPremiumToBeInvoiced()" 
-            :options="currencyOptions" 
-            disabled 
-            />
+          <currency-input
+            :value="calculates.businessInterSluPremiumToBeInvoiced()"
+            :options="currencyOptions"
+            disabled
+          />
         </div>
         <div class="input">
           <currency-input
@@ -360,15 +360,14 @@ import numeral from "numeral";
 import { mapGetters } from "vuex";
 
 //utils
-import Decimal from '@/lib/decimal'
+import Decimal from "@/lib/decimal";
 
 //Services
-import { getNetPremiumOriginalCurrencyById } from './services/NetPremiunProperty/net-premiun-property.service.js';
-import NetPremiumService from '@/modules/home/services/net-premium.service'
-
+import { getNetPremiumOriginalCurrencyById } from "./services/NetPremiunProperty/net-premiun-property.service.js";
+import NetPremiumService from "@/modules/home/services/net-premium.service";
 
 //clase
-import NetPremiumNonPro from '@/application/class/NetPremiumNONPRO'
+import NetPremiumNonPro from "@/application/class/NetPremiumNONPRO";
 
 export default {
   name: "NetPremiumProperty",
@@ -376,9 +375,9 @@ export default {
   data() {
     return {
       subscriptionId: this.$route.params.subscriptionId,
-      sluLine:0,
-      premium:{},
-      deductions:{},
+      sluLine: 0,
+      premium: {},
+      deductions: {},
       isColombia: true,
       currencyOptions: {
         currency: "MXN",
@@ -388,88 +387,145 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      'subscription_id',
-    ]),
-    calculates(){
-
-         return new NetPremiumNonPro( 
-          this.premium,
-          this.deductions,
-          this.sluLine,
-          false
-         )
-     }
+    ...mapGetters(["subscription_id"]),
+    calculates() {
+      return new NetPremiumNonPro(
+        this.premium,
+        this.deductions,
+        this.sluLine,
+        false
+      );
+    },
   },
-  methods:{
-   async getInitialValues(){
-         //Services
-    const netPremium = await getNetPremiumOriginalCurrencyById({ id_subscription: this.subscription_id })
-    
-    //Calc
-    if (netPremium !== undefined) {
-      this.netPremium = { ...this.netPremium, ...netPremium }
-      const selectedLayer = netPremium.Layers[0] ? netPremium.Layers[0] : {}
-      //Need parseFloat
-      const sluLine = selectedLayer.slu_share ? parseFloat((selectedLayer.slu_share.replace(/[^0-9.]/g, ''))) : 0
-      this.sluLine = sluLine
+  methods: {
+    async getInitialValues() {
+      //Services
+      const netPremium = await getNetPremiumOriginalCurrencyById({
+        id_subscription: this.subscription_id,
+      });
 
-      const premium = selectedLayer.premium ? parseFloat((selectedLayer.premium.replace(/[^0-9.]/g, ''))) : 0
-      const total = netPremium.QuotationInsured ? parseFloat((netPremium.QuotationInsured.total.replace(/[^0-9.]/g, ''))) : 0
-      const propertyDamage = netPremium.QuotationInsured ? parseFloat((netPremium.QuotationInsured.property_damage.replace(/[^0-9.]/g, ''))) : 0
-      const businessInterruption = netPremium.QuotationInsured ? parseFloat((netPremium.QuotationInsured.business_interruption.replace(/[^0-9.]/g, ''))) : 0
-      const stock = netPremium.QuotationInsured ? parseFloat((netPremium.QuotationInsured.stock.replace(/[^0-9.]/g, ''))) : 0
-      const porcentaje = (netPremium.QuotationInsured && netPremium.QuotationInsured.stock_percentaje) ? parseFloat((netPremium.QuotationInsured.stock_percentaje.replace(/[^0-9.]/g, ''))) : 0
-      //Not need parseFloat
-      const brokerage = netPremium.Quotation ? netPremium.Quotation.brokerage: 0
-      const taxes = netPremium.Quotation ? netPremium.Quotation.taxes: 0
-      const eng = netPremium.Quotation ? netPremium.Quotation.eng: 0
-      const fronting = netPremium.Quotation ? netPremium.Quotation.fronting: 0
-      const premiumReserve = netPremium.Quotation ? netPremium.Quotation.premium_reserve: 0
-      const lta = netPremium.Quotation ? netPremium.Quotation.lta: 0
-      const others = netPremium.Quotation ? netPremium.Quotation.others: 0
-      const deductionType = netPremium.Quotation ? netPremium.Quotation.deduction_type: 'As Incurred'
-      
-      const rate = !isNaN(premium / total * 1000) ? (premium / total * 1000) : 0
-      const rateStock = !isNaN(premium / total * 10 * porcentaje) ? (premium / total * 10 * porcentaje) : 0
+      //Calc
+      if (netPremium !== undefined) {
+        this.netPremium = { ...this.netPremium, ...netPremium };
+        const selectedLayer = netPremium.Layers[0] ? netPremium.Layers[0] : {};
+        //Need parseFloat
+        const sluLine = selectedLayer.slu_share
+          ? parseFloat(selectedLayer.slu_share.replace(/[^0-9.]/g, ""))
+          : 0;
+        this.sluLine = sluLine;
 
-      //premium en original currency
-       
-      const premiumDamage = Decimal.mul(propertyDamage , rate).div(1000).toNumber() || 0
-      const premiumBI = !isNaN(businessInterruption * rate / 1000) ? (businessInterruption * rate / 1000) : 0
-      const premiumStock = Decimal.mul(stock , rateStock).div(1000).toNumber() || 0
-      const exchange = netPremium.Quotation ? parseFloat((netPremium.Quotation.exchange_rate.replace(/[^0-9.]/g, ''))) : 0
+        const premium = selectedLayer.premium
+          ? parseFloat(selectedLayer.premium.replace(/[^0-9.]/g, ""))
+          : 0;
+        const total = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.total.replace(/[^0-9.]/g, "")
+            )
+          : 0;
+        const propertyDamage = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.property_damage.replace(
+                /[^0-9.]/g,
+                ""
+              )
+            )
+          : 0;
+        const businessInterruption = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.business_interruption.replace(
+                /[^0-9.]/g,
+                ""
+              )
+            )
+          : 0;
+        const stock = netPremium.QuotationInsured
+          ? parseFloat(
+              netPremium.QuotationInsured.stock.replace(/[^0-9.]/g, "")
+            )
+          : 0;
+        const porcentaje =
+          netPremium.QuotationInsured &&
+          netPremium.QuotationInsured.stock_percentaje
+            ? parseFloat(
+                netPremium.QuotationInsured.stock_percentaje.replace(
+                  /[^0-9.]/g,
+                  ""
+                )
+              )
+            : 0;
+        //Not need parseFloat
+        const brokerage = netPremium.Quotation
+          ? netPremium.Quotation.brokerage
+          : 0;
+        const taxes = netPremium.Quotation ? netPremium.Quotation.taxes : 0;
+        const eng = netPremium.Quotation ? netPremium.Quotation.eng : 0;
+        const fronting = netPremium.Quotation
+          ? netPremium.Quotation.fronting
+          : 0;
+        const premiumReserve = netPremium.Quotation
+          ? netPremium.Quotation.premium_reserve
+          : 0;
+        const lta = netPremium.Quotation ? netPremium.Quotation.lta : 0;
+        const others = netPremium.Quotation ? netPremium.Quotation.others : 0;
+        const deductionType = netPremium.Quotation
+          ? netPremium.Quotation.deduction_type
+          : "As Incurred";
 
-      this.deductions = {
-        brokerage,
-        taxes,
-        eng,
-        fronting,
-        premiumReserve,
-        lta,
-        others,
-        deductionType,
+        const rate = !isNaN((premium / total) * 1000)
+          ? (premium / total) * 1000
+          : 0;
+        const rateStock = !isNaN((premium / total) * 10 * porcentaje)
+          ? (premium / total) * 10 * porcentaje
+          : 0;
+
+        //premium en original currency
+
+        const premiumDamage =
+          Decimal.mul(propertyDamage, rate).div(1000).toNumber() || 0;
+        const premiumBI = !isNaN((businessInterruption * rate) / 1000)
+          ? (businessInterruption * rate) / 1000
+          : 0;
+        const premiumStock =
+          Decimal.mul(stock, rateStock).div(1000).toNumber() || 0;
+        const exchange = netPremium.Quotation
+          ? parseFloat(
+              netPremium.Quotation.exchange_rate.replace(/[^0-9.]/g, "")
+            )
+          : 0;
+
+        this.deductions = {
+          brokerage,
+          taxes,
+          eng,
+          fronting,
+          premiumReserve,
+          lta,
+          others,
+          deductionType,
+        };
+
+        this.premium = {
+          propertyDamage: premiumDamage,
+          businessInterruption: premiumBI,
+          stock: premiumStock,
+          propertyDamageUsd: Decimal.div(premiumDamage, exchange).toNumber(),
+          businessInterruptionUsd: Decimal.div(premiumBI, exchange).toNumber(),
+          stockUsd: Decimal.div(premiumStock, exchange).toNumber(),
+        };
       }
-
-      this.premium = {
-        propertyDamage :premiumDamage,
-        businessInterruption: premiumBI,
-        stock:premiumStock,
-        propertyDamageUsd: Decimal.div(premiumDamage , exchange).toNumber(),
-        businessInterruptionUsd: Decimal.div(premiumBI , exchange).toNumber(),
-        stockUsd: Decimal.div(premiumStock , exchange).toNumber()
-      }    
-    
-    }
-    }
+    },
   },
   async beforeMount() {
-      await this.getInitialValues()
+    await this.getInitialValues();
   },
-  async updated(){
-    const data =  this.calculates.getData()
-    await NetPremiumService.addOrUpdateNetPremium(this.subscriptionId, data, false)
-  }
+  async updated() {
+    const data = this.calculates.getData();
+    await NetPremiumService.addOrUpdateNetPremium(
+      this.subscriptionId,
+      data,
+      false
+    );
+  },
 };
 </script>
 <style lang="less" scoped>
