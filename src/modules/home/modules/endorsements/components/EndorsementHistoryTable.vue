@@ -4,6 +4,16 @@
       <div class="table-title-detail table-title-detail--large">Detail</div>
       <div class="input-col">
         <div class="input-cont">
+          <v-text-field
+            label="Effective date"
+            v-model="formatEffectiveDate"
+            disabled
+          >
+          </v-text-field>
+        </div>
+      </div>
+      <div class="input-col">
+        <div class="input-cont">
           <v-menu
             :close-on-content-click="false"
             :nudge-right="40"
@@ -22,16 +32,6 @@
               ></v-text-field>
             </template>
           </v-menu>
-        </div>
-      </div>
-      <div class="input-col">
-        <div class="input-cont">
-          <v-text-field
-            label="Effective date"
-            v-model="formatEffectiveDate"
-            disabled
-          >
-          </v-text-field>
         </div>
       </div>
       <div class="input-col">

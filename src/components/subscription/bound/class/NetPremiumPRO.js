@@ -291,8 +291,9 @@ class NetPremiumPROStrategy {
     const fronting = this.deductions.fronting || 0;
     const percentage = Decimal.div(fronting, 100);
     const operation = Decimal.sub(this.biSluShare(), this.biBrokerage())
-      .sub(this.biEng())
-      .sub(this.biTaxes());
+      .sub(this.biTaxes())
+      .sub(this.biLTA())
+      .sub(this.biOther());
     const op = Decimal.mul(
       operation,
       numeral((`${percentage}` || "$0").replace(/[^0-9.]/g, "")).value() || 0
@@ -409,8 +410,9 @@ class NetPremiumPROStrategy {
     const fronting = this.deductions.fronting || 0;
     const percentage = Decimal.div(fronting, 100);
     const operation = Decimal.sub(this.stocksSluShare(), this.stocksBrokerage())
-      .sub(this.stocksEng())
-      .sub(this.stocksTaxes());
+      .sub(this.stocksTaxes())
+      .sub(this.stocksLTA())
+      .sub(this.stocksOther());
     const op = Decimal.mul(
       operation,
       numeral((`${percentage}` || "$0").replace(/[^0-9.]/g, "")).value() || 0

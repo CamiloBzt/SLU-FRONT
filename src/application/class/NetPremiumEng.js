@@ -155,10 +155,26 @@ class NetPremiumEng {
     this.data.alopFronting = value;
     return value;
   }
+  alopLta() {
+    const sluShare = this.alopSluShare();
+    const result = calculateProperty(this.deductions.lta, sluShare);
+
+    this.data.alopLta = result;
+    return result;
+  }
+  alopOthers() {
+    const sluShare = this.alopSluShare();
+    const result = calculateProperty(this.deductions.others, sluShare);
+
+    this.data.alopOthers = result;
+    return result;
+  }
 
   alopFronting() {
     const value = Decimal.sub(this.alopSluShare(), this.alopBrokerage())
       .sub(this.alopTaxes())
+      .sub(this.alopLta())
+      .sub(this.alopOthers())
       .toNumber();
     const result = calculateProperty(this.deductions.fronting, value);
     this.data.alopFronting = result;
@@ -174,12 +190,10 @@ class NetPremiumEng {
 
   //Apartado de para calcular las  net to slu excluding survey fee
   alopNetSLUExcludingSurveyFees() {
-    const value = Decimal.sub(this.alopSluShare(), this.alopBrokerage())
-      .sub(this.alopTaxes())
-      .sub(this.alopEng())
-      .sub(this.alopFronting())
-      .sub(this.alopColombia())
-      .toNumber();
+    const value = Decimal.sub(
+      this.alopNetSLU(),
+      this.alopColombia()
+    ).toNumber();
 
     this.data.alopNetSLUExcludingSurveyFees = value;
     return value;
@@ -270,8 +284,8 @@ class NetPremiumEng {
   alopNetSLU() {
     const value = Decimal.sub(this.alopSluShare(), this.alopBrokerage())
       .sub(this.alopTaxes())
-      .sub(this.alopEng())
-      .sub(this.alopFronting())
+      .sub(this.alopLta())
+      .sub(this.alopOthers())
       .toNumber();
 
     return value;
@@ -295,7 +309,9 @@ class NetPremiumEng {
   alopNetSLUExcludingFronting() {
     const value = Decimal.sub(this.alopSluShare(), this.alopBrokerage())
       .sub(this.alopTaxes())
-      .sub(this.alopEng())
+      .sub(this.alopFronting())
+      .sub(this.alopLta())
+      .sub(this.alopOthers())
       .toNumber();
     return value;
   }

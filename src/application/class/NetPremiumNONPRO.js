@@ -189,7 +189,10 @@ class NetPremiumNonPro {
   }
 
   biFronting() {
-    const sluShare = this.biSluShare();
+    const sluShare = Decimal.sub(this.biSluShare(), this.biBrokerage())
+      .sub(this.biTaxes())
+      .sub(this.biLTA())
+      .sub(this.biOther());
     const result = calculateProperty(this.deductions.fronting, sluShare);
 
     this.data.biFronting = result;
@@ -252,7 +255,10 @@ class NetPremiumNonPro {
   }
 
   stocksFronting() {
-    const sluShare = this.stocksSluShare();
+    const sluShare = Decimal.sub(this.stocksSluShare(), this.stocksBrokerage())
+      .sub(this.stocksTaxes())
+      .sub(this.stocksLTA())
+      .sub(this.stocksOther());
     const result = calculateProperty(this.deductions.fronting, sluShare);
 
     this.data.stocksFronting = result;
@@ -313,8 +319,7 @@ class NetPremiumNonPro {
           this.biOther(),
         ],
       },
-      this.deductions.deductionType,
-      this.biEng()
+      this.deductions.deductionType
     );
 
     this.data.biNet = result;
@@ -332,8 +337,7 @@ class NetPremiumNonPro {
           this.stocksOther(),
         ],
       },
-      this.deductions.deductionType,
-      this.stocksEng()
+      this.deductions.deductionType
     );
 
     this.data.stocksNet = result;
@@ -372,8 +376,7 @@ class NetPremiumNonPro {
           this.biFronting(),
         ],
       },
-      this.deductions.deductionType,
-      this.biEng()
+      this.deductions.deductionType
     );
 
     this.data.businessInterNetPremiumExcludingFronting = result;
@@ -392,8 +395,7 @@ class NetPremiumNonPro {
           this.stocksFronting(),
         ],
       },
-      this.deductions.deductionType,
-      this.stocksEng()
+      this.deductions.deductionType
     );
 
     this.data.stockNetPremiumExcludingFronting = result;
