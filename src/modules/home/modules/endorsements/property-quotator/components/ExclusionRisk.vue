@@ -303,6 +303,7 @@
         @setTotalPremium="setTotalPremium"
         :detailValues="totalPremium"
         :typeEndorsement="type"
+        :exchangeRate="accountComplete.deductibles.exchangeRate"
       />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
