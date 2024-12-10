@@ -318,12 +318,12 @@ export default {
       this.setStateTobe("premiumSlu", val);
       this.checkTobeColumn("premiumSlu");
     }, 1000),
-    "toBeDefined.limitedInsured": debounce(function (val) {
+    "toBeDefined.limitedInsured": debounce(function () {
       this.calculatePremium();
-    }, 1),
-    "toBeDefined.sluShare": debounce(function (val) {
+    }, 300),
+    "toBeDefined.sluShare": debounce(function () {
       this.calculatePremium();
-    }, 1),
+    }, 300),
   },
   validations: {
     toBeDefined: {
@@ -392,51 +392,28 @@ export default {
     },
     calculatePremium() {
       const fracc = this.toBeDefined.sluShare / 100;
-
-      // Asegurarnos de que limitedInsured sea un número válido para el cálculo
-      const originalLimitedInsured = this.toBeDefined.limitedInsured
-        ? Number(
-            String(this.toBeDefined.limitedInsured).replace(/[^0-9.-]+/g, "")
-          ) || 0
-        : 0;
-
-      // Asegurarnos de que limitedInsuredUsd también sea válido
-      const usdLimitedInsured =
-        Decimal.div(
-          originalLimitedInsured,
-          this.quotation.exchangeRate || 1
-        ).toNumber() || 0;
-
-      // Cálculo del Premium en USD
-      const curr1 = this.premium.totalUsd
-        ? Number(this.premium.totalUsd.replace(/[^0-9.-]+/g, "")) || 0
+      const curr1 = this.toBeDefined.limitedInsuredUsd
+        ? this.premium.totalUsd
+          ? this.premium.totalUsd.replace(/[^0-9.-]+/g, "")
+          : 0
         : 0;
       const op1 = curr1 * fracc;
-
-      // Cálculo del Premium en la moneda original
-      const curr = this.premium.totalInsured
-        ? Number(this.premium.totalInsured.replace(/[^0-9.-]+/g, "")) || 0
-        : 0;
-      const op = curr * fracc;
-
-      // Actualizar valores de Premium
       const formatter = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       });
 
+      const curr = this.premium.totalInsured
+        ? Number(this.premium.totalInsured.replace(/[^0-9.-]+/g, ""))
+        : 0;
+      const op = curr * fracc;
       this.usdPremiumSlu = formatter.format(op1);
       this.originalPremiumSlu = formatter.format(op);
 
-      // Asegurar que los valores se actualicen en Vuex
       this.setStateTobe("premiumSlu", this.originalPremiumSlu);
       this.checkTobeColumn("premiumSlu");
       this.setStateTobe("premiumSluUsd", this.usdPremiumSlu);
       this.checkTobeColumn("premiumSluUsd");
-
-      // Asegurar que los valores se actualicen en el componente
-      this.$set(this.toBeDefined, "limitedInsuredUsd", usdLimitedInsured);
-      this.$set(this.toBeDefined, "limitedInsured", originalLimitedInsured);
     },
   },
 };

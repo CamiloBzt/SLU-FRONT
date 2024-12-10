@@ -366,7 +366,7 @@
           <!--Coverage B // ALOP-->
           <div class="DynamicItemsContent mt-8" v-if="this.showAlopLines">
             <div class="InputTitle d-flex justify-start align-center align-end">
-              ALOP Coverage B, Earthquake, Tremor or Volcanic Eruption
+              BI Coverage B, Earthquake, Tremor or Volcanic Eruption
             </div>
             <div
               class="InputsCont d-flex justify-space-between align-start flex-wrap"
@@ -394,7 +394,7 @@
           <!--Hydrometeorological Risk // ALOP-->
           <div class="DynamicItemsContent mt-7" v-if="this.showAlopLines">
             <div class="InputTitle d-flex justify-start align-center align-end">
-              ALOP Hidrometeorological Risk
+              BI Hidrometeorological Risk
             </div>
             <div
               class="InputsCont d-flex justify-space-between align-start flex-wrap"

@@ -1,240 +1,227 @@
-import {apolloClient} from '@/lib/api'
+import { apolloClient } from "@/lib/api";
 
 /**typeDefs */
-import { 
-    getEndorsementType,
-    getEndorsmentReport,
-    addEndorsment,
-    editEndorsement,
-    getEndorsementsBySubscriptionId,
-    getEndorsementById,
-    getEndorsementByAccountcomplete,
-    updateDocumentEndorsementById,
-    updateDocumentsEndorsement
- } from './dtos/endorsement.service.dtos'
+import {
+  getEndorsementType,
+  getEndorsmentReport,
+  addEndorsment,
+  editEndorsement,
+  getEndorsementsBySubscriptionId,
+  getEndorsementById,
+  getEndorsementByAccountcomplete,
+  updateDocumentEndorsementById,
+  updateDocumentsEndorsement,
+} from "./dtos/endorsement.service.dtos";
 
 class EndorsementsService {
+  /**
+   * Genera registro del endoso
+   * @param {Object} params - Objeto para generar el registro del endoso
+   * @param {Int} params.subscriptionId - ID de la suscripción del endoso
+   * @param {Int} params.endorsmentType - Tipo de endoso
+   * @param {Int} params.idUser - ID del usuario
+   * @param {Int} params.accountId - ID de la nueva cuenta
+   * @param {Date} params.effectiveDate - Fecha efectiva del endoso
+   * @param {Object} params.report - objeto con los campos del excel
+   * @param {Object} params.options - objeto con parametros opcionales
+   * @returns {Object} - Objeto con la respuesta del servidor
+   * @throws {Error} - Error en caso de fallo en la generación del registro
+   */
+  async addEndorsment({
+    subscriptionId,
+    endorsmentType,
+    idUser,
+    accountId,
+    effectiveDate,
+    report,
+    files,
+    options = {},
+  }) {
+    try {
+      const variables = {
+        data: {
+          subscriptionId,
+          endorsmentType,
+          idUser,
+          accountId,
+          effectiveDate,
+          report,
+          files,
+          transactionId: options.transactionId || null,
+        },
+      };
 
+      const findResponse = apolloClient.mutate({
+        variables,
+        mutation: addEndorsment,
+        fetchPolicy: "no-cache",
+      });
 
+      const { data } = await findResponse;
 
-    /**
-     * Genera registro del endoso
-     * @param {Object} params - Objeto para generar el registro del endoso
-     * @param {Int} params.subscriptionId - ID de la suscripción del endoso
-     * @param {Int} params.endorsmentType - Tipo de endoso
-     * @param {Int} params.idUser - ID del usuario
-     * @param {Int} params.accountId - ID de la nueva cuenta
-     * @param {Date} params.effectiveDate - Fecha efectiva del endoso
-     * @param {Object} params.report - objeto con los campos del excel
-     * @param {Object} params.options - objeto con parametros opcionales
-     * @returns {Object} - Objeto con la respuesta del servidor
-     * @throws {Error} - Error en caso de fallo en la generación del registro
-     */
-    async addEndorsment({ 
-        subscriptionId,
-        endorsmentType,
-        idUser,
-        accountId,
-        effectiveDate,
-        report,
-        files,
-        options={}
-     }){
-        try {
-            
-            const variables = {
-                data:{
-                    subscriptionId,
-                    endorsmentType,
-                    idUser,
-                    accountId,
-                    effectiveDate,
-                    report,
-                    files,
-                    transactionId: options.transactionId || null
-                }
-            }
-            
-            const findResponse = apolloClient.mutate({
-                variables,
-                mutation: addEndorsment,
-                fetchPolicy:'no-cache'
-            });
+      const response = JSON.parse(data["addEndorsment"].response);
 
-            const { data } = await findResponse;
+      return response;
+    } catch (error) {
+      //console.log(error)
+      const message = String(error);
+      throw new Error(message);
+    }
+  }
 
-
-            const response = JSON.parse(data['addEndorsment'].response);
-
-            return response;
-        } catch (error) {
-            //console.log(error)
-            const message =  String(error)
-            throw new Error(message)
-        }
-    } 
-
-    async editEndorsement({ 
+  async editEndorsement({ endorsementId, columnName, value }, options = {}) {
+    try {
+      const variables = {
         endorsementId,
         columnName,
         value,
-     },options={}){
-        try {
-            
-            const variables = {
-                endorsementId,
-                columnName,
-                value,
-                transactionId: options.transactionId || null
-            }
-            
-            const findResponse = apolloClient.mutate({
-                variables,
-                mutation: editEndorsement,
-                fetchPolicy:'no-cache'
-            });
+        transactionId: options.transactionId || null,
+      };
 
-            const { data } = await findResponse;
+      const findResponse = apolloClient.mutate({
+        variables,
+        mutation: editEndorsement,
+        fetchPolicy: "no-cache",
+      });
 
-            const response = JSON.parse(data['editEndorsement'].response);
+      const { data } = await findResponse;
 
-            return response;
-        } catch (error) {
-            //console.log(error)
-            const message =  String(error)
-            throw new Error(message)
-        }
+      const response = JSON.parse(data["editEndorsement"].response);
+
+      return response;
+    } catch (error) {
+      //console.log(error)
+      const message = String(error);
+      throw new Error(message);
     }
+  }
 
-    /**
-     * Genera el excel del endoso
-     * @param {Object} params - Objeto para generar el reporte de excel del endoso
-     * @param {Int} params.subscriptionId - ID de la suscripción del endoso
-     * @param {Int} params.endorsmentType - Tipo de endoso
-     * @param {Object} params.endorsmentReporData - Objeto con los campos para pintar el excel
-     * @returns {Object} - Objeto con la respuesta del servidor
-     * @throws {Error} - Error en caso de fallo en la generación del registro
-     */
-    async getEndorsmentReport({ 
-        subscriptionId,
-        endorsmentType,
-        endorsmentReporData
-     }){
-        try {
-            
-            const variables = {
-                data:{
-                    subscriptionId,
-                    endorsmentType,
-                    endorsmentReporData
-                }
-            }
-            
-            const findResponse = apolloClient.query({
-                variables,
-                query: getEndorsmentReport,
-                fetchPolicy:'no-cache'
-            });
+  /**
+   * Genera el excel del endoso
+   * @param {Object} params - Objeto para generar el reporte de excel del endoso
+   * @param {Int} params.subscriptionId - ID de la suscripción del endoso
+   * @param {Int} params.endorsmentType - Tipo de endoso
+   * @param {Object} params.endorsmentReporData - Objeto con los campos para pintar el excel
+   * @returns {Object} - Objeto con la respuesta del servidor
+   * @throws {Error} - Error en caso de fallo en la generación del registro
+   */
+  async getEndorsmentReport({
+    subscriptionId,
+    endorsmentType,
+    endorsmentReporData,
+  }) {
+    try {
+      const variables = {
+        data: {
+          subscriptionId,
+          endorsmentType,
+          endorsmentReporData,
+        },
+      };
 
-            const { data } = await findResponse;
+      const findResponse = apolloClient.query({
+        variables,
+        query: getEndorsmentReport,
+        fetchPolicy: "no-cache",
+      });
 
-            const result = data['getEndorsmentReport'];
+      const { data } = await findResponse;
 
-            const { response } = result;
+      const result = data["getEndorsmentReport"];
 
-            return response;
-        } catch (error) {
-            //console.log(error)
-            const message =  String(error)
-            throw new Error(message)
-        }
+      const { response } = result;
+
+      return response;
+    } catch (error) {
+      //console.log(error)
+      const message = String(error);
+      throw new Error(message);
     }
+  }
 
-    /**
-     * Obtiene el catalogo de los tipos de endoso
-     */
-    async getEndorsementType(){
-        try {
+  /**
+   * Obtiene el catalogo de los tipos de endoso
+   */
+  async getEndorsementType() {
+    try {
+      const findResponse = apolloClient.query({
+        query: getEndorsementType,
+        fetchPolicy: "no-cache",
+      });
 
-            const findResponse = apolloClient.query({
-                query: getEndorsementType,
-                fetchPolicy:'no-cache'
-            });
+      const { data } = await findResponse;
 
-            const { data } = await findResponse;
+      const response = JSON.parse(data["getEndorsementType"].response);
 
-            const response = JSON.parse(data['getEndorsementType'].response);
-
-            return response;
-        } catch (error) {
-            //console.log(error)
-            const message =  String(error)
-            throw new Error(message)
-        }
+      return response;
+    } catch (error) {
+      //console.log(error)
+      const message = String(error);
+      throw new Error(message);
     }
+  }
 
-    async getEndorsementsBySubscriptionId(id){
-        const variables = { id }
-        const { data } = await apolloClient.query({
-            query: getEndorsementsBySubscriptionId,
-            variables,
-            fetchPolicy:'no-cache'
-        });
-        const { response } = data.getEndorsementsBySubscriptionId;
-        const parsedResponse = JSON.parse(response);
-        return parsedResponse;
-    }
+  async getEndorsementsBySubscriptionId(id) {
+    const variables = { id };
+    const { data } = await apolloClient.query({
+      query: getEndorsementsBySubscriptionId,
+      variables,
+      fetchPolicy: "no-cache",
+    });
+    const { response } = data.getEndorsementsBySubscriptionId;
+    const parsedResponse = JSON.parse(response);
+    return parsedResponse;
+  }
 
-    async getEndorsementById(id){
-        const variables = { id }
-        const { data } = await apolloClient.query({
-            query: getEndorsementById,
-            variables,
-            fetchPolicy:'no-cache'
-        });
-        const { response } = data.getEndorsementById;
-        const parsedResponse = JSON.parse(response);
-        return parsedResponse;
-    }
+  async getEndorsementById(id) {
+    const variables = { id };
+    const { data } = await apolloClient.query({
+      query: getEndorsementById,
+      variables,
+      fetchPolicy: "no-cache",
+    });
+    const { response } = data.getEndorsementById;
+    const parsedResponse = JSON.parse(response);
+    return parsedResponse;
+  }
 
-    async getEndorsementByAccountcomplete(idAccountComplete){
-        const variables = { idAccountComplete }
-        const { data } = await apolloClient.query({
-            query: getEndorsementByAccountcomplete,
-            variables,
-            fetchPolicy:'no-cache'
-        });
-        const { response } = data.getEndorsementByAccountcomplete;
-        const parsedResponse = JSON.parse(response);
-        return parsedResponse;
-    }
+  async getEndorsementByAccountcomplete(idAccountComplete) {
+    const variables = { idAccountComplete };
+    const { data } = await apolloClient.query({
+      query: getEndorsementByAccountcomplete,
+      variables,
+      fetchPolicy: "no-cache",
+    });
+    const { response } = data.getEndorsementByAccountcomplete;
+    const parsedResponse = JSON.parse(response);
+    return parsedResponse;
+  }
 
-    async updateDocumentEndorsementById(id) {
-        const variables = { id }
-        const { data } = await apolloClient.query({
-            query: updateDocumentEndorsementById,
-            variables,
-            fetchPolicy: 'no-cache'
-        });
-        const { response } = data.updateDocumentEndorsementById;
-        const parsedResponse = JSON.parse(response);
-        return parsedResponse;
-    }
+  async updateDocumentEndorsementById(id) {
+    const variables = { id };
+    const { data } = await apolloClient.query({
+      query: updateDocumentEndorsementById,
+      variables,
+      fetchPolicy: "no-cache",
+    });
+    const { response } = data.updateDocumentEndorsementById;
+    const parsedResponse = JSON.parse(response);
+    return parsedResponse;
+  }
 
-    async updateDocumentsEndorsement({ id, files }) {
-        const variables = {
-            data: { id, files }
-        }
-        const { data } = await apolloClient.query({
-            query: updateDocumentsEndorsement,
-            variables,
-            fetchPolicy: 'no-cache'
-        });
-        const { response } = data.updateDocumentsEndorsement;
-        const parsedResponse = JSON.parse(response);
-        return parsedResponse;
-    }
+  async updateDocumentsEndorsement({ id, files }) {
+    const variables = {
+      data: { id, files },
+    };
+    const { data } = await apolloClient.query({
+      query: updateDocumentsEndorsement,
+      variables,
+      fetchPolicy: "no-cache",
+    });
+    const { response } = data.updateDocumentsEndorsement;
+    const parsedResponse = JSON.parse(response);
+    return parsedResponse;
+  }
 }
 
-
-export default new EndorsementsService()
+export default new EndorsementsService();
