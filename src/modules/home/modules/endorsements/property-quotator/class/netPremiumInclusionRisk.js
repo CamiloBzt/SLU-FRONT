@@ -398,7 +398,7 @@ export class netPremiumInclusionRisk {
     const totalPremium = this.totalPremium();
     const value = !this.usd
       ? totalPremium.stockTotalPremium
-      : totalPremium.stockTotalPremium;
+      : totalPremium.stockTotalPremiumUsd;
     const result = sluShare(this.sluLine, value);
 
     this.data.stocksPremiumSlu = result;
