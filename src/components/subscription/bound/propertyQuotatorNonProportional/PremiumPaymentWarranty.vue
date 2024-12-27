@@ -90,6 +90,21 @@
             :items="clauseList"
           />
         </div>
+        <div class="Row">
+          <v-text-field
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'daysOfPriorNotice',
+                value: payment.daysOfPriorNotice,
+                index: index + 1,
+              })
+            "
+            v-model="payment.daysOfPriorNotice"
+            label="Days of prior notice"
+            type="number"
+          />
+        </div>
         <div class="remove-button">
           <v-btn
             text
@@ -222,6 +237,7 @@ export default {
           percent: "",
           date: defaultDate,
           idClause: "",
+          daysOfPriorNotice: "",
           showCalendar: false,
         };
         const addPayments = [...this.paymentsWarranty, newPayment];

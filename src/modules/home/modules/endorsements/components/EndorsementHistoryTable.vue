@@ -23,8 +23,8 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="premiumPaymentDate"
-                label="Premium payment date"
+                v-model="formatPremiumPaymentDate"
+                label="Premium payment warranty"
                 readonly
                 disabled
                 v-bind="attrs"
@@ -112,21 +112,27 @@ export default {
     detailValues: Array,
     clause: String,
     effectiveDate: String,
+    premiumPaymentDate: String,
   },
   data() {
     return {
       subscriptionId: this.$route.params.id,
-      premiumPaymentDate: new Date(
-        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
+      // premiumPaymentDate: new Date(
+      //   Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
+      // )
+      //   .toISOString()
+      //   .substr(0, 10),
     };
   },
   computed: {
     formatEffectiveDate() {
       return this.effectiveDate
         ? new Date(this.effectiveDate).toISOString().substr(0, 10)
+        : "";
+    },
+    formatPremiumPaymentDate() {
+      return this.premiumPaymentDate
+        ? new Date(this.premiumPaymentDate).toISOString().substr(0, 10)
         : "";
     },
   },

@@ -5,18 +5,21 @@
     </div>
 
     <div class="InputsCont d-flex flex-wrap align-start">
-      <div 
+      <div
         v-for="(payment, index) in paymentsWarranty"
         :key="index"
-        class="Line d-flex justify-space-between align-center">
+        class="Line d-flex justify-space-between align-center"
+      >
         <div class="Row">
           <v-text-field
-            @change="updatePayment({
-              id:payment.id,
-              column:'installment',
-              value: payment.installment,
-              index: index +1
-              })"
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'installment',
+                value: payment.installment,
+                index: index + 1,
+              })
+            "
             v-model="payment.installment"
             :label="'Installment ' + (index + 1)"
             type="number"
@@ -24,12 +27,14 @@
         </div>
         <div class="Row">
           <v-text-field
-            @change="updatePayment({
-              id:payment.id,
-              column:'percent',
-              value: payment.percent,
-              index: index +1
-              })"
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'percent',
+                value: payment.percent,
+                index: index + 1,
+              })
+            "
             v-model="payment.percent"
             label="Percentage"
             type="number"
@@ -56,24 +61,28 @@
               no-title
               color="#003D6D"
               v-model="payment.date"
-              @change="updatePayment({
-               id:payment.id,
-               column:'ppw_date',
-               value: payment.date,
-               index: index + 1
-              })"
+              @change="
+                updatePayment({
+                  id: payment.id,
+                  column: 'ppw_date',
+                  value: payment.date,
+                  index: index + 1,
+                })
+              "
               @input="payment.showCalendar = false"
             />
           </v-menu>
         </div>
         <div class="Row">
           <v-select
-            @change="updatePayment({
-              id:payment.id,
-              column:'id_payment_clause',
-              value: payment.idClause+'',
-              index: index + 1
-            })"
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'id_payment_clause',
+                value: payment.idClause + '',
+                index: index + 1,
+              })
+            "
             v-model="payment.idClause"
             label="Clause"
             item-value="id"
@@ -81,21 +90,39 @@
             :items="clauseList"
           />
         </div>
+        <div class="Row">
+          <v-text-field
+            @change="
+              updatePayment({
+                id: payment.id,
+                column: 'daysOfPriorNotice',
+                value: payment.daysOfPriorNotice,
+                index: index + 1,
+              })
+            "
+            v-model="payment.daysOfPriorNotice"
+            label="Days of prior notice"
+            type="number"
+          />
+        </div>
+
         <div class="remove-button">
-          <v-btn 
-          text 
-          @click="[removePaymentWarranty(payment.id), deletePayment(payment.id)]"
+          <v-btn
+            text
+            @click="
+              [removePaymentWarranty(payment.id), deletePayment(payment.id)]
+            "
           >
             <v-icon> mdi-delete </v-icon>
           </v-btn>
         </div>
       </div>
       <div class="finishButtonCont d-flex justify-start align-center">
-        <v-btn 
+        <v-btn
           :disabled="addPaymentDisabled"
-          rounded 
-          large 
-          text 
+          rounded
+          large
+          text
           class="finishBtn"
           @click="addPaymentWarranty()"
         >
@@ -107,52 +134,49 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import PaymentService from '@/modules/home/services/payments.service'
+import { mapGetters } from "vuex";
+import PaymentService from "@/modules/home/services/payments.service";
 
 export default {
-  name: 'PremiumPaymentWarranty',
-  inject: ['deepDisabled'],
+  name: "PremiumPaymentWarranty",
+  inject: ["deepDisabled"],
   data() {
     return {
       subscriptionId: this.$route.params.subscriptionId,
-      clauseList:[],
+      clauseList: [],
       paymentsWarranty: [],
       addPaymentDisabled: false,
       menu: false,
-      exampleCalendar: ''
+      exampleCalendar: "",
     };
   },
 
-  async beforeMount(){
-    this.clauseList = await PaymentService.getClauses()
-    this.paymentsWarranty = await PaymentService.getPayments(this.subscriptionId)
-    console.log('this.paymentsWarranty',this.paymentsWarranty)
+  async beforeMount() {
+    this.clauseList = await PaymentService.getClauses();
+    this.paymentsWarranty = await PaymentService.getPayments(
+      this.subscriptionId
+    );
+    console.log("this.paymentsWarranty", this.paymentsWarranty);
     //console.log('date',new Date().toISOString().slice(0, 10))
-    console.log('this.quotation',this.quotation)
-
+    console.log("this.quotation", this.quotation);
   },
-  mounted () {
-    this.deepDisabled()
+  mounted() {
+    this.deepDisabled();
   },
 
   computed: {
-    ...mapGetters([
-      'quotation',
-    ]),
-    
+    ...mapGetters(["quotation"]),
   },
 
   methods: {
-    sumarDias(id, index){
-
+    sumarDias(id, index) {
       // Obtener el objeto de pago correspondiente
-      const payment = this.paymentsWarranty.find(p => p.id === id);
+      const payment = this.paymentsWarranty.find((p) => p.id === id);
 
       // Obtener la cantidad de días a sumar
-      const dias = +(payment.installment);
+      const dias = +payment.installment;
 
-      // Crear un objeto de fecha 
+      // Crear un objeto de fecha
       const arrDate = this.quotation.inceptionDate.split("-");
       const resultado = new Date(`${arrDate[1]}-${arrDate[2]}-${arrDate[0]}`);
 
@@ -160,74 +184,81 @@ export default {
       resultado.setDate(resultado.getDate() + dias);
 
       // Actualizar la fecha
-      payment.date = resultado.toISOString().slice(0, 10)
-      
+      payment.date = resultado.toISOString().slice(0, 10);
+
       // Guardar en BD
       this.updatePayment({
-        id:payment.id,
-        column:'ppw_date',
+        id: payment.id,
+        column: "ppw_date",
         value: payment.date,
-        index: index
-      })
-
+        index: index,
+      });
     },
 
-      async updatePayment({id, column, value, index}){
-      const subscriptionId = this.subscriptionId
-      const paymentResponse = await PaymentService.addOrUpdatePayment({
-        id, column,value
-        }, index, subscriptionId)  
+    async updatePayment({ id, column, value, index }) {
+      const subscriptionId = this.subscriptionId;
+      const paymentResponse = await PaymentService.addOrUpdatePayment(
+        {
+          id,
+          column,
+          value,
+        },
+        index,
+        subscriptionId
+      );
 
-        // asignar el id al objeto payment si el id es nulo
-        if (id === null) {
-          const payment = this.paymentsWarranty[index - 1];
-          payment.id = paymentResponse.id
-        }
+      // asignar el id al objeto payment si el id es nulo
+      if (id === null) {
+        const payment = this.paymentsWarranty[index - 1];
+        payment.id = paymentResponse.id;
+      }
 
-        // sumar los dias
-        if (column === 'installment') {
-          const paymentId = id || paymentResponse.id 
-          this.sumarDias(paymentId, index)
-        }
+      // sumar los dias
+      if (column === "installment") {
+        const paymentId = id || paymentResponse.id;
+        this.sumarDias(paymentId, index);
+      }
     },
 
-    async deletePayment(id){
-      const subscriptionId = this.subscriptionId
-      await PaymentService.deletePayment(id , subscriptionId)
+    async deletePayment(id) {
+      const subscriptionId = this.subscriptionId;
+      await PaymentService.deletePayment(id, subscriptionId);
     },
-    
+
     addPaymentWarranty() {
       // setear la fecha por default
       const defaultDate = this.quotation.inceptionDate;
 
-      if(this.paymentsWarranty.length < 4)  {
-        const totalPaymentsSaved = this.paymentsWarranty.length
+      if (this.paymentsWarranty.length < 4) {
+        const totalPaymentsSaved = this.paymentsWarranty.length;
         const newPayment = {
-          id:null,
-          paymentIndex : totalPaymentsSaved +1,
-          installment: '',
-          percent: '',
+          id: null,
+          paymentIndex: totalPaymentsSaved + 1,
+          installment: "",
+          percent: "",
           date: defaultDate,
-          idClause:'',
-          showCalendar:false
-        }
-        const addPayments = [...this.paymentsWarranty, newPayment]
-        this.paymentsWarranty = addPayments
+          idClause: "",
+          daysOfPriorNotice: "",
+          showCalendar: false,
+        };
+        const addPayments = [...this.paymentsWarranty, newPayment];
+        this.paymentsWarranty = addPayments;
       }
-      if(this.paymentsWarranty.length === 4) this.addPaymentDisabled = true
+      if (this.paymentsWarranty.length === 4) this.addPaymentDisabled = true;
     },
 
     removePaymentWarranty(idToDelete) {
-      const newArray = this.paymentsWarranty.filter((item) => item.id !== idToDelete);
-      this.paymentsWarranty = newArray
-      if(this.paymentsWarranty.length < 4) this.addPaymentDisabled = false
+      const newArray = this.paymentsWarranty.filter(
+        (item) => item.id !== idToDelete
+      );
+      this.paymentsWarranty = newArray;
+      if (this.paymentsWarranty.length < 4) this.addPaymentDisabled = false;
     },
-
-  }
-}
+  },
+};
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/Subscription/Bound.less";
 
 .Cont {
   width: 100%;
@@ -257,13 +288,15 @@ export default {
         justify-content: center;
         align-items: flex-end;
         align-content: flex-end;
-        i {color: #003D6D;}
+        i {
+          color: #003d6d;
+        }
       }
     }
   }
 }
-button.v-btn--disabled  {
-  opacity: .5 !important;
+button.v-btn--disabled {
+  opacity: 0.5 !important;
 }
 .theme--light.v-btn.v-btn--disabled {
   color: white !important;

@@ -115,6 +115,7 @@
           :clause="value"
           :detailValues="totalPremiumHistoryTable"
           :effectiveDate="effectiveDate"
+          :premiumPaymentDate="premiumPaymentDate"
         />
         <AdmittedPremiumTableEngineering
           :detailValues="totalPremium"
@@ -395,6 +396,7 @@ export default {
       idEndorsementDinamic: null,
       value: "",
       effectiveDate: "11/11/23",
+      premiumPaymentDate: "11/11/23",
       endDate: "11/11/24",
       admittedPremiumEndorsement5: "$10,900",
       description: "Este es un gran ejemplo para hacer pruebas",
@@ -583,7 +585,8 @@ export default {
       this.informationCard = await EndorsementService.getEndorsementById(id);
       console.log("informationCard =>", this.informationCard);
       this.clause = this.informationCard.report.cartera.clausula;
-
+      this.premiumPaymentDate =
+        this.informationCard.report.cartera.premiumPaymentDate;
       this.endorsementDocuments = this.informationCard.EndorsementDocuments;
 
       this.value = this.informationCard.report.cartera.clausula;

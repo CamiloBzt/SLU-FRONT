@@ -12,7 +12,12 @@
         <th class="table-header">tax</th>
         <th class="table-header">fronting</th>
         <th class="table-header" colspan="2">ENG fee</th>
-        <th class="table-header">Reserve</th>
+        <th
+          v-if="formatPercentage(deductibles.premiumReserve)"
+          class="table-header"
+        >
+          Reserve
+        </th>
         <th class="table-header">LTA</th>
         <th class="table-header">Others</th>
       </tr>
@@ -31,7 +36,10 @@
         <td class="table-info" colspan="2">
           {{ formatPercentage(deductibles.eng) }}
         </td>
-        <td class="table-info">
+        <td
+          v-if="formatPercentage(deductibles.premiumReserve)"
+          class="table-info"
+        >
           {{ formatPercentage(deductibles.premiumReserve) }}
         </td>
         <td class="table-info">{{ formatPercentage(deductibles.lta) }}</td>
@@ -53,7 +61,13 @@
         <th class="table-header" colspan="2">tax</th>
         <th class="table-header" colspan="2">fronting</th>
         <th class="table-header" colspan="2">ENG</th>
-        <th class="table-header" colspan="2">Reserve</th>
+        <th
+          v-if="formatCurrency(netPremium.colombiaTotal)"
+          class="table-header"
+          colspan="2"
+        >
+          Reserve
+        </th>
         <th class="table-header" colspan="2">LTA</th>
         <th class="table-header" colspan="2">Others</th>
         <th class="table-header" colspan="2">Net Premium</th>
@@ -73,7 +87,9 @@
         <td colspan="2">{{ formatCurrency(netPremium.damageTaxes) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.damageFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.damageEng) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremium.damageColombia) }}</td>
+        <td v-if="formatCurrency(netPremium.damageColombia)" colspan="2">
+          {{ formatCurrency(netPremium.damageColombia) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremium.damageLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.damageOther) }}</td>
         <td colspan="2">
@@ -102,7 +118,9 @@
         <td colspan="2">{{ formatCurrency(netPremium.biTaxes) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.biFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.biEng) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremium.biColombia) }}</td>
+        <td v-if="formatCurrency(netPremium.biColombia)" colspan="2">
+          {{ formatCurrency(netPremium.biColombia) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremium.biLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.biOther) }}</td>
         <td colspan="2">
@@ -137,7 +155,9 @@
         <td colspan="2">{{ formatCurrency(netPremium.stocksTaxes) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.stocksFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.stocksEng) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremium.stocksColombia) }}</td>
+        <td v-if="formatCurrency(netPremium.stocksColombia)" colspan="2">
+          {{ formatCurrency(netPremium.stocksColombia) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremium.stocksLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.stocksOther) }}</td>
         <td colspan="2">
@@ -166,7 +186,9 @@
         <td colspan="2">{{ formatCurrency(netPremium.taxesTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.frontingTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.engTotal) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremium.colombiaTotal) }}</td>
+        <td v-if="formatCurrency(netPremium.colombiaTotal)" colspan="2">
+          {{ formatCurrency(netPremium.colombiaTotal) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremium.LTATotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.otherTotal) }}</td>
         <td colspan="2">
@@ -195,7 +217,12 @@
         <th class="table-header">tax</th>
         <th class="table-header">fronting</th>
         <th class="table-header" colspan="2">ENG fee</th>
-        <th class="table-header">Reserve</th>
+        <th
+          v-if="formatPercentage(deductibles.premiumReserve)"
+          class="table-header"
+        >
+          Reserve
+        </th>
         <th class="table-header">LTA</th>
         <th class="table-header">Others</th>
       </tr>
@@ -214,7 +241,10 @@
         <td class="table-info" colspan="2">
           {{ formatPercentage(deductibles.eng) }}
         </td>
-        <td class="table-info">
+        <td
+          v-if="formatPercentage(deductibles.premiumReserve)"
+          class="table-info"
+        >
           {{ formatPercentage(deductibles.premiumReserve) }}
         </td>
         <td class="table-info">{{ formatPercentage(deductibles.lta) }}</td>
@@ -236,7 +266,13 @@
         <th class="table-header" colspan="2">tax</th>
         <th class="table-header" colspan="2">fronting</th>
         <th class="table-header" colspan="2">ENG</th>
-        <th class="table-header" colspan="2">Reserve</th>
+        <th
+          v-if="formatCurrency(netPremiumUSD.colombiaTotal)"
+          class="table-header"
+          colspan="2"
+        >
+          Reserve
+        </th>
         <th class="table-header" colspan="2">LTA</th>
         <th class="table-header" colspan="2">Others</th>
         <th class="table-header" colspan="2">Net Premium</th>
@@ -256,7 +292,9 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.damageTaxes) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.damageFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.damageEng) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremiumUSD.damageColombia) }}</td>
+        <td v-if="formatCurrency(netPremiumUSD.damageColombia)" colspan="2">
+          {{ formatCurrency(netPremiumUSD.damageColombia) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.damageLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.damageOther) }}</td>
         <td colspan="2">
@@ -287,7 +325,9 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.biTaxes) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.biFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.biEng) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremiumUSD.biColombia) }}</td>
+        <td v-if="formatCurrency(netPremiumUSD.biColombia)" colspan="2">
+          {{ formatCurrency(netPremiumUSD.biColombia) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.biLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.biOther) }}</td>
         <td colspan="2">
@@ -330,7 +370,9 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksTaxes) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksEng) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksColombia) }}</td>
+        <td v-if="formatCurrency(netPremiumUSD.stocksColombia)" colspan="2">
+          {{ formatCurrency(netPremiumUSD.stocksColombia) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksOther) }}</td>
         <td colspan="2">
@@ -359,7 +401,9 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.taxesTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.frontingTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.engTotal) }}</td>
-        <td colspan="2">{{ formatCurrency(netPremiumUSD.colombiaTotal) }}</td>
+        <td v-if="formatCurrency(netPremiumUSD.colombiaTotal)" colspan="2">
+          {{ formatCurrency(netPremiumUSD.colombiaTotal) }}
+        </td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.LTATotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.otherTotal) }}</td>
         <td colspan="2">
