@@ -88,15 +88,16 @@
         </div>
         <div class="Row">
           <v-text-field
+            v-if="isLSWClause(payment.idClause)"
             @change="
               updatePayment({
                 id: payment.id,
-                column: 'daysOfPriorNotice',
-                value: payment.daysOfPriorNotice,
+                column: 'days_of_prior_notice',
+                value: payment.days_of_prior_notice,
                 index: index + 1,
               })
             "
-            v-model="payment.daysOfPriorNotice"
+            v-model="payment.days_of_prior_notice"
             label="Days of prior notice"
             type="number"
           />
@@ -167,6 +168,7 @@ export default {
       inceptionDate: this.accountComplete.deductibles.inceptionDate,
     };
     console.log("this.quotation", this.quotation);
+    if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
   },
   mounted() {
     // this.deepDisabled()
@@ -221,6 +223,12 @@ export default {
         },
       ];
       this.$emit("datasReceive", this.paymentsWarranty);
+    },
+
+    isLSWClause(idClause) {
+      // Valida si el idClause corresponde a LSW
+      const clause = this.clauseList.find((cl) => cl.id === idClause);
+      return clause && clause.clause.includes("LSW");
     },
 
     async updatePayment({ id, column, value, index }) {
@@ -303,7 +311,7 @@ export default {
           percent: "",
           date: defaultDate,
           idClause: "",
-          daysOfPriorNotice: "",
+          days_of_prior_notice: "",
           showCalendar: false,
         };
         const addPayments = [...this.paymentsWarranty, newPayment];

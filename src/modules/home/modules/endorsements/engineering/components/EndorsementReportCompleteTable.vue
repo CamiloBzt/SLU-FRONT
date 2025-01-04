@@ -229,7 +229,7 @@
     </thead>
     <tbody>
       <tr class="data-row highlight">
-        <td class="currency" colspan="3">Premium payment date</td>
+        <td class="currency" colspan="3">Premium payment warranty</td>
         <td colspan="2">{{ formattedDate() }}</td>
       </tr>
       <tr class="data-row highlight">

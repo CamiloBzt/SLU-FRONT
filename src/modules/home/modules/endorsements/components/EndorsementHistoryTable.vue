@@ -40,6 +40,28 @@
           </v-text-field>
         </div>
       </div>
+      <div class="input-col">
+        <div class="input-cont">
+          <v-menu
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="formatExpeditionDate"
+                label="Expedition date"
+                readonly
+                disabled
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+          </v-menu>
+        </div>
+      </div>
     </div>
 
     <div class="table-container input-row justify-center">
@@ -113,6 +135,7 @@ export default {
     clause: String,
     effectiveDate: String,
     premiumPaymentDate: String,
+    expeditionDate: String,
   },
   data() {
     return {
@@ -133,6 +156,11 @@ export default {
     formatPremiumPaymentDate() {
       return this.premiumPaymentDate
         ? new Date(this.premiumPaymentDate).toISOString().substr(0, 10)
+        : "";
+    },
+    formatExpeditionDate() {
+      return this.expeditionDate
+        ? new Date(this.expeditionDate).toISOString().substr(0, 10)
         : "";
     },
   },

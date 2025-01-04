@@ -116,6 +116,7 @@
           :detailValues="totalPremiumHistoryTable"
           :effectiveDate="effectiveDate"
           :premiumPaymentDate="premiumPaymentDate"
+          :expeditionDate="expeditionDate"
         />
         <AdmittedPremiumTableEngineering
           :detailValues="totalPremium"
@@ -397,6 +398,7 @@ export default {
       value: "",
       effectiveDate: "11/11/23",
       premiumPaymentDate: "11/11/23",
+      expeditionDate: "11/11/23",
       endDate: "11/11/24",
       admittedPremiumEndorsement5: "$10,900",
       description: "Este es un gran ejemplo para hacer pruebas",
@@ -587,6 +589,7 @@ export default {
       this.clause = this.informationCard.report.cartera.clausula;
       this.premiumPaymentDate =
         this.informationCard.report.cartera.premiumPaymentDate;
+      this.expeditionDate = this.informationCard.created_at;
       this.endorsementDocuments = this.informationCard.EndorsementDocuments;
 
       this.value = this.informationCard.report.cartera.clausula;

@@ -233,6 +233,7 @@
           :clause="clause"
           :effectiveDate="effectiveDate"
           :premiumPaymentDate="premiumPaymentDate"
+          :expeditionDate="expeditionDate"
           :detailValues="totalPremiumHistoryTable"
         />
         <AdmittedPremiumTableHistory :detailValues="totalPremium" />
@@ -410,6 +411,7 @@ export default {
       onCreatrEndorsement: false,
       idEndorsementDinamic: null,
       premiumPaymentDate: "11/11/23",
+      expeditionDate: "11/11/23",
       effectiveDate: "11/11/23",
       endDate: "11/11/24",
       admittedPremiumEndorsement5: "$10,900",
@@ -668,6 +670,8 @@ export default {
 
       this.premiumPaymentDate =
         this.informationCard.report.cartera.premiumPaymentDate;
+
+      this.expeditionDate = this.informationCard.created_at;
 
       this.effectiveDate = this.informationCard.effective_date;
 

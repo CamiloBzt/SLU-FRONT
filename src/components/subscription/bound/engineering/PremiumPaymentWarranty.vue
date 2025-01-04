@@ -92,15 +92,16 @@
         </div>
         <div class="Row">
           <v-text-field
+            v-if="isLSWClause(payment.idClause)"
             @change="
               updatePayment({
                 id: payment.id,
-                column: 'daysOfPriorNotice',
-                value: payment.daysOfPriorNotice,
+                column: 'days_of_prior_notice',
+                value: payment.days_of_prior_notice,
                 index: index + 1,
               })
             "
-            v-model="payment.daysOfPriorNotice"
+            v-model="payment.days_of_prior_notice"
             label="Days of prior notice"
             type="number"
           />
@@ -159,6 +160,7 @@ export default {
     console.log("this.paymentsWarranty", this.paymentsWarranty);
     //console.log('date',new Date().toISOString().slice(0, 10))
     console.log("this.quotation", this.quotation);
+    if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
   },
   mounted() {
     this.deepDisabled();
@@ -195,6 +197,12 @@ export default {
       });
     },
 
+    isLSWClause(idClause) {
+      // Valida si el idClause corresponde a LSW
+      const clause = this.clauseList.find((cl) => cl.id === idClause);
+      return clause && clause.clause.includes("LSW");
+    },
+
     async updatePayment({ id, column, value, index }) {
       const subscriptionId = this.subscriptionId;
       const paymentResponse = await PaymentService.addOrUpdatePayment(
@@ -229,7 +237,7 @@ export default {
       // setear la fecha por default
       const defaultDate = this.quotation.inceptionDate;
 
-      if (this.paymentsWarranty.length < 4) {
+      if (this.paymentsWarranty.length < 3) {
         const totalPaymentsSaved = this.paymentsWarranty.length;
         const newPayment = {
           id: null,
@@ -238,13 +246,13 @@ export default {
           percent: "",
           date: defaultDate,
           idClause: "",
-          daysOfPriorNotice: "",
+          days_of_prior_notice: "",
           showCalendar: false,
         };
         const addPayments = [...this.paymentsWarranty, newPayment];
         this.paymentsWarranty = addPayments;
       }
-      if (this.paymentsWarranty.length === 4) this.addPaymentDisabled = true;
+      if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
     },
 
     removePaymentWarranty(idToDelete) {
@@ -252,7 +260,7 @@ export default {
         (item) => item.id !== idToDelete
       );
       this.paymentsWarranty = newArray;
-      if (this.paymentsWarranty.length < 4) this.addPaymentDisabled = false;
+      if (this.paymentsWarranty.length < 3) this.addPaymentDisabled = false;
     },
   },
 };
