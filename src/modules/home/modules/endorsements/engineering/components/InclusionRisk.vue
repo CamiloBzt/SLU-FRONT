@@ -124,7 +124,7 @@
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
                             v-model="premiumPaymentDate"
-                            label="Premium payment date"
+                            label="Premium payment warranty"
                             readonly
                             v-bind="attrs"
                             v-on="on"
@@ -159,7 +159,7 @@
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           v-model="premiumPaymentDate"
-                          label="Premium payment date"
+                          label="Premium payment warranty"
                           readonly
                           disabled
                           v-bind="attrs"
