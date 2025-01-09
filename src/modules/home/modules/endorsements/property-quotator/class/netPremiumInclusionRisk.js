@@ -273,11 +273,7 @@ export class netPremiumInclusionRisk {
 
   damageColombia() {
     const sluShare = this.damagePremiumSlu();
-    // const result = calculateProperty(this.deductions.premiumReserve, sluShare);
-    const result = Decimal.mul(
-      sluShare,
-      this.deductions.premiumReserve
-    ).toNumber();
+    const result = calculateProperty(this.deductions.premiumReserve, sluShare);
 
     this.data.damageColombia = result;
     return result;
@@ -365,11 +361,7 @@ export class netPremiumInclusionRisk {
 
   biColombia() {
     const sluShare = this.biPremiumSlu();
-    // const result = calculateProperty(this.deductions.premiumReserve, sluShare);
-    const result = Decimal.mul(
-      sluShare,
-      this.deductions.premiumReserve
-    ).toNumber();
+    const result = calculateProperty(this.deductions.premiumReserve, sluShare);
 
     this.data.biColombia = result;
     return result;
@@ -461,11 +453,7 @@ export class netPremiumInclusionRisk {
 
   stocksColombia() {
     const sluShare = this.stocksPremiumSlu();
-    // const result = calculateProperty(this.deductions.premiumReserve, sluShare);
-    const result = Decimal.mul(
-      sluShare,
-      this.deductions.premiumReserve
-    ).toNumber();
+    const result = calculateProperty(this.deductions.premiumReserve, sluShare);
 
     this.data.stocksColombia = result;
     return result;
