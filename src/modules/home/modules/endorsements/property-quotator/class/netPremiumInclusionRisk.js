@@ -485,7 +485,7 @@ export class netPremiumInclusionRisk {
           this.damageTaxes(),
           this.damageLTA(),
           this.damageOther(),
-          this.damageFronting(),
+          // this.damageFronting(),
         ],
       },
       this.deductions.deductionType,
@@ -505,7 +505,7 @@ export class netPremiumInclusionRisk {
           this.biTaxes(),
           this.biLTA(),
           this.biOther(),
-          this.biFronting(),
+          // this.biFronting(),
         ],
       },
       this.deductions.deductionType,
@@ -525,7 +525,7 @@ export class netPremiumInclusionRisk {
           this.stocksTaxes(),
           this.stocksLTA(),
           this.stocksOther(),
-          this.stocksFronting(),
+          // this.stocksFronting(),
         ],
       },
       this.deductions.deductionType,
@@ -546,6 +546,7 @@ export class netPremiumInclusionRisk {
           this.damageTaxes(),
           this.damageLTA(),
           this.damageOther(),
+          this.damageFronting(),
         ],
       },
       this.deductions.deductionType,
@@ -565,6 +566,7 @@ export class netPremiumInclusionRisk {
           this.biTaxes(),
           this.biLTA(),
           this.biOther(),
+          this.biFronting(),
         ],
       },
       this.deductions.deductionType,
@@ -584,6 +586,7 @@ export class netPremiumInclusionRisk {
           this.stocksTaxes(),
           this.stocksLTA(),
           this.stocksOther(),
+          this.stocksFronting(),
         ],
       },
       this.deductions.deductionType,
@@ -597,27 +600,33 @@ export class netPremiumInclusionRisk {
   //SLU Premium to be invoiced
 
   damageSluPremiumToBeInvoiced() {
-    const result = Decimal.sub(
-      this.damageNet(),
-      this.damageColombia()
-    ).toNumber();
-    this.data.damageSluPremiumToBeInvoiced = result;
-    return result;
+    // const result = Decimal.sub(
+    //   this.damageNet(),
+    //   this.damageColombia()
+    // ).toNumber();
+    // this.data.damageSluPremiumToBeInvoiced = result;
+    // return result;
+    this.data.damageSluPremiumToBeInvoiced = this.damageNet();
+    return this.damageNet();
   }
 
   businessInterSluPremiumToBeInvoiced() {
-    const result = Decimal.sub(this.biNet(), this.biColombia()).toNumber();
-    this.data.businessInterSluPremiumToBeInvoiced = result;
-    return result;
+    // const result = Decimal.sub(this.biNet(), this.biColombia()).toNumber();
+    // this.data.businessInterSluPremiumToBeInvoiced = result;
+    // return result;
+    this.data.businessInterSluPremiumToBeInvoiced = this.biNet();
+    return this.biNet();
   }
 
   stockSluPremiumToBeInvoiced() {
-    const result = Decimal.sub(
-      this.stocksNet(),
-      this.stocksColombia()
-    ).toNumber();
-    this.data.stockSluPremiumToBeInvoiced = result;
-    return result;
+    // const result = Decimal.sub(
+    //   this.stocksNet(),
+    //   this.stocksColombia()
+    // ).toNumber();
+    // this.data.stockSluPremiumToBeInvoiced = result;
+    // return result;
+    this.data.stockSluPremiumToBeInvoiced = this.stocksNet();
+    return this.stocksNet();
   }
 
   //totales

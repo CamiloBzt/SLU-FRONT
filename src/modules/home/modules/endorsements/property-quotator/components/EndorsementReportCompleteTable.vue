@@ -93,16 +93,13 @@
         <td colspan="2">{{ formatCurrency(netPremium.damageLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.damageOther) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.damageNet) }} -->
-          {{ formatCurrency(netPremium.damageNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.damageSluPremiumToBeInvoiced) }} -->
-          {{ formatCurrency(netPremium.damageNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.damageNetPremiumExcludingFronting) }} -->
           {{ formatCurrency(netPremium.damageNet) }}
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremium.damageSluPremiumToBeInvoiced) }}
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremium.damageNetPremiumExcludingFronting) }}
         </td>
       </tr>
       <tr class="data-row highlight">
@@ -124,22 +121,15 @@
         <td colspan="2">{{ formatCurrency(netPremium.biLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.biOther) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.biNet) }} -->
-          {{
-            formatCurrency(netPremium.businessInterNetPremiumExcludingFronting)
-          }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.businessInterSluPremiumToBeInvoiced) }} -->
-          {{
-            formatCurrency(netPremium.businessInterNetPremiumExcludingFronting)
-          }}
-        </td>
-        <td colspan="2">
           {{ formatCurrency(netPremium.biNet) }}
-          <!-- {{
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremium.businessInterSluPremiumToBeInvoiced) }}
+        </td>
+        <td colspan="2">
+          {{
             formatCurrency(netPremium.businessInterNetPremiumExcludingFronting)
-          }} -->
+          }}
         </td>
       </tr>
       <tr class="data-row highlight">
@@ -161,16 +151,13 @@
         <td colspan="2">{{ formatCurrency(netPremium.stocksLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.stocksOther) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.stocksNet) }} -->
-          {{ formatCurrency(netPremium.stockNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.stockSluPremiumToBeInvoiced) }} -->
-          {{ formatCurrency(netPremium.stockNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
           {{ formatCurrency(netPremium.stocksNet) }}
-          <!-- {{ formatCurrency(netPremium.stockNetPremiumExcludingFronting) }} -->
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremium.stockSluPremiumToBeInvoiced) }}
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremium.stockNetPremiumExcludingFronting) }}
         </td>
       </tr>
       <tr class="totals-row">
@@ -192,16 +179,13 @@
         <td colspan="2">{{ formatCurrency(netPremium.LTATotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.otherTotal) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.netTotal) }} -->
-          {{ formatCurrency(netPremium.totalNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremium.totalSluPremiumToBeInvoiced) }} -->
-          {{ formatCurrency(netPremium.totalNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
           {{ formatCurrency(netPremium.netTotal) }}
-          <!-- {{ formatCurrency(netPremium.totalNetPremiumExcludingFronting) }} -->
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremium.totalSluPremiumToBeInvoiced) }}
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremium.totalNetPremiumExcludingFronting) }}
         </td>
       </tr>
     </tbody>
@@ -298,16 +282,13 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.damageLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.damageOther) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremiumUSD.damageNet) }} -->
-          {{ formatCurrency(netPremiumUSD.damageNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremiumUSD.damageSluPremiumToBeInvoiced) }} -->
-          {{ formatCurrency(netPremiumUSD.damageNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
           {{ formatCurrency(netPremiumUSD.damageNet) }}
-          <!-- {{ formatCurrency(netPremiumUSD.damageNetPremiumExcludingFronting) }} -->
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremiumUSD.damageSluPremiumToBeInvoiced) }}
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremiumUSD.damageNetPremiumExcludingFronting) }}
         </td>
       </tr>
       <tr class="data-row highlight">
@@ -331,30 +312,19 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.biLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.biOther) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremiumUSD.biNet) }} -->
-          {{
-            formatCurrency(
-              netPremiumUSD.businessInterNetPremiumExcludingFronting
-            )
-          }}
-        </td>
-        <td colspan="2">
-          <!-- {{
-            formatCurrency(netPremiumUSD.businessInterSluPremiumToBeInvoiced)
-          }} -->
-          {{
-            formatCurrency(
-              netPremiumUSD.businessInterNetPremiumExcludingFronting
-            )
-          }}
-        </td>
-        <td colspan="2">
           {{ formatCurrency(netPremiumUSD.biNet) }}
-          <!-- {{
+        </td>
+        <td colspan="2">
+          {{
+            formatCurrency(netPremiumUSD.businessInterSluPremiumToBeInvoiced)
+          }}
+        </td>
+        <td colspan="2">
+          {{
             formatCurrency(
               netPremiumUSD.businessInterNetPremiumExcludingFronting
             )
-          }} -->
+          }}
         </td>
       </tr>
       <tr class="data-row highlight">
@@ -376,16 +346,13 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksLTA) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.stocksOther) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremiumUSD.stocksNet) }} -->
-          {{ formatCurrency(netPremiumUSD.stockNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremiumUSD.stockSluPremiumToBeInvoiced) }} -->
-          {{ formatCurrency(netPremiumUSD.stockNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
           {{ formatCurrency(netPremiumUSD.stocksNet) }}
-          <!-- {{ formatCurrency(netPremiumUSD.stockNetPremiumExcludingFronting) }} -->
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremiumUSD.stockSluPremiumToBeInvoiced) }}
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremiumUSD.stockNetPremiumExcludingFronting) }}
         </td>
       </tr>
       <tr class="totals-row">
@@ -407,16 +374,13 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.LTATotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.otherTotal) }}</td>
         <td colspan="2">
-          <!-- {{ formatCurrency(netPremiumUSD.netTotal) }} -->
-          {{ formatCurrency(netPremiumUSD.totalNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
-          <!-- {{ formatCurrency(netPremiumUSD.totalSluPremiumToBeInvoiced) }} -->
-          {{ formatCurrency(netPremiumUSD.totalNetPremiumExcludingFronting) }}
-        </td>
-        <td colspan="2">
           {{ formatCurrency(netPremiumUSD.netTotal) }}
-          <!-- {{ formatCurrency(netPremiumUSD.totalNetPremiumExcludingFronting) }} -->
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremiumUSD.totalSluPremiumToBeInvoiced) }}
+        </td>
+        <td colspan="2">
+          {{ formatCurrency(netPremiumUSD.totalNetPremiumExcludingFronting) }}
         </td>
       </tr>
     </tbody>
