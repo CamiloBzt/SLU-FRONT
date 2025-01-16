@@ -153,8 +153,7 @@ export default {
     },
     propEng() {
       const valid = ["PRO", "CPE", "CECR"];
-      if (valid.includes(this.selectedRiskKey)) return true;
-      return false;
+      return valid.includes(this.selectedRiskKey);
     },
   },
   methods: {
@@ -210,13 +209,10 @@ export default {
 
         if (path == 7) {
           if (this.propEng) {
-            if (
-              this.$route.path !=
-              "/underwriting/" + this.subscription_id + "/submission"
-            ) {
-              this.quotation.typeQuotation == 1
-                ? this.$router.push(paths[path])
-                : this.$router.push(paths[path + 1]);
+            if (this.quotationType === 1) {
+              this.$router.push(paths[path]);
+            } else {
+              this.$router.push(paths[path + 1]);
             }
           } else {
             this.$router.push(paths[path - 1]);

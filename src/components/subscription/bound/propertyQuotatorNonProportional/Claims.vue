@@ -53,9 +53,9 @@
                 </div>
                 <div class="input-row large justify-space-between bold-text">
                   <span> $ 0 </span>
-                  <span>
+                  <!-- <span>
                     It does not present claims for being a new project
-                  </span>
+                  </span> -->
                 </div>
               </div>
             </div>

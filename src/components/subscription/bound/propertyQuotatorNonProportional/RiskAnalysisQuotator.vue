@@ -139,6 +139,7 @@ import {
   getSublimes,
   saveSublime,
 } from "./services/SublimesQuotator/sublime-quotator.service";
+import { mapActions } from "vuex";
 
 export default {
   name: "RiskAnalysisQuotator",
@@ -189,6 +190,7 @@ export default {
   async mounted() {
     this.subscription.subscriptionId = this.$route.params?.subscriptionId;
     if (this.subscription.subscriptionId) {
+      await this.fetchQuotationData(); // Cargar información de cotización
       this.DeductiblesArray = await getDeductiblesById({
         id: this.subscription.subscriptionId,
       });
@@ -197,6 +199,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["getQuotationInformation"]),
+    async fetchQuotationData() {
+      try {
+        // Asegúrate de que los datos de la cotización estén cargados
+        await this.getQuotationInformation({
+          subscriptionId: this.subscription.subscriptionId,
+        });
+      } catch (error) {
+        console.error("Error fetching quotation data:", error);
+      }
+    },
     async fetchSublimesWithRetry() {
       const sublimes = await getSublimes(this.subscription.subscriptionId);
       if (sublimes?.BoundSublimesProps) {

@@ -54,9 +54,9 @@
               </div>
               <div class="Row Large justify-space-between Bold">
                 <span> $ 0 </span>
-                <span>
+                <!-- <span>
                   It does not present claims for being a new project
-                </span>
+                </span> -->
               </div>
             </div>
           </div>

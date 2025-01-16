@@ -257,11 +257,12 @@
         <v-select
           v-model.trim="applySirSelect"
           label="Apply"
-          :items="items"
+          :items="applySirOptions"
           item-text="data"
           item-value="id"
           clearable
-          :disabled="disabled"
+          :disabled="applySirOptions.length === 0"
+          @input="saveField('applySirSelect', applySirSelect)"
         ></v-select>
       </div>
     </div>
@@ -269,13 +270,12 @@
 </template>
 <script>
 /* components */
-import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* services */
 import {
   getCatalog,
-  getTotalInsurableValue,
   saveTotalInsurableValue,
 } from "./services/TotalInsurableValue/total-insurable-value.service";
 /* numbers */
@@ -315,6 +315,7 @@ export default {
         stocksRate: "",
       },
       selfInsured: "",
+      applySirOptions: [],
       applySirSelect: "",
       items: [],
       disabled: true,
@@ -536,27 +537,38 @@ export default {
     },
   },
   beforeMount() {
-    this.items = getCatalog("type_coverages");
-
     this.subscriptionId = this.$route.params?.subscriptionId;
     if (this.subscriptionId) {
-      Promise.all([this.getTotalInsurableValue(this.subscriptionId)]).finally(
-        () => {
-          this.quotation = this.realData.quotation;
-          this.quotationInsured = this.realData.quotationInsured;
-          this.layers = this.realData.layers;
-          this.totalInsurableValue = {
-            stocksRate: this.realData.quotationInsured.stockPercentaje,
-          };
-        }
-      );
+      Promise.all(
+        [this.getTotalInsurableValue(this.subscriptionId)],
+        this.loadApplySirCatalog()
+      ).finally(() => {
+        this.quotation = this.realData.quotation;
+        this.quotationInsured = this.realData.quotationInsured;
+        this.layers = this.realData.layers;
+        this.totalInsurableValue = {
+          stocksRate: this.realData.quotationInsured.stockPercentaje,
+        };
+      });
     }
   },
   methods: {
-    ...mapActions(["getTotalInsurableValue"]),
+    ...mapActions(["getTotalInsurableValue", "getCatalogByName"]),
     async saveField(column, value) {
       if (this.subscriptionId)
         await saveTotalInsurableValue(this.subscriptionId, column, value);
+    },
+    async loadApplySirCatalog() {
+      try {
+        this.items = await getCatalog("type_coverages");
+        const catalog = await getCatalog("apply_sir");
+        this.applySirOptions = catalog.map((item) => ({
+          id: item.id,
+          data: item.data,
+        }));
+      } catch (error) {
+        console.error("Error loading applySir catalog:", error);
+      }
     },
   },
   watch: {

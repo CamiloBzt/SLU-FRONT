@@ -94,29 +94,29 @@
   </v-expansion-panels>
 </template>
 <script>
-import InputsRiskQuotator from '@/components/subscription/bound/propertyQuotatorProportional/InputsRiskQuotator';
-import RiskInformationQuotator from '@/components/subscription/bound/propertyQuotatorProportional/RiskInformationQuotator';
-import CedentInformation from '@/components/subscription/bound/engineering/CedentInformation';
-import Deductibles from '@/components/subscription/bound/engineering/Deductibles';
-import DeductiblesQuotator from '@/components/subscription/bound/propertyQuotatorProportional/DeductiblesQuotator';
-import SublimesQuotator from '@/components/subscription/bound/propertyQuotatorProportional/SublimesQuotator';
-import TotalInsurableValueBound from '@/components/subscription/bound/engineering/TotalInsurableValueBound';
-import TotalInsurableValueBoundQuotator from '@/components/subscription/bound/propertyQuotatorProportional/TotalInsurableValueBoundQuotator';
-import MainLocation from '@/components/subscription/bound/propertyQuotatorProportional/MainLocation';
-import PmlProperty from '@/components/subscription/bound/propertyQuotatorProportional/PmlProperty';
-import Deductions from '@/components/subscription/quotation/Deductions';
-import Sublimes from '@/components/subscription/bound/engineering/Sublimes';
-import PremiumPaymentWarranty from '@/components/subscription/bound/engineering/PremiumPaymentWarranty';
-import BoundClaims from '@/components/subscription/bound/engineering/BoundClaims';
-import Rational from '@/components/subscription/bound/engineering/Rational';
-import RiskProfile from '@/components/subscription/bound/engineering/RiskProfile';
-import NetPremiumProperty from '@/components/subscription/bound/propertyQuotatorProportional/NetPremiumProperty';
-import NetPremiumUsdProperty from '@/components/subscription/bound/propertyQuotatorProportional/NetPremiumUsdProperty';
+import InputsRiskQuotator from "@/components/subscription/bound/propertyQuotatorProportional/InputsRiskQuotator";
+import RiskInformationQuotator from "@/components/subscription/bound/propertyQuotatorProportional/RiskInformationQuotator";
+import CedentInformation from "@/components/subscription/bound/engineering/CedentInformation";
+import Deductibles from "@/components/subscription/bound/engineering/Deductibles";
+import DeductiblesQuotator from "@/components/subscription/bound/propertyQuotatorProportional/DeductiblesQuotator";
+import SublimesQuotator from "@/components/subscription/bound/propertyQuotatorProportional/SublimesQuotator";
+import TotalInsurableValueBound from "@/components/subscription/bound/engineering/TotalInsurableValueBound";
+import TotalInsurableValueBoundQuotator from "@/components/subscription/bound/propertyQuotatorProportional/TotalInsurableValueBoundQuotator";
+import MainLocation from "@/components/subscription/bound/propertyQuotatorProportional/MainLocation";
+import PmlProperty from "@/components/subscription/bound/propertyQuotatorProportional/PmlProperty";
+import Deductions from "@/components/subscription/quotation/Deductions";
+import Sublimes from "@/components/subscription/bound/engineering/Sublimes";
+import PremiumPaymentWarranty from "@/components/subscription/bound/engineering/PremiumPaymentWarranty";
+import BoundClaims from "@/components/subscription/bound/engineering/BoundClaims";
+import Rational from "@/components/subscription/bound/engineering/Rational";
+import RiskProfile from "@/components/subscription/bound/engineering/RiskProfile";
+import NetPremiumProperty from "@/components/subscription/bound/propertyQuotatorProportional/NetPremiumProperty";
+import NetPremiumUsdProperty from "@/components/subscription/bound/propertyQuotatorProportional/NetPremiumUsdProperty";
 
-import { stateExpansiveManager } from '@/mixins/subscription.js';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
-  name: 'RiskAnalysisQuotator',
+  name: "RiskAnalysisQuotator",
   mixins: [stateExpansiveManager],
   data() {
     return {
@@ -150,11 +150,11 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'boundEngCatDeductibles',
-      'boundPropDeductibles',
-      'accountInformation',
-      'boundSublimesProp',
-      'risk_type',
+      "boundEngCatDeductibles",
+      "boundPropDeductibles",
+      "accountInformation",
+      "boundSublimesProp",
+      "risk_type",
     ]),
     selectedRisk: {
       get() {
@@ -172,50 +172,54 @@ export default {
       },
     },
     selectedRiskKey() {
-      return this.selectedRisk.key || '';
+      return this.selectedRisk.key || "";
     },
     propEng() {
-      const valid = ['PRO', 'CPE', 'CECR'];
+      const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return true;
       return false;
     },
   },
   methods: {
     ...mapActions([
-      'updateQuotationType',
-      'checkSubscriptionStored',
-      'getQuotationInformation',
-      'getCatalogByName',
-      'updateSubscriptionStatus',
-      'addNewFieldBound',
-      'createSublimeProperty',
-      'getSublimesProperty',
-      'updateSublimeProperty',
-      'createDeductibleProperty',
-      'getDeductiblesProperty',
-      'updateDeductibleProperty',
+      "updateQuotationType",
+      "checkSubscriptionStored",
+      "getQuotationInformation",
+      "getCatalogByName",
+      "updateSubscriptionStatus",
+      "addNewFieldBound",
+      "createSublimeProperty",
+      "getSublimesProperty",
+      "updateSublimeProperty",
+      "createDeductibleProperty",
+      "getDeductiblesProperty",
+      "updateDeductibleProperty",
     ]),
     async addLocation() {
       await this.createSublimeProperty();
       await this.getSublimesProperty();
     },
     async deleteSublime(id) {
-      await this.updateSublimeProperty({ id, column: 'active' });
+      await this.updateSublimeProperty({ id, column: "active" });
       await this.getSublimesProperty();
     },
     async addDeductible() {
-      await this.createDeductibleProperty()
+      await this.createDeductibleProperty();
       await this.getDeductiblesProperty();
     },
     async deleteDeductible(id) {
-      await this.updateDeductibleProperty({ id, column: 'active', value: false });
+      await this.updateDeductibleProperty({
+        id,
+        column: "active",
+        value: false,
+      });
       await this.getDeductiblesProperty();
     },
   },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
 .ExpansionLineTop {
   background: #d2deed !important;
 }

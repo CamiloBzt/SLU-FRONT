@@ -495,7 +495,7 @@ export default {
       ? catalogUnderlyingFireAplica
       : [];
     this.boundNonPropDeductibles = await getFireDeductible({
-      id: this.subscription_id,
+      id: this.deductibleId,
     });
   },
   computed: {
@@ -658,10 +658,10 @@ export default {
       this.buttonLoader = true;
       await setNewFireDeductible({
         deductible_id: this.deductibleId,
-        id_subscription: this.subscription_id,
+        id_subscription: this.deductibleId,
       });
       this.boundNonPropDeductibles = await getFireDeductible({
-        id: this.subscription_id,
+        id: this.deductibleId,
       });
       this.buttonLoader = false;
     },
@@ -678,7 +678,7 @@ export default {
     async deleteFireDeductible(id) {
       await setDeleteFireDeductibleNonProp({ id: id });
       this.boundNonPropDeductibles = await getFireDeductible({
-        id: this.subscription_id,
+        id: this.deductibleId,
       });
     },
   },
