@@ -54,7 +54,7 @@
           <MainLocation />
           <div class="expansion-line-top mt-2" />
 
-          <PmlProperty />
+          <PmlProperty :exchangeRate="quotation.exchangeRate" />
           <div class="expansion-line-top mt-7" />
 
           <DeductiblesQuotator

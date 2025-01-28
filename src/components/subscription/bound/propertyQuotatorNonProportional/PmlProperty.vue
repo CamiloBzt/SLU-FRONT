@@ -53,23 +53,26 @@
 /* components */
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* services */
-import { getPmlProperty, savePmlProperty } from './services/PmlProperty/pml-property.service'
+import {
+  getPmlProperty,
+  savePmlProperty,
+} from "./services/PmlProperty/pml-property.service";
 /* libs */
-import Decimal from 'decimal.js'
-import numeral from 'numeral'
+import Decimal from "decimal.js";
+import numeral from "numeral";
 /* debounce */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
 export default {
   name: "PmlProperty",
   components: { CurrencyInput },
-  data () {
+  data() {
     return {
       pmlProperty: {
         limit: 0,
         pmlTotal: 0,
         pmlTotalUsd: 0,
-        comments: ""
+        comments: "",
       },
       subscriptionId: false,
       currencyOptions: {
@@ -83,53 +86,65 @@ export default {
       }),
     };
   },
+  props: {
+    exchangeRate: {
+      type: Number,
+      required: true,
+    },
+  },
   computed: {
     selectedLimit: {
-      get () { return this.pmlProperty.limit },
-      set (value) {
-        this.pmlProperty.limit = new Decimal(numeral(
-          (`${value}` || '$0').replace(/[^0-9.]/g, '')
-        ).value() || 0)
-      }
+      get() {
+        return this.pmlProperty.limit;
+      },
+      set(value) {
+        this.pmlProperty.limit = new Decimal(
+          numeral((`${value}` || "$0").replace(/[^0-9.]/g, "")).value() || 0
+        );
+      },
     },
     pmlTotalUsd: {
-      get () {
+      get() {
         const percent = new Decimal(
           numeral(
-            (`${this.pmlProperty.pmlTotal}` || '$0').replace(/[^0-9.]/g, '')
+            (`${this.pmlProperty.pmlTotal}` || "$0").replace(/[^0-9.]/g, "")
           ).value() || 0
-        ).div(100)
-        const op = new Decimal(this.selectedLimit || 0).mul(percent)
-        this.pmlProperty.pmlTotalUsd = op.toNumber()
+        ).div(100);
+        // Usa exchangeRate para convertir el valor a USD
+        const limitInUsd = new Decimal(this.selectedLimit || 0).div(
+          this.exchangeRate || 1
+        );
+        const op = limitInUsd.mul(percent);
 
-        return this.pmlProperty.pmlTotalUsd
+        this.pmlProperty.pmlTotalUsd = op.toNumber();
+        return this.pmlProperty.pmlTotalUsd;
       },
-      set () { }
-    }
+      set() {},
+    },
   },
-  async mounted () {
-    this.subscriptionId = this.$route.params?.subscriptionId
+  async mounted() {
+    this.subscriptionId = this.$route.params?.subscriptionId;
     if (this.subscriptionId) {
-      const data = await getPmlProperty(this.subscriptionId)
-      this.pmlProperty = data?.boundNonPropPmlProperty
-      this.selectedLimit = data?.layers?.limit
+      const data = await getPmlProperty(this.subscriptionId);
+      this.pmlProperty = data?.boundNonPropPmlProperty;
+      this.selectedLimit = data?.layers?.limit;
     }
   },
   methods: {
-    async saveField (column, value) {
+    async saveField(column, value) {
       if (this.subscriptionId)
         await savePmlProperty(this.subscriptionId, column, value);
     },
   },
   watch: {
-    'pmlProperty.pmlTotalUsd': debounce(function (value) {
-      this.saveField('pml_total_usd', value)
+    "pmlProperty.pmlTotalUsd": debounce(function (value) {
+      this.saveField("pml_total_usd", value);
     }, 1000),
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/BoundRefactored.less';
+@import "~@/assets/style/Subscription/BoundRefactored.less";
 
 .pml-cont {
   width: 100%;

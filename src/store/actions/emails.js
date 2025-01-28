@@ -1,24 +1,16 @@
-/* api */
 import { apolloClient } from "../../lib/api";
 import { PublicClientApplication, InteractionType } from "@azure/msal-browser";
 import { Client } from "@microsoft/microsoft-graph-client";
 import { AuthCodeMSALBrowserAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/authCodeMsalBrowser";
-/* constantes */
 import messages from "../../constants/messages";
-
-/* mutations */
 import SEND_EMAIL_MUTATION from "./mutations/sendEmail";
 import ATTACH_FILE_MUTATION from "./mutations/attachFile";
 import DELETE_ATTACHED_MUTATION from "./mutations/deleteAttached";
 import CHANGE_TEMPLATE_LANG_MUTATION from "./mutations/changeTemplateLang";
-
-/* query */
 import EMAIL_TEMPLATE_RISK_QUERY from "./queries/getEmailTemplateByRisk";
 import SUBSCRIPTION_TEMPLATE_LANG from "./queries/getSubscriptionTemplateLang";
 import GET_EMAIL_TEMPLATE_QUOTATION from "./queries/getTemplateEmailQuotation";
 import GET_CONTACT_SUBSCRIPTION from "./queries/getContactsBySubscription";
-
-// Utils
 import { getBase64FromFile } from "../../lib/utils";
 
 export default {
@@ -28,26 +20,20 @@ export default {
         response: "getEmailTemplateByRisk",
         query: EMAIL_TEMPLATE_RISK_QUERY,
       };
-
       const variables = { riskId: id, lang };
-
       const { data } = await apolloClient.query({
         query: queryInfo.query,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { response, statusCode } = data[queryInfo.response];
       if (statusCode !== 200) throw new Error("Invalid Template");
-
       const parsedResponse = JSON.parse(response);
-      /* set email ID & template */
       await dispatch("setEmailTemplate", {
         description: parsedResponse.description,
       });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getEmailTemplate error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getEmailTemplate error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -60,26 +46,18 @@ export default {
         response: "getSubscriptionTemplateLang",
         query: SUBSCRIPTION_TEMPLATE_LANG,
       };
-
-      const variables = {
-        id: getters.subscription_id,
-      };
-
+      const variables = { id: getters.subscription_id };
       const { data } = await apolloClient.query({
         query: settings.query,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode, response } = data[settings.response];
       if (statusCode !== 200) throw new Error("Template Lang Error");
-
       const parsedResponse = JSON.parse(response);
       commit("SET_SELECTED_TEMPLATE_LANG", parsedResponse.lang);
     } catch ({ message }) {
-      const messageToDisplay =
-        "getCurrentTemplateLanguage error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getCurrentTemplateLanguage error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -88,10 +66,7 @@ export default {
   },
   async setCurrentTemplateLanguage({ commit }, { langId, id }) {
     try {
-      const variables = {
-        langId,
-        id,
-      };
+      const variables = { langId, id };
       const {
         data: { changeTemplateLang },
       } = await apolloClient.mutate({
@@ -99,17 +74,12 @@ export default {
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode, response } = changeTemplateLang;
       if (statusCode !== 200) throw new Error("Lang not saved on change");
-
       const parsedResponse = JSON.parse(response);
-
       commit("SET_SELECTED_TEMPLATE_LANG", parsedResponse.lang);
     } catch ({ message }) {
-      const messageToDisplay =
-        "setCurrentTemplateLanguage error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "setCurrentTemplateLanguage error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -120,8 +90,7 @@ export default {
     try {
       commit("SET_SELECTED_TEMPLATE_LANG", "en");
     } catch ({ message }) {
-      const messageToDisplay =
-        "resetTemplateLang error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "resetTemplateLang error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -134,8 +103,7 @@ export default {
         currentEmailTemplate: description,
       });
     } catch ({ message }) {
-      const messageToDisplay =
-        "setEmailTemplate error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "setEmailTemplate error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -146,8 +114,7 @@ export default {
     try {
       commit("SET_CURRENT_EMAIL_RISK_ID", { id });
     } catch ({ message }) {
-      const messageToDisplay =
-        "setEmailRiskID error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "setEmailRiskID error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -156,95 +123,62 @@ export default {
   },
   async sendEmailAction({ commit, dispatch, getters, state }, { emailData }) {
     this.$msalInstance = new PublicClientApplication(state.outlook.config);
-    const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(
-      this.$msalInstance,
-      {
-        account: JSON.parse(localStorage.getItem("accountOutlook")),
-        scopes: state.outlook.params.scopes,
-        interactionType: InteractionType.Popup,
-      }
-    );
-    const graphClient = Client.initWithMiddleware({
-      authProvider: authProvider,
+    const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(this.$msalInstance, {
+      account: JSON.parse(localStorage.getItem("accountOutlook")),
+      scopes: state.outlook.params.scopes,
+      interactionType: InteractionType.Popup,
     });
+    const graphClient = Client.initWithMiddleware({ authProvider });
     let toRecipients = [],
       ccoRecipients = [],
       attachmentFiles = [];
-
     if (emailData.cc !== null) {
-      toRecipients = emailData.cc.reduce((accum, item) => {
-        accum.push({
-          emailAddress: {
-            address: item,
-          },
-        });
-        return accum;
-      }, []);
+      toRecipients = emailData.cc.map((item) => ({
+        emailAddress: { address: item },
+      }));
     }
-
-    if (emailData.cco != null) {
-      ccoRecipients = emailData.cco.reduce((accum, item) => {
-        accum.push({
-          emailAddress: {
-            address: item,
-          },
-        });
-        return accum;
-      }, []);
+    if (emailData.cco !== null) {
+      ccoRecipients = emailData.cco.map((item) => ({
+        emailAddress: { address: item },
+      }));
     }
-
-    if (emailData.attachmentFiles)
+    if (emailData.attachmentFiles) {
       attachmentFiles = await Promise.all(
         emailData.attachmentFiles.map(async (file) => {
           const contentBytes = await getBase64FromFile(file);
-
+          const base64Data = contentBytes.split(",")[1];
           return {
             "@odata.type": "#microsoft.graph.fileAttachment",
             name: file.name,
             contentType: file.type,
-            contentBytes: contentBytes.split(",")[1],
+            contentBytes: base64Data,
           };
         })
       );
-
-    const bodyContent = `${emailData.body} <div style="max-height: 200px;"><img src="cid:sluLogo" alt="sluLogo" style="width: 200px;"></div>`;
-    const logoFile = async () => {
-      const sluLogo = require("@/assets/logo-slu.png");
-      const sluBlob = await fetch(sluLogo).then((r) => r.blob());
-
-      const contentBytes = await getBase64FromFile(sluBlob);
-
-      return {
-        "@odata.type": "#microsoft.graph.fileAttachment",
-        name: "SLU",
-        contentType: sluBlob.type,
-        contentBytes: contentBytes.split(",")[1],
-        contentId: "sluLogo",
-      };
-    };
-    const attachmentLogoFile = await logoFile();
-
+    }
+    const sluLogo = require("@/assets/logo-slu.png");
+    const sluBlob = await fetch(sluLogo).then((r) => r.blob());
+    const logoBase64 = await getBase64FromFile(sluBlob);
+    const bodyContent = `
+      ${emailData.body}
+      <div style="max-height: 200px;">
+        <img src="${logoBase64}" alt="sluLogo" style="width: 200px;" />
+      </div>`;
     const mail = {
       subject: emailData.subject,
-      toRecipients: toRecipients,
+      toRecipients,
       ccRecipients: ccoRecipients,
       body: {
         content: bodyContent,
         contentType: "html",
       },
-      attachments: [attachmentLogoFile],
+      attachments: attachmentFiles,
     };
-
-    if (attachmentFiles.length > 0)
-      mail.attachments = [...mail.attachments, ...attachmentFiles];
-
     try {
-      const response = await graphClient
-        .api("/me/sendMail")
-        .post({ message: mail });
-
-      if (emailData.closeAccount) dispatch("storeEmail", { emailData });
-
+      await graphClient.api("/me/sendMail").post({ message: mail });
+      if (emailData.closeAccount) {
+        dispatch("storeEmail", { emailData });
+      }
       commit("addNotification", {
         type: messages.SUCCESS,
         text: "SEND MAIL SUCCESSFUL",
@@ -264,10 +198,8 @@ export default {
         },
         fetchPolicy: "no-cache",
       });
-
       return data.attachFile;
     } catch (e) {
-      console.error(e);
       return { error: true };
     }
   },
@@ -275,8 +207,7 @@ export default {
     try {
       commit("RESET_SEND_EMAIL");
     } catch ({ message }) {
-      const messageToDisplay =
-        "resetEmail error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "resetEmail error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -305,8 +236,7 @@ export default {
         description: getId[settings[language]],
       });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getTemplateEmail error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getTemplateEmail error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -321,32 +251,24 @@ export default {
         cco: Array.isArray(emailData.cco) ? emailData.cco.join(",") : null,
         cc: Array.isArray(emailData.cc) ? emailData.cc.join(",") : null,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: SEND_EMAIL_MUTATION,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { sendEmail } = data;
       const { statusCode, response, message, error } = sendEmail;
-
-      if (statusCode !== 200)
-        throw new Error(`msg: ${message} error: ${error}`);
-
+      if (statusCode !== 200) throw new Error(`msg: ${message} error: ${error}`);
       const parsedResponse = JSON.parse(response);
-
       await dispatch("closeAccountAction", {
         closeAccount: {
           email: parsedResponse.id,
           id: getters.currentTemplateRiskID,
         },
       });
-
       await dispatch("resetEmail");
     } catch ({ message }) {
-      const messageToDisplay =
-        "storeEmail error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "storeEmail error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -355,24 +277,17 @@ export default {
   },
   async getContactsBySubscriptionId({ commit }, body) {
     try {
-      const variables = {
-        subscriptionId: parseFloat(body.subscriptionId),
-      };
+      const variables = { subscriptionId: parseFloat(body.subscriptionId) };
       const { data } = await apolloClient.query({
         query: GET_CONTACT_SUBSCRIPTION,
         variables,
         fetchPolicy: "no-cache",
       });
       if (data.getContactsBySubscription.statusCode) {
-        commit(
-          "SET_MAIL_CC_PARTICIPANTS",
-          data.getContactsBySubscription.response
-        );
+        commit("SET_MAIL_CC_PARTICIPANTS", data.getContactsBySubscription.response);
       }
     } catch ({ message }) {
-      const messageToDisplay =
-        "getContactsBySubscriptionId error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getContactsBySubscriptionId error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,

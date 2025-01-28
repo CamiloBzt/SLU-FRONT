@@ -454,7 +454,17 @@ export default {
   },
   async getSubscriptionList({ commit, state }, payload) {
     try {
-      const { limit, offset } = payload;
+      const {
+        limit,
+        offset,
+        query1,
+        query2,
+        query3,
+        filterOrderBy = [["s.id", "desc"]],
+        filterSearch1 = "s.reference",
+        filterSearch2 = "s.reference",
+        filterSearch3 = "s.reference",
+      } = payload;
 
       const page = Math.ceil(offset / limit) + 1;
 
@@ -468,6 +478,13 @@ export default {
           variables: {
             limit,
             offset,
+            query1,
+            query2,
+            query3,
+            filterOrderBy,
+            filterSearch1,
+            filterSearch2,
+            filterSearch3,
           },
           fetchPolicy: "no-cache",
         });
