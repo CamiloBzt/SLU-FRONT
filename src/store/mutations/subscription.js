@@ -167,9 +167,10 @@ export default {
   setSubscriptionListPagination(state, payload) {
     state.subscription.table.limit = payload.limit;
     state.subscription.table.offset = payload.offset;
-    state.subscription.table.query = payload.query;
-    state.subscription.table.filter = payload.filter;
-    state.subscription.table.filterSearch = payload.filterSearch;
+    state.subscription.table.query1 = payload.query1;
+    state.subscription.table.query2 = payload.query2;
+    state.subscription.table.filterSearch1 = payload.filterSearch1;
+    state.subscription.table.filterSearch2 = payload.filterSearch2;
   },
   addNotesArray(state, note) {
     state.notesArray.push(note);

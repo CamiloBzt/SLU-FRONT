@@ -11,7 +11,7 @@
       v-for="notification in sortedNotifications"
       :key="notification.id"
       @click="openDialog(notification)"
-      class="ContentDashboard d-flex mb-6"
+      class="ContentDashboard d-flex mb-6 align-center"
     >
       <div class="ImageCont d-flex justify-center align-center">
         <v-avatar size="40" class="AvatarCnt">
@@ -64,6 +64,19 @@
           </template>
         </div>
       </div>
+
+      <v-tooltip left color="#003D6D">
+        <template v-slot:activator="{ on, attrs }">
+          <!-- Botón de archivar -->
+          <div class="pr-6" v-bind="attrs" v-on="on" icon>
+            <v-btn icon @click.stop="archiveNotification(notification)">
+              <v-icon class="archiveIcon">mdi-archive</v-icon>
+            </v-btn>
+          </div>
+        </template>
+
+        <span class="white--text">Archive</span>
+      </v-tooltip>
     </div>
 
     <v-dialog v-model="dialog" width="600">
@@ -310,6 +323,82 @@
         </div>
       </v-card>
     </v-dialog>
+
+    <v-expansion-panels
+      class="ExpansionComponent ExpansionBordered mt-6 MarginTopMovil"
+    >
+      <v-expansion-panel>
+        <v-expansion-panel-header class="ExpansionTitle">
+          Archived Notifications
+          <template v-slot:actions>
+            <v-icon class="iconExpand">mdi-chevron-down</v-icon>
+          </template>
+        </v-expansion-panel-header>
+
+        <v-expansion-panel-content>
+          <div class="ExpandContent">
+            <div
+              v-for="notification in archivedNotifications"
+              :key="notification.id"
+              class="ContentDashboard d-flex mb-6 align-center"
+            >
+              <div class="ImageCont d-flex justify-center align-center">
+                <v-avatar size="40" class="AvatarCnt">
+                  <v-icon
+                    v-if="notification.status === 'REVIEW'"
+                    large
+                    color="rgb(0 61 109)"
+                    >mdi-checkbox-blank-circle-outline
+                  </v-icon>
+                  <v-icon
+                    v-else-if="notification.status === 'VALIDATING'"
+                    large
+                    color="yellow"
+                    >mdi-alert-circle-outline
+                  </v-icon>
+                  <v-icon
+                    v-else-if="notification.status === 'REJECTED'"
+                    large
+                    color="red"
+                    >mdi-close-circle-outline
+                  </v-icon>
+                  <v-icon
+                    v-else-if="notification.status === 'ACCEPTED'"
+                    large
+                    color="green"
+                    >mdi-check-circle-outline
+                  </v-icon>
+                </v-avatar>
+              </div>
+
+              <div class="InfoCont flex-wrap">
+                <div class="InfoLine">
+                  <b>{{ notification.reference }}</b>
+                  <br />
+                  {{ notification.status }}
+                </div>
+              </div>
+
+              <v-tooltip left color="#003D6D">
+                <template v-slot:activator="{ on, attrs }">
+                  <!-- Botón para desarchivar -->
+                  <div class="pr-6" v-bind="attrs" v-on="on" icon>
+                    <v-btn
+                      icon
+                      @click.stop="unarchiveNotification(notification)"
+                    >
+                      <v-icon class="archiveIcon">mdi-inbox-arrow-down</v-icon>
+                    </v-btn>
+                  </div>
+                </template>
+
+                <span class="white--text">Unarchive</span>
+              </v-tooltip>
+            </div>
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </div>
 </template>
 <script>
@@ -341,8 +430,20 @@ export default {
   },
   computed: {
     ...mapGetters(["user", "socketNotificationList"]),
+    // Notificaciones NO archivadas
     sortedNotifications() {
-      return this.socketNotificationList.slice().reverse();
+      return this.socketNotificationList
+        .filter((n) => !n.archived)
+        .slice()
+        .reverse();
+    },
+
+    // Notificaciones archivadas
+    archivedNotifications() {
+      return this.socketNotificationList
+        .filter((n) => n.archived)
+        .slice()
+        .reverse();
     },
     isUnderwriter: async function () {
       const result = await getUserType(this.user.id);
@@ -381,6 +482,35 @@ export default {
       "updateNotification",
       "getNotificationsFourEyeSuscriptor",
     ]),
+
+    loadArchivedNotifications() {
+      const archived =
+        JSON.parse(localStorage.getItem("archivedNotifications")) || [];
+
+      // Iteramos sobre la lista de notificaciones actuales y aplicamos el estado de archivado
+      this.socketNotificationList.forEach((notification) => {
+        this.$set(notification, "archived", archived.includes(notification.id));
+      });
+    },
+
+    archiveNotification(notification) {
+      this.$set(notification, "archived", true);
+      const archived =
+        JSON.parse(localStorage.getItem("archivedNotifications")) || [];
+      if (!archived.includes(notification.id)) {
+        archived.push(notification.id);
+        localStorage.setItem("archivedNotifications", JSON.stringify(archived));
+      }
+    },
+
+    unarchiveNotification(notification) {
+      this.$set(notification, "archived", false);
+      let archived =
+        JSON.parse(localStorage.getItem("archivedNotifications")) || [];
+      archived = archived.filter((id) => id !== notification.id);
+      localStorage.setItem("archivedNotifications", JSON.stringify(archived));
+    },
+
     async openDialog(subscriptionData) {
       const { subscription_id } = subscriptionData;
       const isAUnderwriter = await this.isUnderwriter;
@@ -425,8 +555,8 @@ export default {
         id: Number(notification.id),
         input: updateNotificationList,
       });
-      const { id } = this.user;
-      const res = await this.getNotificationsFourEye(id);
+      // const { id } = this.user;
+      // const res = await this.getNotificationsFourEye(id);
       // console.log('🚀 ~ file: NotificationsModal.vue:274 ~ setUpdateNotification ~ res', res)
       this.dialog = false;
       try {
@@ -438,14 +568,26 @@ export default {
       }
     },
   },
+  watch: {
+    socketNotificationList: {
+      handler() {
+        this.loadArchivedNotifications();
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+
   async mounted() {
     const { id } = this.user;
     await this.getNotificationsFourEye(id);
+    this.loadArchivedNotifications();
   },
 };
 </script>
 <style lang="less" scoped>
 @import "~@/assets/style/Dashboard/General.less";
+@import "~@/assets/style/AccordionStyle.less";
 
 .ContentDashboard {
   height: 80px;
@@ -635,5 +777,11 @@ export default {
 
 .transparent-bg {
   background-color: transparent !important;
+}
+
+.archiveIcon {
+  width: 20px;
+  height: 20px;
+  color: #003d6d !important;
 }
 </style>

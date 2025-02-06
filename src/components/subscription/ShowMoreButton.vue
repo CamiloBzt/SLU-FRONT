@@ -39,21 +39,20 @@ export default {
   methods: {
     ...mapActions(["getSubscriptionList"]),
     seeActual(page) {
-      const limit = this.$store.state.subscription.table.limit;
-      const offset = this.$store.state.subscription.table.offset;
-      const query = this.$store.state.subscription.table.query;
-      const filter = this.$store.state.subscription.table.filter;
-      const filterSearch = this.$store.state.subscription.table.filterSearch;
+      const stateTable = this.$store.state.subscription.table;
 
-      this.pagination.limit = limit;
-      this.pagination.offset = (page - 1) * this.pagination.limit;
-      this.pagination.query = query;
-      this.pagination.filter = filter;
-      this.pagination.filterSearch = filterSearch;
+      this.pagination = {
+        limit: stateTable.limit || 10,
+        offset: (page - 1) * (stateTable.limit || 10),
+        query1: stateTable.query1 || "",
+        query2: stateTable.query2 || "",
+        filterSearch1: stateTable.filterSearch1 || "s.reference",
+        filterSearch2: stateTable.filterSearch2 || "s.reference",
+      };
 
       this.getSubscriptionList(this.pagination).then(() => {
         var table = document.querySelector(".TableContentInner");
-        table.scrollTop = table.clientHeight - table.scrollHeight;
+        if (table) table.scrollTop = table.clientHeight - table.scrollHeight;
       });
     },
   },
