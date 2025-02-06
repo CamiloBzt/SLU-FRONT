@@ -161,8 +161,8 @@ export default {
     const logoBase64 = await getBase64FromFile(sluBlob);
     const bodyContent = `
       ${emailData.body}
-      <div style="max-height: 200px;">
-        <img src="${logoBase64}" alt="sluLogo" style="width: 200px;" />
+      <div style="max-height: 180px;">
+        <img src="${logoBase64}" alt="sluLogo" style="width: 180px;" />
       </div>`;
     const mail = {
       subject: emailData.subject,
