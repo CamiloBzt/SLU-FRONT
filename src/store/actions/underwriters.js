@@ -1,13 +1,13 @@
 /* api */
+import messages from "@/constants/messages";
 import { apolloClient } from "../../lib/api";
 import createNotificationFourEyeMutation from "./mutations/createNotificationFourEye";
-import getNotificationsFourEyeQuery from "./queries/getNotificationsFourEye";
-import getSuscriptorNotificationsFourEye from "./queries/getSuscriptorNotificationsFourEye";
-import getNotificationsFourEyeSuscriptor from "./queries/getNotificationsFourEyeSuscriptor";
-import getUnderwriters from "./queries/getUnderwriters";
 import updateNotificationFourEyesDetail from "./mutations/updateNotificationFourEyeDetail";
-import messages from "@/constants/messages";
-import getRoleById from "./queries/getRoleById";
+import getNotificationsFourEyeQuery from "./queries/getNotificationsFourEye";
+import getNotificationsFourEyeSuscriptor from "./queries/getNotificationsFourEyeSuscriptor";
+import getSuscriptorNotificationsFourEye from "./queries/getSuscriptorNotificationsFourEye";
+import getUnderwriters from "./queries/getUnderwriters";
+import updateIsArchivedNotificationDetail from "./queries/updateIsArchivedNotificationDetail";
 
 export default {
   async getListUnderwriters() {
@@ -101,6 +101,27 @@ export default {
       const messageToDisplay =
         "getNotificationsFourEye error: " +
         message.replace("GraphQL error: --", "");
+      commit("addNotification", {
+        type: messages.DANGER,
+        text: messageToDisplay,
+      });
+    }
+  },
+  async updateNotificationArchived({ commit }, { id, isArchived }) {
+    try {
+      const { data } = await apolloClient.mutate({
+        mutation: updateIsArchivedNotificationDetail,
+        variables: {
+          id,
+          is_archived: isArchived,
+        },
+      });
+
+      return data["updateIsArchivedNotificationDetail"];
+    } catch ({ message }) {
+      const messageToDisplay =
+        "updateNotificationArchived error: " +
+        message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,

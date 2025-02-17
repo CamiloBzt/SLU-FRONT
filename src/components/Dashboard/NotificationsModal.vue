@@ -433,7 +433,7 @@ export default {
     // Notificaciones NO archivadas
     sortedNotifications() {
       return this.socketNotificationList
-        .filter((n) => !n.archived)
+        .filter((n) => !n.is_archived)
         .slice()
         .reverse();
     },
@@ -441,7 +441,7 @@ export default {
     // Notificaciones archivadas
     archivedNotifications() {
       return this.socketNotificationList
-        .filter((n) => n.archived)
+        .filter((n) => n.is_archived)
         .slice()
         .reverse();
     },
@@ -481,34 +481,59 @@ export default {
       "getToBeDefinedBySubscriptionId",
       "updateNotification",
       "getNotificationsFourEyeSuscriptor",
+      "updateNotificationArchived",
     ]),
 
-    loadArchivedNotifications() {
-      const archived =
-        JSON.parse(localStorage.getItem("archivedNotifications")) || [];
+    async archiveNotification(notification) {
+      try {
+        await this.updateNotificationArchived({
+          id: notification.id,
+          isArchived: true,
+        });
 
-      // Iteramos sobre la lista de notificaciones actuales y aplicamos el estado de archivado
-      this.socketNotificationList.forEach((notification) => {
-        this.$set(notification, "archived", archived.includes(notification.id));
-      });
-    },
-
-    archiveNotification(notification) {
-      this.$set(notification, "archived", true);
-      const archived =
-        JSON.parse(localStorage.getItem("archivedNotifications")) || [];
-      if (!archived.includes(notification.id)) {
-        archived.push(notification.id);
-        localStorage.setItem("archivedNotifications", JSON.stringify(archived));
+        // Actualizar solo la notificación específica sin recargar toda la lista
+        const index = this.socketNotificationList.findIndex(
+          (n) => n.id === notification.id
+        );
+        if (index !== -1) {
+          this.$set(this.socketNotificationList, index, {
+            ...notification,
+            is_archived: true,
+          });
+        }
+      } catch (error) {
+        console.error("Error archiving notification:", error);
       }
     },
 
-    unarchiveNotification(notification) {
-      this.$set(notification, "archived", false);
-      let archived =
-        JSON.parse(localStorage.getItem("archivedNotifications")) || [];
-      archived = archived.filter((id) => id !== notification.id);
-      localStorage.setItem("archivedNotifications", JSON.stringify(archived));
+    async unarchiveNotification(notification) {
+      try {
+        await this.updateNotificationArchived({
+          id: notification.id,
+          isArchived: false,
+        });
+
+        // Actualizar solo la notificación específica sin recargar toda la lista
+        const index = this.socketNotificationList.findIndex(
+          (n) => n.id === notification.id
+        );
+        if (index !== -1) {
+          this.$set(this.socketNotificationList, index, {
+            ...notification,
+            is_archived: false,
+          });
+        }
+      } catch (error) {
+        console.error("Error unarchiving notification:", error);
+      }
+    },
+
+    async loadArchivedNotifications() {
+      try {
+        await this.getNotificationsFourEye(this.user.id);
+      } catch (error) {
+        console.error("Error loading notifications:", error);
+      }
     },
 
     async openDialog(subscriptionData) {
@@ -570,18 +595,20 @@ export default {
   },
   watch: {
     socketNotificationList: {
-      handler() {
-        this.loadArchivedNotifications();
+      handler(newList, oldList) {
+        if (!oldList.length) return; // Evita la llamada en la primera carga
+        if (JSON.stringify(newList) !== JSON.stringify(oldList)) {
+          this.loadArchivedNotifications();
+        }
       },
       deep: true,
-      immediate: true,
     },
   },
 
-  async mounted() {
-    const { id } = this.user;
-    await this.getNotificationsFourEye(id);
-    this.loadArchivedNotifications();
+  async created() {
+    if (!this.socketNotificationList.length) {
+      await this.getNotificationsFourEye(this.user.id);
+    }
   },
 };
 </script>
