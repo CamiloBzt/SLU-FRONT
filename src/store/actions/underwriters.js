@@ -7,7 +7,7 @@ import getNotificationsFourEyeQuery from "./queries/getNotificationsFourEye";
 import getNotificationsFourEyeSuscriptor from "./queries/getNotificationsFourEyeSuscriptor";
 import getSuscriptorNotificationsFourEye from "./queries/getSuscriptorNotificationsFourEye";
 import getUnderwriters from "./queries/getUnderwriters";
-import updateIsArchivedNotificationDetail from "./queries/updateIsArchivedNotificationDetail";
+import updateIsArchivedNotification from "./queries/updateIsArchivedNotification";
 
 export default {
   async getListUnderwriters() {
@@ -110,14 +110,14 @@ export default {
   async updateNotificationArchived({ commit }, { id, isArchived }) {
     try {
       const { data } = await apolloClient.mutate({
-        mutation: updateIsArchivedNotificationDetail,
+        mutation: updateIsArchivedNotification,
         variables: {
           id,
           is_archived: isArchived,
         },
       });
 
-      return data["updateIsArchivedNotificationDetail"];
+      return data["updateIsArchivedNotification"];
     } catch ({ message }) {
       const messageToDisplay =
         "updateNotificationArchived error: " +
