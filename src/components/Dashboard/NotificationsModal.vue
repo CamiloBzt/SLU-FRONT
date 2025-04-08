@@ -337,64 +337,85 @@
 
         <v-expansion-panel-content>
           <div class="ExpandContent">
-            <div
-              v-for="notification in archivedNotifications"
-              :key="notification.id"
-              class="ContentDashboard d-flex mb-6 align-center"
+            <v-expansion-panels
+              v-for="group in archivedNotificationsGroupedByStatus"
+              :key="group.status"
+              class="ExpansionComponent ExpansionBordered mt-6 MarginTopMovil"
             >
-              <div class="ImageCont d-flex justify-center align-center">
-                <v-avatar size="40" class="AvatarCnt">
-                  <v-icon
-                    v-if="notification.status === 'REVIEW'"
-                    large
-                    color="rgb(0 61 109)"
-                    >mdi-checkbox-blank-circle-outline
-                  </v-icon>
-                  <v-icon
-                    v-else-if="notification.status === 'VALIDATING'"
-                    large
-                    color="yellow"
-                    >mdi-alert-circle-outline
-                  </v-icon>
-                  <v-icon
-                    v-else-if="notification.status === 'REJECTED'"
-                    large
-                    color="red"
-                    >mdi-close-circle-outline
-                  </v-icon>
-                  <v-icon
-                    v-else-if="notification.status === 'ACCEPTED'"
-                    large
-                    color="green"
-                    >mdi-check-circle-outline
-                  </v-icon>
-                </v-avatar>
-              </div>
+              <v-expansion-panel>
+                <v-expansion-panel-header class="ExpansionTitle">
+                  {{ group.status }} ({{ group.notifications.length }})
+                  <template v-slot:actions>
+                    <v-icon class="iconExpand">mdi-chevron-down</v-icon>
+                  </template>
+                </v-expansion-panel-header>
 
-              <div class="InfoCont flex-wrap">
-                <div class="InfoLine">
-                  <b>{{ notification.reference }}</b>
-                  <br />
-                  {{ notification.status }}
-                </div>
-              </div>
-
-              <v-tooltip left color="#003D6D">
-                <template v-slot:activator="{ on, attrs }">
-                  <!-- Botón para desarchivar -->
-                  <div class="pr-6" v-bind="attrs" v-on="on" icon>
-                    <v-btn
-                      icon
-                      @click.stop="unarchiveNotification(notification)"
+                <v-expansion-panel-content>
+                  <div class="ExpandContent">
+                    <div
+                      v-for="notification in group.notifications"
+                      :key="notification.id"
+                      class="ContentDashboard d-flex mb-6 align-center"
                     >
-                      <v-icon class="archiveIcon">mdi-inbox-arrow-down</v-icon>
-                    </v-btn>
-                  </div>
-                </template>
+                      <div class="ImageCont d-flex justify-center align-center">
+                        <v-avatar size="40" class="AvatarCnt">
+                          <v-icon
+                            v-if="notification.status === 'REVIEW'"
+                            large
+                            color="rgb(0 61 109)"
+                            >mdi-checkbox-blank-circle-outline
+                          </v-icon>
+                          <v-icon
+                            v-else-if="notification.status === 'VALIDATING'"
+                            large
+                            color="yellow"
+                            >mdi-alert-circle-outline
+                          </v-icon>
+                          <v-icon
+                            v-else-if="notification.status === 'REJECTED'"
+                            large
+                            color="red"
+                            >mdi-close-circle-outline
+                          </v-icon>
+                          <v-icon
+                            v-else-if="notification.status === 'ACCEPTED'"
+                            large
+                            color="green"
+                            >mdi-check-circle-outline
+                          </v-icon>
+                        </v-avatar>
+                      </div>
 
-                <span class="white--text">Unarchive</span>
-              </v-tooltip>
-            </div>
+                      <div class="InfoCont flex-wrap">
+                        <div class="InfoLine">
+                          <b>{{ notification.reference }}</b>
+                          <br />
+                          {{ notification.status }}
+                        </div>
+                      </div>
+
+                      <v-tooltip left color="#003D6D">
+                        <template v-slot:activator="{ on, attrs }">
+                          <!-- Botón para desarchivar -->
+                          <div class="pr-6" v-bind="attrs" v-on="on" icon>
+                            <v-btn
+                              icon
+                              @click.stop="unarchiveNotification(notification)"
+                            >
+                              <v-icon class="archiveIcon"
+                                >mdi-inbox-arrow-down</v-icon
+                              >
+                            </v-btn>
+                          </div>
+                        </template>
+
+                        <span class="white--text">Unarchive</span>
+                      </v-tooltip>
+                    </div>
+                  </div>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -432,19 +453,81 @@ export default {
     ...mapGetters(["user", "socketNotificationList"]),
     // Notificaciones NO archivadas
     sortedNotifications() {
-      return this.socketNotificationList
+      // Función de prioridad: mayor valor = mayor prioridad
+      const getPriority = (status) => {
+        const s = status.toLowerCase();
+        if (s === "accepted") return 2;
+        if (s === "validating") return 1;
+        return 0;
+      };
+
+      // Agrupar por subscription_id: si existe más de una, se conserva la de mayor prioridad;
+      // si tienen la misma prioridad, se queda la más reciente (según creation_date)
+      const groups = {};
+      this.socketNotificationList.forEach((n) => {
+        const subId = n.subscription_id;
+        if (!groups[subId]) {
+          groups[subId] = n;
+        } else {
+          const currentPriority = getPriority(groups[subId].status);
+          const newPriority = getPriority(n.status);
+          if (newPriority > currentPriority) {
+            groups[subId] = n;
+          } else if (newPriority === currentPriority) {
+            if (Number(n.creation_date) > Number(groups[subId].creation_date)) {
+              groups[subId] = n;
+            }
+          }
+        }
+      });
+
+      // Convertir el objeto a array y ordenar de forma descendente por creation_date
+      return Object.values(groups)
+        .sort((a, b) => Number(b.creation_date) - Number(a.creation_date))
         .filter((n) => !n.is_archived)
-        .slice()
-        .reverse();
+        .sort((a, b) => {
+          // Quitar funcion
+          const statusA = a.status.toLowerCase();
+          const statusB = b.status.toLowerCase();
+          if (statusA === "validating" && statusB !== "validating") {
+            return -1;
+          }
+          if (statusA !== "validating" && statusB === "validating") {
+            return 1;
+          }
+          return Number(b.creation_date) - Number(a.creation_date);
+        });
     },
 
     // Notificaciones archivadas
-    archivedNotifications() {
-      return this.socketNotificationList
-        .filter((n) => n.is_archived)
-        .slice()
-        .reverse();
+    archivedNotificationsGroupedByStatus() {
+      const archived = this.socketNotificationList.filter((n) => n.is_archived);
+
+      const groups = {};
+      archived.forEach((n) => {
+        const status = n.status.toUpperCase();
+        if (!groups[status]) {
+          groups[status] = [];
+        }
+        groups[status].push(n);
+      });
+
+      const grouped = Object.keys(groups).map((status) => {
+        return {
+          status,
+          notifications: groups[status].sort(
+            (a, b) => Number(b.creation_date) - Number(a.creation_date)
+          ),
+        };
+      });
+
+      // VALIDATING primero, luego REJECTED, luego ACCEPTED
+      const order = { VALIDATING: 3, REJECTED: 2, ACCEPTED: 1 };
+      grouped.sort((a, b) => (order[b.status] || 0) - (order[a.status] || 0));
+      console.log(grouped);
+      return grouped;
     },
+
     isUnderwriter: async function () {
       const result = await getUserType(this.user.id);
       return result;
@@ -512,7 +595,6 @@ export default {
           id: notification.id,
           isArchived: false,
         });
-
         // Actualizar solo la notificación específica sin recargar toda la lista
         const index = this.socketNotificationList.findIndex(
           (n) => n.id === notification.id

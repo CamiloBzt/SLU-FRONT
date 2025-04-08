@@ -15,24 +15,42 @@
 
       <TypeBound />
       <!--PASOS DE REGISTRO-->
-      <Stepper step3="StepActive" stepMovil1="Submission" stepMovil2="" stepMovil3="" />
+      <Stepper
+        step3="StepActive"
+        stepMovil1="Submission"
+        stepMovil2=""
+        stepMovil3=""
+      />
 
       <!--COPY ACCOUNT-->
       <div class="copy-and-details-cont">
-        <EditAccount v-if="facultativeReference" :editAccount="editable" :accountName="facultativeReference" />
-        <EditAccount v-else :editAccount="editable" :accountName="nameReference" />
+        <EditAccount
+          v-if="facultativeReference"
+          :editAccount="editable"
+          :accountName="facultativeReference"
+        />
+        <EditAccount
+          v-else
+          :editAccount="editable"
+          :accountName="nameReference"
+        />
         <CopyAccount />
       </div>
 
-      <RiskAnalysisQuotator ref="riskAnalysisQuotator"
+      <RiskAnalysisQuotator
+        ref="riskAnalysisQuotator"
         @panel-event="disabledInteracton"
-        @changeTotalInsurableValueStocksRate="changeTotalInsurableValueStocksRate" :loadingPanel="loadingPanel" />
+        @changeTotalInsurableValueStocksRate="
+          changeTotalInsurableValueStocksRate
+        "
+        :loadingPanel="loadingPanel"
+      />
 
-      <FilesSubmission @panel-event="disabledInteracton"/>
+      <FilesSubmission @panel-event="disabledInteracton" />
 
-      <SlipDocuments @panel-event="disabledInteracton"/>
+      <SlipDocuments @panel-event="disabledInteracton" />
 
-      <NotesComponent @panel-event="disabledInteracton"/>
+      <NotesComponent @panel-event="disabledInteracton" />
 
       <GeneralReport />
 
@@ -40,13 +58,14 @@
 
       <!--BOTON PARA FINALIZAR-->
       <div class="finish-button-cont">
-        <v-btn 
-         v-if="showFacultativeButton"
-          rounded 
-          large 
-          text 
-          class="finish-btn" 
-          @click="sendToFacultative">
+        <v-btn
+          v-if="showFacultativeButton"
+          rounded
+          large
+          text
+          class="finish-btn"
+          @click="sendToFacultative"
+        >
           Send To Facultative
         </v-btn>
       </div>
@@ -57,29 +76,30 @@
   </div>
 </template>
 <script>
-import TitlePage from '@/components/TitlePage.vue';
-import TypeBound from '@/components/subscription/bound/TypeBound.vue';
-import MenuGeneral from '@/components/Menu/MenuGeneral.vue';
-import BarNav from '@/components/subscription/BarNav.vue';
-import Stepper from '@/components/subscription/submission/Stepper';
-import ExtensionAndEndorsements from '@/components/subscription/endorsements/carEar/ExtensionAndEndorsements';
-import RiskAnalysisQuotator from '@/components/subscription/bound/propertyQuotatorNonProportional/RiskAnalysisQuotator';
-import FilesSubmission from '@/components/subscription/submission/FilesSubmission.vue';
-import SlipDocuments from '@/components/subscription/submission/SlipDocuments.vue';
-import NotesComponent from '@/components/Notes/NotesComponent.vue';
-import GeneralReport from '@/components/subscription/bound/engineering/GeneralReport';
-import EditAccount from '@/components/subscription/EditAccount.vue';
-import CopyAccount from '@/components/subscription/quotation/CopyAccount.vue';
-import WhiteSpace from '@/components/WhiteSpace.vue';
-import { mapGetters } from 'vuex';
+import TitlePage from "@/components/TitlePage.vue";
+import TypeBound from "@/components/subscription/bound/TypeBound.vue";
+import MenuGeneral from "@/components/Menu/MenuGeneral.vue";
+import BarNav from "@/components/subscription/BarNav.vue";
+import Stepper from "@/components/subscription/submission/Stepper";
+import ExtensionAndEndorsements from "@/components/subscription/endorsements/carEar/ExtensionAndEndorsements";
+import RiskAnalysisQuotator from "@/components/subscription/bound/propertyQuotatorNonProportional/RiskAnalysisQuotator";
+import FilesSubmission from "@/components/subscription/submission/FilesSubmission.vue";
+import SlipDocuments from "@/components/subscription/submission/SlipDocuments.vue";
+import NotesComponent from "@/components/Notes/NotesComponent.vue";
+import GeneralReport from "@/components/subscription/bound/engineering/GeneralReport";
+import EditAccount from "@/components/subscription/EditAccount.vue";
+import CopyAccount from "@/components/subscription/quotation/CopyAccount.vue";
+import WhiteSpace from "@/components/WhiteSpace.vue";
+import checkDisableInputsFile from "@/lib/checkDisableInputsFile";
+import { mapGetters } from "vuex";
 
 //Servicios
-import AccountCompleteNonPropServices from './services/create-account-complete-non-prop.service'
-import SubscriptionService from '@/modules/home/services/subscription.service'
-import NetPremiumService from '@/modules/home/services/net-premium.service';
+import AccountCompleteNonPropServices from "./services/create-account-complete-non-prop.service";
+import SubscriptionService from "@/modules/home/services/subscription.service";
+import NetPremiumService from "@/modules/home/services/net-premium.service";
 
 export default {
-  name: 'BoundPropertyQuotatorProportional',
+  name: "BoundPropertyQuotatorProportional",
   components: {
     TypeBound,
     TitlePage,
@@ -97,92 +117,75 @@ export default {
     EditAccount,
   },
   watch: {
-    'loadingPanel': function (newLoadingPanel){
-			if(!newLoadingPanel) this.disabledInteracton()
-		},
+    loadingPanel: function (newLoadingPanel) {
+      if (!newLoadingPanel) this.disabledInteracton();
+    },
   },
-  data () {
+  data() {
     return {
-      subscriptionId:this.$route.params.subscriptionId,
-      showFacultativeButton:true,
+      subscriptionId: this.$route.params.subscriptionId,
+      showFacultativeButton: true,
       loadingPanel: false,
       editable: false,
       totalInsurableValue: {
-        stocksRate: 0
-      }
+        stocksRate: 0,
+      },
     };
   },
-  provide () {
+  provide() {
     return {
       totalInsurableValue: this.totalInsurableValue,
-      deepDisabled: this.disabledSubAccordion
-    }
+      deepDisabled: this.disabledSubAccordion,
+    };
   },
   computed: {
-    ...mapGetters(['nameReference', 'facultativeReference']),
+    ...mapGetters([
+      "nameReference",
+      "facultativeReference",
+      "subscriptionStatus",
+    ]),
   },
-  async  beforeMount(){
+  async beforeMount() {
     /**se agrego esta parte para generar un respiro previo para guardar la actualizaciones del net premium*/
-    const subscriptionId = Number(this.subscriptionId)
-    const hasInitialRegister = await NetPremiumService.hasInitialRegister(subscriptionId)
-    if(!hasInitialRegister) await  NetPremiumService.addOrUpdateNetPremium(subscriptionId, {},false)
+    const subscriptionId = Number(this.subscriptionId);
+    const hasInitialRegister = await NetPremiumService.hasInitialRegister(
+      subscriptionId
+    );
+    if (!hasInitialRegister)
+      await NetPremiumService.addOrUpdateNetPremium(subscriptionId, {}, false);
 
-    this.showFacultativeButton = !(await SubscriptionService.isAccountComplete(subscriptionId))
-  },
-  mounted () {
-    this.disabledInteracton()
+    this.showFacultativeButton = !(await SubscriptionService.isAccountComplete(
+      subscriptionId
+    ));
+    this.disabledInteracton();
   },
   methods: {
-    async disabledInteracton () {
-      const subscriptionId = Number(this.$route.params.subscriptionId)
-      const isBoundComplete = await SubscriptionService.isAccountComplete(subscriptionId)
-      isBoundComplete ? this.checkDisableInputsFile() : ''
-    },
-    checkDisableInputsFile  () {
-      setTimeout(() => {
-        // Disabled close account
-        const closeAccountButton = document.querySelector('.closeCont')
-        closeAccountButton.classList.add('disabled-element');
-        // Disabled copy account
-        const copyAccountButton = document.querySelector('.CopyAccount')
-        copyAccountButton.classList.add('disabled-element');
-        
-        // Disable all another elements
-        const getElements = document.querySelectorAll('.inputCont, .InputContent, .InputContentLarge, .table, .finishButtonCont, button.moreButton, .InputDeletContBtn, .InputFileLabel, .CreateNoteCont button.v-btn, .v-input, .app-multiple-file__files button.button__btn ')
-        getElements.forEach(element => {
-          element.classList.add('disabled-element');
-        });
-
-        const getHideElements = document.querySelectorAll('.InputFileLabel input')
-        for (const hideElement of getHideElements) {
-          hideElement.remove();
-        }
-      }, 1000);
-    },
-    async disabledSubAccordion() {
-      const subscriptionId = Number(this.$route.params.subscriptionId)
-      const isBoundComplete = await SubscriptionService.isAccountComplete(subscriptionId)
-      if( isBoundComplete ) {
-        setTimeout(() => {
-          const getElements = document.querySelectorAll('.v-input, .ButtonCont button, textarea')
-          getElements.forEach(element => {
-            element.classList.add('disabled-element');
-          });
-          const getHideElements = document.querySelectorAll('.file input')
-          for (const hideElement of getHideElements) {
-            hideElement.remove();
-          }
-        }, 1000);
+    async disabledInteracton() {
+      const subscriptionId = Number(this.$route.params.subscriptionId);
+      const isBoundComplete = await SubscriptionService.isAccountComplete(
+        subscriptionId
+      );
+      if (isBoundComplete || [5, 7].includes(this.subscriptionStatus)) {
+        checkDisableInputsFile();
       }
     },
-    async sendToFacultative () { 
-      const subscriptionId = Number(this.subscriptionId)
-      await AccountCompleteNonPropServices.addInitialRegister(subscriptionId)
-      this.$router.push({name:'Subs home'})
+    async disabledSubAccordion() {
+      const subscriptionId = Number(this.$route.params.subscriptionId);
+      const isBoundComplete = await SubscriptionService.isAccountComplete(
+        subscriptionId
+      );
+      if (isBoundComplete || [5, 7].includes(this.subscriptionStatus)) {
+        checkDisableInputsFile();
+      }
     },
-    changeTotalInsurableValueStocksRate (value) {
-      this.totalInsurableValue.stocksRate = value
-    }
+    async sendToFacultative() {
+      const subscriptionId = Number(this.subscriptionId);
+      await AccountCompleteNonPropServices.addInitialRegister(subscriptionId);
+      this.$router.push({ name: "Subs home" });
+    },
+    changeTotalInsurableValueStocksRate(value) {
+      this.totalInsurableValue.stocksRate = value;
+    },
   },
 };
 </script>

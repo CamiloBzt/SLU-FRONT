@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panels class="sub-expansion-component">
-    <v-expansion-panel>
+    <v-expansion-panel @change="deepDisabled">
       <v-expansion-panel-header
         @click="changeSubExpansion"
         class="expansion-title d-flex justify-start"
@@ -187,6 +187,10 @@ export default {
     },
     item: {
       type: Object,
+      required: true,
+    },
+    deepDisabled: {
+      type: Function,
       required: true,
     },
   },

@@ -19,6 +19,7 @@
             v-model="payment.installment"
             :label="'Installment ' + (index + 1)"
             type="number"
+            :readonly="readonly"
           />
         </div>
         <div class="Row">
@@ -34,6 +35,7 @@
             v-model="payment.percent"
             label="Percentage"
             type="number"
+            :readonly="readonly"
           />
         </div>
         <div class="Row">
@@ -51,6 +53,7 @@
                 label="PPW Due Date"
                 v-bind="attrs"
                 v-on="on"
+                :readonly="readonly"
               />
             </template>
             <v-date-picker
@@ -66,6 +69,7 @@
                 })
               "
               @input="payment.showCalendar = false"
+              :readonly="readonly"
             />
           </v-menu>
         </div>
@@ -84,6 +88,7 @@
             item-value="id"
             item-text="clause"
             :items="clauseList"
+            :readonly="readonly"
           />
         </div>
         <div class="Row">
@@ -100,10 +105,11 @@
             v-model="payment.days_of_prior_notice"
             label="Days of prior notice"
             type="number"
+            :readonly="readonly"
           />
         </div>
 
-        <div class="remove-button">
+        <div v-if="!readonly" class="remove-button">
           <v-btn
             text
             @click="
@@ -117,7 +123,10 @@
           </v-btn>
         </div>
       </div>
-      <div class="finishButtonCont d-flex justify-start align-center">
+      <div
+        v-if="!readonly"
+        class="finishButtonCont d-flex justify-start align-center"
+      >
         <v-btn
           :disabled="addPaymentDisabled"
           rounded
@@ -140,6 +149,12 @@ import AccountCompleteService from "@/modules/home/services/account-complete.ser
 
 export default {
   name: "PremiumPaymentWarranty",
+  props: {
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+  },
   // inject: ['deepDisabled'],
   data() {
     return {

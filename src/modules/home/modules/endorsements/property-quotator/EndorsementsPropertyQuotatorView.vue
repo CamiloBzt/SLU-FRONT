@@ -165,9 +165,7 @@
 
     <div
       class="cards_endorsement"
-      v-if="
-        (!endorsementHistory && !onCreatrEndorsement) || endorsementType == 10
-      "
+      v-if="!endorsementHistory && !onCreatrEndorsement"
     >
       <v-card
         v-for="(endorsement, index) in listEndorsement"
@@ -266,12 +264,31 @@
         "
       >
         <div class="inner-title">Endorsement Report</div>
-        <div v-if="informationCard && informationCard.report">
+        <div
+          v-if="
+            informationCard &&
+            informationCard.report &&
+            this.informationCard.id_endorsement_type !== 10
+          "
+        >
           <EndorsementReportCompleteTable :report="cleanReport" />
         </div>
         <div
+          v-else-if="
+            informationCard &&
+            informationCard.report &&
+            this.informationCard.id_endorsement_type == 10
+          "
+        >
+          <ExtensionGPWReadOnly :data="extensionGPWReadOnlyData" />
+        </div>
+
+        <div
           class="files-submit flex justify-content-start align-items-start align-content-start"
-          v-if="endorsementHistory"
+          v-if="
+            endorsementHistory &&
+            this.informationCard.id_endorsement_type !== 10
+          "
         >
           <AppFile
             v-for="(item, clave) in files"
@@ -357,6 +374,7 @@ import EndorsementHistoryTable from "../components/EndorsementHistoryTable.vue";
 import AdmittedPremiumTableHistory from "../components/AdmittedPremiumTableHistory.vue";
 import AppFile from "../components/AppFile.vue";
 import EndorsementReportCompleteTable from "./components/EndorsementReportCompleteTable.vue";
+import ExtensionGPWReadOnly from "./components/ExtensionGPWReadOnly.vue";
 import TableEndorsementMovement from "../components/TableEndorsementMovement.vue";
 import TableEndorsementDeductions from "../components/TableEndorsementDeductions.vue";
 import ChangeOfTechnicalConditions from "./components/ChangeOfTechnicalConditions.vue";
@@ -374,6 +392,7 @@ export default {
   components: {
     AppFile,
     EndorsementReportCompleteTable,
+    ExtensionGPWReadOnly,
     AppCloseAccount,
     BarNavGeneral,
     InclusionRisk,
@@ -655,11 +674,6 @@ export default {
 
     async backHistoryTableToId(id) {
       this.selectedEndorsement = id;
-      if (this.endorsementType == 10) {
-        this.showEndorsement = true;
-      } else {
-        this.showEndorsement = false;
-      }
       this.disabledSelect = true;
       this.endorsementHistory = true;
       this.idDinamyc = id;
@@ -704,23 +718,45 @@ export default {
         // this.listEndorsement.find(element => element.id === this.idDinamyc).EndorsementType.type === 'Extension'
         // ){
         // Primera Tabla
-        this.totalPremiumHistoryTable[0].premiumDamage =
-          this.informationCard.report.endorsmentReporData.movementValues.damage;
-        this.totalPremiumHistoryTable[0].premiumBi =
-          this.informationCard.report.endorsmentReporData.movementValues.bi;
-        this.totalPremiumHistoryTable[0].premiumStocks =
-          this.informationCard.report.endorsmentReporData.movementValues.stocks;
-        this.totalPremiumHistoryTable[0].premiumTotal =
-          this.informationCard.report.endorsmentReporData.movementValues.total;
+        if (this.informationCard.id_endorsement_type == 3) {
+          // Si es Extension (endorsement type 3), usamos totalValues
+          this.totalPremiumHistoryTable[0].premiumDamage =
+            this.informationCard.report.endorsmentReporData.totalValues.damage;
+          this.totalPremiumHistoryTable[0].premiumBi =
+            this.informationCard.report.endorsmentReporData.totalValues.bi;
+          this.totalPremiumHistoryTable[0].premiumStocks =
+            this.informationCard.report.endorsmentReporData.totalValues.stocks;
+          this.totalPremiumHistoryTable[0].premiumTotal =
+            this.informationCard.report.endorsmentReporData.totalValues.total;
 
-        this.totalPremiumHistoryTable[1].premiumDamage =
-          this.informationCard.report.endorsmentReporData.movementValues.damageUsd;
-        this.totalPremiumHistoryTable[1].premiumBi =
-          this.informationCard.report.endorsmentReporData.movementValues.biUsd;
-        this.totalPremiumHistoryTable[1].premiumStocks =
-          this.informationCard.report.endorsmentReporData.movementValues.stocksUsd;
-        this.totalPremiumHistoryTable[1].premiumTotal =
-          this.informationCard.report.endorsmentReporData.movementValues.totalUsd;
+          this.totalPremiumHistoryTable[1].premiumDamage =
+            this.informationCard.report.endorsmentReporData.totalValues.damageUsd;
+          this.totalPremiumHistoryTable[1].premiumBi =
+            this.informationCard.report.endorsmentReporData.totalValues.biUsd;
+          this.totalPremiumHistoryTable[1].premiumStocks =
+            this.informationCard.report.endorsmentReporData.totalValues.stocksUsd;
+          this.totalPremiumHistoryTable[1].premiumTotal =
+            this.informationCard.report.endorsmentReporData.totalValues.totalUsd;
+        } else {
+          // Si no es tipo 3, se usa el bloque actual con movementValues
+          this.totalPremiumHistoryTable[0].premiumDamage =
+            this.informationCard.report.endorsmentReporData.movementValues.damage;
+          this.totalPremiumHistoryTable[0].premiumBi =
+            this.informationCard.report.endorsmentReporData.movementValues.bi;
+          this.totalPremiumHistoryTable[0].premiumStocks =
+            this.informationCard.report.endorsmentReporData.movementValues.stocks;
+          this.totalPremiumHistoryTable[0].premiumTotal =
+            this.informationCard.report.endorsmentReporData.movementValues.total;
+
+          this.totalPremiumHistoryTable[1].premiumDamage =
+            this.informationCard.report.endorsmentReporData.movementValues.damageUsd;
+          this.totalPremiumHistoryTable[1].premiumBi =
+            this.informationCard.report.endorsmentReporData.movementValues.biUsd;
+          this.totalPremiumHistoryTable[1].premiumStocks =
+            this.informationCard.report.endorsmentReporData.movementValues.stocksUsd;
+          this.totalPremiumHistoryTable[1].premiumTotal =
+            this.informationCard.report.endorsmentReporData.movementValues.totalUsd;
+        }
 
         // Segunda Tabla
         this.totalPremium[0].premiumDamage =
@@ -812,6 +848,10 @@ export default {
         this.errorInReport = true;
       }
     },
+    getClauseName(id) {
+      const clause = this.catalogEndorsements.find((c) => c.id === id);
+      return clause ? clause.clause : "";
+    },
   },
   filters: {
     formattedDate(date) {
@@ -847,6 +887,37 @@ export default {
   computed: {
     cleanReport() {
       return Object.assign({}, this.informationCard.report);
+    },
+    extensionGPWReadOnlyData() {
+      const info = this.informationCard;
+      const report = info?.report?.endorsmentReporData || {};
+      const additionalInfo = report?.additionalInfo || {};
+
+      const formatDate = (dateStr) =>
+        dateStr ? new Date(dateStr).toISOString().substr(0, 10) : "";
+
+      const daysDiff = (start, end) => {
+        const s = new Date(start);
+        const e = new Date(end);
+        return Math.floor((e - s) / (1000 * 60 * 60 * 24));
+      };
+
+      return {
+        endorsementEffectiveDate: formatDate(info.effective_date),
+        expiryDate: formatDate(report?.deductibles?.expiryDate),
+        days: daysDiff(info.effective_date, report?.deductibles?.expiryDate),
+        installments:
+          additionalInfo.paymentsWarranty?.map((item) => ({
+            installment: item.installment,
+            percentage: item.percent,
+            ppwDueDate: formatDate(item.date),
+            clause: this.getClauseName(item.idClause),
+            priorNoticeDays: item.days_of_prior_notice,
+          })) || [],
+        reason: additionalInfo.detailDescription || "",
+        premiumPaymentDate: formatDate(report?.cartera?.premiumPaymentDate),
+        additionalClause: report?.cartera?.clausula || report?.clause,
+      };
     },
   },
 };

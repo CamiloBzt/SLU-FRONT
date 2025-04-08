@@ -82,13 +82,13 @@
 
           <SublimesQuotator
             v-for="(item, index) in SublimesArray"
-            v-if="!isLoading"
             @deleteSublime="deleteSublime"
             :exchangeRate="quotation.exchangeRate"
             :sublimeIndex="index"
             :id="item.id"
             :item="item"
             :key="index"
+            :deepDisabled="deepDisabled"
           />
 
           <div class="ButtonCont" v-if="true">
@@ -144,6 +144,7 @@ import { mapActions } from "vuex";
 export default {
   name: "RiskAnalysisQuotator",
   mixins: [stateExpansiveManager],
+  inject: ["deepDisabled"],
   data() {
     return {
       riskAnalysisQuotatorPanel: 1,
@@ -168,6 +169,7 @@ export default {
     return {
       quotation: this.quotation,
       subscription: this.subscription,
+      deepDisabled: this.deepDisabled,
     };
   },
   components: {

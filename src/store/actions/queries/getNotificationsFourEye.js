@@ -8,6 +8,7 @@ export default gql`
       subscription_id
       reviewer_user_id
       notifying_user_id
+      creation_date
       reference
       NotifyingUser {
         id

@@ -153,12 +153,10 @@ export default {
       this.$refs.emailModal.showModal = true;
     },
   },
-  // beforeMount(){
-  //     this.showBoundButton = this.subscriptionStatus < 4;
-  // 	this.isValidated = !this.showBoundButton;
-  // 	console.log(this.$store.state.subscriptionStatus);
-  // 	console.log("this.subscriptionStatus > 3", this.subscriptionStatus,  this.subscriptionStatus < 4);
-  // }
+  beforeMount() {
+    this.showBoundButton = this.subscriptionStatus < 4;
+    this.isValidated = !this.showBoundButton;
+  },
 };
 </script>
 <style lang="less" scoped>

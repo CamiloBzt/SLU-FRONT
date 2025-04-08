@@ -29,8 +29,16 @@
 
       <!--COPY ACCOUNT-->
       <div class="CopyAndDetailscont" v-if="editable">
-        <EditAccount v-if="facultativeReference" :editAccount="editable" :accountName="facultativeReference" />
-        <EditAccount v-else :editAccount="editable" :accountName="nameReference" />
+        <EditAccount
+          v-if="facultativeReference"
+          :editAccount="editable"
+          :accountName="facultativeReference"
+        />
+        <EditAccount
+          v-else
+          :editAccount="editable"
+          :accountName="nameReference"
+        />
         <CopyAccount />
       </div>
 
@@ -43,14 +51,14 @@
 
       <!--COMPONENTE PARA SUBIR ARCHIVOS-->
 
-      <FilesSubmission 
-        :showFileUp="showFileUp" 
+      <FilesSubmission
+        :showFileUp="showFileUp"
         @panel-event="disabledInteracton"
       />
 
-      <CorrespondenceDocuments  @panel-event="disabledInteracton" />
+      <CorrespondenceDocuments @panel-event="disabledInteracton" />
 
-      <SlipDocuments @panel-event="disabledInteracton"/>
+      <SlipDocuments @panel-event="disabledInteracton" />
 
       <!--NOTAS-->
       <NotesComponent @panel-event="disabledInteracton" />
@@ -78,34 +86,34 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 
-import TitlePage from '@/components/TitlePage.vue';
-import MenuGeneral from '@/components/Menu/MenuGeneral.vue';
-import BarNav from '@/components/subscription/BarNav.vue';
-import TypeSubmission from '@/components/subscription/submission/TypeSubmission.vue';
-import Stepper from '@/components/subscription/submission/Stepper';
-import AccountInformation from '@/components/subscription/submission/AccountInformation.vue';
-import FilesSubmission from '@/components/subscription/submission/FilesSubmission.vue';
-import SlipDocuments from '@/components/subscription/submission/SlipDocuments.vue';
-import CorrespondenceDocuments from '@/components/subscription/submission/CorrespondenceDocuments.vue';
-import EditAccount from '@/components/subscription/EditAccount.vue';
-import CopyAccount from '@/components/subscription/quotation/CopyAccount.vue';
-import WhiteSpace from '@/components/WhiteSpace.vue';
-import NotesComponent from '@/components/Notes/NotesComponent.vue';
-import AddBrokerOrCedent from '@/components/Create/AddBrokerOrCedent.vue';
-
+import TitlePage from "@/components/TitlePage.vue";
+import MenuGeneral from "@/components/Menu/MenuGeneral.vue";
+import BarNav from "@/components/subscription/BarNav.vue";
+import TypeSubmission from "@/components/subscription/submission/TypeSubmission.vue";
+import Stepper from "@/components/subscription/submission/Stepper";
+import AccountInformation from "@/components/subscription/submission/AccountInformation.vue";
+import FilesSubmission from "@/components/subscription/submission/FilesSubmission.vue";
+import SlipDocuments from "@/components/subscription/submission/SlipDocuments.vue";
+import CorrespondenceDocuments from "@/components/subscription/submission/CorrespondenceDocuments.vue";
+import EditAccount from "@/components/subscription/EditAccount.vue";
+import CopyAccount from "@/components/subscription/quotation/CopyAccount.vue";
+import WhiteSpace from "@/components/WhiteSpace.vue";
+import NotesComponent from "@/components/Notes/NotesComponent.vue";
+import AddBrokerOrCedent from "@/components/Create/AddBrokerOrCedent.vue";
+import checkDisableInputsFile from "@/lib/checkDisableInputsFile";
 //MIXINS
-import { showModal } from '@/mixins/subscription.js';
+import { showModal } from "@/mixins/subscription.js";
 
-import { validationMixin } from 'vuelidate';
+import { validationMixin } from "vuelidate";
 
 //Servicios
-import SubscriptionService from '@/modules/home/services/subscription.service'
+import SubscriptionService from "@/modules/home/services/subscription.service";
 
 export default {
-  name: 'Submission',
+  name: "Submission",
   mixins: [showModal, validationMixin, stateExpansiveManager],
   components: {
     TitlePage,
@@ -136,7 +144,7 @@ export default {
     };
   },
   watch: {
-    '$route.params.subscriptionId': async function (id) {
+    "$route.params.subscriptionId": async function (id) {
       this.RESET_SUBSCRIPTION_REFERENCE();
       await this.resetSubscriptionStatus();
       if (this.$route.params && this.$route.params.subscriptionId) {
@@ -150,7 +158,7 @@ export default {
     },
   },
   async mounted() {
-    this.disabledInteracton()
+    this.disabledInteracton();
     this.RESET_SUBSCRIPTION_REFERENCE();
     await this.resetSubscriptionStatus();
     if (this.$route.params && this.$route.params.subscriptionId) {
@@ -159,83 +167,35 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'subscription_type',
-      'subscription_id',
-      'nameReference',
-      'facultativeReference',
-      'subscriptionStatus',
-      'modalCreateBrokerOrCedent',
+      "subscription_type",
+      "subscription_id",
+      "nameReference",
+      "facultativeReference",
+      "subscriptionStatus",
+      "modalCreateBrokerOrCedent",
     ]),
   },
   methods: {
     ...mapActions([
-      'subscriptionSubmission',
-      'updateDataSubscription',
-      'resetSubscriptionStatus',
-      'updateSubscriptionStatus',
-      'globalSaveColumn',
-      'getBrokers',
-      'getCedents'
+      "subscriptionSubmission",
+      "updateDataSubscription",
+      "resetSubscriptionStatus",
+      "updateSubscriptionStatus",
+      "globalSaveColumn",
+      "getBrokers",
+      "getCedents",
     ]),
-    ...mapMutations(['RESET_SUBSCRIPTION_REFERENCE']),
-    async disabledInteracton () {
-      if(!this.$route.params.subscriptionId) return;
-      const subscriptionId = Number(this.$route.params.subscriptionId)
-      const isBoundComplete =  await SubscriptionService.isAccountComplete(subscriptionId)
-      isBoundComplete ? this.checkDisableInputsFile() : ''
-    },
-    checkDisableInputsFile  () {
-      setTimeout(() => {
-        // Disabled close account
-        const closeAccountButton = document.querySelector('.closeCont')
-        closeAccountButton.classList.add('disabled-element');
-        // Disabled copy account
-        const copyAccountButton = document.querySelector('.CopyAccount')
-        copyAccountButton.classList.add('disabled-element');
-        // Disable all another elements
-        const getElements = document.querySelectorAll('.v-input')
-        const deleteButtons = document.querySelectorAll('.TableDelete')
-        const getInputSquare = document.querySelectorAll('.InputFileContent')
-        const getButtosnDelete = document.querySelectorAll('.InputDeletContBtn')
-        const buttonsFileLarge = document.querySelectorAll('.actions button.v-btn')
-        const getButtosAdd = document.querySelectorAll('.button')
-        const getButtosAddTwo = document.querySelectorAll('.moreButton')
-        const inputButton = document.querySelectorAll('button.moreButton')
-        const buttonAddNotes = document.querySelectorAll('.CreateNoteCont button.v-btn')
-        
-        for (const inputSquare of getInputSquare) {
-          inputSquare.classList.add('disabled-element');
-        }
-        for (const button of inputButton) {
-          button.disabled = true;
-          button.classList.add('disabled-element');
-        }
-        for (const buttonDelete of getButtosnDelete) {
-          buttonDelete.classList.add('disabled-element');
-          buttonDelete.replaceWith(buttonDelete.cloneNode(true));
-        }
-        for (const buttonFileLarge of buttonsFileLarge) {
-          buttonFileLarge.classList.add('disabled-element');
-          buttonFileLarge.replaceWith(buttonFileLarge.cloneNode(true));
-        }
-        for (const buttonAdd of getButtosAdd) {
-          buttonAdd.classList.add('disabled-element');
-        }
-        for (const buttonAddTwo of getButtosAddTwo) {
-          buttonAddTwo.classList.add('disabled-element-hidden');
-        }
-        for (const element of getElements) {
-          element.classList.add('disabled-element');
-        }
-        for (const deleteButtons of deleteButtons) {
-          deleteButtons.classList.add('disabled-element');
-          deleteButtons.replaceWith(deleteButtons.cloneNode(true));
-        }
-        for (const addNotesBtn of buttonAddNotes) {
-          addNotesBtn.classList.add('disabled-element');
-          addNotesBtn.replaceWith(addNotesBtn.cloneNode(true));
-        }
-      }, 50);
+    ...mapMutations(["RESET_SUBSCRIPTION_REFERENCE"]),
+    async disabledInteracton() {
+      if (!this.$route.params.subscriptionId) return;
+      const subscriptionId = Number(this.$route.params.subscriptionId);
+      const isBoundComplete = await SubscriptionService.isAccountComplete(
+        subscriptionId
+      );
+
+      if (isBoundComplete || [5, 7].includes(this.subscriptionStatus)) {
+        checkDisableInputsFile();
+      }
     },
     async submit() {
       const referedForm = this.$refs.accInfo; // referencia al formulario
@@ -254,7 +214,7 @@ export default {
 
       if (referedForm.$v.$invalid) return; // en caso de haber errores
 
-      this.loader = 'loading'; // button loader
+      this.loader = "loading"; // button loader
 
       /* loader button config */
       const l = this.loader;
@@ -299,21 +259,21 @@ export default {
 
         if (!this.nameReference) {
           await this.updateDataSubscription({
-            reference: 'COT-' + this.subscription_id,
+            reference: "COT-" + this.subscription_id,
           });
         }
 
         if (this.subscriptionStatus <= 1 || !this.subscriptionStatus)
           await this.updateSubscriptionStatus(2);
         await this.globalSaveColumn({
-          table: 'subscription',
-          column: 'subscription_type',
-          difname: 'type',
+          table: "subscription",
+          column: "subscription_type",
+          difname: "type",
           id: this.subscription_id,
         });
 
         this.$router.push({
-          name: 'Edit Subs quotation',
+          name: "Edit Subs quotation",
           params: { subscriptionId: this.subscription_id },
         });
       } catch (e) {
@@ -324,7 +284,7 @@ export default {
       this.loader = null;
     },
     changeDocuments(event) {
-      if (event != '') {
+      if (event != "") {
         this.showFileUp = true;
       } else {
         this.showFileUp = false;
@@ -335,5 +295,5 @@ export default {
 </script>
 <style lang="less" scoped>
 //ESTILOS GENERALES DEL ACORDEON
-@import '~@/assets/style/AccordionStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
 </style>
