@@ -524,7 +524,7 @@ export default {
       // VALIDATING primero, luego REJECTED, luego ACCEPTED
       const order = { VALIDATING: 3, REJECTED: 2, ACCEPTED: 1 };
       grouped.sort((a, b) => (order[b.status] || 0) - (order[a.status] || 0));
-      console.log(grouped);
+
       return grouped;
     },
 

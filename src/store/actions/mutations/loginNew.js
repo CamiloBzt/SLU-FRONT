@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export default gql`
   mutation loginNew($email: String!, $token: String!) {
@@ -8,8 +8,9 @@ export default gql`
       email
       lastName
       token
-      roleId,
-      menu,
+      role
+      roleId
+      menu
       action
     }
   }
