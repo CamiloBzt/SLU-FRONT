@@ -22,19 +22,35 @@
         <div class="content">
           <v-stepper-items>
             <v-stepper-content step="1" class="step-one">
-
               <!-- Endorsement date -->
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="inner-title">Endorsement date</div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
-                      transition="scale-transition" offset-y min-width="auto">
+                    <v-menu
+                      v-model="menu2"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs"
-                          v-on="on"></v-text-field>
+                        <v-text-field
+                          v-model="effectiveDate"
+                          label="Endorsement effective date"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
                       </template>
-                      <v-date-picker v-model="effectiveDate" @input="menu2 = false" @change="endorsementDateValidation($event, effectiveDate)"></v-date-picker>
+                      <v-date-picker
+                        v-model="effectiveDate"
+                        @input="menu2 = false"
+                        @change="
+                          endorsementDateValidation($event, effectiveDate)
+                        "
+                      ></v-date-picker>
                     </v-menu>
                     <div v-if="this.endorsementDateError" class="error-message">
                       The new Endorsement effective date must be lower than
@@ -44,14 +60,28 @@
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-                      offset-y min-width="auto">
+                    <v-menu
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="expiryDate" label="Expiry date" readonly v-bind="attrs"
-                          v-on:click="on"></v-text-field>
+                        <v-text-field
+                          v-model="expiryDate"
+                          label="Expiry date"
+                          readonly
+                          v-bind="attrs"
+                          v-on:click="on"
+                        ></v-text-field>
                       </template>
-                      <v-date-picker v-model="expiryDate" @input="menu = false"
-                        @change="endDateValidation($event, expiryDate)"></v-date-picker>
+                      <v-date-picker
+                        v-model="expiryDate"
+                        @input="menu = false"
+                        @change="endDateValidation($event, expiryDate)"
+                      ></v-date-picker>
                     </v-menu>
                     <div v-if="this.endDateError" class="error-message">
                       The new Expiry date must be later than current date.
@@ -65,76 +95,102 @@
                 />
               </div>
               <div v-if="showInfoEndorsement">
-              <!-- Installments -->
-              <div class="input-row w-100 d-flex flex-wrap">
-                <div class="inner-title">Installments</div>
+                <!-- Installments -->
+                <div class="input-row w-100 d-flex flex-wrap">
+                  <div class="inner-title">Installments</div>
 
-                <PremiumPaymentWarranty @datasReceive="datasReceive" @deleteInstallment="deleteInstallment" />
-
-              </div>
-
-              <!-- Reason -->
-              <div class="input-row w-100 d-flex flex-wrap">
-                <div class="inner-title">Reason</div>
-                <div class="description-container">
-
-                  <div class="textArea-cont">
-                    <v-textarea v-model="detailReason" background-color="#EDF2F8" height="180" solo flat rounded no-resize
-                      class="textArea" counter="500" />
-                  </div>
-                </div>
-              </div>
-              <div class="input-row w-100 d-flex flex-wrap">
-                <div class="inner-title">Additional</div>
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menu5"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDay"
-                          label="Premium payment date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDay"
-                        @input="menu5 = false"
-                      ></v-date-picker>
-                    </v-menu>
-                  </div>
-                </div>
-
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-autocomplete
-                      label="Clause"
-                      v-model="clause"
-                      :items="clauseList"
-                      item-value="clause"
-                      item-text="clause"
+                  <!-- Select endorsement (mockeado) -->
+                  <div class="input-col">
+                    <v-select
+                      v-model="selectedEndorsement"
+                      label="Select the endorsement"
+                      :items="endorsementOptions"
+                      item-value="id"
+                      item-text="name"
                     />
                   </div>
+
+                  <PremiumPaymentWarranty
+                    ref="premiumPaymentWarranty"
+                    @datasReceive="datasReceive"
+                    @deleteInstallment="deleteInstallment"
+                    @originalInstallmentsReceive="saveOriginalInstallments"
+                  />
                 </div>
-              </div>
+
+                <!-- Reason -->
+                <div class="input-row w-100 d-flex flex-wrap">
+                  <div class="inner-title">Reason</div>
+                  <div class="description-container">
+                    <div class="textArea-cont">
+                      <v-textarea
+                        v-model="detailReason"
+                        background-color="#EDF2F8"
+                        height="180"
+                        solo
+                        flat
+                        rounded
+                        no-resize
+                        class="textArea"
+                        counter="500"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="input-row w-100 d-flex flex-wrap">
+                  <div class="inner-title">Additional</div>
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-menu
+                        v-model="menu5"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="premiumPaymentDay"
+                            label="Premium payment date"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          v-model="premiumPaymentDay"
+                          @input="menu5 = false"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
+                  </div>
+
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-autocomplete
+                        label="Clause"
+                        v-model="clause"
+                        :items="clauseList"
+                        item-value="clause"
+                        item-text="clause"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </v-stepper-content>
 
             <v-stepper-content step="2">
-
               <div>
                 <Table :tableData="tableData" />
               </div>
               <div class="detail-date">
-                <div class="table-title-detail table-title-detail--large containerrow">Detail</div>
+                <div
+                  class="table-title-detail table-title-detail--large containerrow"
+                >
+                  Detail
+                </div>
                 <div class="input-row w-100 d-flex flex-wrap">
                   <div class="input-col">
                     <div class="input-cont">
@@ -177,32 +233,65 @@
                 <div class="endorsement-title">Reason</div>
 
                 <div class="textArea-cont">
-                  <v-textarea v-model="detailDescription" background-color="#EDF2F8" height="180" solo flat rounded
-                    no-resize class="textArea" counter="500" readonly />
+                  <v-textarea
+                    v-model="detailDescription"
+                    background-color="#EDF2F8"
+                    height="180"
+                    solo
+                    flat
+                    rounded
+                    no-resize
+                    class="textArea"
+                    counter="500"
+                    readonly
+                  />
                 </div>
               </div>
-
             </v-stepper-content>
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div class="files-submit flex justify-content-start align-items-start align-content-start">
-                <AppFile v-for="(item, clave) in files" :key="clave" :fileId="item.fileId" :fileName="item.fileName"
-                  :fileDownloadLink="item.fileDownloadLink" :loaded="item.loaded" :error="item.error"
-                  :errorMessage="item.errorMessage" :loading="item.loading" :fileType="item.fileType"
-                  :fileTypeMessage="item.fileTypeMessage" @removeFileById="removeFileById($event)"
-                  @errors="errors($event)" @loading="loadingFile($event)" @loadFile="updateFile($event)" />
+              <div
+                class="files-submit flex justify-content-start align-items-start align-content-start"
+              >
+                <AppFile
+                  v-for="(item, clave) in files"
+                  :key="clave"
+                  :fileId="item.fileId"
+                  :fileName="item.fileName"
+                  :fileDownloadLink="item.fileDownloadLink"
+                  :loaded="item.loaded"
+                  :error="item.error"
+                  :errorMessage="item.errorMessage"
+                  :loading="item.loading"
+                  :fileType="item.fileType"
+                  :fileTypeMessage="item.fileTypeMessage"
+                  @removeFileById="removeFileById($event)"
+                  @errors="errors($event)"
+                  @loading="loadingFile($event)"
+                  @loadFile="updateFile($event)"
+                />
               </div>
             </v-stepper-content>
           </v-stepper-items>
         </div>
       </div>
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
       <!-- <AdmittedPremiumTableEngineering v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" /> -->
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
+        <v-btn
+          :outlined="e1 == 3 ? false : true"
+          rounded
+          large
+          :text="e1 == 3 ? true : false"
+          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 3 ? 'none' : '#003D6D'"
+          @click="goNext(e1)"
+        >
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -221,22 +310,25 @@ import AppFile from "../../components/AppFile.vue";
 import MovementValues from "./MovementValuesEng.vue";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import ClauseSelector from "../modules/deductions-change/detail/components/ClauseSelector.vue";
-import PremiumPaymentWarranty from "../modules/deductions-change/detail/components/PremiumPaymentWarranty.vue"
-import Table from './../modules/deductions-change/detail/components/Table.vue';
+import PremiumPaymentWarranty from "../modules/deductions-change/detail/components/PremiumPaymentWarranty.vue";
+import Table from "./../modules/deductions-change/detail/components/Table.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
 import AdmittedPremiumTableEngineering from "../../components/AdmittedPremiumTableEngineering.vue";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
 /* services */
 import { getFiles } from "../../services/mock-files.service";
-import netPremiumEng from '../services/netpremium.service';
+import netPremiumEng from "../services/netpremium.service";
 import EndorsementService from "../../services/endorsement.service";
-import accountCompleteService from '@/modules/home/services/account-complete.service';
+import accountCompleteService from "@/modules/home/services/account-complete.service";
 import PaymentService from "@/components/subscription/bound/services/payment.service";
-import { netPremiumInclusionRiskEng, netPremiumInclusionRiskAutoCalcs } from "../class/netPremiumInclusionRiskEng";
+import {
+  netPremiumInclusionRiskEng,
+  netPremiumInclusionRiskAutoCalcs,
+} from "../class/netPremiumInclusionRiskEng";
 
 /* libs */
-import Decimal from '@/lib/decimal';
-import { unFormatCurrency,formatCurrency } from "../../utils";
+import Decimal from "@/lib/decimal";
+import { unFormatCurrency, formatCurrency } from "../../utils";
 
 export default {
   name: "ExtensionGPW",
@@ -249,7 +341,7 @@ export default {
     Table,
     InputDaysDiference,
     AdmittedPremiumTableEngineering,
-    EndorsementDocuments
+    EndorsementDocuments,
   },
   props: {
     type: { type: String, default: "Extension GPW" },
@@ -261,11 +353,17 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: {type: Boolean},
-    selectedEndorsementId: { type: Number }
+    showInfoEndorsement: { type: Boolean },
+    listEndorsement: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
+      originalInstallments: [],
+      selectedEndorsement: 0,
+      selectedEndorsementId: 0,
       endorsementDocuments: [],
       endorsementDateError: false,
       expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
@@ -278,7 +376,7 @@ export default {
           allRisk: 0,
           alop: 0,
           totalAllRisk: this.accountComplete.tiv.insurable.allRisk,
-          totalAlop: this.accountComplete.tiv.insurable.alop
+          totalAlop: this.accountComplete.tiv.insurable.alop,
         },
         {
           id: 2,
@@ -286,8 +384,9 @@ export default {
           allRisk: 0,
           alop: 0,
           totalAllRisk: this.accountComplete.tiv.insurable.allRiskUsd,
-          totalAlop: this.accountComplete.tiv.insurable.alopUsd
-        },],
+          totalAlop: this.accountComplete.tiv.insurable.alopUsd,
+        },
+      ],
       netPremium: {},
       subscriptionId: this.$route.params.id,
       e1: 1,
@@ -297,7 +396,7 @@ export default {
       menu4: false,
       menu5: false,
       menu6: false,
-      effectiveDate: this.dateSaved,
+      effectiveDate: this.dateSaved || new Date().toISOString().substr(0, 10),
       expiryDate: new Date(
         Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
       )
@@ -308,21 +407,19 @@ export default {
       )
         .toISOString()
         .substr(0, 10),
-      premiumPaymentDay: new Date( )
-        .toISOString()
-        .substr(0, 10),
+      premiumPaymentDay: new Date().toISOString().substr(0, 10),
       detail: 20,
       files: [
         {
           fileId: 1,
-          fileName: 'Report Extension GPW',
-          fileDownloadLink: '',
+          fileName: "Report Extension GPW",
+          fileDownloadLink: "",
           loaded: false,
           error: false,
-          errorMessage: 'Could not load the file',
+          errorMessage: "Could not load the file",
           loading: true,
-          fileType: 'xlsx',
-          fileTypeMessage: 'Download',
+          fileType: "xlsx",
+          fileTypeMessage: "Download",
         },
       ],
       insurable: [],
@@ -354,20 +451,20 @@ export default {
       detailReason: " ",
       detailDescription: " ",
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
       installmentNumber: [1, 2, 3, 4],
-      installmentValue: '',
+      installmentValue: "",
       assignedPercentage: 16,
       clause: this.accountComplete.cartera.clausula,
       cartera: {},
       clauseList: [],
-      newClause: '',
-      currentClause: '',
-      additionalClause: '',
-      daysNotice: '',
+      newClause: "",
+      currentClause: "",
+      additionalClause: "",
+      daysNotice: "",
       tableData: {
         currency: {
           total_premium: {
@@ -381,7 +478,7 @@ export default {
             premium_slu: 0,
             net_premium: 0,
             total: 0,
-          }
+          },
         },
         usd: {
           total_premium: {
@@ -395,7 +492,7 @@ export default {
             premium_slu: 0,
             net_premium: 0,
             total: 0,
-          }
+          },
         },
       },
       allDatas: [],
@@ -418,10 +515,10 @@ export default {
           name: "Original Currency",
           premiumAllRisk: 0,
           premiumAlop: 0,
-          premiumTotal:0,
+          premiumTotal: 0,
           sluAllRisk: 0,
           sluAlop: 0,
-          sluTotal:0,
+          sluTotal: 0,
         },
         {
           id: 2,
@@ -432,14 +529,32 @@ export default {
           sluAlop: 0,
         },
       ],
-      isEdited:{},
+      isEdited: {},
       idArrayToDelete: [],
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
     };
+  },
+  computed: {
+    endorsementOptions() {
+      const options = this.listEndorsement.map((endorsement) => ({
+        id: endorsement.id,
+        name: `${endorsement.EndorsementType?.type || "Unknown"} - ${new Date(
+          endorsement.effective_date
+        ).toLocaleDateString()}`,
+      }));
+
+      return [{ id: 0, name: "Original Account" }, ...options];
+    },
   },
   async beforeMount() {
     this.clauseList = await PaymentService.getClauses();
+  },
+  async mounted() {
+    if (!this.dateSaved) {
+      this.effectiveDate = new Date().toISOString().substr(0, 10);
+      this.endorsementDateValidation(null, this.effectiveDate);
+    }
   },
   created() {
     // console.log(this.accountComplete);
@@ -456,18 +571,21 @@ export default {
     this.porcentStock = tiv.insurable.porcentaje;
   },
   watch: {
+    selectedEndorsement(newVal) {
+      this.loadInstallmentsBySelectedEndorsement(newVal);
+    },
     e1: async function () {
       switch (this.e1) {
         case 1:
-          this.isEdited = {}
-          this.buttonTitle = 'Next';
-          this.buttonTitleBack = 'Cancel';
-          break
+          this.isEdited = {};
+          this.buttonTitle = "Next";
+          this.buttonTitleBack = "Cancel";
+          break;
 
         case 2:
-          this.buttonTitle = 'Next';
-          this.buttonTitleBack = 'Return';
-          
+          this.buttonTitle = "Next";
+          this.buttonTitleBack = "Return";
+
           this.deductible = Object.assign(this.accountComplete.deductibles);
           this.deductible.brokerage = this.brokerage;
           this.deductible.taxes = this.taxes;
@@ -478,77 +596,95 @@ export default {
           this.deductible.fronting = this.frontingFee;
           this.deductible.premiumReserve = this.premiumReserve;
           this.sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
-          this.calcPremium()
+          this.calcPremium();
           break;
         case 3:
-          this.buttonTitle = 'Finalize'
-          this.buttonTitleBack = 'Return';
-          this.paymentsWarranty = await PaymentService.getPayments(this.subscriptionId);
+          this.buttonTitle = "Finalize";
+          this.buttonTitleBack = "Return";
+          this.paymentsWarranty = await PaymentService.getPayments(
+            this.subscriptionId
+          );
           this.installmentsForExcel = [...this.paymentsWarranty];
-          this.allDatas.map(elModified => {
-            this.paymentsWarranty.map(el => {
-              if (elModified.typeOfOperation === 'addOrUpdate') {
+          this.allDatas.map((elModified) => {
+            this.paymentsWarranty.map((el) => {
+              if (elModified.typeOfOperation === "addOrUpdate") {
                 if (el.index === elModified.index) {
-                  if (elModified.column === 'installment') {
-                    this.installmentsForExcel[el.index - 1] = { ...this.installmentsForExcel[el.index - 1], installment: elModified.value }
+                  if (elModified.column === "installment") {
+                    this.installmentsForExcel[el.index - 1] = {
+                      ...this.installmentsForExcel[el.index - 1],
+                      installment: elModified.value,
+                    };
                   }
-                  if (elModified.column === 'ppw_date') {
-                    this.installmentsForExcel[el.index - 1] = { ...this.installmentsForExcel[el.index - 1], date: elModified.value }
+                  if (elModified.column === "ppw_date") {
+                    this.installmentsForExcel[el.index - 1] = {
+                      ...this.installmentsForExcel[el.index - 1],
+                      date: elModified.value,
+                    };
                   }
-                  if (elModified.column === 'percent') {
-                    this.installmentsForExcel[el.index - 1] = { ...this.installmentsForExcel[el.index - 1], percent: elModified.value }
+                  if (elModified.column === "percent") {
+                    this.installmentsForExcel[el.index - 1] = {
+                      ...this.installmentsForExcel[el.index - 1],
+                      percent: elModified.value,
+                    };
                   }
-                  if (elModified.column === 'id_payment_clause') {
-                    this.installmentsForExcel[el.index - 1] = { ...this.installmentsForExcel[el.index - 1], id_payment_clause: elModified.value }
+                  if (elModified.column === "id_payment_clause") {
+                    this.installmentsForExcel[el.index - 1] = {
+                      ...this.installmentsForExcel[el.index - 1],
+                      id_payment_clause: elModified.value,
+                    };
                   }
                 }
               }
-              if (elModified.typeOfOperation === 'deletePayment') {
-                this.installmentsForExcel.splice(elModified.index - 1, 1)
+              if (elModified.typeOfOperation === "deletePayment") {
+                this.installmentsForExcel.splice(elModified.index - 1, 1);
               }
-            })
-          })
+            });
+          });
 
-          this.installmentsForExcel.map(el => {
-            this.clauseList.map(clause => {
-              if (el.idClause === clause.id)
-                el.idClause = clause.clause
-            })
-          })
+          this.installmentsForExcel.map((el) => {
+            this.clauseList.map((clause) => {
+              if (el.idClause === clause.id) el.idClause = clause.clause;
+            });
+          });
 
           this.accountComplete.deductibles = this.deductible;
           const premiumOriginal = this.accountComplete.tiv.insurable;
-          const premiumUSD = this.detailValues.find(el => el.id === 2);
+          const premiumUSD = this.detailValues.find((el) => el.id === 2);
 
           const tiv = this.accountComplete.tiv;
           const tivMovement = {
             allRisk: tiv.insurable.allRisk,
-            alop:tiv.insurable.alop,
+            alop: tiv.insurable.alop,
 
             allRiskRate: tiv.premium.allRiskRate,
             alopRate: tiv.premium.alopRate,
-          }
+          };
 
           const dates = {
-            effetiveDate:new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0,10),
-            expiryDate:new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10),
-            endormenteffetiveDate: new Date (this.effectiveDate),
-            movementEndDate:new Date(this.expiryDate),
-          }
+            effetiveDate: new Date(
+              this.accountComplete.deductibles.inceptionDate
+            )
+              .toISOString()
+              .substring(0, 10),
+            expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
+              .toISOString()
+              .substring(0, 10),
+            endormenteffetiveDate: new Date(this.effectiveDate),
+            movementEndDate: new Date(this.expiryDate),
+          };
 
           const options = {
-            isEdited:this.isEdited,
+            isEdited: this.isEdited,
             dataEdited: {
               // totalPremium
-              premiumAllRisk:this.totalPremium[0].premiumAllRisk,
-              premiumAlop:this.totalPremium[0].premiumAlop,
+              premiumAllRisk: this.totalPremium[0].premiumAllRisk,
+              premiumAlop: this.totalPremium[0].premiumAlop,
 
               // premiumSlu
-              sluAllRisk:this.totalPremium[0].sluAllRisk,
-              sluAlop:this.totalPremium[0].sluAlop,
-
+              sluAllRisk: this.totalPremium[0].sluAllRisk,
+              sluAlop: this.totalPremium[0].sluAlop,
             },
-          }
+          };
 
           // Obteniendo los calculos de Net premium
           const sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
@@ -559,7 +695,7 @@ export default {
             false,
             dates,
             options
-          )
+          );
           const resultUSD = await netPremiumInclusionRiskAutoCalcs(
             tivMovement,
             this.accountComplete.deductibles,
@@ -567,8 +703,7 @@ export default {
             true,
             dates,
             options
-          ) 
-
+          );
 
           // Obteniendo premium payment date
           const premiumPaymentDate = new Date(
@@ -597,31 +732,31 @@ export default {
               totalUsd: 0,
             },
             premium: {
-            ...this.accountComplete.tiv.premium,
-            allRisk:this.totalPremium[0].premiumAllRisk,
-            alop:this.totalPremium[0].premiumAlop,
-            totalInsured:this.totalPremium[0].premiumTotal,
-            allRiskRate: this.accountComplete.tiv.premium.allRiskRate,
-            alopRate: this.accountComplete.tiv.premium.alopRate,
-            allRiskUsd:this.toUsd(this.totalPremium[0].premiumAllRisk),
-            alopUsd:this.toUsd(this.totalPremium[0].premiumAlop),
-            totalUsd:this.toUsd(this.totalPremium[0].premiumTotal),
+              ...this.accountComplete.tiv.premium,
+              allRisk: this.totalPremium[0].premiumAllRisk,
+              alop: this.totalPremium[0].premiumAlop,
+              totalInsured: this.totalPremium[0].premiumTotal,
+              allRiskRate: this.accountComplete.tiv.premium.allRiskRate,
+              alopRate: this.accountComplete.tiv.premium.alopRate,
+              allRiskUsd: this.toUsd(this.totalPremium[0].premiumAllRisk),
+              alopUsd: this.toUsd(this.totalPremium[0].premiumAlop),
+              totalUsd: this.toUsd(this.totalPremium[0].premiumTotal),
             },
-              boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
-              deductibles: this.accountComplete.deductibles,
-              netPremium: {
+            boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
+            deductibles: this.accountComplete.deductibles,
+            netPremium: {
               ...resultOriginalCurenncy.data,
               allRiskSluShare: resultOriginalCurenncy.data.allRiskPremiumSlu,
               alopSluShare: resultOriginalCurenncy.data.alopPremiumSlu,
               sluShareTotal: resultOriginalCurenncy.data.totalPremiumSlu,
             },
-              netPremiumUSD: {
+            netPremiumUSD: {
               ...resultUSD.data,
               allRiskSluShare: resultUSD.data.allRiskPremiumSlu,
               alopSluShare: resultUSD.data.alopPremiumSlu,
               sluShareTotal: resultUSD.data.totalPremiumSlu,
             },
-          }
+          };
 
           this.endorsmentReporData = endorsmentReporData;
 
@@ -630,12 +765,12 @@ export default {
             const fileLink = await EndorsementService.getEndorsmentReport({
               subscriptionId: this.subscriptionId,
               endorsmentType: 10,
-              endorsmentReporData
+              endorsmentReporData,
             });
 
-            const file = this.files.find(file => file.fileId === 1);
+            const file = this.files.find((file) => file.fileId === 1);
             if (!fileLink) {
-              file.error = true
+              file.error = true;
             } else {
               file.fileDownloadLink = fileLink;
               file.loaded = true;
@@ -646,26 +781,80 @@ export default {
           }
           break;
       }
-    }
+    },
   },
   methods: {
+    loadInstallmentsBySelectedEndorsement(endorsementId) {
+      if (endorsementId === 0) {
+        if (this.originalInstallments.length > 0) {
+          const originalInstallments = JSON.parse(
+            JSON.stringify(this.originalInstallments)
+          );
+          if (this.$refs.premiumPaymentWarranty) {
+            this.$refs.premiumPaymentWarranty.paymentsWarranty = [
+              ...originalInstallments,
+            ];
+            this.$refs.premiumPaymentWarranty.addPaymentDisabled =
+              originalInstallments.length >= 3;
+          }
+          this.allDatas = [...originalInstallments];
+        }
+        return;
+      }
 
-    calcPremium(){
+      const endorsementSelected = this.listEndorsement.find(
+        (endorsement) => endorsement.id === endorsementId
+      );
 
+      if (!endorsementSelected) return;
+      console.log(endorsementSelected);
+      const cartera = endorsementSelected?.report?.endorsmentReporData?.cartera;
+      const premiumPaymentDate =
+        cartera?.premiumPaymentDate?.substring(0, 10) ||
+        new Date().toISOString().substr(0, 10);
+      const clauseName = cartera?.clausula || "";
+      const idClause =
+        this.clauseList.find((cl) => cl.clause === clauseName)?.id || "";
+
+      const installment = {
+        id: null,
+        index: 1,
+        installment: 1,
+        percent: 100,
+        date: premiumPaymentDate,
+        idClause,
+        ...(cartera?.days_of_prior_notice && {
+          days_of_prior_notice: cartera.days_of_prior_notice,
+        }),
+        showCalendar: false,
+      };
+
+      if (this.$refs.premiumPaymentWarranty) {
+        this.$refs.premiumPaymentWarranty.paymentsWarranty = [installment];
+        this.$refs.premiumPaymentWarranty.addPaymentDisabled = true;
+      }
+
+      this.allDatas = [installment];
+    },
+    calcPremium() {
       const tiv = this.accountComplete.tiv;
       const tivMovement = {
         allRisk: tiv.insurable.allRisk,
-        alop:tiv.insurable.alop,
+        alop: tiv.insurable.alop,
 
         allRiskRate: tiv.premium.allRiskRate,
         alopRate: tiv.premium.alopRate,
-      }
+      };
       const dates = {
-        effetiveDate:new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0,10),
-        expiryDate:new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10),
-        endormenteffetiveDate: new Date (this.effectiveDate),
-        movementEndDate:new Date(this.expiryDate),
-      }
+        effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
+          .toISOString()
+          .substring(0, 10),
+        expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
+          .toISOString()
+          .substring(0, 10),
+        endormenteffetiveDate: new Date(this.effectiveDate),
+        movementEndDate: new Date(this.expiryDate),
+      };
 
       const calcTotalPremium = new netPremiumInclusionRiskEng(
         tivMovement,
@@ -683,37 +872,42 @@ export default {
       totalPremium.premiumAlop = totalPremiumResult.alopTotalPremium;
       totalPremium.premiumTotal = totalPremiumResult.total;
 
-      totalPremium.sluAllRisk =  calcTotalPremium.allRiskPremiumSlu();
-      totalPremium.sluAlop =  calcTotalPremium.alopPremiumSlu();
-      totalPremium.sluTotal =  calcTotalPremium.totalPremiumSlu();
+      totalPremium.sluAllRisk = calcTotalPremium.allRiskPremiumSlu();
+      totalPremium.sluAlop = calcTotalPremium.alopPremiumSlu();
+      totalPremium.sluTotal = calcTotalPremium.totalPremiumSlu();
 
-
-      const netTotal =unFormatCurrency(calcTotalPremium.netSLUExcludingSurveyFeesTotal())
-      this.tableData.currency.total_premium.total_premium_movement = totalPremiumResult.total.toFixed(2);
-      this.tableData.currency.total_premium.premium_slu = totalPremium.sluTotal.toFixed(2);
+      const netTotal = unFormatCurrency(
+        calcTotalPremium.netSLUExcludingSurveyFeesTotal()
+      );
+      this.tableData.currency.total_premium.total_premium_movement =
+        totalPremiumResult.total.toFixed(2);
+      this.tableData.currency.total_premium.premium_slu =
+        totalPremium.sluTotal.toFixed(2);
       this.tableData.currency.total_premium.net_premium = netTotal;
       //this.tableData.currency.total_premium.total = c_t_t_movement + c_t_t_slu + c_t_t_premium;
 
-
       //   tableData.usd.total_premium.total_premium_movement
-      this.tableData.usd.total_premium.total_premium_movement = this.toUsd(totalPremiumResult.total).toFixed(2);
-      this.tableData.usd.total_premium.premium_slu = this.toUsd(totalPremium.sluTotal).toFixed(2);
+      this.tableData.usd.total_premium.total_premium_movement = this.toUsd(
+        totalPremiumResult.total
+      ).toFixed(2);
+      this.tableData.usd.total_premium.premium_slu = this.toUsd(
+        totalPremium.sluTotal
+      ).toFixed(2);
       this.tableData.usd.total_premium.net_premium = this.toUsd(netTotal);
       //this.tableData.usd.total_premium.total = u_t_t_movement + u_t_t_slu + u_t_t_premium;
-
     },
 
-    setTotalPremium({id, value, concept}){
+    setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
       totalPremium[concept] = value;
 
-      if (concept !== 'premiumTotal' & concept !== 'sluTotal') {
+      if ((concept !== "premiumTotal") & (concept !== "sluTotal")) {
         this.isEdited[concept] = true;
       }
     },
-    toUsd(value){
-      const exchangeRate = this.accountComplete.deductibles.exchangeRate
-      return Decimal.div(value, exchangeRate).toNumber()
+    toUsd(value) {
+      const exchangeRate = this.accountComplete.deductibles.exchangeRate;
+      return Decimal.div(value, exchangeRate).toNumber();
     },
     async stepone() {
       this.e1 = 2;
@@ -753,8 +947,7 @@ export default {
       // actualizando tiv.insurable de account complete
       const tiv = this.accountComplete.tiv;
       const tivUpdate = {
-        insurable:{
-
+        insurable: {
           allRisk: tiv.allRisk,
           alop: tiv.alop,
           total: tiv.total,
@@ -762,44 +955,46 @@ export default {
           allRiskUsd: tiv.allRiskUsd,
           alopUsd: tiv.alopUsd,
           totalUsd: tiv.totalUsd,
-
         },
-        premium:{
+        premium: {
           allRiskRate: this.accountComplete.tiv.premium.allRiskRate,
           alopRate: this.accountComplete.tiv.premium.alopRate,
         },
         boundInsurableProp: this.accountComplete.tiv.boundInsurableProp,
-      }
-      
+      };
+
       // guardar la cuenta actualizada en BD
-      const accountCompleteResponse = await accountCompleteService.addAccountComplete(this.subscriptionId, {
-        deductibles: this.deductible,
-        tiv: tivUpdate,
-        netPremium: {
-            originalValues:{
-              netSluExcludingSurveyFeesTotal:this.accountComplete.net_premium.originalValues.netSluExcludingSurveyFeesTotal,
-            }
-        },
-        cartera: {
+      const accountCompleteResponse =
+        await accountCompleteService.addAccountComplete(this.subscriptionId, {
+          deductibles: this.deductible,
+          tiv: tivUpdate,
+          netPremium: {
+            originalValues: {
+              netSluExcludingSurveyFeesTotal:
+                this.accountComplete.net_premium.originalValues
+                  .netSluExcludingSurveyFeesTotal,
+            },
+          },
+          cartera: {
             ...this.accountComplete.cartera,
             ...this.cartera,
           },
-      });
+        });
 
-      //guardar registro del endoso 
-      await EndorsementService.addEndorsment({
+      //guardar registro del endoso
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 10,
         idUser: this.$store.state.auth.user.id,
         accountId: accountCompleteResponse.id,
         effectiveDate: this.effectiveDate,
         report: {
-          endorsmentReporData:{
+          endorsmentReporData: {
             ...this.endorsmentReporData,
-            additionalInfo:{
+            additionalInfo: {
               detailDescription: this.detailDescription,
-              paymentsWarranty: [], 
-              endorsementSelected: selectedEndorsementId, // <== id del endoso seleccionado
+              paymentsWarranty: [],
+              endorsementSelected: this.selectedEndorsementId, // <== id del endoso seleccionado
             },
           },
           cartera: {
@@ -825,17 +1020,19 @@ export default {
       // })
 
       this.idArrayToDelete.map(async (el) => {
-          const paymentResponse = await PaymentService.deletePayment(
-            el,
-            this.subscriptionId
-          );
-      })
-      
-      await PaymentService.addOrUpdatePayments(this.allDatas, this.subscriptionId)
+        const paymentResponse = await PaymentService.deletePayment(
+          el,
+          endorsementResponse.id
+        );
+      });
 
+      await PaymentService.addOrUpdatePayments(
+        this.allDatas,
+        endorsementResponse.id
+      );
 
       // getPayments
-      const payments = await PaymentService.getPayments(this.subscriptionId)
+      const payments = await PaymentService.getPayments(endorsementResponse.id);
 
       // update endorsement.report.endorsmentReporData.additionalInfo.paymentsWarranty
       const report = {
@@ -845,21 +1042,21 @@ export default {
           additionalInfo: {
             ...endorsementResponse.report.endorsmentReporData.additionalInfo,
             paymentsWarranty: payments,
-          }
-        }
-      }
+          },
+        },
+      };
 
       await EndorsementService.editEndorsement({
         endorsementId: endorsementResponse.id,
-        columnName: 'report',
-        value: report
-      })
+        columnName: "report",
+        value: report,
+      });
 
-      await this.backToCreateEndorsement()
+      await this.backToCreateEndorsement();
     },
 
     deleteInstallment(id) {
-      this.idArrayToDelete = [...this.idArrayToDelete, id]
+      this.idArrayToDelete = [...this.idArrayToDelete, id];
     },
 
     endDateValidation(event, incomingDate) {
@@ -870,14 +1067,10 @@ export default {
       }
     },
     async endorsementDateValidation(event, incomingDate) {
-      
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.expiryDate)
-      ) {
+      if (Date.parse(incomingDate) >= Date.parse(this.expiryDate)) {
         this.endorsementDateError = true;
       } else {
-        await this.changeDateEndorsement(incomingDate)
+        await this.changeDateEndorsement(incomingDate);
         this.endorsementDateError = false;
       }
     },
@@ -887,11 +1080,19 @@ export default {
     },
 
     datasReceive(datasUpdate) {
-      this.allDatas = [...datasUpdate]
+      this.allDatas = [...datasUpdate];
+    },
+
+    saveOriginalInstallments(originalInstallments) {
+      if (this.originalInstallments.length === 0) {
+        this.originalInstallments = JSON.parse(
+          JSON.stringify(originalInstallments)
+        );
+      }
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.keepDescription();
       } else if (e1 == 2) {
@@ -902,7 +1103,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -1124,7 +1325,11 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
+.theme--light.v-stepper
+  .v-stepper__step:not(.v-stepper__step--active):not(
+    .v-stepper__step--complete
+  ):not(.v-stepper__step--error)
+  .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 

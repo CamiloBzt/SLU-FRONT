@@ -753,13 +753,12 @@ export default {
       const tivMovement = {
         allRisk: tiv.insurable.allRisk,
         alop: tiv.insurable.alop,
+
         allRiskRate: tiv.premium.allRiskRate,
         alopRate: tiv.premium.alopRate,
       };
 
-      // ESTRUCTURA DE FECHAS PARA EXTENSION
       const dates = {
-        // Para compatibilidad con métodos existentes
         effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
           .toISOString()
           .substring(0, 10),
@@ -768,12 +767,6 @@ export default {
           .substring(0, 10),
         endormenteffetiveDate: new Date(this.originalEffectiveDate),
         movementEndDate: new Date(this.originalMovementEndDate),
-
-        // NUEVAS FECHAS PARA EXTENSION
-        inceptionDate: this.accountComplete.deductibles.inceptionDate,
-        originalExpiryDate: this.accountComplete.deductibles.expiryDate,
-        effectiveDate: this.originalEffectiveDate,
-        newExpiryDate: this.originalMovementEndDate,
       };
 
       this.calcTotalPremium = new netPremiumInclusionRiskEng(
@@ -784,10 +777,7 @@ export default {
         dates
       );
 
-      // USAR EL NUEVO MÉTODO PARA EXTENSION
-      const ajuste = 0.15; // 15%
-      const totalPremiumResult =
-        this.calcTotalPremium.calculateTotalPremiumExtension(ajuste);
+      const totalPremiumResult = this.calcTotalPremium.calculateTotalPremium();
 
       const totalPremium = this.totalPremium.find((el) => el.id === 1);
 
@@ -798,19 +788,6 @@ export default {
       totalPremium.sluAllRisk = this.calcTotalPremium.allRiskPremiumSlu();
       totalPremium.sluAlop = this.calcTotalPremium.alopPremiumSlu();
       totalPremium.sluTotal = this.calcTotalPremium.totalPremiumSlu();
-
-      // DEBUG: Mostrar valores calculados en consola
-      console.log("=== EXTENSION CALCULATION DEBUG ===");
-      console.log("TIV All Risk:", tivMovement.allRisk);
-      console.log("Rate All Risk:", tivMovement.allRiskRate);
-      console.log("Daily Rate All Risk:", totalPremiumResult.dailyRateAllRisk);
-      console.log("Extension Days:", totalPremiumResult.extensionDays);
-      console.log(
-        "Extension Rate All Risk:",
-        totalPremiumResult.extensionRateAllRisk
-      );
-      console.log("Premium All Risk:", totalPremiumResult.allRiskTotalPremium);
-      console.log("===================================");
     },
     toUsd(value) {
       const exchangeRate = this.accountComplete.deductibles.exchangeRate;

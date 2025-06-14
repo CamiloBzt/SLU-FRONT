@@ -19,7 +19,11 @@
             </div>
 
             <template v-for="item in detailValues">
-              <div v-if="item.id === 1" class="table-col">
+              <div
+                v-if="item.id === 1"
+                :key="'Table 1' + item.id"
+                class="table-col"
+              >
                 <div class="col-table-title">Total premium</div>
                 <div>
                   <div class="table-title">{{ item.name }}</div>
@@ -90,7 +94,11 @@
             </template>
 
             <template v-for="item in detailValues">
-              <div v-if="item.id === 1" :key="item.id" class="table-col">
+              <div
+                v-if="item.id === 1"
+                :key="'Table 1 USD' + item.id"
+                class="table-col"
+              >
                 <div class="col-table-title">Premium SLU</div>
                 <div>
                   <div class="table-title">{{ item.name }}</div>
@@ -171,7 +179,11 @@
             </div>
 
             <template v-for="item in detailValues">
-              <div v-if="item.id === 2" class="table-col">
+              <div
+                v-if="item.id === 2"
+                :key="'Table 2' + item.id"
+                class="table-col"
+              >
                 <div class="col-table-title">Total premium</div>
                 <div>
                   <div class="table-title">{{ item.name }}</div>
@@ -230,7 +242,7 @@
                       </div>
                       <div class="table-input">
                         <currency-input
-                          v-model="premiumTotalComputed"
+                          v-model="premiumTotalComputedUSD"
                           :options="currencyOptions"
                           :disabled="true"
                         />
@@ -242,7 +254,11 @@
             </template>
 
             <template v-for="item in detailValues">
-              <div v-if="item.id === 2" :key="item.id" class="table-col">
+              <div
+                v-if="item.id === 2"
+                :key="'Table 2 USD' + item.id"
+                class="table-col"
+              >
                 <div class="col-table-title">Premium SLU</div>
                 <div>
                   <div class="table-title">{{ item.name }}</div>
@@ -301,7 +317,7 @@
                       </div>
                       <div class="table-input">
                         <currency-input
-                          v-model="sluTotalComputed"
+                          v-model="sluTotalComputedUSD"
                           :options="currencyOptions"
                           :disabled="true"
                         />
@@ -387,6 +403,8 @@ export default {
       e1: 1,
       sluTotal: 0,
       premiumTotal: 0,
+      sluTotalUSD: 0,
+      premiumTotalUSD: 0,
     };
   },
   async beforeMount() {
@@ -429,6 +447,18 @@ export default {
         return this.sluTotal;
       },
     },
+    premiumTotalComputedUSD: {
+      get() {
+        this.premiumTotalUSD = this.sumTotalPremiumUSD();
+        return this.premiumTotalUSD;
+      },
+    },
+    sluTotalComputedUSD: {
+      get() {
+        this.sluTotalUSD = this.sumPremiumSluUSD();
+        return this.sluTotalUSD;
+      },
+    },
   },
   methods: {
     sumTotalPremium() {
@@ -441,6 +471,22 @@ export default {
     },
     sumPremiumSlu() {
       const admittedPremium = this.detailValues.find((el) => el.id === 1);
+      const sum =
+        admittedPremium.sluDamage +
+        admittedPremium.sluBi +
+        admittedPremium.sluStocks;
+      return sum;
+    },
+    sumTotalPremiumUSD() {
+      const admittedPremium = this.detailValues.find((el) => el.id === 2);
+      const sum =
+        admittedPremium.premiumDamage +
+        admittedPremium.premiumBi +
+        admittedPremium.premiumStocks;
+      return sum;
+    },
+    sumPremiumSluUSD() {
+      const admittedPremium = this.detailValues.find((el) => el.id === 2);
       const sum =
         admittedPremium.sluDamage +
         admittedPremium.sluBi +
