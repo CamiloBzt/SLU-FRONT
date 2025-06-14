@@ -68,6 +68,7 @@ export class netPremiumInclusionRiskEng {
     this.deductibles = deductibles;
     this.sluLine = sluLine;
     this.usd = usd;
+    this.dates = dates;
 
     const effetiveDate = new Date(dates.effetiveDate);
     const expiryDate = new Date(dates.expiryDate);
@@ -98,25 +99,112 @@ export class netPremiumInclusionRiskEng {
     };
   }
 
-  calculateTotalPremium() {
-    // (((( this.premium.stockMovement * this.premium.stockRate ) / 1000) / this.daysResult.initialDays)*this.daysResult.endormentsDays)
+  getDaysInceptionToExpiry() {
+    const inceptionDate = new Date(this.dates?.inceptionDate);
+    const expiryDate = new Date(this.dates?.originalExpiryDate);
+    const diffTime = expiryDate.getTime() - inceptionDate.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays !== 0 ? diffDays : 1;
+  }
 
+  // Método para calcular días de extensión (effective date a new expiry date)
+  getDaysExtension() {
+    const effectiveDate = new Date(this.dates?.effectiveDate);
+    const newExpiryDate = new Date(this.dates?.newExpiryDate);
+    const diffTime = newExpiryDate.getTime() - effectiveDate.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays !== 0 ? diffDays : 1;
+  }
+
+  // Daily rate All Risk = (Rate all risk / Diferencia días de inception y expiry)
+  getDailyRateAllRisk() {
+    const totalDays = this.getDaysInceptionToExpiry();
+    return Decimal.div(this.tivMovement.allRiskRate, totalDays).toNumber();
+  }
+
+  // Daily rate ALOP = (Rate ALOP / Diferencia días de inception y expiry)
+  getDailyRateAlop() {
+    const totalDays = this.getDaysInceptionToExpiry();
+    return Decimal.div(this.tivMovement.alopRate, totalDays).toNumber();
+  }
+
+  // Extension rate All Risk = (Daily rate All Risk * Días extensión) * (1 + Ajuste)
+  getExtensionRateAllRisk(ajuste = 0.15) {
+    const dailyRate = this.getDailyRateAllRisk();
+    const extensionDays = this.getDaysExtension();
+    const baseRate = Decimal.mul(dailyRate, extensionDays).toNumber();
+    const adjustmentFactor = Decimal.add(1, ajuste).toNumber();
+    return Decimal.mul(baseRate, adjustmentFactor).toNumber();
+  }
+
+  // Extension rate ALOP = (Daily rate ALOP * Días extensión) * (1 + Ajuste)
+  getExtensionRateAlop(ajuste = 0.15) {
+    const dailyRate = this.getDailyRateAlop();
+    const extensionDays = this.getDaysExtension();
+    const baseRate = Decimal.mul(dailyRate, extensionDays).toNumber();
+    const adjustmentFactor = Decimal.add(1, ajuste).toNumber();
+    return Decimal.mul(baseRate, adjustmentFactor).toNumber();
+  }
+
+  // NUEVO MÉTODO: calculateTotalPremiumExtension
+  calculateTotalPremiumExtension(ajuste = 0.15) {
+    // Premium All Risk = (TIV All Risk) * (Extension rate All Risk) / 1000
     const allRiskTotalPremium = this.premiumIsEdited.premiumAllRisk
       ? this.premiumDataEdited.premiumAllRisk
-      : ((this.tivMovement.allRisk * this.tivMovement.allRiskRate) /
-          1000 /
-          this.daysResult.initialDays) *
-        this.daysResult.endormentsDays;
+      : Decimal.mul(
+          this.tivMovement.allRisk,
+          this.getExtensionRateAllRisk(ajuste)
+        )
+          .div(1000)
+          .toNumber();
 
+    // Premium ALOP = (TIV ALOP) * (Extension rate ALOP) / 1000
     const alopTotalPremium = this.premiumIsEdited.premiumAlop
       ? this.premiumDataEdited.premiumAlop
-      : ((this.tivMovement.alop * this.tivMovement.alopRate) /
-          1000 /
-          this.daysResult.initialDays) *
-        this.daysResult.endormentsDays;
+      : Decimal.mul(this.tivMovement.alop, this.getExtensionRateAlop(ajuste))
+          .div(1000)
+          .toNumber();
 
-    //const allRiskTotalPremium = (((( this.tivMovement.allRisk * this.tivMovement.allRiskRate ) / 1000) / this.daysResult.initialDays)*this.daysResult.endormentsDays);
-    //const alopTotalPremium = (((( this.tivMovement.alop * this.tivMovement.alopRate ) / 1000) / this.daysResult.initialDays)*this.daysResult.endormentsDays);
+    const total = Decimal.add(allRiskTotalPremium, alopTotalPremium).toNumber();
+
+    this.totalPremium = {
+      allRiskTotalPremium,
+      alopTotalPremium,
+      total,
+
+      allRiskTotalPremiumUsd: Decimal.div(
+        allRiskTotalPremium,
+        this.deductibles.exchangeRate
+      ).toNumber(),
+      alopTotalPremiumUsd: Decimal.div(
+        alopTotalPremium,
+        this.deductibles.exchangeRate
+      ).toNumber(),
+      totalUsd: Decimal.div(total, this.deductibles.exchangeRate).toNumber(),
+
+      // Datos adicionales para debugging
+      dailyRateAllRisk: this.getDailyRateAllRisk(),
+      dailyRateAlop: this.getDailyRateAlop(),
+      extensionRateAllRisk: this.getExtensionRateAllRisk(ajuste),
+      extensionRateAlop: this.getExtensionRateAlop(ajuste),
+      totalDaysPolicy: this.getDaysInceptionToExpiry(),
+      extensionDays: this.getDaysExtension(),
+      adjustmentFactor: Decimal.add(1, ajuste).toNumber(),
+    };
+
+    return this.totalPremium;
+  }
+
+  calculateTotalPremium() {
+    // All Risk Premium = (Movement Values All Risk) * (Rate Damage) / 1000
+    const allRiskTotalPremium = this.premiumIsEdited.premiumAllRisk
+      ? this.premiumDataEdited.premiumAllRisk
+      : (this.tivMovement.allRisk * this.tivMovement.allRiskRate) / 1000;
+
+    // ALOP Premium = (Movement Values ALOP) * (Rate ALOP) / 1000
+    const alopTotalPremium = this.premiumIsEdited.premiumAlop
+      ? this.premiumDataEdited.premiumAlop
+      : (this.tivMovement.alop * this.tivMovement.alopRate) / 1000;
 
     const total = Decimal.add(allRiskTotalPremium, alopTotalPremium).toNumber();
 
