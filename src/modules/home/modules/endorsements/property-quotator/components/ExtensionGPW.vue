@@ -105,22 +105,9 @@
                 <div class="input-row w-100 d-flex flex-wrap">
                   <div class="inner-title">Installments</div>
 
-                  <!-- Select endorsement (mockeado) -->
-                  <div class="input-col">
-                    <v-select
-                      v-model="selectedEndorsement"
-                      label="Select the endorsement"
-                      :items="endorsementOptions"
-                      item-value="id"
-                      item-text="name"
-                    />
-                  </div>
-
                   <PremiumPaymentWarranty
-                    ref="premiumPaymentWarranty"
                     @datasReceive="datasReceive"
                     @deleteInstallment="deleteInstallment"
-                    @originalInstallmentsReceive="saveOriginalInstallments"
                   />
                 </div>
 
@@ -305,6 +292,7 @@
           :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
           :color="e1 == 3 ? 'none' : '#003D6D'"
           @click="goNext(e1)"
+          :disabled="validationFirstStep"
         >
           {{ buttonTitle }}
         </v-btn>
@@ -368,16 +356,10 @@ export default {
     },
     dateSaved: { type: String },
     showInfoEndorsement: { type: Boolean },
-    listEndorsement: {
-      type: Array,
-      default: () => [],
-    },
+    selectedEndorsementId: { type: Number },
   },
   data() {
     return {
-      originalInstallments: [],
-      selectedEndorsement: 0,
-      selectedEndorsementId: 0,
       endorsementDocuments: [],
       endorsementDateError: false,
       expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
@@ -564,18 +546,6 @@ export default {
       buttonTitleBack: "Cancel",
     };
   },
-  computed: {
-    endorsementOptions() {
-      const options = this.listEndorsement.map((endorsement) => ({
-        id: endorsement.id,
-        name: `${endorsement.EndorsementType?.type || "Unknown"} - ${new Date(
-          endorsement.effective_date
-        ).toLocaleDateString()}`,
-      }));
-
-      return [{ id: 0, name: "Original Account" }, ...options];
-    },
-  },
   async beforeMount() {
     this.clauseList = await PaymentService.getClauses();
   },
@@ -599,9 +569,6 @@ export default {
     this.porcentStock = tiv.insurable.porcentaje;
   },
   watch: {
-    selectedEndorsement(newVal) {
-      this.loadInstallmentsBySelectedEndorsement(newVal);
-    },
     e1: async function () {
       switch (this.e1) {
         case 1:
@@ -808,58 +775,6 @@ export default {
     },
   },
   methods: {
-    loadInstallmentsBySelectedEndorsement(endorsementId) {
-      if (endorsementId === 0) {
-        if (this.originalInstallments.length > 0) {
-          const originalInstallments = JSON.parse(
-            JSON.stringify(this.originalInstallments)
-          );
-          if (this.$refs.premiumPaymentWarranty) {
-            this.$refs.premiumPaymentWarranty.paymentsWarranty = [
-              ...originalInstallments,
-            ];
-            this.$refs.premiumPaymentWarranty.addPaymentDisabled =
-              originalInstallments.length >= 3;
-          }
-          this.allDatas = [...originalInstallments];
-        }
-        return;
-      }
-
-      const endorsementSelected = this.listEndorsement.find(
-        (endorsement) => endorsement.id === endorsementId
-      );
-
-      if (!endorsementSelected) return;
-      console.log(endorsementSelected);
-      const cartera = endorsementSelected?.report?.endorsmentReporData?.cartera;
-      const premiumPaymentDate =
-        cartera?.premiumPaymentDate?.substring(0, 10) ||
-        new Date().toISOString().substr(0, 10);
-      const clauseName = cartera?.clausula || "";
-      const idClause =
-        this.clauseList.find((cl) => cl.clause === clauseName)?.id || "";
-
-      const installment = {
-        id: null,
-        index: 1,
-        installment: 1,
-        percent: 100,
-        date: premiumPaymentDate,
-        idClause,
-        ...(cartera?.days_of_prior_notice && {
-          days_of_prior_notice: cartera.days_of_prior_notice,
-        }),
-        showCalendar: false,
-      };
-
-      if (this.$refs.premiumPaymentWarranty) {
-        this.$refs.premiumPaymentWarranty.paymentsWarranty = [installment];
-        this.$refs.premiumPaymentWarranty.addPaymentDisabled = true;
-      }
-
-      this.allDatas = [installment];
-    },
     setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
       totalPremium[concept] = value;
@@ -1077,17 +992,17 @@ export default {
       this.idArrayToDelete.map(async (el) => {
         const paymentResponse = await PaymentService.deletePayment(
           el,
-          endorsementResponse.id
+          this.subscriptionId
         );
       });
 
       await PaymentService.addOrUpdatePayments(
         this.allDatas,
-        endorsementResponse.id
+        this.subscriptionId
       );
 
       // getPayments
-      const payments = await PaymentService.getPayments(endorsementResponse.id);
+      const payments = await PaymentService.getPayments(this.subscriptionId);
 
       // update endorsement.report.endorsmentReporData.additionalInfo.paymentsWarranty
       const report = {
@@ -1137,14 +1052,6 @@ export default {
     datasReceive(datasUpdate) {
       this.allDatas = [...datasUpdate];
       console.log("this.allDatas", this.allDatas);
-    },
-
-    saveOriginalInstallments(originalInstallments) {
-      if (this.originalInstallments.length === 0) {
-        this.originalInstallments = JSON.parse(
-          JSON.stringify(originalInstallments)
-        );
-      }
     },
 
     goNext(e1) {

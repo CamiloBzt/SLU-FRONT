@@ -86,7 +86,7 @@
             :items="clauseList"
           />
         </div>
-        <div class="Row" v-if="payment.days_of_prior_notice">
+        <div class="Row">
           <v-text-field
             v-if="isLSWClause(payment.idClause)"
             @change="
@@ -168,7 +168,6 @@ export default {
       inceptionDate: this.accountComplete.deductibles.inceptionDate,
     };
     console.log("this.quotation", this.quotation);
-    this.$emit("originalInstallmentsReceive", [...this.paymentsWarranty]);
     if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
   },
   mounted() {

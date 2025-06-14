@@ -303,7 +303,7 @@
         :dateSaved="dateSaved"
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
-        :listEndorsement="listEndorsement"
+        :selectedEndorsementId="selectedEndorsementId"
       />
       <ChangeOfTechnicalConditions
         v-if="endorsementType == 11"
@@ -392,6 +392,7 @@ export default {
   },
   data() {
     return {
+      selectedEndorsementId: 0,
       onCreatrEndorsement: false,
       idEndorsementDinamic: null,
       value: "",
@@ -578,6 +579,7 @@ export default {
         );
     },
     async backHistoryTableToId(id) {
+      this.selectedEndorsementId = id;
       this.showEndorsement = false;
       this.disabledSelect = true;
       this.endorsementHistory = true;

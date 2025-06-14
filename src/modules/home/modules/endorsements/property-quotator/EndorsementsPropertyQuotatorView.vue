@@ -113,7 +113,7 @@
         :dateSaved="dateSaved"
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
-        :listEndorsement="listEndorsement"
+        :selectedEndorsementId="selectedEndorsementId"
       />
       <ChangeOfTechnicalConditions
         v-if="endorsementType == 11"

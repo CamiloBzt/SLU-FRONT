@@ -71,6 +71,10 @@ import ModalFourEyes from "@/components/subscription/quotation/ModalFourEyes.vue
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
 export default {
+  components: {
+    EmailModal,
+    ModalFourEyes,
+  },
   async beforeMount() {
     this.showBoundButton = this.facultativeReference !== null ? true : false;
 
@@ -82,17 +86,13 @@ export default {
     ]).finally(() => {
       this.loading = false;
     });
+
     this.underwritersTable = await this.getNotificationsFourEyeSuscriptor(
       this.$route.params.subscriptionId
     );
 
-    const mapStatus = this.underwritersTable.map((e) => {
-      return e.status;
-    });
-  },
-  components: {
-    EmailModal,
-    ModalFourEyes,
+    this.showBoundButton = this.subscriptionStatus < 4;
+    this.isValidated = !this.showBoundButton;
   },
   watch: {
     facultativeReference: function () {
