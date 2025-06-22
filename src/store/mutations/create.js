@@ -204,4 +204,36 @@ export default {
   SET_ACTIVITY_LIST(state, { activities }) {
     state.activities.list = activities;
   },
+
+  SAVE_CURRENCY_INFORMATION(state, { key, description, region, active }) {
+    state.currencyInformation = {
+      key,
+      description,
+      region,
+      active,
+    };
+    state.submittedCurrencyInformation = true;
+  },
+
+  RESET_CURRENCY_INFORMATION(state) {
+    state.currencyInformation = {
+      key: "",
+      description: "",
+      region: "",
+      active: true,
+    };
+    state.submittedCurrencyInformation = false;
+  },
+
+  SET_AVAILABLE_CURRENCIES(state, { currencies }) {
+    state.availableCurrencies = currencies;
+  },
+
+  SET_INFO_CURRENCY(state, { payload }) {
+    state.currencies.selected = payload;
+  },
+
+  SET_CURRENCY_LIST(state, { currencies }) {
+    state.currencies.list = currencies;
+  },
 };
