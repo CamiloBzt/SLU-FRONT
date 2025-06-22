@@ -3,28 +3,46 @@ import VueRouter from "vue-router";
 
 import store from "../store";
 
-import { subscription } from "./Subscription";
-import { dashboard } from "./Dashboard";
 import { create } from "./Create";
+import { dashboard } from "./Dashboard";
 import { login } from "./Login";
-import { users } from "./users";
-import { roles } from "./roles";
+import { portfolio } from "./Portfolio";
+import { subscription } from "./Subscription";
 import { activation } from "./activation";
-import { claims } from "./claims";
-import { renewals } from "./renewals";
 import { brokers } from "./brokers";
 import { cedents } from "./cedents";
+import { claims } from "./claims";
+import { lineOfRisk } from "./lineOfRisk";
+import { renewals } from "./renewals";
+import { roles } from "./roles";
+import { users } from "./users";
 import { wallet } from "./wallet";
-import { portfolio } from './Portfolio';
+
 // Rutas de la segunda versión de SLU
-import { AppRoutes } from '@/modules/home/home.routes'
+import { AppRoutes } from "@/modules/home/home.routes";
 Vue.use(VueRouter);
 
 const globalRoutes = [
   //LOGIN
 ];
 
-const routes = globalRoutes.concat(activation, subscription,dashboard,create, login, users, roles, claims,renewals, brokers, cedents, AppRoutes, wallet, portfolio);
+const routes = globalRoutes.concat(
+  activation,
+  subscription,
+  dashboard,
+  create,
+  login,
+  users,
+  roles,
+  claims,
+  renewals,
+  brokers,
+  cedents,
+  lineOfRisk,
+  AppRoutes,
+  wallet,
+  portfolio
+);
 
 const router = new VueRouter({
   mode: "history",
@@ -33,14 +51,14 @@ const router = new VueRouter({
 });
 
 /* destructured store */
-const { dispatch, getters, commit } = store
+const { dispatch, getters, commit } = store;
 
 /* Route Protection */
 router.beforeEach((to, from, next) => {
   /* is token stored */
-  if (localStorage.getItem('sessionToken'))
-  dispatch('setToken', { token: localStorage.getItem('sessionToken') })
-  commit('setTokenOutlook', localStorage.getItem('tokenOutlook'))
+  if (localStorage.getItem("sessionToken"))
+    dispatch("setToken", { token: localStorage.getItem("sessionToken") });
+  commit("setTokenOutlook", localStorage.getItem("tokenOutlook"));
   const isUserLoggedIn = getters.isAuthenticated;
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isUserLoggedIn || isUserLoggedIn === false) {

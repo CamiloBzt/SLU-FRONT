@@ -138,4 +138,33 @@ export default {
   SET_USER_TYPE(state, { value }) {
     state.userType = value;
   },
+  SAVE_LINE_OF_RISK_INFORMATION(state, { key, description, active }) {
+    state.lineOfRiskInformation = {
+      key,
+      description,
+      active,
+    };
+    state.submittedLineOfRiskInformation = true;
+  },
+
+  RESET_LINE_OF_RISK_INFORMATION(state) {
+    state.lineOfRiskInformation = {
+      key: "",
+      description: "",
+      active: true,
+    };
+    state.submittedLineOfRiskInformation = false;
+  },
+
+  SET_AVAILABLE_LINE_OF_RISK(state, { lineOfRisk }) {
+    state.availableLineOfRisk = lineOfRisk;
+  },
+
+  SET_INFO_LINE_OF_RISK(state, { payload }) {
+    state.lineOfRisk.selected = payload;
+  },
+
+  SET_LINE_OF_RISK_LIST(state, { lineOfRisk }) {
+    state.lineOfRisk.list = lineOfRisk;
+  },
 };
