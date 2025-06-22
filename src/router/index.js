@@ -9,9 +9,13 @@ import { login } from "./Login";
 import { portfolio } from "./Portfolio";
 import { subscription } from "./Subscription";
 import { activation } from "./activation";
+import { activities } from "./activities";
 import { brokers } from "./brokers";
 import { cedents } from "./cedents";
 import { claims } from "./claims";
+import { contacts } from "./contacts";
+import { countries } from "./countries";
+import { currencies } from "./currencies";
 import { lineOfRisk } from "./lineOfRisk";
 import { renewals } from "./renewals";
 import { roles } from "./roles";
@@ -39,6 +43,10 @@ const routes = globalRoutes.concat(
   brokers,
   cedents,
   lineOfRisk,
+  activities,
+  currencies,
+  countries,
+  contacts,
   AppRoutes,
   wallet,
   portfolio

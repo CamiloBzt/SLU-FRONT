@@ -1,3 +1,4 @@
+import activities from "./activities";
 import auth from "./auth";
 import bound from "./bound";
 import createBroker from "./brokersAndCedents";
@@ -5,6 +6,8 @@ import claims from "./claims";
 import companies from "./companies";
 import contacts from "./contacts";
 import copy from "./copyData";
+import countries from "./countries";
+import currencies from "./currencies";
 import docs from "./docs";
 import emails from "./emails";
 import endorsements from "./endorsements";
@@ -50,4 +53,7 @@ export default {
   ...socket,
   ...underwriters,
   ...lineOfRisk,
+  ...activities,
+  ...currencies,
+  ...countries,
 };
