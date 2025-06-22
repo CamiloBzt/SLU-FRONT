@@ -167,4 +167,41 @@ export default {
   SET_LINE_OF_RISK_LIST(state, { lineOfRisk }) {
     state.lineOfRisk.list = lineOfRisk;
   },
+
+  SAVE_ACTIVITY_INFORMATION(
+    state,
+    { description, category, rate, risk_type_id, active }
+  ) {
+    state.activityInformation = {
+      description,
+      category,
+      rate,
+      risk_type_id,
+      active,
+    };
+    state.submittedActivityInformation = true;
+  },
+
+  RESET_ACTIVITY_INFORMATION(state) {
+    state.activityInformation = {
+      description: "",
+      category: "",
+      rate: 1,
+      risk_type_id: 2,
+      active: true,
+    };
+    state.submittedActivityInformation = false;
+  },
+
+  SET_AVAILABLE_ACTIVITIES(state, { activities }) {
+    state.availableActivities = activities;
+  },
+
+  SET_INFO_ACTIVITY(state, { payload }) {
+    state.activities.selected = payload;
+  },
+
+  SET_ACTIVITY_LIST(state, { activities }) {
+    state.activities.list = activities;
+  },
 };
