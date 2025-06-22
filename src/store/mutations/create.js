@@ -236,4 +236,31 @@ export default {
   SET_CURRENCY_LIST(state, { currencies }) {
     state.currencies.list = currencies;
   },
+  SAVE_COUNTRY_INFORMATION(state, { description, active }) {
+    state.countryInformation = {
+      description,
+      active,
+    };
+    state.submittedCountryInformation = true;
+  },
+
+  RESET_COUNTRY_INFORMATION(state) {
+    state.countryInformation = {
+      description: "",
+      active: true,
+    };
+    state.submittedCountryInformation = false;
+  },
+
+  SET_AVAILABLE_COUNTRIES(state, { countries }) {
+    state.availableCountries = countries;
+  },
+
+  SET_INFO_COUNTRY(state, { payload }) {
+    state.countries.selected = payload;
+  },
+
+  SET_COUNTRY_LIST(state, { countries }) {
+    state.countries.list = countries;
+  },
 };
