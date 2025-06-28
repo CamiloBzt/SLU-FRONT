@@ -166,7 +166,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import moment from "moment";
 
 export default {
@@ -183,12 +183,16 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      list: (state) => state.activities.list,
-    }),
+    // ...mapState({
+    //   list: (state) => state.activities.list,
+    // }),
+    ...mapGetters(["activities"]),
+    list() {
+      return this.activities || [];
+    },
   },
   methods: {
-    ...mapActions(["getActivitiesList", "deleteActivity"]),
+    ...mapActions(["getActivitiesList", "deleteActivity", "getCatalogByName"]),
     moveRightTable() {
       this.sideScroll("right", 25, 100, 10);
     },
@@ -232,9 +236,12 @@ export default {
   },
   beforeMount() {
     this.$emit("startLoading");
-    this.getActivitiesList().then(() => {
+    this.getCatalogByName({ name: "activities" }).then(() => {
       this.$emit("finishLoading", "loading");
     });
+    // this.getActivitiesList().then(() => {
+    //   this.$emit("finishLoading", "loading");
+    // });
   },
   mounted() {
     this.tableBodyContSnWidth = this.$refs.TableContent.offsetWidth;

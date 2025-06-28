@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import moment from "moment";
 
 export default {
@@ -185,12 +185,16 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      list: (state) => state.currencies.list,
-    }),
+    // ...mapState({
+    //   list: (state) => state.currencies.list,
+    // }),
+    ...mapGetters(["currencies"]),
+    list() {
+      return this.currencies || [];
+    },
   },
   methods: {
-    ...mapActions(["getCurrenciesList", "deleteCurrency"]),
+    ...mapActions(["getCurrenciesList", "deleteCurrency", "getCatalogByName"]),
     moveRightTable() {
       this.sideScroll("right", 25, 100, 10);
     },
@@ -244,9 +248,12 @@ export default {
   },
   beforeMount() {
     this.$emit("startLoading");
-    this.getCurrenciesList().then(() => {
+    this.getCatalogByName({ name: "currencies" }).then(() => {
       this.$emit("finishLoading", "loading");
     });
+    // this.getCurrenciesList().then(() => {
+    //   this.$emit("finishLoading", "loading");
+    // });
   },
   mounted() {
     this.tableBodyContSnWidth = this.$refs.TableContent.offsetWidth;

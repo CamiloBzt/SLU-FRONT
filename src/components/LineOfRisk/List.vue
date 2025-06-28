@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import moment from "moment";
 
 export default {
@@ -171,12 +171,20 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      list: (state) => state.lineOfRisk.list,
-    }),
+    // ...mapState({
+    //   list: (state) => state.lineOfRisk.list,
+    // }),
+    ...mapGetters(["risk_type"]),
+    list() {
+      return this.risk_type || [];
+    },
   },
   methods: {
-    ...mapActions(["getLineOfRiskList", "deleteLineOfRisk"]),
+    ...mapActions([
+      "getLineOfRiskList",
+      "deleteLineOfRisk",
+      "getCatalogByName",
+    ]),
     moveRightTable() {
       this.sideScroll("right", 25, 100, 10);
     },
@@ -211,9 +219,12 @@ export default {
   },
   beforeMount() {
     this.$emit("startLoading");
-    this.getLineOfRiskList().then(() => {
+    this.getCatalogByName({ name: "risk_type" }).then(() => {
       this.$emit("finishLoading", "loading");
     });
+    // this.getLineOfRiskList().then(() => {
+    //   this.$emit("finishLoading", "loading");
+    // });
   },
   mounted() {
     this.tableBodyContSnWidth = this.$refs.TableContent.offsetWidth;

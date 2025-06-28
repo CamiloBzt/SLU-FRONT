@@ -31,16 +31,12 @@
       </v-list-item>
       <v-list class="List" dense>
         <div class="MiddleLinks">
-          <!--
-            Importante
-            Cuando se añadan las nuevas opciones cambiar :to="item.path" por
-            :to="item.subMenu === false ? item.path : '' "
-          -->
           <v-list-item
             class="LinkMenu"
             v-for="item in items"
             :key="item.id"
-            :to="item.path"
+            :to="item.subMenu ? null : item.path"
+            :class="{ 'v-list-item--active': isItemActive(item) }"
           >
             <div class="LinkMenu__Link">
               <v-list-item-icon>
@@ -55,48 +51,45 @@
               </v-list-item-icon>
             </div>
 
-            <!--
-              Evalua si  la opción del menu incluye submenus
-            -->
-
-            <!-- No tiene  submenus-->
+            <!-- No tiene submenus -->
             <v-list-item-content v-if="!item.subMenu">
               <v-list-item-title>
                 {{ item.name }}
               </v-list-item-title>
             </v-list-item-content>
 
-            <!--Si tiene submenus-->
+            <!-- Si tiene submenus -->
             <v-list-group
               v-else
               :ripple="false"
               no-action
               class="GroupLinksCont"
               prepend-icon=""
+              :value="isGroupActive(item)"
             >
-              <v-list-tile slot="activator">
-                <v-list-tile-title class="LinkName">
-                  {{ item.name }}
-                </v-list-tile-title>
-              </v-list-tile>
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title class="LinkName">
+                    {{ item.name }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </template>
 
-              <!--
-                Itera los submenus
-              -->
-              <v-list-tile
+              <v-list-item
                 v-for="subMenu in item.subMenuArray"
                 :key="subMenu.id"
                 class="SubLink"
-                @click="redirect(subMenu.path)"
+                :to="subMenu.path"
+                exact
               >
-                <v-list-tile-title>
+                <v-list-item-title>
                   {{ subMenu.name }}
-                </v-list-tile-title>
-              </v-list-tile>
+                </v-list-item-title>
+              </v-list-item>
             </v-list-group>
           </v-list-item>
 
-          <!--CERRAR SESIÓN-->
+          <!-- CERRAR SESIÓN -->
           <v-list-item @click.native="closeConfirmationModal" class="LinkMenu">
             <div class="LinkMenu__Link">
               <v-list-item-icon class="LinkIcon">
@@ -230,6 +223,22 @@ export default {
       //Redirige los sub links
       this.$router.push(url);
     },
+
+    isItemActive(item) {
+      if (!item.subMenu) {
+        return this.$route.path === item.path;
+      }
+
+      return item.subMenuArray.some((subMenu) =>
+        this.$route.path.includes(subMenu.path)
+      );
+    },
+
+    isGroupActive(item) {
+      return item.subMenuArray.some((subMenu) =>
+        this.$route.path.includes(subMenu.path)
+      );
+    },
   },
   mounted() {
     if (this.isMobile) {
@@ -245,7 +254,7 @@ export default {
   box-shadow: 4px 4px 6px rgba(10, 63, 102, 0.15);
   border-top-right-radius: 10px !important;
   border-bottom-right-radius: 10px !important;
-  z-index: 1000;
+  z-index: 10000;
   min-width: 70px !important;
 
   .List {
@@ -262,6 +271,17 @@ export default {
 .LinkMenu {
   min-height: 54px;
   cursor: pointer;
+
+  &.v-list-item--active {
+    background-color: rgba(0, 61, 109, 0.1) !important;
+    border-right: 3px solid #003d6d;
+
+    .LinkName {
+      color: #003d6d;
+      font-weight: 600;
+    }
+  }
+
   .LinkMenu__Link {
     display: flex;
     justify-content: center;
@@ -275,12 +295,11 @@ export default {
     width: 100%;
     height: 100%;
     padding: 0;
-    ::before {
-      background: white !important;
-    }
+
     ::v-deep .v-list-group__header {
       height: 100%;
       padding: 0 !important;
+      padding-left: 10px !important;
       height: 54px;
       position: relative;
       .v-list-item__icon {
@@ -310,6 +329,13 @@ export default {
       width: 100%;
       height: 35px;
       font-size: 0.8125rem !important;
+      padding-left: 20px !important;
+      &:hover {
+        .v-list-item__title {
+          color: #003d6d !important;
+        }
+        cursor: pointer;
+      }
     }
   }
 }
