@@ -35,9 +35,6 @@ function transformMenuToGroupsDynamic(menuItems) {
     return acc;
   }, {});
 
-  // Agregar items estáticos para las páginas que creamos
-  addStaticMenuItems(grouped);
-
   // Determinar si cada grupo debe tener subMenu: true
   const result = Object.values(grouped).map((group) => {
     if (group.subMenuArray.length === 1) {
@@ -60,80 +57,6 @@ function transformMenuToGroupsDynamic(menuItems) {
   });
 
   return result;
-}
-
-function addStaticMenuItems(grouped) {
-  // Agregar Line of Risk al grupo Underwriting
-  const underwritingKey = "2-Underwriting";
-
-  if (grouped[underwritingKey]) {
-    // Agregar Line of Risk
-    grouped[underwritingKey].subMenuArray.push({
-      id: 9001, // ID único para evitar conflictos
-      name: "Line of Risk",
-      path: "/line-of-risk/list",
-      icon: "mdi-format-list-bulleted",
-      read: true,
-      write: true,
-    });
-
-    // Agregar Activities
-    grouped[underwritingKey].subMenuArray.push({
-      id: 9002, // ID único para evitar conflictos
-      name: "Activities",
-      path: "/activities/list",
-      icon: "mdi-clipboard-list",
-      read: true,
-      write: true,
-    });
-
-    // Agregar Currencies
-    grouped[underwritingKey].subMenuArray.push({
-      id: 9003, // ID único para evitar conflictos
-      name: "Currencies",
-      path: "/currencies/list",
-      icon: "mdi-currency-usd",
-      read: true,
-      write: true,
-    });
-
-    // Agregar Countries
-    grouped[underwritingKey].subMenuArray.push({
-      id: 9004, // ID único para evitar conflictos
-      name: "Countries",
-      path: "/countries/list",
-      icon: "mdi-earth",
-      read: true,
-      write: true,
-    });
-
-    // Agregar Contacts
-    grouped[underwritingKey].subMenuArray.push({
-      id: 9005, // ID único para evitar conflictos
-      name: "Contacts",
-      path: "/contacts/list",
-      icon: "mdi-account-multiple",
-      read: true,
-      write: true,
-    });
-
-    // Ordenar los items del submenú alfabéticamente para mejor organización
-    grouped[underwritingKey].subMenuArray.sort((a, b) => {
-      // Mantener el orden original de los items del backend primero
-      const originalItems = [3, 12, 8]; // Accounts, Brokers, Cedents
-      const aIsOriginal = originalItems.includes(a.id);
-      const bIsOriginal = originalItems.includes(b.id);
-
-      if (aIsOriginal && !bIsOriginal) return -1;
-      if (!aIsOriginal && bIsOriginal) return 1;
-      if (aIsOriginal && bIsOriginal) {
-        return originalItems.indexOf(a.id) - originalItems.indexOf(b.id);
-      }
-
-      // Para los items estáticos, ordenar alfabéticamente
-      return a.name.localeCompare(b.name);
-    });
-  }
 }
 
 function getItemGroupUpdate(itemId) {

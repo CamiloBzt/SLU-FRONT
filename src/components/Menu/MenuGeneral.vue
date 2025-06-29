@@ -40,7 +40,16 @@
           >
             <div class="LinkMenu__Link">
               <v-list-item-icon>
-                <v-tooltip right :disabled="!mini" color="#003D6D">
+                <v-tooltip
+                  right
+                  :disabled="!mini"
+                  color="#003D6D"
+                  v-if="
+                    mini ||
+                    !item.subMenu ||
+                    (item.subMenu && !expandedGroups.includes(item.id))
+                  "
+                >
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon color="#003D6D" v-bind="attrs" v-on="on">
                       {{ item.icon }}
@@ -66,9 +75,23 @@
               class="GroupLinksCont"
               prepend-icon=""
               :value="isGroupActive(item)"
+              @click="toggleGroupExpansion(item.id)"
             >
               <template v-slot:activator>
                 <v-list-item-content>
+                  <div
+                    class="GroupLinksContIcon"
+                    v-if="expandedGroups.includes(item.id)"
+                  >
+                    <v-tooltip right :disabled="!mini" color="#003D6D">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon color="#003D6D" v-bind="attrs" v-on="on">
+                          {{ item.icon }}
+                        </v-icon>
+                      </template>
+                      <span class="white--text">{{ item.name }}</span>
+                    </v-tooltip>
+                  </div>
                   <v-list-item-title class="LinkName">
                     {{ item.name }}
                   </v-list-item-title>
@@ -147,47 +170,7 @@ export default {
       showConfirmationModal: false,
       offset: true, //Opciones de los sub menus
       io: undefined,
-
-      /*
-      Ejemplo del array menú con los nuevos atributos itemspara los
-      submenus
-      items:[
-        //Ejemplo sin submenus
-        {
-          //...
-          id:1,
-          name:'Prueba 1',
-          icon: 'mdi-magnify',
-          path:'/subscription/bound',
-
-          //Nuevos elementos
-          subMenu:false,
-          subMenuArray:[]
-        },
-        //Ejemplo con submenus
-        {
-          //...
-          id:2,
-          name:'Prueba 2',
-          icon: 'mdi-magnify',
-
-          //Nuevos elementos
-          subMenu:true,
-          subMenuArray:[
-            {
-              id:5,
-              name:'SubMenu 1',//Nombre que se muestra
-              path:'/dashboard'//Ruta a donde redirige
-            },
-            {
-              id:6,
-              name:'Prueba 2',//Nombre que se muestra
-              path:'/subscription'//Ruta a donde redirige
-            }
-          ]
-        } 
-      ]
-      /**/
+      expandedGroups: [],
     };
   },
   computed: {
@@ -224,6 +207,17 @@ export default {
       this.$router.push(url);
     },
 
+    toggleGroupExpansion(itemId) {
+      const index = this.expandedGroups.indexOf(itemId);
+      if (index > -1) {
+        // Si el grupo ya está expandido, lo removemos del array
+        this.expandedGroups.splice(index, 1);
+      } else {
+        // Si el grupo no está expandido, lo agregamos al array
+        this.expandedGroups.push(itemId);
+      }
+    },
+
     isItemActive(item) {
       if (!item.subMenu) {
         return this.$route.path === item.path;
@@ -235,9 +229,15 @@ export default {
     },
 
     isGroupActive(item) {
-      return item.subMenuArray.some((subMenu) =>
+      const isActive = item.subMenuArray.some((subMenu) =>
         this.$route.path.includes(subMenu.path)
       );
+
+      if (isActive && !this.expandedGroups.includes(item.id)) {
+        this.expandedGroups.push(item.id);
+      }
+
+      return isActive;
     },
   },
   mounted() {
@@ -296,10 +296,16 @@ export default {
     height: 100%;
     padding: 0;
 
+    .GroupLinksContIcon {
+      position: absolute;
+      top: 0.9375rem;
+      left: -3.5rem;
+    }
+
     ::v-deep .v-list-group__header {
       height: 100%;
       padding: 0 !important;
-      padding-left: 10px !important;
+      padding-left: 0 !important;
       height: 54px;
       position: relative;
       .v-list-item__icon {
@@ -329,7 +335,7 @@ export default {
       width: 100%;
       height: 35px;
       font-size: 0.8125rem !important;
-      padding-left: 20px !important;
+      padding-left: 0 !important;
       &:hover {
         .v-list-item__title {
           color: #003d6d !important;
