@@ -63,11 +63,14 @@
           SET_BOUND_ENG('awAnalist1', this);
           checkField('awAnalist1');
         "
-        label="UW Analist 1"
+        label="UW Analist 1*"
         :items="underwriter"
         item-text="data"
         item-value="id"
         :disabled="underwriter.length === 0"
+        hint="Required field"
+        persistent-hint
+        :error-messages="requiredInputVuelidateParent('awAnalist1', 'boundEng')"
       ></v-select>
     </div>
     <div class="inputCont">
