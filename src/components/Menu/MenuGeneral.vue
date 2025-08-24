@@ -510,4 +510,24 @@ export default {
     }
   }
 }
+::v-deep .theme--light.v-list-item--active::before,
+::v-deep .theme--light.v-list-item--active:hover::before {
+  display: none;
+  content: none;
+}
+::v-deep .theme--light.v-list-item--active::after,
+::v-deep .theme--light.v-list-item--active:hover::after {
+  display: none;
+  content: none;
+}
+::v-deep .theme--light.v-list-item::before,
+::v-deep .theme--light.v-list-item:hover::before {
+  display: none;
+  content: none;
+}
+::v-deep .theme--light.v-list-item::after,
+::v-deep .theme--light.v-list-item:hover::after {
+  display: none;
+  content: none;
+}
 </style>
