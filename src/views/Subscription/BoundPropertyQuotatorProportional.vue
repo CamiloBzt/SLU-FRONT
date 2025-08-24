@@ -49,30 +49,34 @@
       </div>
       <!-- <ExtensionAndEndorsements /> -->
       <div class="finishButtonCont mt-7 d-flex justify-end align-center">
-        <v-btn
-          v-if="showFacultativeButton"
-          rounded
-          large
-          text
-          class="finishBtn"
-          :disabled="!buttonsEnabled"
-          @click="sendToFacultative"
-        >
-          Send To Facultative
-        </v-btn>
+        <div @click="onSendToFacultative">
+          <v-btn
+            v-if="showFacultativeButton"
+            rounded
+            large
+            text
+            class="finishBtn"
+            :disabled="!buttonsEnabled"
+            @click.stop
+          >
+            Send To Facultative
+          </v-btn>
+        </div>
       </div>
       <!--Botón crear wallet-->
       <div class="finishButtonCont mt-2 d-flex justify-end align-center">
-        <v-btn
-          rounded
-          large
-          text
-          class="finishBtn"
-          :disabled="!buttonsEnabled"
-          @click="createWallet"
-        >
-          Create Wallet
-        </v-btn>
+        <div @click="onCreateWallet">
+          <v-btn
+            rounded
+            large
+            text
+            class="finishBtn"
+            :disabled="!buttonsEnabled"
+            @click.stop
+          >
+            Create Wallet
+          </v-btn>
+        </div>
       </div>
       <!--ESPACIO EN BLANCO-->
       <WhiteSpace />
@@ -264,10 +268,24 @@ export default {
         checkDisableInputsFile();
       }
     },
+    onSendToFacultative() {
+      if (this.buttonsEnabled) {
+        this.sendToFacultative();
+      } else {
+        this.scrollToFirstInvalid();
+      }
+    },
     async sendToFacultative() {
       const subscriptionId = Number(this.subscriptionId);
       await AccountCompleteService.addInitialRegister(subscriptionId);
       this.$router.push({ name: "Subs home" });
+    },
+    onCreateWallet() {
+      if (this.buttonsEnabled) {
+        this.createWallet();
+      } else {
+        this.scrollToFirstInvalid();
+      }
     },
     // TODO:definir bien donde ira este servicio
     async createWallet() {
@@ -297,6 +315,9 @@ export default {
     },
     onAllRequiredFieldsComplete(isComplete) {
       this.requiredFieldsCompleted = isComplete;
+    },
+    scrollToFirstInvalid() {
+      this.$refs.riskAnalysisQuotator?.scrollToFirstInvalid();
     },
   },
 };

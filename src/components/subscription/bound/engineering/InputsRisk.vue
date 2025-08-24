@@ -50,6 +50,9 @@
         item-text="data"
         item-value="id"
         :disabled="underwriter.length === 0"
+        hint="Required field"
+        persistent-hint
+        :error-messages="requiredInputVuelidateParent('underwriter', 'boundEng')"
       ></v-select>
     </div>
 
@@ -65,6 +68,9 @@
         item-text="data"
         item-value="id"
         :disabled="underwriter.length === 0"
+        hint="Required field"
+        persistent-hint
+        :error-messages="requiredInputVuelidateParent('awAnalist1', 'boundEng')"
       ></v-select>
     </div>
     <div class="inputCont">

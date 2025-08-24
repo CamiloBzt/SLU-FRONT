@@ -18,6 +18,9 @@
               v-model="mainLocation.damage"
               @blur="saveField('damage', mainLocation.damage)"
               :options="currencyOptions"
+              hint="Required field"
+              persistent-hint
+              :error-messages="requiredInputVuelidateParent('damage', 'mainLocation')"
             />
           </div>
           <div class="input-row">
@@ -93,6 +96,10 @@ import numeral from "numeral";
 import { debounce } from "lodash";
 /* components */
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
+/* validations */
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 /* services */
 import {
   getMainLocation,
@@ -102,6 +109,7 @@ import {
 export default {
   name: "MainLocation",
   components: { CurrencyInput },
+  mixins: [validationMixin, formValidations],
   data() {
     return {
       mainLocation: {
@@ -215,6 +223,11 @@ export default {
       if (column === "damage") {
         this.$forceUpdate();
       }
+    },
+  },
+  validations: {
+    mainLocation: {
+      damage: { required },
     },
   },
   watch: {

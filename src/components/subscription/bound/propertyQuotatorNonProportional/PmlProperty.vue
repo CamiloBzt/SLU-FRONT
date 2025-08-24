@@ -22,6 +22,9 @@
               min="0"
               max="100"
               step="1"
+              hint="Required field"
+              persistent-hint
+              :rules="[(v) => !!v || 'Required field']"
             />
           </div>
           <div class="input-row">
@@ -44,11 +47,14 @@
     </div>
 
     <div class="title-text-area">PML Comments*</div>
-    <textarea
+    <v-textarea
       v-model="pmlProperty.comments"
       @blur="saveField('comments', pmlProperty.comments)"
       @input="handleCommentsChange"
-    ></textarea>
+      hint="Required field"
+      persistent-hint
+      :rules="[(v) => !!v || 'Required field']"
+    />
   </div>
 </template>
 <script>

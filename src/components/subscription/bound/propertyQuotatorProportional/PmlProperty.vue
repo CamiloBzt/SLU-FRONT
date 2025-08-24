@@ -21,6 +21,9 @@
               SET_BOUND_PML('pmlDamage', this);
               checkField('pmlDamage');
             "
+            hint="Required field"
+            persistent-hint
+            :error-messages="requiredInputVuelidateParent('pmlDamage', 'boundPml')"
           />
         </div>
         <div class="Row">
@@ -33,7 +36,7 @@
       </div>
 
       <div class="Line">
-        <div class="Row Label">BI</div>
+        <div class="Row Label">BI*</div>
         <div class="Row">
           <v-text-field
             type="number"
@@ -42,6 +45,9 @@
               SET_BOUND_PML('pmlBi', this);
               checkField('pmlBi');
             "
+            hint="Required field"
+            persistent-hint
+            :error-messages="requiredInputVuelidateParent('pmlBi', 'boundPml')"
           />
         </div>
         <div class="Row">
@@ -54,7 +60,7 @@
       </div>
 
       <div class="Line BorderBottom">
-        <div class="Row Label">Stocks</div>
+        <div class="Row Label">Stocks*</div>
         <div class="Row">
           <v-text-field
             type="number"
@@ -63,6 +69,9 @@
               SET_BOUND_PML('pmlStocks', this);
               checkField('pmlStocks');
             "
+            hint="Required field"
+            persistent-hint
+            :error-messages="requiredInputVuelidateParent('pmlStocks', 'boundPml')"
           />
         </div>
         <div class="Row">
@@ -84,14 +93,17 @@
     </div>
 
     <div class="TitleTextArea">PML Comments*</div>
-    <textarea
+    <v-textarea
       v-model="$v.boundPml.pmlComments.$model"
       @blur="
         SET_BOUND_PML('pmlComments', this);
         checkField('pmlComments');
       "
       placeholder="Please enter PML comments"
-    ></textarea>
+      hint="Required field"
+      persistent-hint
+      :error-messages="requiredInputVuelidateParent('pmlComments', 'boundPml')"
+    />
   </div>
 </template>
 <script>
@@ -101,12 +113,15 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* libs */
 import Decimal from "decimal.js";
 /* validations */
+import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 /* lodash */
 import { debounce } from "lodash";
 
 export default {
   name: "PmlProperty",
+  mixins: [validationMixin, formValidations],
   data() {
     return {
       pmlDamage: null,

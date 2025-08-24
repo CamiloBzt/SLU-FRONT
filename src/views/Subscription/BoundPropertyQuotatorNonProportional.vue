@@ -65,17 +65,19 @@
 
       <!--BOTON PARA FINALIZAR-->
       <div class="finish-button-cont">
-        <v-btn
-          v-if="showFacultativeButton"
-          rounded
-          large
-          text
-          class="finish-btn"
-          @click="sendToFacultative"
-          :disabled="!buttonsEnabled"
-        >
-          Send To Facultative
-        </v-btn>
+        <div @click="onSendToFacultative">
+          <v-btn
+            v-if="showFacultativeButton"
+            rounded
+            large
+            text
+            class="finish-btn"
+            @click.stop
+            :disabled="!buttonsEnabled"
+          >
+            Send To Facultative
+          </v-btn>
+        </div>
       </div>
 
       <!--ESPACIO EN BLANCO-->
@@ -190,6 +192,13 @@ export default {
         checkDisableInputsFile();
       }
     },
+    onSendToFacultative() {
+      if (this.buttonsEnabled) {
+        this.sendToFacultative();
+      } else {
+        this.scrollToFirstInvalid();
+      }
+    },
     async sendToFacultative() {
       const subscriptionId = Number(this.subscriptionId);
       await AccountCompleteNonPropServices.addInitialRegister(subscriptionId);
@@ -200,6 +209,9 @@ export default {
     },
     onAllRequiredFieldsComplete(isComplete) {
       this.requiredFieldsCompleted = isComplete;
+    },
+    scrollToFirstInvalid() {
+      this.$refs.riskAnalysisQuotator?.scrollToFirstInvalid();
     },
   },
 };

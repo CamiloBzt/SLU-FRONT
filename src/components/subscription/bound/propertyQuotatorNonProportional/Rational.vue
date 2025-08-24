@@ -19,13 +19,16 @@
       <v-expansion-panel-content>
         <div class="expand-content">
           <div class="title-text-area">Offer Comments*</div>
-          <textarea
+          <v-textarea
             v-model.trim="rationalComments"
             @blur="updateByColumn('rational_comments', $event.target.value)"
             @input="
               $emit('rational-comments-change', rationalCommentsCompleted)
             "
-          ></textarea>
+            hint="Required field"
+            persistent-hint
+            :rules="[(v) => !!v || 'Required field']"
+          />
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>

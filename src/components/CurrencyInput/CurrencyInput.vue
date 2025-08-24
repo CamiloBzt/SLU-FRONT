@@ -9,6 +9,8 @@
     :readonly="readonly"
     :disabled="disabled"
     :label="label"
+    :hint="hint"
+    :persistent-hint="persistentHint"
     @blur="onBlur()"
   />
 </template>
@@ -63,6 +65,14 @@ export default {
     label: {
       type: String,
       default: "",
+    },
+    hint: {
+      type: String,
+      default: null,
+    },
+    persistentHint: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props) {

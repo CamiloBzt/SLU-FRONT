@@ -33,6 +33,9 @@
         item-text="data"
         item-value="id"
         :disabled="disabled"
+        hint="Required field"
+        persistent-hint
+        :rules="[(v) => !!v || 'Required field']"
       ></v-select>
     </div>
     <div class="input-cont">
@@ -44,6 +47,9 @@
         item-text="data"
         item-value="id"
         :disabled="disabled"
+        hint="Required field"
+        persistent-hint
+        :rules="[(v) => !!v || 'Required field']"
       >
       </v-select>
     </div>
