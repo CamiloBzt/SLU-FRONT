@@ -3,31 +3,15 @@
     <div class="closeCont d-flex justify-center align-center">
       <v-menu z-index="3000" :offset-x="offset">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="activateButton"
-            rounded
-            text
-            v-bind="attrs"
-            v-on="on"
-            large
-            :loading="loading"
-            v-if="!(close_account.length === 0 || !subscription_id)"
-          >
+          <v-btn class="activateButton" rounded text v-bind="attrs" v-on="on" large :loading="loading" v-if="!(close_account.length === 0 || !subscription_id)">
             <div class="ButtonText">Close Account</div>
             <v-icon> mdi-close-circle </v-icon>
           </v-btn>
         </template>
 
         <v-list class="pl-5 pr-5">
-          <div class="headerClose d-flex justify-start align-center">
-            Reason to close account
-          </div>
-          <div
-            @click="CloseAccount(item)"
-            class="button"
-            v-for="(item, index) in close_account"
-            :key="index"
-          >
+          <div class="headerClose d-flex justify-start align-center">Reason to close account</div>
+          <div @click="CloseAccount(item)" class="button" v-for="(item, index) in close_account" :key="index">
             <v-list-item-title>
               {{ item.description }}
             </v-list-item-title>
@@ -44,8 +28,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import EmailModal from '@/components/Email/EmailModal.vue';
+import { mapActions, mapGetters } from "vuex";
+import EmailModal from "@/components/Email/EmailModal.vue";
 
 export default {
   components: {
@@ -57,27 +41,22 @@ export default {
       /* loaders */
       loading: false,
       /* modal reason title */
-      reason: '',
+      reason: "",
     };
   },
   mounted() {
     /* store load for later */
-    const lca = 'loading';
+    const lca = "loading";
     this[lca] = !this[lca];
-    this.getCatalogByName({ name: 'close_account' }).finally(() => {
+    this.getCatalogByName({ name: "close_account" }).finally(() => {
       this[lca] = false;
     });
   },
   computed: {
-    ...mapGetters([
-      'close_account',
-      'subscription_id',
-      'currentTemplateRiskID',
-      'selectedLang',
-    ]),
+    ...mapGetters(["close_account", "subscription_id", "currentTemplateRiskID", "selectedLang"]),
   },
   methods: {
-    ...mapActions(['getCatalogByName', 'getEmailTemplate', 'setEmailRiskID']),
+    ...mapActions(["getCatalogByName", "getEmailTemplate", "setEmailRiskID"]),
     async CloseAccount(itemList) {
       try {
         this.reason = `Close account<br>${itemList.description}`;

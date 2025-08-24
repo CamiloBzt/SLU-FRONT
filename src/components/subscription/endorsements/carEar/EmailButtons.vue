@@ -3,46 +3,19 @@
     <div class="dropCont mt-3">
       <v-menu z-index="3000" :offset-x="offset">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            v-on="on"
-            rounded
-            large
-            depressed
-            outlined
-            class="btn"
-            color="#003D6D"
-          >
-            Send Email
-          </v-btn>
+          <v-btn v-bind="attrs" v-on="on" rounded large depressed outlined class="btn" color="#003D6D"> Send Email </v-btn>
         </template>
 
         <div class="ListFh">
           <v-list class="listContent">
             <div class="pl-5 pr-5">
-              <div
-                @click="defineQuotation(item, item.id)"
-                v-for="(item, index) in items"
-                :key="index"
-                class="button d-flex justify-start align-center"
-              >
+              <div @click="defineQuotation(item, item.id)" v-for="(item, index) in items" :key="index" class="button d-flex justify-start align-center">
                 {{ item.description }}
               </div>
             </div>
 
             <div class="declineOffer">
-              <div
-                class="
-                  buttoNoBorder
-                  d-flex
-                  justify-start
-                  align-center
-                  pl-5
-                  pr-5
-                "
-              >
-                Ask for more information
-              </div>
+              <div class="buttoNoBorder d-flex justify-start align-center pl-5 pr-5">Ask for more information</div>
             </div>
           </v-list>
         </div>
@@ -52,8 +25,8 @@
   </div>
 </template>
 <script>
-import EmailModal from '@/components/Email/EmailModalWithQuotation.vue';
-import { mapState, mapActions, mapMutations, mapGetters } from 'vuex';
+import EmailModal from "@/components/Email/EmailModalWithQuotation.vue";
+import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 export default {
   beforeMount() {
     Promise.all([this.getTemplateEmail()]).finally(() => {
@@ -64,25 +37,21 @@ export default {
     EmailModal,
   },
   data: () => ({
-    reason: '',
+    reason: "",
     loading: false,
     offset: false,
     loadBtn: false,
-    item: '',
+    item: "",
   }),
   computed: {
     ...mapState({
       items: (state) => state.emailTemplatesQuotation,
     }),
-    ...mapGetters(['subscription_id', 'selectedLang', 'lang']),
+    ...mapGetters(["subscription_id", "selectedLang", "lang"]),
   },
   methods: {
-    ...mapActions([
-      'getTemplateEmail',
-      'setCurrentTemplateLanguage',
-      'getCurrentTemplateLanguage',
-    ]),
-    ...mapMutations(['SET_MAIL_TEMPLATE']),
+    ...mapActions(["getTemplateEmail", "setCurrentTemplateLanguage", "getCurrentTemplateLanguage"]),
+    ...mapMutations(["SET_MAIL_TEMPLATE"]),
     /*
 				El metodo defineQuotation devuelve el tipo de quotation elegido
     	*/
@@ -154,6 +123,7 @@ export default {
 }
 
 .btn {
+  border-radius: 5px;
   width: 200px;
   color: white;
   text-transform: none;
@@ -180,7 +150,7 @@ export default {
 
     .listContent {
       width: 90%;
-      border-radius: 15px;
+      border-radius: 5px;
     }
   }
   /*

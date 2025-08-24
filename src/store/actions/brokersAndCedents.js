@@ -30,8 +30,7 @@ export default {
       });
       commit("setUsersList", { users: data["getUsersList"] });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getInfoUsers error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getInfoUsers error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -60,14 +59,12 @@ export default {
         text: "Broker created!",
       };
 
-      if (brokerInformation.id !== 0)
-        notificationMessage.text = "Broker Updated!";
+      if (brokerInformation.id !== 0) notificationMessage.text = "Broker Updated!";
 
       commit("addNotification", notificationMessage);
       commit("RESET_BROKER_INFORMATION");
     } catch ({ message }) {
-      const messageToDisplay =
-        "createBroker error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createBroker error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -101,8 +98,7 @@ export default {
       commit("addNotification", notificationMessage);
       commit("RESET_CEDENT_DATA");
     } catch ({ message }) {
-      const messageToDisplay =
-        "createCedent error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createCedent error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -124,8 +120,7 @@ export default {
       const parsedResponse = JSON.parse(response);
       commit("SET_AVAILABLE_BROKERS", { brokers: Array.from(parsedResponse) });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getBrokers error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getBrokers error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -147,8 +142,7 @@ export default {
       const parsedResponse = JSON.parse(response);
       commit("SET_AVAILABLE_CEDENTS", { cedents: Array.from(parsedResponse) });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getCedents error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getCedents error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -173,8 +167,7 @@ export default {
       commit("SET_AVAILABLE_BROKERS", { brokers: brokerCedentData.brokers });
       commit("SET_AVAILABLE_CEDENTS", { cedents: brokerCedentData.cedents });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getBrokersAndCedents error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getBrokersAndCedents error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -185,9 +178,7 @@ export default {
     try {
       commit("RESET_BROKER_INFORMATION");
     } catch ({ message }) {
-      const messageToDisplay =
-        "resetBrokerInformation error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "resetBrokerInformation error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -198,8 +189,7 @@ export default {
     try {
       commit("RESET_CEDENT_DATA");
     } catch ({ message }) {
-      const messageToDisplay =
-        "resetCedentData error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "resetCedentData error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -217,8 +207,7 @@ export default {
       });
       commit("SET_INFO_BROKER", { payload: data["getBrokerDataById"] });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getBrokerId error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getBrokerId error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -236,8 +225,7 @@ export default {
       });
       commit("SET_INFO_CEDENT", { payload: data["getCedentDataById"] });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getCedentId error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getCedentId error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -246,6 +234,7 @@ export default {
   },
   async getBrokersList({ commit }) {
     try {
+      console.log("commint", commit);
       const { data } = await apolloClient.query({
         query: LIST_BROKERS_QUERY,
         fetchPolicy: "no-cache",
@@ -253,8 +242,7 @@ export default {
 
       commit("setUsersList", { users: data["getBrokersList"] });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getBrokersList error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getBrokersList error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -269,8 +257,7 @@ export default {
       });
       commit("setUsersList", { users: data["getCedentsList"] });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getCedentsList error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getCedentsList error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -293,8 +280,7 @@ export default {
       });
       commit("setUsersList", { users: data["deleteBroker"]["response"] });
     } catch ({ message }) {
-      const messageToDisplay =
-        "deleteBroker error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "deleteBroker error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -316,8 +302,7 @@ export default {
       });
       commit("setUsersList", { users: data["deleteCedent"]["response"] });
     } catch ({ message }) {
-      const messageToDisplay =
-        "deleteCedent error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "deleteCedent error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,

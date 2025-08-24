@@ -12,7 +12,7 @@
         </div>
 
         <div class="line">
-          <div class="input-row label">Damage</div>
+          <div class="input-row label">Damage*</div>
           <div class="input-row">
             <currency-input
               v-model="mainLocation.damage"
@@ -131,6 +131,9 @@ export default {
     ...mapState({
       realMainLocation: (state) => state.mainLocation,
     }),
+    damageFieldCompleted() {
+      return !!(this.mainLocation.damage && this.mainLocation.damage > 0);
+    },
     damageUsd: {
       get() {
         // const percentDivided = Decimal.div(this.exchangeRate, 100)
@@ -209,9 +212,19 @@ export default {
     async saveField(column, value) {
       if (this.subscriptionId)
         await saveMainLocation(this.subscriptionId, column, value);
+      if (column === "damage") {
+        this.$forceUpdate();
+      }
     },
   },
   watch: {
+    "mainLocation.damage": {
+      handler() {
+        this.$nextTick(() => {
+          this.$emit("damage-field-change", this.damageFieldCompleted);
+        });
+      },
+    },
     "mainLocation.damageUsd": {
       handler: debounce(function (value) {
         saveMainLocation(this.subscriptionId, "damage_usd", value);
@@ -240,6 +253,12 @@ export default {
       handler: debounce(function (value) {
         saveMainLocation(this.subscriptionId, "total_usd", value);
       }, 1000),
+    },
+    damageFieldCompleted: {
+      handler(newValue) {
+        this.$emit("damage-field-change", newValue);
+      },
+      immediate: true,
     },
   },
 };
@@ -294,7 +313,7 @@ export default {
       font-size: 14px;
     }
     .bold-text {
-      font-weight: 700;
+      font-weight: 600;
       font-size: 16px;
     }
     .border-bottom {

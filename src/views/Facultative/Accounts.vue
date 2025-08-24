@@ -11,9 +11,7 @@
       <TitlePage title="Facultative" />
 
       <!--Barra de navegación de facultative-->
-      <BarNavGeneral 
-        :NavContent="BarNavData"
-      />
+      <BarNavGeneral :NavContent="BarNavData" />
       <!--Cuentas-->
       <AccountsFacultative @ShowNotesHistory="ShowNotesHistory($event)" />
 
@@ -23,11 +21,7 @@
     </div>
 
     <!--MODAL NOTAS-->
-    <ModalNotes
-      @HideModal="ToggleModal"
-      :ShowModal="ShowNotesModal"
-      :idSubsNotes="idSubsNotes"
-    />
+    <ModalNotes @HideModal="ToggleModal" :ShowModal="ShowNotesModal" :idSubsNotes="idSubsNotes" />
   </div>
 </template>
 <script>
@@ -48,7 +42,7 @@ export default {
     AccountsFacultative,
     WhiteSpace,
     ModalNotes,
-    ShowMoreButton
+    ShowMoreButton,
   },
   data() {
     return {
@@ -61,41 +55,40 @@ export default {
         path (String): Ruta a donde dirige
         active (Bolean): Resaltar link (true) / No resaltar link (false)
       */
-      BarNavData:[ 
+      BarNavData: [
         {
-          id:1,
-          text:'Accounts',
-          path:'/facultative/accounts',
-          active:true
+          id: 1,
+          text: "Accounts",
+          path: "/facultative/accounts",
+          active: true,
         },
         {
-          id:2,
-          text:'In Negotiation',
-          path:'/facultative/negotiation',
-          active:false
-        }
-      ]
+          id: 2,
+          text: "In Negotiation",
+          path: "/facultative/negotiation",
+          active: false,
+        },
+      ],
     };
   },
-  async created() {
-  },
+  async created() {},
   methods: {
     ...mapActions(["noteSubscription"]),
     ...mapMutations(["setLoading"]),
     /*
     ShowNotesHistory
-    Muestra el historial de notas al 
+    Muestra el historial de notas al
     hacer click en una nota de la tabla
     */
-    ShowNotesHistory(idSubscription){
-      this.$emit('ShowNotesHistory',idSubscription)
+    ShowNotesHistory(idSubscription) {
+      this.$emit("ShowNotesHistory", idSubscription);
     },
     ToggleModal() {
       this.ShowNotesModal = !this.ShowNotesModal;
     },
     async ShowNotesHistory(idSubscription) {
       this.setLoading();
-      console.log(idSubscription)
+      // console.log(idSubscription)
       this.idSubsNotes = idSubscription;
       await this.loadNotes(idSubscription);
       this.setLoading();

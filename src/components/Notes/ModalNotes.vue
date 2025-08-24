@@ -1,14 +1,6 @@
 <template>
   <div v-if="ShowModal" class="ModalNotes d-flex justify-center align-center">
-    <div
-      class="
-        NotesCont
-        d-flex
-        justify-center
-        align-start align-content-start
-        flex-wrap
-      "
-    >
+    <div class="NotesCont d-flex justify-center align-start align-content-start flex-wrap">
       <!--BOTON CERRAR-->
       <div @click="HideModal()" class="CloseModalBtn">
         <v-btn class="btn" icon>
@@ -17,33 +9,12 @@
       </div>
 
       <!--REFERENCIA-->
-      <div class="RefCont d-flex justify-start align-center">
-        [Ref Number {{ idSubsNotes }}] Notes
-      </div>
+      <div class="RefCont d-flex justify-start align-center">[Ref Number {{ idSubsNotes }}] Notes</div>
 
       <!--NOTAS-->
-      <div
-        class="
-          NotesHistory
-          scrollable
-          d-flex
-          justify-center
-          align-content-start align-start
-          flex-wrap
-        "
-      >
+      <div class="NotesHistory scrollable d-flex justify-center align-content-start align-start flex-wrap">
         <!--HISTORIAL DE NOTAS-->
-        <div
-          v-for="(item, index) in notesArray"
-          :key="index"
-          class="
-            NoteCont
-            d-flex
-            justify-center
-            align-start align-content-start
-            flex-wrap
-          "
-        >
+        <div v-for="(item, index) in notesArray" :key="index" class="NoteCont d-flex justify-center align-start align-content-start flex-wrap">
           <!--NOMBRE DEL CREADOR DE LAS NOTAS-->
           <div class="NoteCreator">
             <h6>{{ item.user_name }} - {{ item.date }}:</h6>
@@ -55,11 +26,7 @@
             <div class="Note">{{ item.description }}</div>
 
             <!--RESPUESTAS-->
-            <div
-              class="Response"
-              v-for="(res, index) in item.arrayResponse"
-              :key="index"
-            >
+            <div class="Response" v-for="(res, index) in item.arrayResponse" :key="index">
               <!--CREADOR-->
               <div class="NoteCreator">
                 <h6>{{ res.user_name }} {{ res.date }}</h6>
@@ -107,7 +74,7 @@ export default {
     width: 74%;
     height: 50%;
     background: white;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
 
     //CERRAR NOTA
@@ -118,7 +85,7 @@ export default {
       right: -15px;
       top: -15px;
       z-index: 1000;
-      border-radius: 25px;
+      border-radius: 5px;
       cursor: pointer;
       .btn {
         width: 30px !important;

@@ -1,43 +1,24 @@
 /* api */
 import { apolloClient } from "../../lib/api";
-
 /* queries & mutations */
-import {
-  getSublimesProperty as queryGetSublimes,
-  createSublimeProperty as mutationCreateSublimeProperty,
-  updateSublimeProperty as mutationUpdateSublimeProperty,
-  createSublimitProperty as mutationCreateSublimitProperty,
-} from "./graphql/sublimes";
-
-import {
-  getBoundClaims as queryGetBoundClaims,
-  updateBoundClaim as mutationUpdateClaim,
-} from "./graphql/bound";
-
-import {
-  getDeductibles as queryGetDeductibles,
-  createDeductibleProperty as mutationCreateDeductible,
-  updateDeductibleProperty as mutationUpdateDeductible,
-  createFireDeductible as mutationCreateFireDeductible,
-} from "./graphql/deductibles";
+import { getSublimesProperty as queryGetSublimes, createSublimeProperty as mutationCreateSublimeProperty, updateSublimeProperty as mutationUpdateSublimeProperty, createSublimitProperty as mutationCreateSublimitProperty } from "./graphql/sublimes";
+import { getBoundClaims as queryGetBoundClaims, updateBoundClaim as mutationUpdateClaim } from "./graphql/bound";
+import { getDeductibles as queryGetDeductibles, createDeductibleProperty as mutationCreateDeductible, updateDeductibleProperty as mutationUpdateDeductible, createFireDeductible as mutationCreateFireDeductible } from "./graphql/deductibles";
 /* mutaciones */
 import UPDATE_CHANGE_MUTATION from "./mutations/updateChange";
 import SAVE_RATE_AND_ALOP_CURRENCY_MUTATION from "./mutations/saveRateAndAlopCurrency";
 import CREATE_FIELD_BOUND_MUTATION from "./mutations/addFieldBound";
-
 /* queries */
 import FIND_BOUND_QUERY from "./queries/findBoundBySubscription";
 import ENG_DED_ID_QUERY from "./queries/getEngDeductibleById";
 import ENG_DED_QUERY from "./queries/getEngDeductible";
 import SUBLIMIT_ID_QUERY from "./queries/getSublimitById";
 import SUBLIMITS_QUERY from "./queries/getSublimits";
-
 /* constantes */
 import messages from "../../constants/messages";
 import BOUND from "../../constants/bound";
-
 /* utils */
-import { toSnakeCase, keysToCamel } from "./utils";
+import { toSnakeCase, keysToCamel, cleanNumericValue } from "./utils";
 
 export default {
   async saveBoundColumn({ commit, state }, payload) {
@@ -61,82 +42,70 @@ export default {
         },
         fetchPolicy: "no-cache",
       });
-
-      const response = JSON.parse(
-        findResponse.data["findBoundBySubscription"].response
-      );
-
+      const response = JSON.parse(findResponse.data["findBoundBySubscription"].response);
       const { id } = response[table];
       const snakeCasedColumn = toSnakeCase(column);
-
       const comparison = state[parent][column];
+      const rawValue = cleanNumericValue(comparison);
+      const safeValue = rawValue == null || rawValue === "null" ? "0" : String(rawValue);
       const variables = {
         tableName: tableConditions[table],
         column: snakeCasedColumn,
-        dataValue: String(comparison),
+        dataValue: safeValue,
         id,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_CHANGE_MUTATION,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["updateChange"];
-
-      if (statusCode !== 200)
-        throw new Error("Error creating/updating Quotation Column");
+      if (statusCode !== 200) throw new Error("Error creating/updating Quotation Column");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "saveBoundColumn error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "saveBoundColumn error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async saveBoundMultipleColumn({ commit, state }, payload) {
     try {
       const { table = "buced", parent, column, id } = payload;
       const tableConditions = {
         buced: "bound_underlying_cat_eng_deductibles",
       };
-
       const snakeCasedColumn = toSnakeCase(column);
       const comparison = state[parent][id];
-
+      const rawValue = cleanNumericValue(comparison[column]);
+      const safeValue = rawValue == null || rawValue === "null" ? "0" : String(rawValue);
       const variables = {
         tableName: tableConditions[table],
         column: snakeCasedColumn,
-        dataValue: String(comparison[column]),
+        dataValue: safeValue,
         id: comparison["id"],
       };
-
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_CHANGE_MUTATION,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["updateChange"];
-
-      if (statusCode !== 200)
-        throw new Error("Error creating/updating Quotation Column");
+      if (statusCode !== 200) throw new Error("Error creating/updating Quotation Column");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "saveBoundMultipleColumn error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "saveBoundMultipleColumn error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async getBoundInformation({ commit, state }, table = "bound") {
     try {
       const settings = {
@@ -198,9 +167,7 @@ export default {
         fetchPolicy: "no-cache",
       });
 
-      const parsedResponse = JSON.parse(
-        findResponse.data[settings.find.response].response
-      );
+      const parsedResponse = JSON.parse(findResponse.data[settings.find.response].response);
 
       const config = settings.saving[table];
       const responseToCamel = keysToCamel(parsedResponse);
@@ -211,8 +178,7 @@ export default {
         .filter((key) => tableKeys.includes(key))
         .reduce((obj, key) => {
           obj[key] = tableResponse[key];
-          if (key === "ppw1" || key === "ppw2" || key === "ppw3")
-            obj[key] = new Date(tableResponse[key]).toISOString().split("T")[0];
+          if (key === "ppw1" || key === "ppw2" || key === "ppw3") obj[key] = new Date(tableResponse[key]).toISOString().split("T")[0];
           return obj;
         }, {});
 
@@ -220,14 +186,14 @@ export default {
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "getBoundInformation error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getBoundInformation error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async loadMultipleDeductiblesEng({ commit, state }, payload) {
     try {
       const { table = "boundEngDeductibles" } = payload;
@@ -314,15 +280,14 @@ export default {
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "loadMultipleDeductiblesEng error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "loadMultipleDeductiblesEng error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async updateBoundType({ commit, state }, type) {
     try {
       const tableName = "bound";
@@ -332,60 +297,49 @@ export default {
       const variablesFind = { id: state.subscription_id };
       const queryResponse = "findBoundBySubscription";
       const updateResponse = "updateChange";
-
       const findResponse = await apolloClient.query({
         query,
         variables: variablesFind,
         fetchPolicy: "no-cache",
       });
-
       const response = JSON.parse(findResponse.data[queryResponse].response);
-
       commit(mutation, { key: column, value: type });
-
       const { id } = response[tableName];
       const snakeCasedColumn = toSnakeCase(column);
-      const dataValue = state.boundEng[column];
-
+      const comparison = state.boundEng[column];
+      const rawValue = cleanNumericValue(comparison);
+      const safeValue = rawValue == null || rawValue === "null" ? "0" : String(rawValue);
       const variables = {
         tableName,
         column: snakeCasedColumn,
-        dataValue: String(dataValue),
+        dataValue: safeValue,
         id,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_CHANGE_MUTATION,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data[updateResponse];
-
-      if (statusCode !== 200)
-        throw new Error("Error creating/updating Bound Column");
+      if (statusCode !== 200) throw new Error("Error creating/updating Bound Column");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "updateBoundType error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateBoundType error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
-  async getBoundColumnData(
-    { commit, state },
-    { table = "quotation", column, subscriptionId = state.subscription_id }
-  ) {
+
+  async getBoundColumnData({ commit, state }, { table = "quotation", column, subscriptionId = state.subscription_id }) {
     try {
       const variables = {
         table,
         column,
         subscriptionId,
       };
-
       const {
         data: { getQuotationColumn },
       } = await apolloClient.query({
@@ -393,28 +347,24 @@ export default {
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode, response } = getQuotationColumn;
-      if (statusCode !== 200)
-        throw new Error("Error fetching quotation column");
-
+      if (statusCode !== 200) throw new Error("Error fetching quotation column");
       const parsedResponse = JSON.parse(response);
       return parsedResponse[column];
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "getBoundColumnData error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getBoundColumnData error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async saveEngDeductibleColumn({ commit, state }, payload) {
     try {
       const { table = "boundEngDeductibles", key, value, id = null } = payload;
-
       const tableSettings = {
         boundEngDeductibles: {
           table: "bound_deductibles_eng",
@@ -438,55 +388,42 @@ export default {
           variables: { id, type: "prop" },
         },
       };
-
       const column = toSnakeCase(key);
-
       const findResponse = await apolloClient.query({
         query: tableSettings[table].find,
         variables: tableSettings[table].variables,
         fetchPolicy: "no-cache",
       });
-
-      const response =
-        findResponse.data[tableSettings[table].findResponse].response;
+      const response = findResponse.data[tableSettings[table].findResponse].response;
       const parsedResponse = JSON.parse(response);
-
       const variables = {
         tableName: tableSettings[table].table,
         column,
-        dataValue: String(value),
+        dataValue: cleanNumericValue(value),
         id: parsedResponse[0].id,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_CHANGE_MUTATION,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["updateChange"];
-
-      if (statusCode !== 200)
-        throw new Error(
-          `Error creating/updating ${tableSettings[table].err} Column`
-        );
+      if (statusCode !== 200) throw new Error(`Error creating/updating ${tableSettings[table].err} Column`);
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "saveEngDeductibleColumn error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "saveEngDeductibleColumn error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async addNewFieldBound({ commit, dispatch, state }, payload) {
     try {
       const { table = "boundEngDeductibles" } = payload;
       const id = state.subscription_id;
-
       const tableSettings = {
         boundEngDeductibles: {
           table: "bound_deductibles_eng",
@@ -534,37 +471,29 @@ export default {
           reset: "resetStateCompleteSublimesProp",
         },
       };
-
       const variables = {
         table: tableSettings[table].table,
         id,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: tableSettings[table].find,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data[tableSettings[table].findResponse];
-
-      if (statusCode !== 200)
-        throw new Error(
-          `Error creating/updating ${tableSettings[table].err} Column`
-        );
-
+      if (statusCode !== 200) throw new Error(`Error creating/updating ${tableSettings[table].err} Column`);
       await dispatch("loadMultipleDeductiblesEng", { table });
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "addNewFieldBound error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "addNewFieldBound error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async getSublimesProperty({ commit, state }) {
     try {
       const { subscription_id } = state;
@@ -575,26 +504,22 @@ export default {
         },
         fetchPolicy: "no-cache",
       });
-
       const { data } = create;
-      const { statusCode, response: beforeParsing } =
-        data["getSublimesProperty"];
-
+      const { statusCode, response: beforeParsing } = data["getSublimesProperty"];
       if (statusCode !== 200) throw new Error("Error fetching Sublimes");
-
       const response = JSON.parse(beforeParsing);
       commit("setStateCompleteSublimesProp", keysToCamel(response));
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "getSublimesProperty error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getSublimesProperty error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async createSublimeProperty({ commit, state }) {
     try {
       const { subscription_id } = state;
@@ -603,21 +528,19 @@ export default {
         variables: { subscription_id },
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["createSublimeProperty"];
       if (statusCode !== 200) throw new Error("Error fetching Sublime");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "createSublimeProperty error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createSublimeProperty error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async createSublimitProperty({ commit, state }, sublime_id) {
     try {
       const { subscription_id } = state;
@@ -626,35 +549,29 @@ export default {
         variables: { sublime_id, subscription_id },
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["createSublimitProperty"];
       if (statusCode !== 200) throw new Error("Error fetching Sublime");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "createSublimitProperty error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createSublimitProperty error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async updateSublimeProperty({ commit, state }, { id, column }) {
     try {
       const snakeCasedColumn = toSnakeCase(column);
-      const findItem = Array.from(state.boundSublimesProp).find(
-        (v) => v.id === id
-      );
+      const findItem = Array.from(state.boundSublimesProp).find((v) => v.id === id);
       const comparison = column === "active" ? false : findItem[column];
-
       const variables = {
         id,
         column: snakeCasedColumn,
-        value: String(comparison),
+        value: String(cleanNumericValue(comparison)),
       };
-
       const { data } = await apolloClient.mutate({
         mutation: mutationUpdateSublimeProperty,
         variables,
@@ -666,76 +583,69 @@ export default {
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "updateSublimeProperty error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateSublimeProperty error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async getBoundClaims({ commit, state }, payload) {
     try {
       const subscription_id = state.subscription_id;
-
       const variables = {
         subscription_id,
         type: payload,
       };
-
       const { data } = await apolloClient.query({
         query: queryGetBoundClaims,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const fetched = data["getBoundClaims"];
       const { statusCode, response } = fetched;
       if (statusCode !== 200) throw new Error("Error fetching Bound Claims");
-
       const parsedResponse = JSON.parse(response);
       commit("setBoundClaims", keysToCamel(parsedResponse));
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "getBoundClaims error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getBoundClaims error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async updateBoundClaim({ commit }, { id, column, value, type }) {
     try {
       const snakeCasedColumn = toSnakeCase(column);
       const variables = {
         id,
         column: snakeCasedColumn,
-        value: String(value),
+        value: cleanNumericValue(value),
         type,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: mutationUpdateClaim,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["updateBoundClaim"];
       if (statusCode !== 200) throw new Error("Error updating Claim");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "updateBoundClaim error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateBoundClaim error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async getDeductiblesProperty({ commit, state }) {
     try {
       const { subscription_id } = state;
@@ -746,29 +656,20 @@ export default {
         },
         fetchPolicy: "no-cache",
       });
-
       const { data } = create;
       const { statusCode, response: beforeParsing } = data["getDeductibles"];
-
       if (statusCode !== 200) throw new Error("Error fetching Deductibles");
-
       const response = JSON.parse(beforeParsing);
       const camelized = keysToCamel(response);
       const parsedValues = camelized.map((data) => {
         return {
           ...data,
-          underlyingCatAplicaSelect:
-            parseInt(data.underlyingCatAplicaSelect, 10) || 0,
-          underlyingCatValuesSelect:
-            parseInt(data.underlyingCatValuesSelect, 10) || 0,
-          underlyingCatValuesSelectTwo:
-            parseInt(data.underlyingCatValuesSelectTwo, 10) || 0,
-          underlyingHidroAplicaSelect:
-            parseInt(data.underlyingHidroAplicaSelect, 10) || 0,
-          underlyingHidroValuesSelect:
-            parseInt(data.underlyingHidroValuesSelect, 10) || 0,
-          underlyingHidroValuesSelectTwo:
-            parseInt(data.underlyingHidroValuesSelectTwo, 10) || 0,
+          underlyingCatAplicaSelect: parseInt(data.underlyingCatAplicaSelect, 10) || 0,
+          underlyingCatValuesSelect: parseInt(data.underlyingCatValuesSelect, 10) || 0,
+          underlyingCatValuesSelectTwo: parseInt(data.underlyingCatValuesSelectTwo, 10) || 0,
+          underlyingHidroAplicaSelect: parseInt(data.underlyingHidroAplicaSelect, 10) || 0,
+          underlyingHidroValuesSelect: parseInt(data.underlyingHidroValuesSelect, 10) || 0,
+          underlyingHidroValuesSelectTwo: parseInt(data.underlyingHidroValuesSelectTwo, 10) || 0,
         };
       });
 
@@ -776,9 +677,7 @@ export default {
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "getDeductiblesProperty error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getDeductiblesProperty error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -794,51 +693,46 @@ export default {
         variables: { subscription_id },
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["createDeductibleProperty"];
       if (statusCode !== 200) throw new Error("Error creating Deductible");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "createDeductibleProperty error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createDeductibleProperty error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async updateDeductibleProperty({ commit }, { id, column, value, type }) {
     try {
       const snakeCasedColumn = toSnakeCase(column);
       const variables = {
         id,
         column: snakeCasedColumn,
-        value: String(value),
+        value: cleanNumericValue(value),
         type,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: mutationUpdateDeductible,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["updateDeductibleProperty"];
       if (statusCode !== 200) throw new Error("Error updating Deductible");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "updateDeductibleProperty error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateDeductibleProperty error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
+
   async createFireDeductible({ commit, state }, deductible_id) {
     try {
       const { subscription_id } = state;
@@ -846,30 +740,25 @@ export default {
         deductible_id,
         subscription_id,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: mutationCreateFireDeductible,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["createFireDeductible"];
       if (statusCode !== 200) throw new Error("Error creating Fire Deductible");
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "createFireDeductible error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createFireDeductible error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
-  async saveRateAndAlopCurrency(
-    { commit, state },
-    { subscription_id, newVal, column = "rate" }
-  ) {
+
+  async saveRateAndAlopCurrency({ commit, state }, { subscription_id, newVal, column = "rate" }) {
     try {
       // column -> 'rate' || 'alop_currency_rate'
       const variables = {
@@ -877,23 +766,16 @@ export default {
         column,
         newVal,
       };
-
       const { data } = await apolloClient.mutate({
         mutation: SAVE_RATE_AND_ALOP_CURRENCY_MUTATION,
         variables,
         fetchPolicy: "no-cache",
       });
-
       const { statusCode } = data["updateChange"];
-
-      if (statusCode !== 200)
-        throw new Error("Error creating/updating Bound Insurable Column");
+      if (statusCode !== 200) throw new Error("Error creating/updating Bound Insurable Column");
     } catch (e) {
       const { message } = e;
-      const messageToDisplay =
-        "saveRateAndAlopCurrency error: " +
-        message.replace("GraphQL error: ", "");
-
+      const messageToDisplay = "saveRateAndAlopCurrency error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,

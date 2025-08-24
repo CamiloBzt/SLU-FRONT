@@ -4,60 +4,28 @@
       <div class="table-title-detail table-title-detail--large">Detail</div>
       <div class="input-col">
         <div class="input-cont">
-          <v-text-field
-            label="Effective date"
-            v-model="formatEffectiveDate"
-            disabled
-          >
-          </v-text-field>
+          <v-text-field label="Effective date" v-model="formatEffectiveDate" disabled> </v-text-field>
         </div>
       </div>
       <div class="input-col">
         <div class="input-cont">
-          <v-menu
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
+          <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="formatPremiumPaymentDate"
-                label="Premium payment warranty"
-                readonly
-                disabled
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
+              <v-text-field v-model="formatPremiumPaymentDate" label="Premium payment warranty" readonly disabled v-bind="attrs" v-on="on"></v-text-field>
             </template>
           </v-menu>
         </div>
       </div>
       <div class="input-col">
         <div class="input-cont">
-          <v-text-field label="Clause" v-model="clause" disabled>
-          </v-text-field>
+          <v-text-field label="Clause" v-model="clause" disabled> </v-text-field>
         </div>
       </div>
       <div class="input-col">
         <div class="input-cont">
-          <v-menu
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
+          <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="formatExpeditionDate"
-                label="Expedition date"
-                readonly
-                disabled
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
+              <v-text-field v-model="formatExpeditionDate" label="Expedition date" readonly disabled v-bind="attrs" v-on="on"></v-text-field>
             </template>
           </v-menu>
         </div>
@@ -146,19 +114,13 @@ export default {
   },
   computed: {
     formatEffectiveDate() {
-      return this.effectiveDate
-        ? new Date(this.effectiveDate).toISOString().substr(0, 10)
-        : "";
+      return this.effectiveDate ? new Date(this.effectiveDate).toISOString().substr(0, 10) : "";
     },
     formatPremiumPaymentDate() {
-      return this.premiumPaymentDate
-        ? new Date(this.premiumPaymentDate).toISOString().substr(0, 10)
-        : "";
+      return this.premiumPaymentDate ? new Date(this.premiumPaymentDate).toISOString().substr(0, 10) : "";
     },
     formatExpeditionDate() {
-      return this.expeditionDate
-        ? new Date(this.expeditionDate).toISOString().substr(0, 10)
-        : "";
+      return this.expeditionDate ? new Date(this.expeditionDate).toISOString().substr(0, 10) : "";
     },
   },
   methods: {
@@ -167,10 +129,7 @@ export default {
     },
   },
   async mounted() {
-    this.listEndorsement =
-      await EndorsementService.getEndorsementsBySubscriptionId(
-        this.subscriptionId
-      );
+    this.listEndorsement = await EndorsementService.getEndorsementsBySubscriptionId(this.subscriptionId);
   },
 };
 </script>
@@ -178,9 +137,9 @@ export default {
 .formatEndorsementHistoryTable {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -263,7 +222,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;

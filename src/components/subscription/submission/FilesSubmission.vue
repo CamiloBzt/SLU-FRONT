@@ -116,7 +116,7 @@
         <v-expansion-panel-content v-else>
           <div class="ExpandContent">
             <div>
-              You must select a Line of Risk first to view this section.
+              You must select a Line of Business first to view this section.
             </div>
           </div>
         </v-expansion-panel-content>

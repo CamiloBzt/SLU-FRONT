@@ -1,7 +1,7 @@
 /* api */
-import { apolloClient } from '../../lib/api';
-import addWalletPayment from './mutations/addWalletPayment';
-import getWalletSubscriptionQuery from './queries/getWalletSubscription';
+import { apolloClient } from "../../lib/api";
+import addWalletPayment from "./mutations/addWalletPayment";
+import getWalletSubscriptionQuery from "./queries/getWalletSubscription";
 export default {
   async fieldWalletPayment({ state, commit }, { pay, field }) {
     try {
@@ -14,12 +14,11 @@ export default {
       const { data } = await apolloClient.mutate({
         mutation: addWalletPayment,
         variables,
-        fetchPolicy: 'no-cache',
+        fetchPolicy: "no-cache",
       });
     } catch ({ message }) {
-      console.log(message);
-      const messageToDisplay = 'fieldWalletPayment error: ' + message.replace('GraphQL error: ', '');
-      commit('addNotification', {
+      const messageToDisplay = "fieldWalletPayment error: " + message.replace("GraphQL error: ", "");
+      commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
@@ -37,17 +36,17 @@ export default {
       } = await apolloClient.query({
         query: getWalletSubscriptionQuery,
         variables,
-        fetchPolicy: 'no-cache',
+        fetchPolicy: "no-cache",
       });
 
       const { statusCode, response, message, error } = getWalletSubscription;
       if (statusCode !== 200) throw new Error(`Cannot get wallet payment: ${message}, ${error}`);
       const checkPayment = JSON.parse(response);
-      commit('saveCheckPaymentInformation', checkPayment[0] || []);
+      commit("saveCheckPaymentInformation", checkPayment[0] || []);
       return response;
     } catch ({ message }) {
-      const messageToDisplay = 'getInstallment error: ' + message.replace('GraphQL error: ', '');
-      commit('addNotification', {
+      const messageToDisplay = "getInstallment error: " + message.replace("GraphQL error: ", "");
+      commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });

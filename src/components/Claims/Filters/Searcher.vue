@@ -12,7 +12,6 @@
       <!-- Buscador 1 -->
       <div class="SearchBackground">
         <div class="SearchForm">
-
           <div class="SearchForm__Filters d-flex justify-center align-center">
             <v-select
               class="SearchForm__Filters__Select"
@@ -29,7 +28,6 @@
                 v-model="showDatePicker"
                 :close-on-content-click="false"
                 transition="scale-transition"
-
                 min-width="auto"
               >
                 <template v-slot:activator="{ on, attrs }">
@@ -57,14 +55,12 @@
               />
             </div>
           </div>
-
         </div>
       </div>
 
       <!-- Buscador 2 -->
       <div class="SearchBackground" v-if="search1.length > 0">
         <div class="SearchForm">
-
           <div class="SearchForm__Filters d-flex justify-center align-center">
             <v-select
               class="SearchForm__Filters__Select"
@@ -81,7 +77,6 @@
                 v-model="showDatePicker"
                 :close-on-content-click="false"
                 transition="scale-transition"
-                
                 min-width="auto"
               >
                 <template v-slot:activator="{ on, attrs }">
@@ -109,12 +104,14 @@
               />
             </div>
           </div>
-
         </div>
       </div>
 
       <div class="SearchBackground">
-        <div class="SearchForm" style="justify-content: end;padding-top: 0px;height: 40px;">
+        <div
+          class="SearchForm"
+          style="justify-content: end; padding-top: 0px; height: 40px"
+        >
           <v-btn
             class="loadMoreButton"
             rounded
@@ -122,7 +119,7 @@
             color="#003D6D"
             @click="clean"
           >
-              Clean
+            Clean
           </v-btn>
         </div>
       </div>
@@ -130,41 +127,41 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 
-import { required } from 'vuelidate/lib/validators';
-import { debounce } from 'lodash';
+import { required } from "vuelidate/lib/validators";
+import { debounce } from "lodash";
 
 export default {
-  name: 'Searcher',
+  name: "Searcher",
   data() {
     return {
       chip1: true,
       chip2: true,
       chip3: true,
-      search1: '',
-      search2: '',
-      datePicker: '',
+      search1: "",
+      search2: "",
+      datePicker: "",
       isTyping: false,
       selectedFilters: [],
-      value1: 's.reference',
-      value2: 's.reference',
+      value1: "s.reference",
+      value2: "s.reference",
       showDatePicker: false,
       filterItems: [
-        { value: 's.reference', text: 'Ref Number' },
-        { value: 'ct.description', text: 'Country' },
-        { value: 'rt.description', text: 'Line of Risk' },
-        { value: 'sm."insured_name"', text: 'Name' },
-        { value: 'b."name"', text: 'Broker' },
-        { value: 'c."name"', text: 'Cedent' },
-        { value: 's.created_at', text: 'Date' },
-        { value: 'sts.description', text: 'Status' },
+        { value: "s.reference", text: "Ref Number" },
+        { value: "ct.description", text: "Country" },
+        { value: "rt.description", text: "Line of Business" },
+        { value: 'sm."insured_name"', text: "Name" },
+        { value: 'b."name"', text: "Broker" },
+        { value: 'c."name"', text: "Cedent" },
+        { value: "s.created_at", text: "Date" },
+        { value: "sts.description", text: "Status" },
       ],
       pagination: {
         limit: 10,
         offset: 0,
       },
-      positionedMenu: true
+      positionedMenu: true,
     };
   },
   validations: {
@@ -192,7 +189,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getClaimsHistoryList']),
+    ...mapActions(["getClaimsHistoryList"]),
     // addValue() {
     //   const isIncluded = this.selectedFilters.includes(this.value);
     //   if (!isIncluded) this.selectedFilters.push(this.value);
@@ -210,68 +207,71 @@ export default {
         const data = {
           ...this.pagination,
           query1: this.search1,
-          filterSearch1: this.value1
+          filterSearch1: this.value1,
         };
 
         if (this.search2?.length > 0) {
-          data.query2 = this.search2
-          data.filterSearch2 = this.value2
+          data.query2 = this.search2;
+          data.filterSearch2 = this.value2;
         }
 
         await this.getClaimsHistoryList(data);
-      }
-      else {
+      } else {
         await this.getClaimsHistoryList(this.pagination);
       }
     },
     clean() {
-      this.search1 = ''
-      this.search2 = ''
+      this.search1 = "";
+      this.search2 = "";
 
       this.getList();
     },
-    setMenuPosition () {
+    setMenuPosition() {
       if (this.positionedMenu) {
         setTimeout(() => {
-          const searcher = document.querySelector('.v-menu__content')
-          const menuDespegable = document.querySelector('.v-autocomplete__content')
+          const searcher = document.querySelector(".v-menu__content");
+          const menuDespegable = document.querySelector(
+            ".v-autocomplete__content"
+          );
 
-          const menuPosition = parseInt(menuDespegable.style.left)
-          const searcherPosition = parseInt(searcher.style.left)
+          const menuPosition = parseInt(menuDespegable.style.left);
+          const searcherPosition = parseInt(searcher.style.left);
 
-          const newMenuPosition = `${(menuPosition - ((menuPosition - searcherPosition) * 0.3))}px`
+          const newMenuPosition = `${
+            menuPosition - (menuPosition - searcherPosition) * 0.3
+          }px`;
 
-          menuDespegable.style.left = newMenuPosition
+          menuDespegable.style.left = newMenuPosition;
 
-          this.positionedMenu = false
+          this.positionedMenu = false;
         }, 100);
       }
     },
     inputDate1() {
-      this.showDatePicker = false
+      this.showDatePicker = false;
 
-      const [year, month, day] = this.datePicker.split('-')
+      const [year, month, day] = this.datePicker.split("-");
 
-      this.search1 = `${day} - ${month} - ${year}`
+      this.search1 = `${day} - ${month} - ${year}`;
 
-      this.getList()
+      this.getList();
     },
     inputDate2() {
-      this.showDatePicker = false
+      this.showDatePicker = false;
 
-      const [year, month, day] = this.datePicker.split('-')
+      const [year, month, day] = this.datePicker.split("-");
 
-      this.search2 = `${day} - ${month} - ${year}`
+      this.search2 = `${day} - ${month} - ${year}`;
 
-      this.getList()
-    }
+      this.getList();
+    },
   },
 };
 </script>
 <style lang="less">
-@import '~@/assets/style/MenuActions.less';
+@import "~@/assets/style/MenuActions.less";
 
-.loadMoreButton{
+.loadMoreButton {
   // width: 217px;
   // height: 40px;
   text-transform: none;
@@ -279,12 +279,11 @@ export default {
   text-transform: none;
 
   letter-spacing: normal !important;
-  font-size: 15px !important;;
-  font-weight: 500 !important;;
+  font-size: 15px !important;
+  font-weight: 500 !important;
 }
 
 .SearchBackground {
-
   .SearchForm {
     width: 600px !important;
     height: 80px;
@@ -296,27 +295,27 @@ export default {
     flex-wrap: wrap;
 
     //Filtros de busqueda
-    &__Filters{
+    &__Filters {
       width: 27%;
       height: 100%;
       background: #edf2f8;
       border-top-left-radius: 8px;
       border-bottom-left-radius: 8px;
-      
+
       box-sizing: border-box !important;
-      padding-left:10px;
+      padding-left: 10px;
       padding-right: 10px;
-      &__Select{
+      &__Select {
         height: 30px;
         //Color de texto del  filtro
-        .v-select__selection--comma{
-          color: #547FA9;
+        .v-select__selection--comma {
+          color: #547fa9;
         }
       }
     }
 
     //Input de busqueda
-    &__Searcher{
+    &__Searcher {
       width: calc(73% - 10px);
       height: 100%;
       border-top-right-radius: 8px;
@@ -339,8 +338,6 @@ export default {
         }
       }
     }
-    
-
   }
 
   /*mofica estilos de vuetify*/
@@ -356,20 +353,16 @@ export default {
   }
 }
 
-.Date__Container{
+.Date__Container {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  .v-text-field__slot{
+  .v-text-field__slot {
     margin-top: 25px;
   }
 }
-
-
-
-
 
 @media (max-width: 650px) {
   .SearchBackground {
@@ -383,7 +376,7 @@ export default {
     overflow: auto !important;
     padding-top: 10%;
     &::before {
-      content: '';
+      content: "";
       width: 100%;
       height: 100%;
       position: absolute;
@@ -395,7 +388,7 @@ export default {
 
     .SearchForm {
       width: 83% !important;
-      border-radius: 15px;
+      border-radius: 5px;
       z-index: 1000;
     }
   }

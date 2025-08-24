@@ -19,7 +19,7 @@
 
       <!--INPUTS-->
       <div class="InputContent d-flex justify-end align-center mt-2">
-        <span class="LabelInput"> Limited Insured</span>
+        <span class="LabelInput"> Limit Insured</span>
 
         <div class="InputContainer">
           <!-- <v-text-field
@@ -120,7 +120,7 @@
 
       <!--INPUTS-->
       <div class="InputContent d-flex justify-start align-center mt-2">
-        <span class="LabelInput ShowFlexOnMovil"> Limited insured: </span>
+        <span class="LabelInput ShowFlexOnMovil"> Limit insured: </span>
 
         <div class="InputContainer inputRight">
           <v-text-field

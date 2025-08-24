@@ -16,10 +16,20 @@ const formatter = new Intl.NumberFormat("en-US", {
  */
 
 /**
-* genera todos los cálculos necesarios para net premium eng 
+* genera todos los cálculos necesarios para net premium eng
   esta clase es un adaptación para darle para cambiar nombres a los apartado que
   le corresponde a un cuenta engineering
 */
+
+function safeDecimal(val) {
+  const num = val === null || val === undefined || isNaN(val) ? 0 : val;
+  try {
+    return new Decimal(num);
+  } catch {
+    return new Decimal(0);
+  }
+}
+
 class NetPremiumEng {
   data = {
     allRiskSluShare: 0,
@@ -28,21 +38,27 @@ class NetPremiumEng {
     allRiskEng: 0,
     allRiskFronting: 0,
     allRiskColombia: 0,
-    allRiskNetSLUExcludingSurveyFees: 0,
+    allRiskLta: 0,
+    allRiskOthers: 0,
+    allRiskToBeInvoiced: 0,
     alopSluShare: 0,
     alopBrokerage: 0,
     alopTaxes: 0,
     alopEng: 0,
     alopFronting: 0,
     alopColombia: 0,
-    alopNetSLUExcludingSurveyFees: 0,
+    alopLta: 0,
+    alopOthers: 0,
+    alopToBeInvoiced: 0,
     sluShareTotal: 0,
     brokerageTotal: 0,
     taxesTotal: 0,
     engTotal: 0,
     colombiaTotal: 0,
+    ltaTotal: 0,
+    othersTotal: 0,
     frontingTotal: 0,
-    netSLUExcludingSurveyFeesTotal: 0,
+    SluPremiumToBeInvoicedTotal: 0,
   };
 
   /**
@@ -74,7 +90,6 @@ class NetPremiumEng {
   allRiskBrokerage() {
     const sluShare = this.allRiskSluShare();
     const result = calculateProperty(this.deductions.brokerage, sluShare);
-
     this.data.allRiskBrokerage = result;
     return result;
   }
@@ -82,7 +97,6 @@ class NetPremiumEng {
   allRiskTaxes() {
     const sluShare = this.allRiskSluShare();
     const result = calculateProperty(this.deductions.taxes, sluShare);
-
     this.data.allRiskTaxes = result;
     return result;
   }
@@ -90,44 +104,38 @@ class NetPremiumEng {
   allRiskEng() {
     const sluShare = this.allRiskSluShare();
     const result = calculateProperty(this.deductions.eng, sluShare);
-
     this.data.allRiskEng = result;
     return result;
   }
+  
   allRiskLta() {
     const sluShare = this.allRiskSluShare();
     const result = calculateProperty(this.deductions.lta, sluShare);
-
     this.data.allRiskLta = result;
     return result;
   }
+
   allRiskOthers() {
     const sluShare = this.allRiskSluShare();
     const result = calculateProperty(this.deductions.others, sluShare);
-
     this.data.allRiskOthers = result;
     return result;
   }
 
   allRiskFronting() {
-    const value = Decimal.sub(this.allRiskSluShare(), this.allRiskBrokerage())
-      .sub(this.allRiskTaxes())
-      .sub(this.allRiskLta())
-      .sub(this.allRiskOthers())
-      .toNumber();
+    const value = safeDecimal(this.allRiskSluShare()).sub(safeDecimal(this.allRiskBrokerage())).sub(safeDecimal(this.allRiskTaxes())).sub(safeDecimal(this.allRiskLta())).sub(safeDecimal(this.allRiskOthers())).toNumber();
     const result = calculateProperty(this.deductions.fronting, value);
     this.data.allRiskFronting = result;
     return result;
   }
+
   allRiskColombia() {
     const sluShare = this.allRiskSluShare();
     const result = calculateProperty(this.deductions.premiumReserve, sluShare);
-
     this.data.allRiskColombia = result;
     return result;
   }
 
-  //Sección de OLAP
   alopSluShare() {
     const value = !this.usd ? this.premium.alop : this.premium.alopUsd;
     const result = sluShare(this.sluLine, value);
@@ -155,27 +163,28 @@ class NetPremiumEng {
     this.data.alopFronting = value;
     return value;
   }
+
   alopLta() {
     const sluShare = this.alopSluShare();
     const result = calculateProperty(this.deductions.lta, sluShare);
-
     this.data.alopLta = result;
     return result;
   }
+
   alopOthers() {
     const sluShare = this.alopSluShare();
     const result = calculateProperty(this.deductions.others, sluShare);
-
     this.data.alopOthers = result;
     return result;
   }
 
   alopFronting() {
-    const value = Decimal.sub(this.alopSluShare(), this.alopBrokerage())
-      .sub(this.alopTaxes())
-      .sub(this.alopLta())
-      .sub(this.alopOthers())
-      .toNumber();
+    const value = 
+    safeDecimal(this.alopSluShare())
+    .sub(safeDecimal(this.alopBrokerage()))
+    .sub(safeDecimal(this.alopTaxes()))
+    .sub(safeDecimal(this.alopLta()))
+    .sub(safeDecimal(this.alopOthers())).toNumber();
     const result = calculateProperty(this.deductions.fronting, value);
     this.data.alopFronting = result;
     return result;
@@ -188,138 +197,103 @@ class NetPremiumEng {
     return value;
   }
 
-  //Apartado de para calcular las  net to slu excluding survey fee
-  alopNetSLUExcludingSurveyFees() {
-    const value = Decimal.sub(
-      this.alopNetSLU(),
-      this.alopColombia()
-    ).toNumber();
-
-    this.data.alopNetSLUExcludingSurveyFees = value;
+  alopToBeInvoiced() {
+    const value = safeDecimal(this.alopSluShare()).sub(safeDecimal(this.alopBrokerage())).sub(safeDecimal(this.alopTaxes())).sub(safeDecimal(this.alopLta())).sub(safeDecimal(this.alopOthers())).toNumber();
     return value;
   }
 
-  allRiskNetSLUExcludingSurveyFees() {
-    const value = Decimal.sub(
-      this.allRiskNetSLU(),
-      this.allRiskColombia()
-    ).toNumber();
-
-    this.data.allRiskNetSLUExcludingSurveyFees = value;
+  allRiskToBeInvoiced() {
+    const value = safeDecimal(this.allRiskSluShare()).sub(safeDecimal(this.allRiskBrokerage())).sub(safeDecimal(this.allRiskTaxes())).sub(safeDecimal(this.allRiskLta())).sub(safeDecimal(this.allRiskOthers())).toNumber();
     return value;
   }
 
-  //suma de totales
   sluShareTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskSluShare(),
-      this.alopSluShare()
-    );
-
+    const { format, result } = calculateTotal(this.allRiskSluShare(), this.alopSluShare());
     this.data.sluShareTotal = result;
     return format;
   }
 
   brokerageTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskBrokerage(),
-      this.alopBrokerage()
-    );
+    const { format, result } = calculateTotal(this.allRiskBrokerage(), this.alopBrokerage());
     this.data.brokerageTotal = result;
     return format;
   }
 
   taxesTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskTaxes(),
-      this.alopTaxes()
-    );
+    const { format, result } = calculateTotal(this.allRiskTaxes(), this.alopTaxes());
     this.data.taxesTotal = result;
     return format;
   }
 
   engTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskEng(),
-      this.alopEng()
-    );
+    const { format, result } = calculateTotal(this.allRiskEng(), this.alopEng());
     this.data.engTotal = result;
     return format;
   }
 
   colombiaTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskColombia(),
-      this.alopColombia()
-    );
+    const { format, result } = calculateTotal(this.allRiskColombia(), this.alopColombia());
     this.data.colombiaTotal = result;
     return format;
   }
 
+  ltaTotal() {
+    const { format, result } = calculateTotal(this.allRiskLta(), this.alopLta());
+    this.data.ltaTotal = result;
+    return format;
+  }
+
+  OthersTotal() {
+    const { format, result } = calculateTotal(this.allRiskOthers(), this.alopOthers());
+    this.data.OthersTotal = result;
+    return format;
+  }
+
   frontingTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskFronting(),
-      this.alopFronting()
-    );
+    const { format, result } = calculateTotal(this.allRiskFronting(), this.alopFronting());
     this.data.frontingTotal = result;
     return format;
   }
 
-  netSLUExcludingSurveyFeesTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskNetSLUExcludingSurveyFees(),
-      this.alopNetSLUExcludingSurveyFees()
-    );
-    this.data.netSLUExcludingSurveyFeesTotal = result;
+  SluPremiumToBeInvoicedTotal() {
+    const { format, result } = calculateTotal(this.allRiskToBeInvoiced(), this.alopToBeInvoiced());
+    this.data.SluPremiumToBeInvoicedTotal = result;
     return format;
   }
-  allRiskNetSLU() {
-    const value = Decimal.sub(this.allRiskSluShare(), this.allRiskBrokerage())
-      .sub(this.allRiskTaxes())
-      .sub(this.allRiskLta())
-      .sub(this.allRiskOthers())
-      .toNumber();
-    return value;
-  }
-  alopNetSLU() {
-    const value = Decimal.sub(this.alopSluShare(), this.alopBrokerage())
-      .sub(this.alopTaxes())
-      .sub(this.alopLta())
-      .sub(this.alopOthers())
-      .toNumber();
 
+  allRiskNetSLU() {
+    const value = safeDecimal(this.allRiskSluShare()).sub(safeDecimal(this.allRiskBrokerage())).sub(safeDecimal(this.allRiskTaxes())).sub(safeDecimal(this.allRiskLta())).sub(safeDecimal(this.allRiskOthers())).toNumber();
     return value;
   }
+
+  alopNetSLU() {
+    const value = safeDecimal(this.alopSluShare()).sub(safeDecimal(this.alopBrokerage())).sub(safeDecimal(this.alopTaxes())).sub(safeDecimal(this.alopLta())).sub(safeDecimal(this.alopOthers())).toNumber();
+    return value;
+  }
+
   netSLUTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskNetSLU(),
-      this.alopNetSLU()
-    );
+    const { format } = calculateTotal(this.allRiskNetSLU(), this.alopNetSLU());
     return format;
   }
+
   allRiskNetSLUExcludingFronting() {
-    const value = Decimal.sub(this.allRiskSluShare(), this.allRiskBrokerage())
-      .sub(this.allRiskTaxes())
-      .sub(this.allRiskFronting())
-      .sub(this.allRiskLta())
-      .sub(this.allRiskOthers())
+    const value = safeDecimal(this.allRiskSluShare())
+      .sub(safeDecimal(this.allRiskBrokerage()))
+      .sub(safeDecimal(this.allRiskTaxes()))
+      .sub(safeDecimal(this.allRiskFronting()))
+      .sub(safeDecimal(this.allRiskLta()))
+      .sub(safeDecimal(this.allRiskOthers()))
       .toNumber();
     return value;
   }
+
   alopNetSLUExcludingFronting() {
-    const value = Decimal.sub(this.alopSluShare(), this.alopBrokerage())
-      .sub(this.alopTaxes())
-      .sub(this.alopFronting())
-      .sub(this.alopLta())
-      .sub(this.alopOthers())
-      .toNumber();
+    const value = safeDecimal(this.alopSluShare()).sub(safeDecimal(this.alopBrokerage())).sub(safeDecimal(this.alopTaxes())).sub(safeDecimal(this.alopFronting())).sub(safeDecimal(this.alopLta())).sub(safeDecimal(this.alopOthers())).toNumber();
     return value;
   }
+
   netSLUExcludingFrontingTotal() {
-    const { format, result } = calculateTotal(
-      this.allRiskNetSLUExcludingFronting(),
-      this.alopNetSLUExcludingFronting()
-    );
+    const { format } = calculateTotal(this.allRiskNetSLUExcludingFronting(), this.alopNetSLUExcludingFronting());
     return format;
   }
 

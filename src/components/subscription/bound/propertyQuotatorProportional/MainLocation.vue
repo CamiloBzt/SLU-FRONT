@@ -12,7 +12,7 @@
       </div>
 
       <div class="Line">
-        <div class="Row Label">Damage</div>
+        <div class="Row Label">Damage*</div>
         <div class="Row">
           <currency-input
             v-model="$v.mliv.damage.$model"
@@ -87,41 +87,41 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from "vuex";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* libs */
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 /* validations */
-import { required } from 'vuelidate/lib/validators';
+import { required } from "vuelidate/lib/validators";
 /* lodash */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
 export default {
-  name: 'MainLocation',
+  name: "MainLocation",
   components: { CurrencyInput },
   data() {
     return {
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
-      formatter: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      formatter: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       }),
     };
   },
   computed: {
     ...mapGetters([
-      'quotation',
-      'tiv',
-      'premium',
-      'typeCoverage',
-      'applySir',
-      'mliv',
+      "quotation",
+      "tiv",
+      "premium",
+      "typeCoverage",
+      "applySir",
+      "mliv",
     ]),
     mlivDamageUsd: {
       get() {
@@ -178,44 +178,53 @@ export default {
         return op;
       },
     },
+    damageFieldCompleted() {
+      return !!(this.mliv.damage && this.mliv.damage > 0);
+    },
   },
   watch: {
     mlivDamageUsd: debounce(function (val) {
       this.$v.mliv.damageUsd.$model = val.toNumber();
-      this.SET_MLIV_BOUND('damageUsd', val.toNumber());
-      this.checkField('damageUsd');
+      this.SET_MLIV_BOUND("damageUsd", val.toNumber());
+      this.checkField("damageUsd");
     }, 1000),
     mlivBiUsd: debounce(function (val) {
       this.$v.mliv.biUsd.$model = val.toNumber();
-      this.SET_MLIV_BOUND('biUsd', val.toNumber());
-      this.checkField('biUsd');
+      this.SET_MLIV_BOUND("biUsd", val.toNumber());
+      this.checkField("biUsd");
     }, 1000),
     mlivStocksUsd: debounce(function (val) {
       this.$v.mliv.stocksUsd.$model = val.toNumber();
-      this.SET_MLIV_BOUND('stocksUsd', val.toNumber());
-      this.checkField('stocksUsd');
+      this.SET_MLIV_BOUND("stocksUsd", val.toNumber());
+      this.checkField("stocksUsd");
     }, 1000),
     mlivTotal: debounce(function (val) {
       this.$v.mliv.total.$model = val.toNumber();
-      this.SET_MLIV_BOUND('total', val.toNumber());
-      this.checkField('total');
+      this.SET_MLIV_BOUND("total", val.toNumber());
+      this.checkField("total");
     }, 1000),
     mlivTotalUsd: debounce(function (val) {
       this.$v.mliv.totalUsd.$model = val.toNumber();
-      this.SET_MLIV_BOUND('totalUsd', val.toNumber());
-      this.checkField('totalUsd');
+      this.SET_MLIV_BOUND("totalUsd", val.toNumber());
+      this.checkField("totalUsd");
     }, 1000),
+    damageFieldCompleted: {
+      handler(newValue) {
+        this.$emit("damage-field-change", newValue);
+      },
+      immediate: true,
+    },
   },
   methods: {
-    ...mapActions(['saveBoundColumn']),
-    ...mapMutations(['SET_MLIV_BOUND']),
+    ...mapActions(["saveBoundColumn"]),
+    ...mapMutations(["SET_MLIV_BOUND"]),
     async checkField(column) {
       this.$v.mliv[column].$touch();
-      console.log(this.$v.mliv[column].$invalid, this.$v.mliv[column].$error);
+      // console.log(this.$v.mliv[column].$invalid, this.$v.mliv[column].$error);
       if (this.$v.mliv[column].$invalid || this.$v.mliv[column].$error) return;
       await this.saveBoundColumn({
-        table: 'mainLocation',
-        parent: 'mliv',
+        table: "mainLocation",
+        parent: "mliv",
         column,
       });
     },
@@ -239,7 +248,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/Subscription/Bound.less";
 
 .Cont {
   width: 100%;
@@ -278,8 +287,8 @@ export default {
       font-size: 14px;
     }
     .Bold {
-      font-weight: 700;
-      font-size: 16px;
+      font-weight: 600;
+      font-size: 15px;
     }
     .BorderBottom {
       border-bottom: solid 1px #d2deed;

@@ -71,7 +71,11 @@
           <textarea
             v-model.trim="$v.internalAdjustment.pmlComments.$model"
             @blur="
-              setInternalAdjustment({ index: currentIndex, key: 'pmlComments', value: $v.internalAdjustment.pmlComments.$model });
+              setInternalAdjustment({
+                index: currentIndex,
+                key: 'pmlComments',
+                value: $v.internalAdjustment.pmlComments.$model,
+              });
               checkField('pmlComments');
             "
           ></textarea>
@@ -81,29 +85,29 @@
   </v-expansion-panels>
 </template>
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* validations */
-import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
-import { DigitsAndDecimals, Percentage } from '@/constants/validations';
-import { formValidations } from '@/mixins/formValidations';
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { DigitsAndDecimals, Percentage } from "@/constants/validations";
+import { formValidations } from "@/mixins/formValidations";
 /* libs & helpers */
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 /* lodash */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
 export default {
-  name: 'InternalAdjustment',
+  name: "InternalAdjustment",
   mixins: [stateExpansiveManager, formValidations, validationMixin],
   data() {
     return {
       menu: false,
       menu2: false,
 
-      model1: '',
-      model2: '',
+      model1: "",
+      model2: "",
     };
   },
   props: {
@@ -112,58 +116,70 @@ export default {
     },
   },
   async mounted() {
-    await this.getEndorsementInformation('internalAdjustment');
+    await this.getEndorsementInformation("internalAdjustment");
   },
   computed: {
-    ...mapGetters(['endorsements']),
+    ...mapGetters(["endorsements"]),
     ...mapGetters({
-      IntAdjust: 'internalAdjustment',
+      IntAdjust: "internalAdjustment",
     }),
     internalAdjustment: {
       get() {
         const current = this.endorsements[this.indexarr];
-        const id = current['movementId'];
+        const id = current["movementId"];
         const item = this.IntAdjust.findIndex((v) => v.id === id);
         return this.IntAdjust[item];
-      }
+      },
     },
     currentId: {
       get() {
         const current = this.endorsements[this.indexarr];
-        const id = current['movementId'];
+        const id = current["movementId"];
         return id;
       },
     },
     currentIndex: {
       get() {
         const current = this.endorsements[this.indexarr];
-        const id = current['movementId'];
+        const id = current["movementId"];
         const item = this.IntAdjust.findIndex((v) => v.id === id);
         return item;
       },
     },
   },
   watch: {
-    'internalAdjustment.effectiveDateMovement': debounce(function (val) {
+    "internalAdjustment.effectiveDateMovement": debounce(function (val) {
       this.$v.internalAdjustment.effectiveDateMovement.$model = val;
-      this.setInternalAdjustment({ index: this.currentIndex, key: 'effectiveDateMovement', value: val });
-      this.checkField('effectiveDateMovement');
+      this.setInternalAdjustment({
+        index: this.currentIndex,
+        key: "effectiveDateMovement",
+        value: val,
+      });
+      this.checkField("effectiveDateMovement");
     }, 1000),
-    'internalAdjustment.movementEndDate': debounce(function (val) {
+    "internalAdjustment.movementEndDate": debounce(function (val) {
       this.$v.internalAdjustment.movementEndDate.$model = val;
-      this.setInternalAdjustment({ index: this.currentIndex, key: 'movementEndDate', value: val });
-      this.checkField('movementEndDate');
+      this.setInternalAdjustment({
+        index: this.currentIndex,
+        key: "movementEndDate",
+        value: val,
+      });
+      this.checkField("movementEndDate");
     }, 1000),
   },
   methods: {
-    ...mapActions(['saveQuotationColumn', 'saveEndorsementColumn', 'getEndorsementInformation']),
-    ...mapMutations(['setInternalAdjustment']),
+    ...mapActions([
+      "saveQuotationColumn",
+      "saveEndorsementColumn",
+      "getEndorsementInformation",
+    ]),
+    ...mapMutations(["setInternalAdjustment"]),
     async checkField(column) {
       this.$v.internalAdjustment[column].$touch();
       if (this.$v.internalAdjustment[column].$invalid) return;
       await this.saveEndorsementColumn({
-        table: 'internalAdjustment',
-        parent: 'internalAdjustment',
+        table: "internalAdjustment",
+        parent: "internalAdjustment",
         column,
         id: this.currentId,
       });
@@ -179,8 +195,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 .InputCont {
   margin-right: 1.5%;
   width: 18%;

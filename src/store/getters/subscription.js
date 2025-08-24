@@ -4,6 +4,10 @@ export default {
     if (countries.length === 0) return [];
     return countries;
   },
+  brokers: ({ brokers }) => {
+    if (brokers.length === 0) return [];
+    return brokers;
+  },
   lossType: ({ loss_type }) => {
     if (loss_type.length === 0) return [];
     return loss_type;
@@ -20,10 +24,13 @@ export default {
     if (currencies.length === 0) return [];
     return currencies;
   },
-  activitiesById: ({ activities }) => (id) => {
-    if (typeof id == 'undefined' || !id) return [];
-    return activities.filter(({ risk_type_id }) => risk_type_id == id);
-  },
+  activitiesById:
+    ({ activities }) =>
+    (id) => {
+      if (typeof id === "undefined" || !id) return [];
+      if (!Array.isArray(activities)) return []; // <- protección clave
+      return activities.filter(({ risk_type_id }) => risk_type_id == id);
+    },
   subscription_id: ({ subscription_id }) => subscription_id,
   subscriptionStatus: ({ subscriptionStatus }) => subscriptionStatus,
   nameReference: ({ nameReference }) => nameReference,

@@ -24,12 +24,19 @@
         :items="risk_type"
         item-text="key"
         item-value="id"
-        :hint="`${accountInformation.typeOfRisk.description || 'Select a Line of Risk'}`"
+        :hint="`${
+          accountInformation.typeOfRisk.description ||
+          'Select a Line of Business'
+        }`"
         disabled
       ></v-select>
     </div>
     <div class="inputCont">
-      <v-text-field v-model.trim="subscription_type" label="Business" disabled />
+      <v-text-field
+        v-model.trim="subscription_type"
+        label="Business"
+        disabled
+      />
     </div>
     <div class="inputCont">
       <v-select
@@ -38,7 +45,7 @@
           SET_BOUND_ENG('underwriter', this);
           checkField('underwriter');
         "
-        label="Underwriter"
+        label="Underwriter*"
         :items="underwriter"
         item-text="data"
         item-value="id"
@@ -86,19 +93,53 @@
       />
     </div>
     <div class="inputCont">
-      <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+      <v-menu
+        v-model="menu2"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="auto"
+      >
         <template v-slot:activator="{ on, attrs }">
-          <v-text-field v-model="quotation.inceptionDate" label="Inception" readonly v-bind="attrs" v-on="on" disabled></v-text-field>
+          <v-text-field
+            v-model="quotation.inceptionDate"
+            label="Inception"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+            disabled
+          ></v-text-field>
         </template>
-        <v-date-picker v-model="quotation.inceptionDate" @input="menu2 = false"></v-date-picker>
+        <v-date-picker
+          v-model="quotation.inceptionDate"
+          @input="menu2 = false"
+        ></v-date-picker>
       </v-menu>
     </div>
     <div class="inputCont">
-      <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="auto"
+      >
         <template v-slot:activator="{ on, attrs }">
-          <v-text-field v-model="quotation.expiryDate" label="Expiry " readonly v-bind="attrs" v-on="on" disabled></v-text-field>
+          <v-text-field
+            v-model="quotation.expiryDate"
+            label="Expiry "
+            readonly
+            v-bind="attrs"
+            v-on="on"
+            disabled
+          ></v-text-field>
         </template>
-        <v-date-picker v-model="quotation.expiryDate" @input="menu = false"></v-date-picker>
+        <v-date-picker
+          v-model="quotation.expiryDate"
+          @input="menu = false"
+        ></v-date-picker>
       </v-menu>
     </div>
     <div class="inputCont">
@@ -107,54 +148,63 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from "vuex";
 /* validations */
-import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
-import { formValidations } from '@/mixins/formValidations';
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 /* libs & helpers */
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 /* lodash */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
 export default {
-  name: 'InputsRiskQuotator',
+  name: "InputsRiskQuotator",
   mixins: [validationMixin, formValidations],
   data() {
     return {
       menu2: false,
       menu: false,
 
-      formatter: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      formatter: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       }),
     };
   },
   async beforeMount() {
-    await this.getCatalogByName({ name: 'underwriters' });
-    await this.getCatalogByName({ name: 'status_eng' });
-    await this.getCatalogByName({ name: 'underwriter_month' });
-    await this.getCatalogByName({ name: 'business_bound' });
+    await this.getCatalogByName({ name: "underwriters" });
+    await this.getCatalogByName({ name: "status_eng" });
+    await this.getCatalogByName({ name: "underwriter_month" });
+    await this.getCatalogByName({ name: "business_bound" });
   },
   mounted() {
-    if (!this.quotation.inceptionDate) this.quotation.inceptionDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10);
+    if (!this.quotation.inceptionDate)
+      this.quotation.inceptionDate = new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
     if (!this.quotation.expiryDate)
-      this.quotation.expiryDate = new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10);
+      this.quotation.expiryDate = new Date(
+        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
   },
   computed: {
     ...mapGetters([
-      'risk_type',
-      'accountInformation',
-      'subscription_id',
-      'subscription_type',
-      'quotation',
-      'statusEng',
-      'businessBound',
-      'underwriter',
-      'underwriterMonth',
-      'boundEng',
+      "risk_type",
+      "accountInformation",
+      "subscription_id",
+      "subscription_type",
+      "quotation",
+      "statusEng",
+      "businessBound",
+      "underwriter",
+      "underwriterMonth",
+      "boundEng",
     ]),
     term: {
       get() {
@@ -162,7 +212,9 @@ export default {
 
         const inceptionDate = new Date(this.quotation.inceptionDate || 0);
         const expiryDate = new Date(this.quotation.expiryDate || 0);
-        const dateSubs = (expiryDate.getTime() - inceptionDate.getTime()) / (1000 * 60 * 60 * 24);
+        const dateSubs =
+          (expiryDate.getTime() - inceptionDate.getTime()) /
+          (1000 * 60 * 60 * 24);
 
         const result = Decimal.div(dateSubs, div);
         return this.formatter.format(result);
@@ -172,34 +224,49 @@ export default {
       get() {
         const inception = new Date(this.quotation.inceptionDate);
         const month = inception.getMonth();
-        if (this.underwriterMonth.length) return this.underwriterMonth[month].id;
+        if (this.underwriterMonth.length)
+          return this.underwriterMonth[month].id;
         return 1;
       },
       set() {},
     },
+    requiredFieldsCompleted() {
+      return !!(this.boundEng.underwriter && this.boundEng.awAnalist1);
+    },
   },
   watch: {
-    term: debounce(function(val) {
-      this.$v.boundEng.term.$model = numeral((val || '$0').replace('$', '')).value() || 0;
-      this.SET_BOUND_ENG('term', numeral((val || '$0').replace('$', '')).value() || 0);
-      this.checkField('term');
+    term: debounce(function (val) {
+      this.$v.boundEng.term.$model =
+        numeral((val || "$0").replace("$", "")).value() || 0;
+      this.SET_BOUND_ENG(
+        "term",
+        numeral((val || "$0").replace("$", "")).value() || 0
+      );
+      this.checkField("term");
     }, 1000),
-    selectedUnderwriterMonth: debounce(function(val) {
+    selectedUnderwriterMonth: debounce(function (val) {
       this.$v.boundEng.underwriterMonth.$model = val;
-      this.SET_BOUND_ENG('underwriterMonth', val);
-      this.checkField('underwriterMonth');
+      this.SET_BOUND_ENG("underwriterMonth", val);
+      this.checkField("underwriterMonth");
     }, 1000),
+    requiredFieldsCompleted: {
+      handler(newValue) {
+        this.$emit("required-fields-change", newValue);
+      },
+      immediate: true,
+    },
   },
   methods: {
-    ...mapActions(['getCatalogByName', 'saveBoundColumn']),
-    ...mapMutations(['SET_BOUND_ENG']),
+    ...mapActions(["getCatalogByName", "saveBoundColumn"]),
+    ...mapMutations(["SET_BOUND_ENG"]),
     async checkField(column) {
       this.$v.boundEng[column].$touch();
-      console.log(this.$v.boundEng[column].$invalid, this.$v.boundEng[column].$error);
-      if (this.$v.boundEng[column].$invalid || this.$v.boundEng[column].$error) return;
+      // console.log(this.$v.boundEng[column].$invalid, this.$v.boundEng[column].$error);
+      if (this.$v.boundEng[column].$invalid || this.$v.boundEng[column].$error)
+        return;
       await this.saveBoundColumn({
-        table: 'bound',
-        parent: 'boundEng',
+        table: "bound",
+        parent: "boundEng",
         column,
       });
     },

@@ -9,11 +9,9 @@
     <div class="GeneralContent FullOnMovil pl-10 pr-10">
       <!--Titulo de la pagina-->
       <TitlePage title="Accounts" />
-      
+
       <!--Barra de navegación-->
-      <BarNavGeneral 
-        :NavContent="BarNavData"
-      />
+      <BarNavGeneral :NavContent="BarNavData" />
       <!--Tipo-->
       <TypeSubmission />
 
@@ -28,11 +26,7 @@
     </div>
 
     <!--MODAL NOTAS-->
-    <ModalNotes
-      @HideModal="ToggleModal"
-      :ShowModal="ShowNotesModal"
-      :idSubsNotes="idSubsNotes"
-    />
+    <ModalNotes @HideModal="ToggleModal" :ShowModal="ShowNotesModal" :idSubsNotes="idSubsNotes" />
   </div>
 </template>
 <script>
@@ -57,46 +51,46 @@ export default {
     Search,
     WhiteSpace,
     ModalNotes,
-    ShowMoreButton
+    ShowMoreButton,
   },
   data() {
     return {
       ShowNotesModal: false, //muestra oculta el historial de notas
       idSubsNotes: null, //referencia de la nota a mostrar en el modal
-      BarNavData:[ //Datos de la barra de navegación
+      BarNavData: [
+        //Datos de la barra de navegación
         {
-          id:1,
-          text:'Registered Accounts',
-          path:'/renewals/accounts',
-          active:true
+          id: 1,
+          text: "Registered Accounts",
+          path: "/renewals/accounts",
+          active: true,
         },
         {
-          id:2,
-          text:'Underwriting',
-          path:'/renewals/subscription',
-          active:false
-        }
-      ]
+          id: 2,
+          text: "Underwriting",
+          path: "/renewals/subscription",
+          active: false,
+        },
+      ],
     };
   },
-  async created() {
-  },
+  async created() {},
   methods: {
     ...mapActions(["noteSubscription"]),
     /*
     ShowNotesHistory
-    Muestra el historial de notas al 
+    Muestra el historial de notas al
     hacer click en una nota de la tabla
     */
-    ShowNotesHistory(idSubscription){
-      this.$emit('ShowNotesHistory',idSubscription)
+    ShowNotesHistory(idSubscription) {
+      this.$emit("ShowNotesHistory", idSubscription);
     },
     ToggleModal() {
       this.ShowNotesModal = !this.ShowNotesModal;
     },
     async ShowNotesHistory(idSubscription) {
       this.setLoading();
-      console.log(idSubscription)
+      // console.log(idSubscription)
       this.idSubsNotes = idSubscription;
       await this.loadNotes(idSubscription);
       this.setLoading();

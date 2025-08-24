@@ -4,9 +4,7 @@
       <div class="endorsement-wrapper">
         <div class="content">
           <div class="head-items-cont">
-            <div class="endorsement-title" style="padding: 20px">
-              Admited premium
-            </div>
+            <div class="endorsement-title" style="padding: 20px">Admited premium</div>
           </div>
           <div class="table-container input-row justify-center">
             <div class="title-col">
@@ -31,11 +29,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumDamage = changeHandler(
-                                item.id,
-                                item.premiumDamage,
-                                'premiumDamage'
-                              );
+                              item.premiumDamage = changeHandler(item.id, item.premiumDamage, 'premiumDamage');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -48,11 +42,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumBi = changeHandler(
-                                item.id,
-                                item.premiumBi,
-                                'premiumBi'
-                              );
+                              item.premiumBi = changeHandler(item.id, item.premiumBi, 'premiumBi');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -65,11 +55,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumStocks = changeHandler(
-                                item.id,
-                                item.premiumStocks,
-                                'premiumStocks'
-                              );
+                              item.premiumStocks = changeHandler(item.id, item.premiumStocks, 'premiumStocks');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -77,11 +63,7 @@
                         />
                       </div>
                       <div class="table-input">
-                        <currency-input
-                          v-model="premiumTotalComputed"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input v-model="premiumTotalComputed" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -102,11 +84,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluDamage = changeHandler(
-                                item.id,
-                                item.sluDamage,
-                                'sluDamage'
-                              );
+                              item.sluDamage = changeHandler(item.id, item.sluDamage, 'sluDamage');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -119,11 +97,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluBi = changeHandler(
-                                item.id,
-                                item.sluBi,
-                                'sluBi'
-                              );
+                              item.sluBi = changeHandler(item.id, item.sluBi, 'sluBi');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -136,11 +110,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluStocks = changeHandler(
-                                item.id,
-                                item.sluStocks,
-                                'sluStocks'
-                              );
+                              item.sluStocks = changeHandler(item.id, item.sluStocks, 'sluStocks');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -148,11 +118,7 @@
                         />
                       </div>
                       <div class="table-input">
-                        <currency-input
-                          v-model="sluTotalComputed"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input v-model="sluTotalComputed" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -183,11 +149,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumDamage = changeHandler(
-                                item.id,
-                                item.premiumDamage,
-                                'premiumDamage'
-                              );
+                              item.premiumDamage = changeHandler(item.id, item.premiumDamage, 'premiumDamage');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -200,11 +162,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumBi = changeHandler(
-                                item.id,
-                                item.premiumBi,
-                                'premiumBi'
-                              );
+                              item.premiumBi = changeHandler(item.id, item.premiumBi, 'premiumBi');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -217,11 +175,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumStocks = changeHandler(
-                                item.id,
-                                item.premiumStocks,
-                                'premiumStocks'
-                              );
+                              item.premiumStocks = changeHandler(item.id, item.premiumStocks, 'premiumStocks');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -229,11 +183,7 @@
                         />
                       </div>
                       <div class="table-input">
-                        <currency-input
-                          v-model="premiumTotalComputed"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input v-model="premiumTotalComputed" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -254,11 +204,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluDamage = changeHandler(
-                                item.id,
-                                item.sluDamage,
-                                'sluDamage'
-                              );
+                              item.sluDamage = changeHandler(item.id, item.sluDamage, 'sluDamage');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -271,11 +217,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluBi = changeHandler(
-                                item.id,
-                                item.sluBi,
-                                'sluBi'
-                              );
+                              item.sluBi = changeHandler(item.id, item.sluBi, 'sluBi');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -288,11 +230,7 @@
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluStocks = changeHandler(
-                                item.id,
-                                item.sluStocks,
-                                'sluStocks'
-                              );
+                              item.sluStocks = changeHandler(item.id, item.sluStocks, 'sluStocks');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -300,11 +238,7 @@
                         />
                       </div>
                       <div class="table-input">
-                        <currency-input
-                          v-model="sluTotalComputed"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input v-model="sluTotalComputed" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -319,45 +253,19 @@
       <v-card id="card-eye" class="pb-3">
         <v-card-actions class="px-3 pb-3">
           <v-flex text-xs-right>
-            <v-btn
-              @click="dialog = false"
-              color="orange"
-              dark
-              small
-              absolute
-              fab
-              right
-            >
+            <v-btn @click="dialog = false" color="orange" dark small absolute fab right>
               <v-icon color="white">mdi-close</v-icon>
             </v-btn>
           </v-flex>
         </v-card-actions>
-        <v-card-title class="font-weight-bold text-h5"
-          >Changes admitted premium</v-card-title
-        >
+        <v-card-title class="font-weight-bold text-h5">Changes admitted premium</v-card-title>
         <v-divider id="divisor"></v-divider>
         <div id="border-blue" class="mb-8">
-          <v-card-text class="font-weight-bold text-h6 blue-text">
-            If you continue, the data entered in the admitted premium table will
-            be taken.
-          </v-card-text>
+          <v-card-text class="font-weight-bold text-h6 blue-text"> If you continue, the data entered in the admitted premium table will be taken. </v-card-text>
         </div>
-        <div
-          class="stepper-btn mt-7 mb-3 d-flex justify-space-around align-center"
-        >
-          <v-btn text rounded large class="blue-btn" @click="dialog = false">
-            Accept
-          </v-btn>
-          <v-btn
-            outlined
-            rounded
-            large
-            class="clear-btn"
-            color="#003D6D"
-            @click="cancelModifyTable"
-          >
-            Cancel
-          </v-btn>
+        <div class="stepper-btn mt-7 mb-3 d-flex justify-space-around align-center">
+          <v-btn text rounded large class="blue-btn" @click="dialog = false"> Accept </v-btn>
+          <v-btn outlined rounded large class="clear-btn" color="#003D6D" @click="cancelModifyTable"> Cancel </v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -433,18 +341,12 @@ export default {
   methods: {
     sumTotalPremium() {
       const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      const sum =
-        admittedPremium.premiumDamage +
-        admittedPremium.premiumBi +
-        admittedPremium.premiumStocks;
+      const sum = admittedPremium.premiumDamage + admittedPremium.premiumBi + admittedPremium.premiumStocks;
       return sum;
     },
     sumPremiumSlu() {
       const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      const sum =
-        admittedPremium.sluDamage +
-        admittedPremium.sluBi +
-        admittedPremium.sluStocks;
+      const sum = admittedPremium.sluDamage + admittedPremium.sluBi + admittedPremium.sluStocks;
       return sum;
     },
     changeHandler(id, value, concept) {
@@ -474,9 +376,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -530,6 +432,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -600,7 +503,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -624,7 +527,7 @@ export default {
 }
 
 #card-eye {
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 #divisor {
@@ -636,7 +539,7 @@ export default {
 #border-blue {
   margin: 20px;
   border: solid 2px #a8bfd9;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .blue-text {

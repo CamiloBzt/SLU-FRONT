@@ -16,10 +16,7 @@ const formatter = new Intl.NumberFormat("en-US", {
 export const sluShare = (sluLine, value) => {
   const percentage = Decimal.div(sluLine, 100);
 
-  const op = Decimal.mul(
-    numeral((`${percentage}` || "$0").replace(/[^0-9.]/g, "")).value() || 0,
-    numeral((`${value}` || "$0").replace(/[^0-9.]/g, "")).value() || 0
-  ).toNumber();
+  const op = Decimal.mul(numeral((`${percentage}` || "$0").replace(/[^0-9.]/g, "")).value() || 0, numeral((`${value}` || "$0").replace(/[^0-9.]/g, "")).value() || 0).toNumber();
 
   return op || 0;
 };
@@ -32,15 +29,22 @@ export const sluShare = (sluLine, value) => {
  */
 
 export const calculateProperty = (property = 0, sluShare = 0) => {
-  const percentage = Decimal.div(property, 100);
-  const value = sluShare;
+  try {
+    const safeProperty = property == null || isNaN(property) ? 0 : property;
+    const safeSluShare = sluShare == null || isNaN(sluShare) ? 0 : sluShare;
 
-  const op = Decimal.mul(
-    numeral((`${percentage}` || "$0").replace(/[^0-9.]/g, "")).value() || 0,
-    numeral((`${value}` || "$0").replace(/[^0-9.]/g, "")).value() || 0
-  ).toNumber();
+    const percentage = new Decimal(safeProperty).div(100);
 
-  return op || 0;
+    const cleanPercentage = numeral(`${percentage}`.replace(/[^0-9.]/g, "")).value() || 0;
+    const cleanSluShare = numeral(`${safeSluShare}`.replace(/[^0-9.]/g, "")).value() || 0;
+
+    const op = new Decimal(cleanPercentage).mul(cleanSluShare).toNumber();
+
+    return op || 0;
+  } catch (e) {
+    console.warn("Error in calculateProperty:", e.message);
+    return 0;
+  }
 };
 
 /**
@@ -80,16 +84,8 @@ export const calculateTotal = (...properties) => {
  * @returns {number}
  */
 
-export const calculateNet = (
-  { initialValue, returners },
-  deductionType,
-  exception
-) => {
-  let op = returners.reduce(
-    (accumulator, currentValue) =>
-      Decimal.sub(accumulator, currentValue).toNumber(),
-    initialValue
-  );
+export const calculateNet = ({ initialValue, returners }, deductionType, exception) => {
+  let op = returners.reduce((accumulator, currentValue) => Decimal.sub(accumulator, currentValue).toNumber(), initialValue);
 
   if (deductionType === "At inception") {
     op = Decimal.sub(op, exception).toNumber();

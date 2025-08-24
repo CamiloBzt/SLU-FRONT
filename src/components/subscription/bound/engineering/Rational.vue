@@ -18,7 +18,7 @@
 
       <v-expansion-panel-content>
         <div class="ExpandContent">
-          <div class="TitleTextArea">Offer Comments</div>
+          <div class="TitleTextArea">Offer Comments*</div>
 
           <textarea
             v-model.trim="$v.boundEng.rationalComments.$model"
@@ -33,32 +33,47 @@
   </v-expansion-panels>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* validations */
-import { required } from 'vuelidate/lib/validators';
+import { required } from "vuelidate/lib/validators";
 
 export default {
-  name: 'Rational',
+  name: "Rational",
   mixins: [stateExpansiveManager],
-  inject: ['deepDisabled'],
+  inject: ["deepDisabled"],
   computed: {
-    ...mapGetters(['boundEng']),
+    ...mapGetters(["boundEng"]),
+    rationalCommentsCompleted() {
+      return (
+        this.boundEng.rationalComments &&
+        this.boundEng.rationalComments.trim().length > 0
+      );
+    },
   },
+  watch: {
+    rationalCommentsCompleted: {
+      handler(newValue) {
+        this.$emit("rational-comments-change", newValue);
+      },
+      immediate: true,
+    },
+  },
+
   methods: {
-    ...mapActions(['saveBoundColumn']),
-    ...mapMutations(['SET_BOUND_ENG']),
+    ...mapActions(["saveBoundColumn"]),
+    ...mapMutations(["SET_BOUND_ENG"]),
     async checkField(column) {
       this.$v.boundEng[column].$touch();
-      console.log(
+      /*console.log(
         this.$v.boundEng[column].$invalid,
         this.$v.boundEng[column].$error
-      );
+      );*/
       if (this.$v.boundEng[column].$invalid || this.$v.boundEng[column].$error)
         return;
       await this.saveBoundColumn({
-        table: 'bound',
-        parent: 'boundEng',
+        table: "bound",
+        parent: "boundEng",
         column,
       });
     },
@@ -71,6 +86,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 </style>

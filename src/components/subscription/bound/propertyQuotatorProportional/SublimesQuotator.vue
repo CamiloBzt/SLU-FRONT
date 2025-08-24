@@ -1,17 +1,13 @@
 <template>
   <v-expansion-panels class="SubExpansionComponent">
     <v-expansion-panel @change="deepDisabled">
-      <v-expansion-panel-header
-        @click="changeSubExpansion"
-        class="ExpansionTitle d-flex justify-start"
-        expand-icon=""
-      >
+      <v-expansion-panel-header @click="changeSubExpansion" class="ExpansionTitle d-flex justify-start" expand-icon="">
         <template v-slot:actions>
           <div class="subIconCont d-flex justify-start align-center">
             <v-icon class="iconExpand mr-1">
               {{ iconSubExpansion }}
             </v-icon>
-            <div class="SubExpansionTitle">Sublime {{ sublimeIndex + 1 }}</div>
+            <div class="SubExpansionTitle">Sublimit {{ sublimeIndex + 1 }}</div>
           </div>
         </template>
       </v-expansion-panel-header>
@@ -40,14 +36,12 @@
 
           <!--Cat Sublimes title-->
           <div class="TitleCont d-flex justify-start align-center">
-            <h5>Cat Sublimes</h5>
+            <h5>Cat Sublimits</h5>
           </div>
           <v-row class="mt-4">
             <v-col :cols="6">
               <!--Label-->
-              <div class="Label">
-                Coverage B Earthquake, Tremor or volcanic Eruption
-              </div>
+              <div class="Label">Coverage B Earthquake, Tremor or volcanic Eruption</div>
               <!--Input-->
               <div class="w-100">
                 <v-select
@@ -156,11 +150,7 @@
             <h5>All Other Sublimits</h5>
           </div>
           <div class="SublimitsCont d-flex align-start flex-wrap">
-            <div
-              class="Line mt-4"
-              v-for="(item, index) in $v.boundSublimitsProp.$each.$iter"
-              :key="index"
-            >
+            <div class="Line mt-4" v-for="(item, index) in $v.boundSublimitsProp.$each.$iter" :key="index">
               <div class="RowLarge">
                 <v-select
                   v-model.trim="item.otherDeductiblesSelect.$model"
@@ -186,17 +176,10 @@
                 />
               </div>
               <div class="Row">
-                <currency-input
-                  v-model.trim="computedUsd[index]"
-                  label="USD"
-                  disabled
-                  :options="currencyOptions"
-                />
+                <currency-input v-model.trim="computedUsd[index]" label="USD" disabled :options="currencyOptions" />
               </div>
               <!-- botón de eliminado (debug only) -->
-              <v-icon small @click="removeField(index)" class="mt-4">
-                mdi-minus-circle
-              </v-icon>
+              <v-icon small @click="removeField(index)" class="mt-4"> mdi-minus-circle </v-icon>
             </div>
           </div>
 
@@ -251,21 +234,13 @@ export default {
     },
   },
   async beforeMount() {
-    await Promise.all([
-      this.getCatalogByName({ name: "sublimits" }),
-      this.getCatalogByName({ name: "other_deductibles" }),
-    ]);
+    await Promise.all([this.getCatalogByName({ name: "sublimits" }), this.getCatalogByName({ name: "other_deductibles" })]);
   },
   async mounted() {
     await this.loadMultipleDeductiblesEng({ table: "boundSublimitsProp" });
   },
   computed: {
-    ...mapGetters([
-      "otherDeductibles",
-      "sublimits",
-      "subscription_id",
-      "quotation",
-    ]),
+    ...mapGetters(["otherDeductibles", "sublimits", "subscription_id", "quotation"]),
     ...mapGetters({
       currentSublimes: "boundSublimesProp",
       currentSublimits: "boundSublimitsProp",
@@ -274,22 +249,14 @@ export default {
       return this.currentSublimes[this.sublimeIndex];
     },
     boundSublimitsProp() {
-      const data = Array.from(this.currentSublimits).filter(
-        (v) => v.sublimeId == this.sublimeId
-      );
+      const data = Array.from(this.currentSublimits).filter((v) => v.sublimeId == this.sublimeId);
       return data;
     },
     computedUsd: {
       get() {
         const arr = this.boundSublimitsProp.map((i) => {
-          const mynumber = new Decimal(
-            numeral(
-              (`${i.otherDeductiblesValue}` || "$0").replace(/[^0-9.]/g, "")
-            ).value() || 0
-          );
-          const op = mynumber.div(
-            numeral(this.quotation.exchangeRate || 0).value() || 0
-          );
+          const mynumber = new Decimal(numeral((`${i.otherDeductiblesValue}` || "$0").replace(/[^0-9.]/g, "")).value() || 0);
+          const op = mynumber.div(numeral(this.quotation.exchangeRate || 0).value() || 0);
           return op.toNumber();
         });
         return arr;
@@ -297,17 +264,13 @@ export default {
     },
     displayHiddenCoverageB() {
       const valid = [4, "4"];
-      const comparison = valid.includes(
-        this.$v.boundSublimes.sublimits1.$model
-      );
+      const comparison = valid.includes(this.$v.boundSublimes.sublimits1.$model);
       if (comparison) return true;
       return false;
     },
     displayHiddenCoverageC() {
       const valid = [4, "4"];
-      const comparison = valid.includes(
-        this.$v.boundSublimes.sublimits2.$model
-      );
+      const comparison = valid.includes(this.$v.boundSublimes.sublimits2.$model);
       if (comparison) return true;
       return false;
     },
@@ -324,33 +287,20 @@ export default {
     }, 1000),
   },
   methods: {
-    ...mapActions([
-      "saveBoundColumn",
-      "loadMultipleDeductiblesEng",
-      "saveEngDeductibleColumn",
-      "addNewFieldBound",
-      "getCatalogByName",
-      "updateSublimeProperty",
-      "createSublimitProperty",
-    ]),
+    ...mapActions(["saveBoundColumn", "loadMultipleDeductiblesEng", "saveEngDeductibleColumn", "addNewFieldBound", "getCatalogByName", "updateSublimeProperty", "createSublimitProperty"]),
     ...mapMutations(["SET_BOUND_ENG"]),
     computedOnUsd(index, column = "otherDeductiblesValueUsd") {
-      this.$v.boundSublimitsProp.$each[index][column].$model =
-        this.computedUsd[index];
+      this.$v.boundSublimitsProp.$each[index][column].$model = this.computedUsd[index];
       this.checkMultipleField(index, column);
     },
     async checkField(column) {
       this.$v.boundSublimes[column].$touch();
       const id = this.$v.boundSublimes.$model.id;
-      console.log(
+      /*console.log(
         this.$v.boundSublimes[column].$invalid,
         this.$v.boundSublimes[column].$error
-      );
-      if (
-        this.$v.boundSublimes[column].$invalid ||
-        this.$v.boundSublimes[column].$error
-      )
-        return;
+      );*/
+      if (this.$v.boundSublimes[column].$invalid || this.$v.boundSublimes[column].$error) return;
 
       await this.updateSublimeProperty({
         id: this.sublimeId,
@@ -358,22 +308,12 @@ export default {
       });
     },
     async checkMultipleField(index, column) {
-      if (
-        this.$v.boundSublimitsProp.$each[index][column].$invalid ||
-        this.$v.boundSublimitsProp.$each[index][column].$error
-      )
-        return;
+      if (this.$v.boundSublimitsProp.$each[index][column].$invalid || this.$v.boundSublimitsProp.$each[index][column].$error) return;
       const value = this.$v.boundSublimitsProp.$each[index][column].$model;
       const id = this.$v.boundSublimitsProp.$each[index].$model.id;
 
-      if (
-        this.$v.boundSublimitsProp.$each[index].otherDeductiblesValue.$model
-      ) {
-        this.$v.boundSublimitsProp.$each[
-          index
-        ].otherDeductiblesValueUsd.$model = Decimal(
-          this.$v.boundSublimitsProp.$each[index].otherDeductiblesValue.$model
-        ).mul(this.quotation.exchangeRate);
+      if (this.$v.boundSublimitsProp.$each[index].otherDeductiblesValue.$model) {
+        this.$v.boundSublimitsProp.$each[index].otherDeductiblesValueUsd.$model = Decimal(this.$v.boundSublimitsProp.$each[index].otherDeductiblesValue.$model).mul(this.quotation.exchangeRate);
       }
       await this.saveEngDeductibleColumn({
         table: "boundSublimitsProp",
@@ -404,9 +344,7 @@ export default {
     numberWithDotsElement(e) {
       let val = e.target.value;
       let onlyNumbers = val.toString().replace(/[^0-9]+/g, "");
-      let newVal = /^\d+$/.test(onlyNumbers)
-        ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        : "";
+      let newVal = /^\d+$/.test(onlyNumbers) ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "";
       e.target.value = newVal;
     },
   },

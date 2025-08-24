@@ -573,7 +573,7 @@ export default {
   }
   //Tabla
   .Table {
-    width: 80%;
+    width: 90%;
     height: auto;
 
     //Cabecera
@@ -648,7 +648,7 @@ export default {
     }
 
     .Bold {
-      font-weight: 700;
+      font-weight: 600;
     }
   }
 

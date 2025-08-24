@@ -1,6 +1,6 @@
 <template>
   <div class="ButtonsCont d-flex flex-column align-end">
-    <ModalFourEyes />
+    <ModalFourEyes @close="handleFourEyesClosed" />
     <div class="dropCont mt-3">
       <v-menu left z-index="3000" :offset-x="offset">
         <template v-slot:activator="{ on, attrs }">
@@ -13,7 +13,6 @@
             outlined
             class="btn"
             color="#003D6D"
-            :disabled="validaRejected"
             id="btnDefineAuth"
           >
             <v-icon class="mr-2"> mdi-chevron-down </v-icon>
@@ -71,9 +70,12 @@ import ModalFourEyes from "@/components/subscription/quotation/ModalFourEyes.vue
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
 export default {
+  components: {
+    EmailModal,
+    ModalFourEyes,
+  },
   async beforeMount() {
-    this.showBoundButton = this.facultativeReference !== null ? true : false;
-
+    this.showBoundButton = this.subscriptionStatus < 4;
     Promise.all([
       this.getTemplateEmail(),
       this.getContactsBySubscriptionId({
@@ -82,17 +84,7 @@ export default {
     ]).finally(() => {
       this.loading = false;
     });
-    this.underwritersTable = await this.getNotificationsFourEyeSuscriptor(
-      this.$route.params.subscriptionId
-    );
-
-    const mapStatus = this.underwritersTable.map((e) => {
-      return e.status;
-    });
-  },
-  components: {
-    EmailModal,
-    ModalFourEyes,
+    this.updateUnderwritersTable();
   },
   watch: {
     facultativeReference: function () {
@@ -120,12 +112,13 @@ export default {
       "facultativeReference",
       "subscriptionStatus",
     ]),
-
-    validaRejected: function (element) {
-      const validaRejected = this.underwritersTable.find(
-        (e) => e.status === "ACCEPTED"
-      );
-      return !(!validaRejected === false || this.showBoundButton);
+    validaRejected() {
+      // Ley de los cuatro ojos: mínimo 1 aceptados
+      const accepted = Array.isArray(this.underwritersTable)
+        ? this.underwritersTable.filter((e) => e.status === "ACCEPTED")
+        : [];
+      // Solo habilitar si hay al menos  aceptados y el botón está permitido por status
+      return !(accepted.length >= 1 && this.showBoundButton);
     },
   },
   methods: {
@@ -137,6 +130,11 @@ export default {
       "getContactsBySubscriptionId",
     ]),
     ...mapMutations(["SET_MAIL_TEMPLATE"]),
+    async updateUnderwritersTable() {
+      this.underwritersTable = await this.getNotificationsFourEyeSuscriptor(
+        this.$route.params.subscriptionId
+      );
+    },
     /*
 				El metodo defineQuotation devuelve el tipo de quotation elegido
     	*/
@@ -152,10 +150,9 @@ export default {
       this.SET_MAIL_TEMPLATE(event);
       this.$refs.emailModal.showModal = true;
     },
-  },
-  beforeMount() {
-    this.showBoundButton = this.subscriptionStatus < 4;
-    this.isValidated = !this.showBoundButton;
+    handleFourEyesClosed() {
+      this.updateUnderwritersTable();
+    },
   },
 };
 </script>
@@ -212,6 +209,7 @@ export default {
 }
 
 .btn {
+  border-radius: 5px;
   width: 200px;
   color: white;
   text-transform: none;
@@ -247,7 +245,7 @@ export default {
 
     .listContent {
       width: 90%;
-      border-radius: 15px;
+      border-radius: 5px;
     }
   }
   /*

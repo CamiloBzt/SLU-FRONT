@@ -8,17 +8,11 @@
 
     <v-stepper v-model="e1">
       <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607">
-          Endorsement
-        </v-stepper-step>
+        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607"> Endorsement </v-stepper-step>
 
-        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
-          Calculate premium
-        </v-stepper-step>
+        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607"> Calculate premium </v-stepper-step>
 
-        <v-stepper-step step="3" color="#F59607">
-          Endorsement summary
-        </v-stepper-step>
+        <v-stepper-step step="3" color="#F59607"> Endorsement summary </v-stepper-step>
       </v-stepper-header>
 
       <div class="endorsement-wrapper">
@@ -26,17 +20,13 @@
           <v-stepper-items>
             <v-stepper-content step="1" class="step-one">
               <div class="head-items-cont-checkbox">
-                <div class="endorsement-title" style="padding: 20px 0">
-                  Account
-                </div>
+                <div class="endorsement-title" style="padding: 20px 0">Account</div>
 
                 <div class="endorsement-title" style="padding: 20px 40px">
                   <v-checkbox v-model="showAccountOrEndorsements" value="1"></v-checkbox>
                 </div>
 
-                <div class="endorsement-title" style="padding: 20px 0">
-                  Endorsements
-                </div>
+                <div class="endorsement-title" style="padding: 20px 0">Endorsements</div>
 
                 <div class="endorsement-title" style="padding: 20px 40px">
                   <v-checkbox v-model="showAccountOrEndorsements" value="2"></v-checkbox>
@@ -55,11 +45,9 @@
                 <div class="inner-title">Additional</div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40"
-                      transition="scale-transition" offset-y min-width="auto">
+                    <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" v-bind="attrs"
-                          v-on="on"></v-text-field>
+                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" v-bind="attrs" v-on="on"></v-text-field>
                       </template>
                       <v-date-picker v-model="premiumPaymentDate" @input="menu3 = false"></v-date-picker>
                     </v-menu>
@@ -67,30 +55,38 @@
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause"
-                      item-text="clause" />
+                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" />
                   </div>
-                  <div v-if="!clause" class="error-message">
-                    Please select a clause.
-                  </div>
+                  <div v-if="!clause" class="error-message">Please select a clause.</div>
                 </div>
               </div>
             </v-stepper-content>
 
             <v-stepper-content step="2">
-              <AdmittedPremium3Table @setTotalPremium="setTotalPremium" :detailValues="detailValues"
-                :premiumPaymentDate="premiumPaymentDate" :clause="clause" :clauseList="clauseList" />
+              <AdmittedPremium3Table @setTotalPremium="setTotalPremium" :detailValues="detailValues" :premiumPaymentDate="premiumPaymentDate" :clause="clause" :clauseList="clauseList" />
             </v-stepper-content>
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
 
               <div class="files-submit flex justify-content-start align-items-start align-content-start">
-                <AppFile v-for="(item, clave) in files" :key="clave" :fileId="item.fileId" :fileName="item.fileName"
-                  :fileDownloadLink="item.fileDownloadLink" :loaded="item.loaded" :error="item.error"
-                  :errorMessage="item.errorMessage" :loading="item.loading" :fileType="item.fileType"
-                  :fileTypeMessage="item.fileTypeMessage" @removeFileById="removeFileById($event)"
-                  @errors="errors($event)" @loading="loadingFile($event)" @loadFile="updateFile($event)" />
+                <AppFile
+                  v-for="(item, clave) in files"
+                  :key="clave"
+                  :fileId="item.fileId"
+                  :fileName="item.fileName"
+                  :fileDownloadLink="item.fileDownloadLink"
+                  :loaded="item.loaded"
+                  :error="item.error"
+                  :errorMessage="item.errorMessage"
+                  :loading="item.loading"
+                  :fileType="item.fileType"
+                  :fileTypeMessage="item.fileTypeMessage"
+                  @removeFileById="removeFileById($event)"
+                  @errors="errors($event)"
+                  @loading="loadingFile($event)"
+                  @loadFile="updateFile($event)"
+                />
               </div>
             </v-stepper-content>
           </v-stepper-items>
@@ -98,16 +94,13 @@
       </div>
 
       <div v-if="e1 == 1" v-for="(element, index) in listEndorsement" :key="element.id">
-        <CancellationEndorsement v-if="showAccountOrEndorsements == 2" :elementComplete="element" :item="index"
-          @arrayCancellationEndorsement="arrayCancellationEndorsement" />
+        <CancellationEndorsement v-if="showAccountOrEndorsements == 2" :elementComplete="element" :item="index" @arrayCancellationEndorsement="arrayCancellationEndorsement" />
       </div>
 
       <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)"
-          :disabled="validationFirstStep">
+        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false" :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)" :disabled="validationFirstStep">
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -133,26 +126,19 @@
               Are you sure?
             </v-card-text>
 
-            <v-card-text v-if="showAccountOrEndorsements == 2 && endorsementCancellationList"
-              class="font-weight-bold text-h6 blue-text">
-              The following endorsement [<span v-for="(item, index) in nameEndorsementListToCancell"
-                class="font-weight-bold text-h6 blue-text">{{ item.name }} {{ item.id }}<span
-                  v-if="totalEndorsementCancelled != index + 1" class="font-weight-bold text-h6 blue-text">,
-                </span></span>]
-              will be cancelled.
+            <v-card-text v-if="showAccountOrEndorsements == 2 && endorsementCancellationList" class="font-weight-bold text-h6 blue-text">
+              The following endorsement [<span v-for="(item, index) in nameEndorsementListToCancell" class="font-weight-bold text-h6 blue-text"
+                >{{ item.name }} {{ item.id }}<span v-if="totalEndorsementCancelled != index + 1" class="font-weight-bold text-h6 blue-text">, </span></span
+              >] will be cancelled.
               <br />
               Are you sure?
             </v-card-text>
           </div>
 
           <div class="stepper-btn mt-7 mb-3 d-flex justify-space-around align-center">
-            <v-btn text rounded large class="blue-btn" @click="agreeCancellation">
-              Accept
-            </v-btn>
+            <v-btn text rounded large class="blue-btn" @click="agreeCancellation"> Accept </v-btn>
 
-            <v-btn outlined rounded large class="clear-btn" color="#003D6D" @click="dialog = false">
-              Cancel
-            </v-btn>
+            <v-btn outlined rounded large class="clear-btn" color="#003D6D" @click="dialog = false"> Cancel </v-btn>
           </div>
         </v-card>
       </v-dialog>
@@ -165,15 +151,12 @@ import AppFile from "../../components/AppFile.vue";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import AdmittedPremium3Table from "../../components/AdmittedPremium3Table.vue";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
-import CancellationInfo from "../../components/CancellationInfo.vue"
-import CancellationTable from "../../components/CancellationTable.vue"
-import CancellationEndorsement from "../../components/CancellationEndorsement.vue"
+import CancellationInfo from "../../components/CancellationInfo.vue";
+import CancellationTable from "../../components/CancellationTable.vue";
+import CancellationEndorsement from "../../components/CancellationEndorsement.vue";
 
 /* services */
-import {
-  netPremiumInclusionRisk,
-  netPremiumInclusionRiskAutoCalcs,
-} from "../class/netPremiumInclusionRisk";
+import { netPremiumInclusionRisk, netPremiumInclusionRiskAutoCalcs } from "../class/netPremiumInclusionRisk";
 import EndorsementService from "../../services/endorsement.service";
 import AccountCompleteService from "@/modules/home/services/account-complete.service";
 import PaymentService from "@/modules/home/services/payments.service";
@@ -203,13 +186,11 @@ export default {
     },
     accountComplete: { type: Object },
     dateSaved: { type: String },
-    listEndorsement: { type: Array }
+    listEndorsement: { type: Array },
   },
   data() {
     return {
-      expiryDateReal: new Date(this.accountComplete.deductibles.expiryDate)
-        .toISOString()
-        .substr(0, 10),
+      expiryDateReal: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
       menu3: false,
       menu4: false,
       clause: this.accountComplete.cartera.clausula,
@@ -222,11 +203,7 @@ export default {
       subscriptionId: this.$route.params.id,
       e1: 1,
       effectiveDate: this.dateSaved,
-      expiryDate: new Date(
-        Date.now() + 31540000000 - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
+      expiryDate: new Date(Date.now() + 31540000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       admitedPremium: 0,
       files: [
         {
@@ -245,7 +222,7 @@ export default {
       insurable: [],
       detailValues: [
         {
-          title: 'Total premium',
+          title: "Total premium",
           datas: [
             {
               id: 1,
@@ -266,7 +243,7 @@ export default {
           ],
         },
         {
-          title: 'Premium SLU',
+          title: "Premium SLU",
           datas: [
             {
               id: 1,
@@ -287,7 +264,7 @@ export default {
           ],
         },
         {
-          title: 'Net premium',
+          title: "Net premium",
           datas: [
             {
               id: 1,
@@ -337,9 +314,9 @@ export default {
       endDateError: false,
       endorsmentReporData: {},
       isEdited: {},
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
-      showAccountOrEndorsements: '1',
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
+      showAccountOrEndorsements: "1",
       dialog: false,
       endorsementCancellationList: [],
       nameEndorsementListToCancell: [],
@@ -350,21 +327,21 @@ export default {
     this.clauseList = await PaymentService.getClauses();
     // console.log('this.listEndorsement --->', this.listEndorsement)
   },
-  created() { },
+  created() {},
   watch: {
     e1: async function () {
       if (this.e1 === 1) {
-        this.isEdited = {}
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Cancel';
+        this.isEdited = {};
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Cancel";
       }
       if (this.e1 === 2) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Return";
       }
       if (this.e1 === 3) {
-        this.buttonTitle = 'Finalize'
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Finalize";
+        this.buttonTitleBack = "Return";
         const premiumOriginal = this.detailValues.find((el) => el.id === 1);
         const premiumUSD = this.detailValues.find((el) => el.id === 2);
 
@@ -377,15 +354,11 @@ export default {
           businessInterruptionRate: this.accountComplete.tiv.premium.businessInterruptionRate,
           stockRate: this.accountComplete.tiv.premium.stockRate,
           stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
-        }
+        };
 
         const dates = {
-          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-            .toISOString()
-            .substring(0, 10),
-          expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-            .toISOString()
-            .substring(0, 10),
+          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0, 10),
+          expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10),
           endormenteffetiveDate: new Date(this.effectiveDate),
           movementEndDate: new Date(this.expiryDateReal),
         };
@@ -402,37 +375,20 @@ export default {
             sluDamage: this.totalPremium[0].sluDamage,
             sluBi: this.totalPremium[0].sluBi,
             sluStocks: this.totalPremium[0].sluStocks,
-
           },
-        }
+        };
 
         // Obteniendo los calculos de Net premium
-        const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
-          tivModificado,
-          this.accountComplete.deductibles,
-          this.accountComplete.tiv?.boundInsurableProp.sluLine,
-          false,
-          dates,
-          options
-        );
+        const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(tivModificado, this.accountComplete.deductibles, this.accountComplete.tiv?.boundInsurableProp.sluLine, false, dates, options);
 
-        const resultUSD = await netPremiumInclusionRiskAutoCalcs(
-          tivModificado,
-          this.accountComplete.deductibles,
-          this.accountComplete.tiv?.boundInsurableProp.sluLine,
-          true,
-          dates,
-          options
-        );
+        const resultUSD = await netPremiumInclusionRiskAutoCalcs(tivModificado, this.accountComplete.deductibles, this.accountComplete.tiv?.boundInsurableProp.sluLine, true, dates, options);
 
         // Obteniendo los inputs del usuario
         const movementValues = this.movementValues.find((el) => el.id === 1);
         const movementValuesUSD = this.movementValues.find((el) => el.id === 2);
 
         // Obteniendo premium payment date
-        const premiumPaymentDate = new Date(
-          this.premiumPaymentDate
-        ).toISOString();
+        const premiumPaymentDate = new Date(this.premiumPaymentDate).toISOString();
 
         // Obteniendo la clausula
         const clause = this.clause;
@@ -460,15 +416,11 @@ export default {
             damage: movementValues.damage,
             bi: movementValues.bi,
             stocks: movementValues.stocks,
-            total:
-              movementValues.damage + movementValues.bi + movementValues.stocks,
+            total: movementValues.damage + movementValues.bi + movementValues.stocks,
             damageUsd: movementValuesUSD.damage,
             biUsd: movementValuesUSD.bi,
             stocksUsd: movementValuesUSD.stocks,
-            totalUsd:
-              movementValuesUSD.damage +
-              movementValuesUSD.bi +
-              movementValuesUSD.stocks,
+            totalUsd: movementValuesUSD.damage + movementValuesUSD.bi + movementValuesUSD.stocks,
           },
           premium: {
             propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
@@ -486,13 +438,13 @@ export default {
 
             totalInsured: this.totalPremium[0].premiumTotal,
 
-            propertyDamageUsd: (this.totalPremium[0].premiumDamage / this.accountComplete.deductibles.exchangeRate),
+            propertyDamageUsd: this.totalPremium[0].premiumDamage / this.accountComplete.deductibles.exchangeRate,
 
-            businessInterruptionUsd: (this.totalPremium[0].premiumBi / this.accountComplete.deductibles.exchangeRate),
+            businessInterruptionUsd: this.totalPremium[0].premiumBi / this.accountComplete.deductibles.exchangeRate,
 
-            stockUsd: (this.totalPremium[0].premiumStocks / this.accountComplete.deductibles.exchangeRate),
+            stockUsd: this.totalPremium[0].premiumStocks / this.accountComplete.deductibles.exchangeRate,
 
-            totalUsd: (this.totalPremium[0].premiumTotal / this.accountComplete.deductibles.exchangeRate),
+            totalUsd: this.totalPremium[0].premiumTotal / this.accountComplete.deductibles.exchangeRate,
           },
           boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
           deductibles: this.accountComplete.deductibles,
@@ -510,7 +462,6 @@ export default {
             stocksSluShare: resultUSD.data.stocksPremiumSlu,
             sluShareTotal: resultUSD.data.totalPremiumSlu,
           },
-
         };
 
         // Guardar los valores de netPremium
@@ -560,7 +511,7 @@ export default {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
       totalPremium[concept] = value;
 
-      if (concept !== 'premiumTotal' & concept !== 'sluTotal') {
+      if ((concept !== "premiumTotal") & (concept !== "sluTotal")) {
         this.isEdited[concept] = true;
       }
     },
@@ -568,40 +519,30 @@ export default {
       // console.log(datasMV);
       // this.movementValues = datasMV;
       // this.detailValues.map((value, index) => {
-
       //   value.premiumDamage =
       //     datasMV[index].totalDamage + datasMV[index].damage;
-
       //   value.premiumBi = datasMV[index].totalBi + datasMV[index].bi;
-
       //   value.premiumStocks =
       //     datasMV[index].totalStocks + datasMV[index].stocks;
-
       //   value.premiumTotal =
       //     value.premiumDamage + value.premiumBi + value.premiumStocks;
       // });
-
       // const premiumOriginal = this.detailValues.find((el) => el.id === 1);
-
       // const tivModificado = {
       //   propertyDamageMovement: this.movementValues[0].damage,
       //   businessInterruptionMovement: this.movementValues[0].bi,
       //   stockMovement: this.movementValues[0].stocks,
-
       //   propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
       //   businessInterruptionRate: this.accountComplete.tiv.premium.businessInterruptionRate,
       //   stockRate: this.accountComplete.tiv.premium.stockRate,
       //   stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
       // }
-
       // const dates = {
       //   effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0, 10),
       //   expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10),
       //   endormenteffetiveDate: new Date(this.effectiveDate),
       //   movementEndDate: new Date(this.expiryDateReal),
       // }
-
-
       // const totalPremium = new netPremiumInclusionRisk(
       //   tivModificado,
       //   this.accountComplete.deductibles,
@@ -609,16 +550,12 @@ export default {
       //   false,
       //   dates
       // );
-
       // const retultTotalPremium = totalPremium.totalPremium();
-
       // const premiumOriginal2 = this.totalPremium.find((el) => el.id === 1);
-
       // premiumOriginal2.premiumDamage = retultTotalPremium.damageTotalPremium;
       // premiumOriginal2.premiumBi = retultTotalPremium.biTotalPremium;
       // premiumOriginal2.premiumStocks = retultTotalPremium.stockTotalPremium;
       // premiumOriginal2.premiumTotal = retultTotalPremium.total;
-
       // premiumOriginal2.sluDamage = totalPremium.damagePremiumSlu();
       // premiumOriginal2.sluBi = totalPremium.biPremiumSlu();
       // premiumOriginal2.sluStocks = totalPremium.stocksPremiumSlu();
@@ -640,20 +577,16 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
     async submit() {
       this.e1 = 1;
 
       // calcular diferencia del net premium
-      const originalNetPremium = removeDollarSign(
-        this.accountComplete.net_premium.originalValues.netTotal
-      );
+      const originalNetPremium = removeDollarSign(this.accountComplete.net_premium.originalValues.netTotal);
 
-      const netPremiumMovement = removeDollarSign(
-        this.netPremium.originalValues.netTotal
-      );
+      const netPremiumMovement = removeDollarSign(this.netPremium.originalValues.netTotal);
 
       const newNetPremium = Decimal.add(originalNetPremium, netPremiumMovement).toNumber();
 
@@ -677,7 +610,7 @@ export default {
           total: tivTotal.premiumTotal,
           totalUsd: tivTotalUsd.premiumTotal,
 
-          porcentaje: this.accountComplete.tiv.insurable.porcentaje
+          porcentaje: this.accountComplete.tiv.insurable.porcentaje,
         },
         premium: {
           propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
@@ -686,27 +619,26 @@ export default {
           stockPercentaje: this.accountComplete.tiv.premium.stockPercentaje,
         },
         boundInsurableProp: this.accountComplete.tiv.boundInsurableProp,
-      }
+      };
 
       // guardar la cuenta actualizada en BD
-      const accountCompleteResponse =
-        await AccountCompleteService.addAccountComplete(this.subscriptionId, {
-          ...this.accountComplete,
-          deductibles: this.accountComplete.deductibles,
-          tiv: tivUpdate,
-          netPremium: {
-            originalValues: {
-              netTotal: newNetPremium,
-            }
+      const accountCompleteResponse = await AccountCompleteService.addAccountComplete(this.subscriptionId, {
+        ...this.accountComplete,
+        deductibles: this.accountComplete.deductibles,
+        tiv: tivUpdate,
+        netPremium: {
+          originalValues: {
+            netTotal: newNetPremium,
           },
-          technicalConditions: this.accountComplete.technical_conditions,
-          cartera: {
-            ...this.accountComplete.cartera,
-            ...this.cartera,
-            netPremiumDifference,
-            admitedPremium: this.admitedPremium,
-          },
-        });
+        },
+        technicalConditions: this.accountComplete.technical_conditions,
+        cartera: {
+          ...this.accountComplete.cartera,
+          ...this.cartera,
+          netPremiumDifference,
+          admitedPremium: this.admitedPremium,
+        },
+      });
 
       //guardar registro del endoso
       await EndorsementService.addEndorsment({
@@ -734,13 +666,13 @@ export default {
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.e1 = 2;
-        this.endorsementCancellationList.map(u => {
-          this.nameEndorsementListToCancell.push({ name: this.listEndorsement.filter(elem => elem.id == u.value).map(u => u.EndorsementType.type)[0], id: u.id })
-        })
-        this.totalEndorsementCancelled = this.nameEndorsementListToCancell.length
+        this.endorsementCancellationList.map((u) => {
+          this.nameEndorsementListToCancell.push({ name: this.listEndorsement.filter((elem) => elem.id == u.value).map((u) => u.EndorsementType.type)[0], id: u.id });
+        });
+        this.totalEndorsementCancelled = this.nameEndorsementListToCancell.length;
       } else if (e1 == 2) {
         this.dialog = true;
       } else if (e1 == 3) {
@@ -749,7 +681,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -769,25 +701,23 @@ export default {
     // id es el index + 1 y el value es el id del endoso
     arrayCancellationEndorsement({ id, value }) {
       if (value) {
-        this.endorsementCancellationList.push({ id, value })
+        this.endorsementCancellationList.push({ id, value });
       } else {
-        this.endorsementCancellationList = this.endorsementCancellationList.filter(el => el.id != id)
+        this.endorsementCancellationList = this.endorsementCancellationList.filter((el) => el.id != id);
       }
     },
-
   },
 
   computed: {
     validationFirstStep() {
       const clause = Boolean(this.clause);
-      const endDateError = !this.endDateError
+      const endDateError = !this.endDateError;
 
       const result = !(clause & endDateError);
 
       return false; // Cambiar por result cuando se acaben las pruebas
     },
-  }
-
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -801,9 +731,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -857,6 +787,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -881,7 +812,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1082,7 +1013,7 @@ export default {
 #border-blue {
   margin: 20px;
   border: solid 2px #a8bfd9;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .blue-text {
@@ -1091,6 +1022,6 @@ export default {
 }
 
 #card-eye {
-  border-radius: 20px;
+  border-radius: 5px;
 }
 </style>

@@ -4,11 +4,11 @@
     v-model="accountPanel"
   >
     <ConfirmationPrecaptureModal
-        :showConfirmationPrecaptureModal="IsPrecaptured"
-        :title="'You have pre captured data Are you want to load them?'"
-        @closeConfirmationPrecaptureModal="removeCapture"
-        @confirmAction="precapture"
-      />
+      :showConfirmationPrecaptureModal="IsPrecaptured"
+      :title="'You have pre captured data Are you want to load them?'"
+      @closeConfirmationPrecaptureModal="removeCapture"
+      @confirmAction="precapture"
+    />
     <v-expansion-panel :disabled="loadingPanel" @change="$emit('panel-event')">
       <!--TITULO DEL ACORDEON-->
       <v-expansion-panel-header
@@ -103,13 +103,17 @@
               :error-messages="
                 requiredInputVuelidateParent('typeOfRisk', 'accountInformation')
               "
-              label="Line of Risk"
+              label="Line of Business"
               :items="risk_type"
               item-text="key"
               item-value="id"
-              :hint="`${selectedRisk.description || 'Select a Line of Risk'}`"
+              :hint="`${
+                selectedRisk.description || 'Select a Line of Business'
+              }`"
               :loading="loadingRisks"
-              :disabled="risk_type.length === 0 || facultativeReference !== null"
+              :disabled="
+                risk_type.length === 0 || facultativeReference !== null
+              "
             ></v-select>
           </div>
 
@@ -154,12 +158,9 @@
               }`"
               persistent-hint
               :loading="loadingCurrencies"
-              :disabled="currencies.length === 0"
+              :disabled="!currencies || currencies.length === 0"
             >
-              <template
-                slot="item"
-                slot-scope="data"
-              >
+              <template slot="item" slot-scope="data">
                 {{ data.item.key }} - {{ data.item.description }}
               </template>
             </v-select>
@@ -256,23 +257,23 @@
                           autocomplete="nope"
                           :no-data-text="customText"
                         >
-                          <template
-                            slot="selection"
-                            slot-scope="{ item }"
-                          >
+                          <template slot="selection" slot-scope="{ item }">
                             {{ item.name }} ({{ item.email }})
                           </template>
-                          <template
-                            slot="item"
-                            slot-scope="{ item }"
-                          >
-                            <template v-if="(typeof item !== 'object')">
-                              <v-list-item-content v-text="item.name"></v-list-item-content>
+                          <template slot="item" slot-scope="{ item }">
+                            <template v-if="typeof item !== 'object'">
+                              <v-list-item-content
+                                v-text="item.name"
+                              ></v-list-item-content>
                             </template>
                             <template v-else>
                               <v-list-item-content>
-                                <v-list-item-title v-text="item.name"></v-list-item-title>
-                                <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>
+                                <v-list-item-title
+                                  v-text="item.name"
+                                ></v-list-item-title>
+                                <v-list-item-subtitle
+                                  v-text="item.email"
+                                ></v-list-item-subtitle>
                               </v-list-item-content>
                             </template>
                           </template>
@@ -308,25 +309,25 @@
   </v-expansion-panels>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
-import { stateExpansiveManager } from '@/mixins/subscription.js';
-import { formValidations } from '@/mixins/formValidations';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+import { formValidations } from "@/mixins/formValidations";
 
 /* vuelidate mixin & validators */
-import { validationMixin } from 'vuelidate';
-import { required, requiredIf, minLength } from 'vuelidate/lib/validators';
+import { validationMixin } from "vuelidate";
+import { required, requiredIf, minLength } from "vuelidate/lib/validators";
 
-import UsersTableAccount from '@/components/subscription/submission/UsersTableAccount.vue';
+import UsersTableAccount from "@/components/subscription/submission/UsersTableAccount.vue";
 import ConfirmationPrecaptureModal from "@/components/ConfirmationPrecaptureModal.vue";
 export default {
-  name: 'AccountInformation',
+  name: "AccountInformation",
   mixins: [stateExpansiveManager, formValidations, validationMixin],
   components: {
     UsersTableAccount,
     ConfirmationPrecaptureModal,
   },
-  data () {
+  data() {
     return {
       IsPrecaptured: false,
       /* paneles */
@@ -335,7 +336,7 @@ export default {
       /* valids */
       validContacts: true,
       activityDisabled: true,
-      itemsTypeOfRisk: ['CAR', 'CPE', 'CECR', 'PRO', 'EAR'],
+      itemsTypeOfRisk: ["CAR", "CPE", "CECR", "PRO", "EAR"],
       /* loaders */
       loadingItems: false,
       loadingPanel: false,
@@ -352,65 +353,69 @@ export default {
       selectedItems: [],
     };
   },
-  beforeMount () {
+  beforeMount() {
     this.resetAccountInformation();
     this.resetContactsInformation();
   },
-  async mounted () {
+  async mounted() {
     await this.initData();
   },
   computed: {
     ...mapGetters([
-      'contacts',
-      'countries',
-      'risk_type',
-      'currencies',
-      'activities',
-      'activitiesById',
-      'subscription_id',
-      'availableBrokers',
-      'availableCedents',
-      'accountInformation',
-      'availableBrokersById',
-      'availableBrokersCedents',
-      'availableBrokersCedentsByUUID',
-      'documents',
-      'facultativeReference',
+      "contacts",
+      "countries",
+      "risk_type",
+      "currencies",
+      "activities",
+      "activitiesById",
+      "subscription_id",
+      "availableBrokers",
+      "availableCedents",
+      "accountInformation",
+      "availableBrokersById",
+      "availableBrokersCedents",
+      "availableBrokersCedentsByUUID",
+      "documents",
+      "facultativeReference",
     ]),
-    filteredActivities () {
+    filteredActivities() {
       const id =
         this.accountInformation.typeOfRisk.id ||
         this.accountInformation.typeOfRisk;
-      if (typeof id === 'number') {
+      if (typeof id === "number") {
         this.enableActivities();
         return this.activitiesById(id);
       }
       return [];
     },
     selectAllContacts: {
-      get () {
+      get() {
         return this.selectedItems.length === this.contactsItems.length;
       },
     },
     selectSomeContact: {
-      get () {
+      get() {
         return this.selectedItems.length > 0 && !this.selectAllContacts;
       },
     },
     icon: {
-      get () {
-        if (this.selectAllContacts) return 'mdi-close-box';
-        if (this.selectSomeContact) return 'mdi-minus-box';
-        return 'mdi-checkbox-blank-outline';
+      get() {
+        if (this.selectAllContacts) return "mdi-close-box";
+        if (this.selectSomeContact) return "mdi-minus-box";
+        return "mdi-checkbox-blank-outline";
       },
     },
     isOptional: {
-      get () {
+      get() {
         return true;
       },
     },
     items: {
-      get () {
+      get() {
+        if (!this.contacts || this.contacts.length === 0) {
+          return [];
+        }
+
         const filteredArray = this.contacts.filter((x) => {
           if (this.selectedItems.some((v) => v.id === x.id)) return false;
           return true;
@@ -419,7 +424,7 @@ export default {
       },
     },
     selectedRisk: {
-      get () {
+      get() {
         if (
           this.accountInformation.typeOfRisk &&
           this.risk_type &&
@@ -434,7 +439,7 @@ export default {
       },
     },
     selectedCurrency: {
-      get () {
+      get() {
         if (
           this.accountInformation.currency &&
           this.currencies &&
@@ -449,27 +454,27 @@ export default {
       },
     },
     selectedBroker: {
-      get () {
+      get() {
         return this.$v.accountInformation.broker.$model;
       },
     },
     selectedCedent: {
-      get () {
+      get() {
         return this.$v.accountInformation.cedent.$model;
       },
     },
     customText: {
-      get () {
+      get() {
         if (!this.selectedBroker && !this.selectedCedent)
-          return 'Select a broker/cedent to see their contacts.';
+          return "Select a broker/cedent to see their contacts.";
         if (!Array.from(this.contacts) || Array.from(this.contacts).length <= 0)
-          return 'Type some data.';
-        return 'No data avilable.';
+          return "Type some data.";
+        return "No data avilable.";
       },
     },
   },
   watch: {
-    '$route.params.subscriptionId': async function (id) {
+    "$route.params.subscriptionId": async function (id) {
       this.resetAccountInformation();
       this.resetContactsInformation();
 
@@ -477,13 +482,13 @@ export default {
     },
     selectedItems: {
       deep: true,
-      async handler (val) {
+      async handler(val) {
         this.$v.contactsInformation.$model = val;
-        await this.checkContacts('contactsInformation', 'contacts');
+        await this.checkContacts("contactsInformation", "contacts");
       },
     },
     search: async function (query) {
-      const lit = 'loadingItems';
+      const lit = "loadingItems";
 
       if (this[lit]) return;
 
@@ -499,6 +504,30 @@ export default {
 
       this[lit] = false;
     },
+
+    selectedBroker: async function (newVal, oldVal) {
+      if (newVal && newVal !== oldVal) {
+        await this.filterContactsByType({
+          contact: [
+            { type: 1, id: newVal || 0 },
+            { type: 2, id: this.selectedCedent || 0 },
+          ],
+          query: this.search || "",
+        });
+      }
+    },
+
+    selectedCedent: async function (newVal, oldVal) {
+      if (newVal && newVal !== oldVal) {
+        await this.filterContactsByType({
+          contact: [
+            { type: 1, id: this.selectedBroker || 0 },
+            { type: 2, id: newVal || 0 },
+          ],
+          query: this.search || "",
+        });
+      }
+    },
   },
   methods: {
     /*
@@ -508,25 +537,25 @@ export default {
       A QUE INPUT PERTENECE EL CAMBIO
     */
     ...mapActions([
-      'saveColumn',
-      'getBrokers',
-      'getCedents',
-      'loadContacts',
-      'getCatalogByName',
-      'filterContactsByType',
-      'getBrokersAndCedents',
-      'getCatalogByDocuments',
-      'saveContactsSubmission',
-      'resetContactsInformation',
-      'checkSubscriptionStored',
-      'resetAccountInformation',
+      "saveColumn",
+      "getBrokers",
+      "getCedents",
+      "loadContacts",
+      "getCatalogByName",
+      "filterContactsByType",
+      "getBrokersAndCedents",
+      "getCatalogByDocuments",
+      "saveContactsSubmission",
+      "resetContactsInformation",
+      "checkSubscriptionStored",
+      "resetAccountInformation",
     ]),
     ...mapMutations([
-      'setDocuments',
-      'setStateAccount',
-      'setModalCreateBrokerOrCedent',
+      "setDocuments",
+      "setStateAccount",
+      "setModalCreateBrokerOrCedent",
     ]),
-    async checkColumn (column, difname = column) {
+    async checkColumn(column, difname = column) {
       const value = this.$v.accountInformation[column].$model.toString();
       localStorage.setItem(column, value);
       localStorage.setItem("IsPrecaptured", "1");
@@ -534,43 +563,43 @@ export default {
       this.$v.accountInformation[column].$touch();
       if (this.$v.accountInformation[column].$invalid) return;
       await this.saveColumn({
-        table: 'submission',
-        parent: 'accountInformation',
+        table: "submission",
+        parent: "accountInformation",
         column,
         difname,
       });
     },
-    async checkContacts (column, difname = column) {
+    async checkContacts(column, difname = column) {
       if (!this.subscription_id) return;
       this.$v[column].$touch();
       if (this.$v[column].$invalid) return;
       await this.saveContactsSubmission({
-        table: 'submission',
+        table: "submission",
         column,
         difname,
       });
     },
-    changeTypeOfRisk (text) {
+    changeTypeOfRisk(text) {
       const newdocs = [];
       this.documents.forEach((item) => {
         if (item.idrisk === this.accountInformation.typeOfRisk) {
-          item.text = 'Upload the next document';
+          item.text = "Upload the next document";
           newdocs.push(item);
         }
       });
       this.setDocuments(newdocs);
-      this.$emit('changeDocuments', text);
+      this.$emit("changeDocuments", text);
     },
-    emitInput (text, inputName) {
+    emitInput(text, inputName) {
       this.$emit(inputName, text);
     },
-    enableActivities () {
+    enableActivities() {
       this.activityDisabled = false;
     },
-    resetActivities () {
-      this.$v.accountInformation.activity.$model = '';
+    resetActivities() {
+      this.$v.accountInformation.activity.$model = "";
     },
-    toggle () {
+    toggle() {
       this.$nextTick(() => {
         if (this.selectAllContacts) {
           this.selectedItems = [];
@@ -579,42 +608,55 @@ export default {
         }
       });
     },
-    addValue () {
+    addValue() {
       const isIncluded = this.selectedItems.includes(this.value);
       if (!isIncluded) this.selectedItems.push(this.value);
       this.$nextTick(() => {
         this.value = null;
       });
     },
-    removeValue (id) {
+    removeValue(id) {
       const item = this.selectedItems.findIndex((v) => v.id == id);
       this.selectedItems.splice(item, 1);
     },
-    filterAutocomplete (item, queryText, itemText) {
+    filterAutocomplete(item, queryText, itemText) {
       return (
         item.name.toLocaleLowerCase().indexOf(queryText.toLocaleLowerCase()) >
-        -1 ||
+          -1 ||
         item.email.toLocaleLowerCase().indexOf(queryText.toLocaleLowerCase()) >
-        -1
+          -1
       );
     },
-    getCountry (id) {
+    getCountry(id) {
       const countryName = Array.from(this.countries).find((v) => v.id == id);
       if (countryName && countryName.description)
         return countryName.description;
-      return 'N/A';
+      return "N/A";
     },
     precapture() {
       this.IsPrecaptured = false;
-      this.$v.accountInformation.insuredName.$model = localStorage.getItem("insuredName");
-      this.$v.accountInformation.activity.$model = Number(localStorage.getItem("activity"));
-      this.$v.accountInformation.broker.$model = Number(localStorage.getItem("broker"));
-      this.$v.accountInformation.cedent.$model = Number(localStorage.getItem("cedent"));
-      this.$v.accountInformation.country.$model = Number(localStorage.getItem("country"));
-      this.$v.accountInformation.currency.$model = Number(localStorage.getItem("currency"));
-      this.$v.accountInformation.typeOfRisk.$model = Number(localStorage.getItem("typeOfRisk"));
+      this.$v.accountInformation.insuredName.$model =
+        localStorage.getItem("insuredName");
+      this.$v.accountInformation.activity.$model = Number(
+        localStorage.getItem("activity")
+      );
+      this.$v.accountInformation.broker.$model = Number(
+        localStorage.getItem("broker")
+      );
+      this.$v.accountInformation.cedent.$model = Number(
+        localStorage.getItem("cedent")
+      );
+      this.$v.accountInformation.country.$model = Number(
+        localStorage.getItem("country")
+      );
+      this.$v.accountInformation.currency.$model = Number(
+        localStorage.getItem("currency")
+      );
+      this.$v.accountInformation.typeOfRisk.$model = Number(
+        localStorage.getItem("typeOfRisk")
+      );
     },
-    removeCapture(){
+    removeCapture() {
       this.IsPrecaptured = false;
       localStorage.removeItem("insuredName");
       localStorage.removeItem("activity");
@@ -624,18 +666,17 @@ export default {
       localStorage.removeItem("currency");
       localStorage.removeItem("typeOfRisk");
       localStorage.setItem("IsPrecaptured", "0");
-      
-    }, 
-    async initData () {
+    },
+    async initData() {
       /* set loadings (data) */
-      const lpa = 'loadingPanel';
-      const lri = 'loadingRisks';
-      const lco = 'loadingCountries';
-      const lac = 'loadingActivities';
-      const lcu = 'loadingCurrencies';
-      const lbr = 'loadingBrokers';
-      const lce = 'loadingCedents';
-      const lcn = 'loadingContacts';
+      const lpa = "loadingPanel";
+      const lri = "loadingRisks";
+      const lco = "loadingCountries";
+      const lac = "loadingActivities";
+      const lcu = "loadingCurrencies";
+      const lbr = "loadingBrokers";
+      const lce = "loadingCedents";
+      const lcn = "loadingContacts";
       /* loaders to true */
       this[lpa] = !this[lpa];
       this[lri] = !this[lri];
@@ -646,15 +687,17 @@ export default {
       this[lce] = !this[lce];
       this[lcn] = !this[lcn];
       /* obtención de catálogos */
-      await this.getCatalogByName({ name: 'activities' });
-      await this.getCatalogByName({ name: 'countries' });
-      await this.getCatalogByName({ name: 'risk_type' });
-      await this.getCatalogByName({ name: 'currencies' });
+      await this.getCatalogByName({ name: "activities" });
+      await this.getCatalogByName({ name: "countries" });
+      await this.getCatalogByName({ name: "risk_type" });
+      await this.getCatalogByName({ name: "currencies" });
       await this.getBrokers();
       await this.getCedents();
+
+      await this.loadContacts();
       // await this.getBrokersAndCedents()
-      await this.getCatalogByDocuments({ name: 'documents' });
-      
+      await this.getCatalogByDocuments({ name: "documents" });
+
       await this.checkSubscriptionStored();
 
       /* loaders to false */
@@ -674,7 +717,7 @@ export default {
         this.selectedItems = this.$store.getters.contactsInformation;
       } else {
         const result = localStorage.getItem("IsPrecaptured");
-        this.IsPrecaptured = (result && (result !== "0")) ? true : false;
+        this.IsPrecaptured = result && result !== "0" ? true : false;
       }
     },
   },
@@ -685,7 +728,7 @@ export default {
       country: { required },
       typeOfRisk: { required },
       activity: {
-        required: requiredIf(({ typeOfRisk: { key } }) => key != 'CPE'),
+        required: requiredIf(({ typeOfRisk: { key } }) => key != "CPE"),
       },
       currency: { required },
       broker: {
@@ -711,7 +754,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
 
 .AddCompanyCont {
   height: 50px;

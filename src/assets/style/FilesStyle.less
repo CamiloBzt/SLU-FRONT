@@ -1,20 +1,21 @@
 //CONTENEDOR DE LOS INPUTS
-.emptyFileContent{
-  width: 18%; height: 180px;
+.emptyFileContent {
+  width: 18%;
+  height: 180px;
 
-  .moreButton{
+  .moreButton {
     color: var(--mainColor2);
     text-transform: none !important;
     font-style: normal !important;
     font-weight: 500 !important;
     letter-spacing: normal !important;
-    i{
+    i {
       padding-right: 0px;
     }
   }
 }
-.InputsContentFh{
-  width: 100%; 
+.InputsContentFh {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -23,44 +24,44 @@
   padding-left: 15px;
   padding-right: 15px;
 
-  .InputFileContent{
-    width: 18%; 
+  .InputFileContent {
+    width: 18%;
+    overflow: visible;
     height: 180px;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
     margin-right: 2%;
-    background: #D2DEED;
+    background: #d2deed;
 
-  
     //LABEL DE LOS INPUTS
-    .InputFileLabel{
+    .InputFileLabel {
       width: 100%;
       height: 100%;
-      z-index: 0;
-      position:absolute;
-      border-radius:15px;
+      z-index: 1;
+      position: absolute;
+      border-radius: 15px;
       overflow: hidden;
       left: 0;
       top: 0;
       text-align: center;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      align-content:flex-start !important;
-      align-items:flex-start !important;
+      align-content: flex-start !important;
+      align-items: flex-start !important;
 
       //NOMBRE DEL ARCHIVO
-      .NameFileCont{
-        width: 100%; 
+      .NameFileCont {
+        width: 100%;
         height: 100%;
 
-        .FileName{
+        .FileName {
           width: 100%;
           height: 40px;
-          background:#EDF2F8;
+          background: #edf2f8;
           text-align: center;
           word-break: break-all;
-          padding-left:10px;
-          padding-right:10px;
+          padding-left: 10px;
+          padding-right: 10px;
           padding-top: 8px;
           padding-bottom: 8px;
           text-overflow: ellipsis;
@@ -68,177 +69,196 @@
           overflow: hidden;
         }
 
-        .FileImage{
+        .FileImage {
           width: 100%;
           height: calc(100% - 40px);
           display: flex;
           justify-content: center;
-          align-items:center;
-          padding-bottom:45px;
-          padding-top:10px;
+          align-items: center;
+          padding-bottom: 45px;
+          padding-top: 10px;
 
-          .image{
+          .image {
             height: 100%;
           }
         }
-        
-
-
       }
 
       //OCULTAR EL INPUT
-      .HideInputFile{display: none;}
+      .HideInputFile {
+        display: none;
+      }
       //CUANDO NO HAY DOCUMENTOS SELECCIONADOS
-      .emptyFileInfo{
+      .emptyFileInfo {
         width: 100%;
         height: 100%;
-        
-        p{
+
+        p {
           font-weight: normal;
-          width: 95%; 
+          width: 95%;
           text-align: center;
           font-size: 15px;
           margin-bottom: 7px;
         }
         //BORRAR
-        .buttonFileOutlined{
+        .buttonFileOutlined {
           display: none;
           width: 65%;
           height: 40px;
           border: solid 1px grey;
-          border-radius:40px;
+          border-radius: 40px;
           font-weight: normal;
         }
       }
     }
 
     //BOTON PARA BORRAR ARCHIVOS
-    .InputDeletContBtn{
+    .InputDeletContBtn {
       width: 35px;
       height: 35px;
-      position:absolute;
-      bottom: 7px; 
+      position: absolute;
+      bottom: 7px;
       right: 5px;
       z-index: 1000;
       cursor: pointer;
-      background:white;
-      border-radius:35px;
-      i{
+      background: white;
+      border-radius: 35px;
+      i {
         font-size: 19px;
-        color: #0069BA;
+        color: #0069ba;
       }
     }
 
     //BOTON PARA DESCARGAR ARCHIVOS
-    .DownloadCont{
+    .DownloadCont {
       width: 35px;
       height: 35px;
-      position:absolute;
-      bottom: 7px; 
+      position: absolute;
+      bottom: 7px;
       right: 45px;
       z-index: 1000;
+      pointer-events: auto;
       cursor: pointer;
-      background:white;
-      border-radius:35px;
-      i{
+      background: white;
+      border-radius: 35px;
+      i {
         font-size: 19px;
-        color: #0069BA;
+        color: #0069ba;
       }
     }
   }
 }
 
 //AVISO FINAL
-.singleFileContent{
-  width: 100%; 
+.singleFileContent {
+  width: 100%;
   height: 50px;
 
-  .singleFile{
+  .singleFile {
     width: 150px;
     height: 100%;
     font-size: 18px;
   }
+}
 
+:deep(.ActionBtns) {
+  position: absolute;
+  right: 5px;
+  bottom: 7px;
+  display: flex;
+  gap: 10px;
+  z-index: 1002;
+}
+
+:deep(.ActionBtns .DownloadCont),
+:deep(.ActionBtns .InputDeletContBtn) {
+  width: 35px;
+  height: 35px;
+  background: #fff;
+  border-radius: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 
-@media(max-width: 600px)
-{
-.InputsContentFh{
-  padding-left:0px;
-  padding-right:0px;
-  .InputFileContent, 
-  .emptyFileContent {
-    width: 100%;
-    height: 45px;
-    margin-bottom: 5px !important;
-    background:white;
+@media (max-width: 600px) {
+  :deep(.ActionBtns) { right: 3px; bottom: 5px; gap: 7px; }
+  .InputsContentFh {
+    padding-left: 0px;
+    padding-right: 0px;
+    .InputFileContent,
+    .emptyFileContent {
+      width: 100%;
+      height: 45px;
+      margin-bottom: 5px !important;
+      background: white;
 
-    .InputFileLabel{
-      //NOMBRE DEL ARCHIVO
-      .NameFileCont{
-        width: calc(100% - 78px);
-        text-align: left;
-        position:absolute;
-        left: 0;
-
-        .FileName{
-          padding-left:15px;
-          border-radius:50px;
+      .InputFileLabel {
+        //NOMBRE DEL ARCHIVO
+        .NameFileCont {
+          width: calc(100% - 78px);
           text-align: left;
-          background:#EDF2F8;
-          top: 0;
-          padding-right:0px;
-          height: 100%;
-          line-height: 30px;
-        }
+          position: absolute;
+          left: 0;
 
-        .FileImage{
-          display: none;
-        }
-      }
+          .FileName {
+            padding-left: 15px;
+            border-radius: 50px;
+            text-align: left;
+            background: #edf2f8;
+            top: 0;
+            padding-right: 0px;
+            height: 100%;
+            line-height: 30px;
+          }
 
-      //CUANDO LOS ARCHIVOS ESTAN VACIOS
-      .emptyFileInfo{
-        p{
-          padding-left:15px;
-          border-radius:50px;
-          line-height: 45px;
-          background:#EDF2F8;
-          top: 0;
-          width: calc(100% - 75px);
-          text-align: left;
-          height: 100%;
-          position:absolute;
-          left: 0px;
-          b{
-            margin-left: 3px;
-            margin-right: 3px;
+          .FileImage {
+            display: none;
           }
         }
-        .buttonFileOutlined{
-          display: none !important;
+
+        //CUANDO LOS ARCHIVOS ESTAN VACIOS
+        .emptyFileInfo {
+          p {
+            padding-left: 15px;
+            border-radius: 50px;
+            line-height: 45px;
+            background: #edf2f8;
+            top: 0;
+            width: calc(100% - 75px);
+            text-align: left;
+            height: 100%;
+            position: absolute;
+            left: 0px;
+            b {
+              margin-left: 3px;
+              margin-right: 3px;
+            }
+          }
+          .buttonFileOutlined {
+            display: none !important;
+          }
         }
       }
 
-    }
+      //BOTON PARA BORRAR ARCHIVOS
+      .InputDeletContBtn {
+        height: 35px;
+        width: 35px;
+        bottom: 5px;
+        right: 3px;
+      }
 
-    //BOTON PARA BORRAR ARCHIVOS
-    .InputDeletContBtn{
-      height: 35px;
-      width: 35px;
-      bottom: 5px;
-      right: 3px;
-    }
-
-    //BOTON PARA DESCARGAR ARCHIVOS
-    .DownloadCont{
-      height: 35px;
-      width: 35px;
-      bottom:5px;
-      left: initial; 
-      right: 40px;
+      //BOTON PARA DESCARGAR ARCHIVOS
+      .DownloadCont {
+        height: 35px;
+        width: 35px;
+        bottom: 5px;
+        left: initial;
+        right: 40px;
+      }
     }
   }
-}
 }

@@ -63,6 +63,6 @@ export default {
     state.endorsementsDocuments = value;
   },
   resetEndorsementDocuments(state) {
-    state.endorsementsDocuments = {};
+    state.endorsementsDocuments = [];
   },
 };

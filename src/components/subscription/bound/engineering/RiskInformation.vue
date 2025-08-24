@@ -128,7 +128,7 @@
           </div>
           <div class="inputCont">
             <v-text-field
-              label="Exchange Rate"
+              label="Rate of Exchange"
               v-model="accountInformation.quotationExchangeRate"
               disabled
             />

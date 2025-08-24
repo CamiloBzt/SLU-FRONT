@@ -26,7 +26,7 @@
             </div>
 
             <div class="Line" v-for="(item, key) in computedYears" :key="key">
-              <div class="Row Small Light">{{ item.year }}</div>
+              <div class="Row Small Light">{{ item.year }}*</div>
               <div class="Row Medium">
                 <currency-input
                   v-model="item.model"
@@ -95,12 +95,36 @@ export default {
         currency: "USD",
       }),
       sumYears: 0,
+      computedYears: [],
     };
   },
   async mounted() {
     await this.getCatalogByName({ name: "razon_claim" });
-    if (this.propEng) await this.getBoundClaims("property");
-    else await this.getBoundClaims("engineering");
+    const type = this.propEng ? "property" : "engineering";
+    await this.getBoundClaims(type);
+
+    const current = this.boundClaims;
+    const years = [current.dateTwo, current.dateOne];
+    const models = ["Two", "One"];
+    if (this.propEng)
+      years.unshift(
+        current.dateSix,
+        current.dateFive,
+        current.dateFour,
+        current.dateThree
+      ) && models.unshift("Six", "Five", "Four", "Three");
+
+    this.computedYears = years.map((value, index) => {
+      const modelIndex = models[index];
+      return {
+        id: current.id,
+        year: value,
+        model: current[`amount${modelIndex}`],
+        razonClaim: current[`select${modelIndex}`],
+        columnModel: `amount${modelIndex}`,
+        columnRazon: `select${modelIndex}`,
+      };
+    });
   },
   computed: {
     ...mapGetters([
@@ -174,12 +198,25 @@ export default {
         this.sumYears = value;
       },
     },
+    boundClaimsCompleted() {
+      return this.computedYears.every((item) => {
+        const amountComplete = !!(
+          item.model &&
+          Number(item.model) >= 0 &&
+          !isNaN(Number(item.model))
+        );
+        return amountComplete;
+      });
+    },
   },
   methods: {
     ...mapActions(["getCatalogByName", "getBoundClaims", "updateBoundClaim"]),
     update(key, value) {
       /** @type {Array} */
       this.computedYears[key].model = value;
+
+      this.$forceUpdate();
+
       const data = this.computedYears;
       const total = data.reduce((previous, current) => {
         const sum = new Decimal(previous || 0)
@@ -221,6 +258,23 @@ export default {
         type,
       });
     }, 1000),
+
+    boundClaimsCompleted: {
+      handler(newValue) {
+        this.$emit("bound-claims-change", newValue);
+      },
+      immediate: true,
+    },
+
+    // También observar cambios en computedYears
+    computedYears: {
+      handler() {
+        this.$nextTick(() => {
+          this.$emit("bound-claims-change", this.boundClaimsCompleted);
+        });
+      },
+      deep: true,
+    },
   },
 };
 </script>
@@ -255,8 +309,8 @@ export default {
 
     .Bold {
       justify-content: center;
-      font-weight: 700;
-      font-size: 16px;
+      font-weight: 600;
+      font-size: 15px;
     }
 
     .Light {

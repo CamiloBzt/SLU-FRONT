@@ -1,14 +1,5 @@
 <template>
-  <div
-    class="
-      Cont
-      d-flex
-      justify-start
-      align-center
-      flex-wrap
-      align-content-center
-    "
-  >
+  <div class="Cont d-flex justify-start align-center flex-wrap align-content-center">
     <!--TITULO-->
     <div class="TitleCont">
       <h5>Non CAT Rate</h5>
@@ -25,26 +16,10 @@
       <!--LINEA DE INPUTS-->
       <div class="LineInputs">
         <div class="InputLarge">
-          <v-select
-            v-model.trim="accountInformation.activity"
-            label="Activity"
-            :items="activities"
-            item-text="description"
-            item-value="id"
-            return-object
-            disabled
-          ></v-select>
+          <v-select v-model.trim="accountInformation.activity" label="Activity" :items="activities" item-text="description" item-value="id" return-object disabled></v-select>
         </div>
         <div class="Input">
-          <v-select
-            v-model.trim="accountInformation.activity"
-            label="Category"
-            :items="activities"
-            item-text="category"
-            item-value="id"
-            return-object
-            disabled
-          ></v-select>
+          <v-select v-model.trim="accountInformation.activity" label="Category" :items="activities" item-text="category" item-value="id" return-object disabled></v-select>
         </div>
         <div class="Input">
           <v-text-field label="Rate" type="number" v-model.trim="rateContractor"> </v-text-field>
@@ -461,19 +436,19 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from "vuex";
 /* validations */
-import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
-import { formValidations } from '@/mixins/formValidations';
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 /* lodash */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 
 export default {
-  name: 'NonCatLarge',
+  name: "NonCatLarge",
   mixins: [validationMixin, formValidations],
   data() {
     return {
@@ -505,60 +480,46 @@ export default {
     };
   },
   async mounted() {
-    await this.loadSectionRatesModal({ table: 'catLarge' });
-    await this.getCatalogByName({ name: 'activities' });
+    await this.loadSectionRatesModal({ table: "catLarge" });
+    await this.getCatalogByName({ name: "activities" });
   },
 
   computed: {
     ...mapGetters([
-      'risk_type',
-      'accountInformation',
-      'activities',
-      'deductions',
-      'rate',
-      'contractors',
-      'monthlyRate',
-      'typeofconstruction',
-      'testing',
-      'thirdPartyLiability',
-      'SRCC',
-      'firstyearOp',
-      'inlandTransit',
-      'ALOP',
-      'errorsDesign',
-      'equipmentInstallation',
-      'maintenancePeriod',
-      'reasons',
-      'nonCatLarge',
-      'sumDeductions',
-      'quotation',
-      'tarifarNonCatRate',
-      'tiv',
+      "risk_type",
+      "accountInformation",
+      "activities",
+      "deductions",
+      "rate",
+      "contractors",
+      "monthlyRate",
+      "typeofconstruction",
+      "testing",
+      "thirdPartyLiability",
+      "SRCC",
+      "firstyearOp",
+      "inlandTransit",
+      "ALOP",
+      "errorsDesign",
+      "equipmentInstallation",
+      "maintenancePeriod",
+      "reasons",
+      "nonCatLarge",
+      "sumDeductions",
+      "quotation",
+      "tarifarNonCatRate",
+      "tiv",
     ]),
     sumMonthlyRate: {
       get() {
-        this.nonCatLarge.ratetypeConstructor = this.nonCatLarge.typeConstructorSelect
-          ? this.typeofconstruction.find((v) => v.id === this.nonCatLarge.typeConstructorSelect).rate
-          : null;
-        this.nonCatLarge.ratemaintenancePeriod = this.nonCatLarge.maintenancePeriodSelect
-          ? this.maintenancePeriod.find((v) => v.id === this.nonCatLarge.maintenancePeriodSelect).rate
-          : null;
-        this.nonCatLarge.ratethirdPartyLiability = this.nonCatLarge.thirdPartyLiabilitySelect
-          ? this.thirdPartyLiability.find((v) => v.id === this.nonCatLarge.thirdPartyLiabilitySelect).rate
-          : null;
-        this.nonCatLarge.ratefirstyearOp = this.nonCatLarge.firstyearOpSelect
-          ? this.firstyearOp.find((v) => v.id === this.nonCatLarge.firstyearOpSelect).rate
-          : null;
-        this.nonCatLarge.rateequipmentInstallation = this.nonCatLarge.equipmentInstallationSelect
-          ? this.equipmentInstallation.find((v) => v.id === this.nonCatLarge.equipmentInstallationSelect).rate
-          : null;
+        this.nonCatLarge.ratetypeConstructor = this.nonCatLarge.typeConstructorSelect ? this.typeofconstruction.find((v) => v.id === this.nonCatLarge.typeConstructorSelect).rate : null;
+        this.nonCatLarge.ratemaintenancePeriod = this.nonCatLarge.maintenancePeriodSelect ? this.maintenancePeriod.find((v) => v.id === this.nonCatLarge.maintenancePeriodSelect).rate : null;
+        this.nonCatLarge.ratethirdPartyLiability = this.nonCatLarge.thirdPartyLiabilitySelect ? this.thirdPartyLiability.find((v) => v.id === this.nonCatLarge.thirdPartyLiabilitySelect).rate : null;
+        this.nonCatLarge.ratefirstyearOp = this.nonCatLarge.firstyearOpSelect ? this.firstyearOp.find((v) => v.id === this.nonCatLarge.firstyearOpSelect).rate : null;
+        this.nonCatLarge.rateequipmentInstallation = this.nonCatLarge.equipmentInstallationSelect ? this.equipmentInstallation.find((v) => v.id === this.nonCatLarge.equipmentInstallationSelect).rate : null;
         this.nonCatLarge.ratetesting = this.nonCatLarge.testingSelect ? this.testing.find((v) => v.id === this.nonCatLarge.testingSelect).rate : null;
-        this.nonCatLarge.rateinlandTransit = this.nonCatLarge.inlandTransitSelect
-          ? this.inlandTransit.find((v) => v.id === this.nonCatLarge.inlandTransitSelect).rate
-          : null;
-        this.nonCatLarge.rateerrorsDesign = this.nonCatLarge.errorsDesignSelect
-          ? this.errorsDesign.find((v) => v.id === this.nonCatLarge.errorsDesignSelect).rate
-          : null;
+        this.nonCatLarge.rateinlandTransit = this.nonCatLarge.inlandTransitSelect ? this.inlandTransit.find((v) => v.id === this.nonCatLarge.inlandTransitSelect).rate : null;
+        this.nonCatLarge.rateerrorsDesign = this.nonCatLarge.errorsDesignSelect ? this.errorsDesign.find((v) => v.id === this.nonCatLarge.errorsDesignSelect).rate : null;
         this.nonCatLarge.rateSrcc = this.nonCatLarge.srccSelect ? this.SRCC.find((v) => v.id === this.nonCatLarge.srccSelect).rate : null;
 
         const op =
@@ -609,14 +570,13 @@ export default {
     },
     categorySelect: {
       get() {
-        if (!this.selectedContractor) return '';
+        if (!this.selectedContractor) return "";
         return this.selectedContractor.category;
       },
     },
     rateContractor: {
       get() {
         const activity = this.activities.find((v) => v.id === this.accountInformation.activity);
-        console.log('activity', activity);
         if (!activity) return 0;
         const restDeductions = (100 - this.sumDeductions) / 100;
         const monthlyRateCal = this.monthlyRate.find((v) => v.id === activity.rate || 0);
@@ -629,7 +589,7 @@ export default {
     },
     sizeCredit: {
       get() {
-        var compareTiv = numeral((this.tiv.total || '$0').replace('$', '')).value();
+        var compareTiv = numeral((this.tiv.total || "$0").replace("$", "")).value();
         switch (true) {
           case compareTiv <= 15000000:
             return 1;
@@ -668,48 +628,48 @@ export default {
     },
   },
   watch: {
-    finalRate: debounce(function(val) {
+    finalRate: debounce(function (val) {
       this.tarifarNonCatRate.finalRate = val;
       this.$v.nonCatLarge.finalRate.$model = val;
-      this.SET_NONCATLARGE('finalRate', val);
-      this.checkField('finalRate');
+      this.SET_NONCATLARGE("finalRate", val);
+      this.checkField("finalRate");
     }, 1000),
-    sumMonthlyRate: debounce(function(val) {
+    sumMonthlyRate: debounce(function (val) {
       this.$v.nonCatLarge.sumMonthlyRate.$model = val;
-      this.SET_NONCATLARGE('sumMonthlyRate', val);
-      this.checkField('sumMonthlyRate');
+      this.SET_NONCATLARGE("sumMonthlyRate", val);
+      this.checkField("sumMonthlyRate");
     }, 1000),
-    categorySelect: debounce(function(val) {
+    categorySelect: debounce(function (val) {
       this.$v.nonCatLarge.categorySelect.$model = val;
-      this.SET_NONCATLARGE('categorySelect', val);
-      this.checkField('categorySelect');
+      this.SET_NONCATLARGE("categorySelect", val);
+      this.checkField("categorySelect");
     }, 1000),
-    rateContractor: debounce(function(val) {
+    rateContractor: debounce(function (val) {
       this.$v.nonCatLarge.rateContractor.$model = val;
-      this.SET_NONCATLARGE('rateContractor', val);
-      this.checkField('rateContractor');
+      this.SET_NONCATLARGE("rateContractor", val);
+      this.checkField("rateContractor");
     }, 1000),
-    sizeCredit: debounce(function(val) {
+    sizeCredit: debounce(function (val) {
       this.$v.nonCatLarge.rateSize.$model = val;
-      this.SET_NONCATLARGE('rateSize', val);
-      this.checkField('rateSize');
+      this.SET_NONCATLARGE("rateSize", val);
+      this.checkField("rateSize");
     }, 1000),
-    time: debounce(function(val) {
+    time: debounce(function (val) {
       this.$v.nonCatLarge.rateTime.$model = val;
-      this.SET_NONCATLARGE('rateTime', val);
-      this.checkField('rateTime');
+      this.SET_NONCATLARGE("rateTime", val);
+      this.checkField("rateTime");
     }, 1000),
   },
   methods: {
-    ...mapActions(['saveRatesModalColumn', 'loadSectionRatesModal', 'getCatalogByName']),
-    ...mapMutations(['SET_NONCATLARGE']),
+    ...mapActions(["saveRatesModalColumn", "loadSectionRatesModal", "getCatalogByName"]),
+    ...mapMutations(["SET_NONCATLARGE"]),
 
     async checkField(column) {
       this.$v.nonCatLarge[column].$touch();
       if (this.$v.nonCatLarge[column].$invalid || this.$v.nonCatLarge[column].$error) return;
       const value = this.$v.nonCatLarge[column].$model;
       await this.saveRatesModalColumn({
-        table: 'catLarge',
+        table: "catLarge",
         key: column,
         value,
       });
@@ -750,10 +710,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Rate.less';
+@import "~@/assets/style/Subscription/Rate.less";
 
 .Table {
-  width: 80%;
+  width: 90%;
   height: auto;
 
   //LINEA DE INPUTS

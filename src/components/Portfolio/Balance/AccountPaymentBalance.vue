@@ -1,7 +1,5 @@
 <template>
-  <v-expansion-panels
-    class="ExpansionComponent ExpansionBordered mt-6"
-    >
+  <v-expansion-panels class="ExpansionComponent ExpansionBordered mt-6">
     <v-expansion-panel>
       <!--TITULO DEL ACORDEON-->
       <v-expansion-panel-header
@@ -22,7 +20,6 @@
       <!--CONTENIDO DEL ACORDEON-->
       <v-expansion-panel-content>
         <div class="ExpandContent">
-          
           <div class="LeftInputs">
             <div class="InputContent mb-3">
               <v-text-field label="Reference Numer" />
@@ -56,23 +53,23 @@
                 <v-date-picker no-title color="#003D6D" />
               </v-menu>
             </div>
-
-
           </div>
 
-        <!-- Exchange Rate -->
+          <!-- Rate of Exchange -->
           <div class="RightInputs">
-
             <div class="ExchangeInfo mb-3">
-              Exchange rate when the policy was issued<br>
-              <b>1 USD  = 20.18 MXN</b>
+              Rate of Exchange when the policy was issued<br />
+              <b>1 USD = 20.18 MXN</b>
             </div>
 
             <div class="InputContent mb-3">
               <v-select label="Local Currency" />
             </div>
             <div class="InputContent mb-3">
-              <v-text-field prefix="$" label="Exchange rate at the Payment Date" />
+              <v-text-field
+                prefix="$"
+                label="Rate of Exchange at the Payment Date"
+              />
             </div>
 
             <div class="InputContent mb-3">
@@ -95,43 +92,38 @@
             <div class="InputContent mb-3">
               <v-text-field prefix="$" label="Payment Gap un USD" />
             </div>
-
           </div>
 
           <div class="finishButtonCont mt-7 d-flex justify-end align-center">
-            <v-btn rounded large text class="secondaryBtn">
-              Define
-            </v-btn>
+            <v-btn rounded large text class="secondaryBtn"> Define </v-btn>
             <v-btn rounded large text outlined class="finishBtn ml-3">
               Validate
             </v-btn>
           </div>
-          
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
-  
 <script>
-import { stateExpansiveManager } from '@/mixins/subscription.js';
-export default{
-  name:'PortfolioPaymentBalance',
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+export default {
+  name: "PortfolioPaymentBalance",
   mixins: [stateExpansiveManager],
-  components:{
+  components: {
     //Info: () => import('./Info'),
   },
-  data(){
-    return{
+  data() {
+    return {
       menu2: false,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-.LeftInputs{
+@import "~@/assets/style/AccordionStyle.less";
+.LeftInputs {
   width: 25%;
   height: auto;
 
@@ -141,12 +133,12 @@ export default{
   align-content: flex-start;
   flex-wrap: wrap;
 
-  .InputContent{
+  .InputContent {
     width: 100%;
     height: auto;
   }
 }
-.RightInputs{
+.RightInputs {
   width: 75%;
   height: auto;
   display: flex;
@@ -154,16 +146,16 @@ export default{
   align-items: flex-start;
   align-content: flex-start;
   flex-wrap: wrap;
-  gap:2%;
-  
-  .ExchangeInfo{
+  gap: 2%;
+
+  .ExchangeInfo {
     width: 100%;
     height: 70px;
     text-align: center;
     font-size: 19px;
   }
 
-  .InputContent{
+  .InputContent {
     width: 35%;
     height: auto;
   }

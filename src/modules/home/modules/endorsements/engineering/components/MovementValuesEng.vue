@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="input-col">
-          <div class="column-title">Porcent apply stock</div>
+          <div class="column-title">Stocks Percentage stock</div>
 
           <div class="input-cont">
             <currency-input v-model="porcentComputed" label="Porcent" :options="currencyOptions" />

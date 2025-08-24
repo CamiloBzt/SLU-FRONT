@@ -3,23 +3,15 @@
     <!--IMAGEN-->
     <img class="LogoLogin HideOnMovil" src="@/assets/img/logo.svg" />
     <!--TITULO-->
-    <h2 class="mt-3">
-      Create your new SLU password
-    </h2>
-    <p>
-      Your new password needs to be different from previous used password
-    </p>
-    <v-form
-      class="LoginForm d-flex flex-column"
-      > 
-
-
+    <h2 class="mt-3">Create your new SLU password</h2>
+    <p>Your new password needs to be different from previous used password</p>
+    <v-form class="LoginForm d-flex flex-column">
       <div class="InputContent d-flex flex-column mt-3">
         <v-text-field
           flat
           type="password"
           required
-          label ="yourSLUemail@outlook.com"
+          label="yourSLUemail@outlook.com"
           append-icon="mdi-eye-outline"
           placeholder="yourSLUemail@outlook.com"
           v-model="pass1"
@@ -33,7 +25,7 @@
           flat
           type="password"
           required
-          label ="yourSLUemail@outlook.com"
+          label="yourSLUemail@outlook.com"
           append-icon="mdi-eye-outline"
           placeholder="yourSLUemail@outlook.com"
           v-model="pass2"
@@ -43,84 +35,64 @@
         ></v-text-field>
       </div>
 
-
-
       <div class="FinishButtonCont mt-2 mx-auto">
-        <v-btn
-          class="FinishButton"
-          :color="colorButton"
-          rounded
-          large
-          depressed
-          >
-            Send e-mail
-        </v-btn>
+        <v-btn class="FinishButton" :color="colorButton" rounded large depressed> Send e-mail </v-btn>
       </div>
-
     </v-form>
-
-    
   </div>
 </template>
 <script>
 export default {
-  name:'ResetPassword',
+  name: "ResetPassword",
   data() {
     return {
-      colorButton:'#003D6D',
-      pass1:null,
-      pass2:null,
+      colorButton: "#003D6D",
+      pass1: null,
+      pass2: null,
       show1: false,
-    }
+    };
   },
-  methods:{
-    
-  }
-}
+  methods: {},
+};
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/LoginStyle.less';
+@import "~@/assets/style/LoginStyle.less";
 //RE-ENVIAR CORREO
-.LoginComponent{
-  p{
+.LoginComponent {
+  p {
     margin-top: 8px;
   }
 }
 
-
-
-
-@media(max-width: 650px)
-{
-  .LoginComponent{
+@media (max-width: 650px) {
+  .LoginComponent {
     height: 350px;
     position: absolute;
     bottom: 0;
-    border-bottom-left-radius: 0px ;
-    border-top-right-radius: 15px ;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 15px;
 
-
-    p{
+    p {
       width: 90%;
       text-align: left;
       font-size: 14px;
     }
-    h2{
+    h2 {
       width: 90%;
       font-size: 16px;
       text-align: left;
     }
 
-    .LoginForm{
+    .LoginForm {
       width: 90%;
-      .InputContent{
+      .InputContent {
         height: 55px;
         margin-top: 0px !important;
       }
-      .FinishButtonCont{
+      .FinishButtonCont {
+        border-radius: 5px;
         margin-top: 20px !important;
       }
-      
     }
   }
 }

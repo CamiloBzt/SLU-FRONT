@@ -1,149 +1,142 @@
 <template>
-    <div class="endorsement-documents">
-        <h2 class="endorsement-title">Documents</h2>
-        <div class="drop-zone" @dragover.prevent @drop.prevent="dropFile($event)">
-            <div class="documents-list">
-                <div v-for="(file, index) in files" :key="index" class="InputFileContent">
-                    <label class="InputFileLabel">
-                        <div class="NameFileCont">
-                            <div class="FileName">{{ file.name ? file.name : 'No name' }}</div>
-                            <div class="FileImage">
-                                <img class="image" src="@/assets/img/document.png" />
-                            </div>
-                        </div>
-                    </label>
-                    <div @click="removeFile(index, file)" class="InputDeletContBtn">
-                        <v-icon> mdi-trash-can-outline </v-icon>
-                    </div>
-                    <!-- <div v-if="file.id" class="DownloadCont" @click="download(item)">
+  <div class="endorsement-documents">
+    <h2 class="endorsement-title">Documents</h2>
+    <div class="drop-zone" @dragover.prevent @drop.prevent="dropFile($event)">
+      <div class="documents-list">
+        <div v-for="(file, index) in files" :key="index" class="InputFileContent">
+          <label class="InputFileLabel">
+            <div class="NameFileCont">
+              <div class="FileName">{{ file.name ? file.name : "No name" }}</div>
+              <div class="FileImage">
+                <img class="image" src="@/assets/img/document.png" />
+              </div>
+            </div>
+          </label>
+          <div @click="removeFile(index, file)" class="InputDeletContBtn">
+            <v-icon> mdi-trash-can-outline </v-icon>
+          </div>
+          <!-- <div v-if="file.id" class="DownloadCont" @click="download(item)">
                         <v-icon> mdi-download </v-icon>
                     </div> -->
-                </div>
-                <div class="InputsContentFh">
-                <div  class="InputFileContentUpload">
-              <!--LABEL-->
-              <label class="InputFileLabel d-flex align-center justify-center">
-                <!-- <input
+        </div>
+        <div class="InputsContentFh">
+          <div class="InputFileContentUpload">
+            <!--LABEL-->
+            <label class="InputFileLabel d-flex align-center justify-center">
+              <!-- <input
                   @change="uploadFile($event, arrayFilesNatcat.length + 1)"
                   class="HideInputFile"
                   type="file"
                 /> -->
 
-                <div class="NameFileCont">
-                  <div class="FileImage">
-                    <div class="FileImageText">
-                      Document size must be
-                      <span class="FileImageSpan">less than 2MB</span>
-                    </div>
-                    <img
-                      class="image"
-                      src="@/assets/img/icons/hexagonalwarning.svg"
-                    />
-                    <button class="buttonFileUpload">Upload</button>
+              <div class="NameFileCont">
+                <div class="FileImage">
+                  <div class="FileImageText">
+                    Document size must be
+                    <span class="FileImageSpan">less than 2MB</span>
                   </div>
+                  <img class="image" src="@/assets/img/icons/hexagonalwarning.svg" />
+                  <button class="buttonFileUpload">Upload</button>
                 </div>
-              </label>
-                </div>
-                 </div>
-            </div>
-            
-            <div class="button">
-                <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileSelect">
-          <button 
-          class="button"
-           @click="$refs.fileInput.click()">
-            <v-icon> mdi-plus-circle </v-icon>
-            Add New Document
-          </button>
+              </div>
+            </label>
+          </div>
         </div>
-        </div>
+      </div>
+
+      <div class="button">
+        <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileSelect" />
+        <button class="button" @click="$refs.fileInput.click()">
+          <v-icon> mdi-plus-circle </v-icon>
+          Add New Document
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
-
 <script>
-import ClaimService from "../services/claim.service"
+import ClaimService from "../services/claim.service";
 export default {
-    data() {
-        return {
-            dragging: false,
-            files: []
-        };
+  data() {
+    return {
+      dragging: false,
+      files: [],
+    };
+  },
+  props: {
+    idEndorsement: { type: Number, default: 0 },
+    endorsementDocuments: { type: Array, default: () => [] },
+    reloadFiles: { type: Function },
+  },
+  methods: {
+    async addFiles(files) {
+      if (this.idEndorsement) {
+        const newDocuments = await ClaimService.addDocumentsClaims({
+          id: this.idEndorsement,
+          files,
+        });
+        this.files.push(...newDocuments);
+      } else {
+        this.files.push(...files);
+      }
+      this.$emit("setEndorsementDocuments", { files: this.files });
+      // this.reloadFiles()
     },
-    props: {
-        idEndorsement: { type: Number, default: 0 },
-        endorsementDocuments: { type: Array, default: () => [] },
-        reloadFiles : { type: Function }
+    removeFile(index, file) {
+      this.files.splice(index, 1);
+      if (this.idEndorsement) {
+        ClaimService.deleteClaimDocumentById(file.id);
+      }
+      this.$emit("setEndorsementDocuments", { files: this.files });
+      // this.reloadFiles()
     },
-    methods: {
-        async addFiles(files) {
-            if (this.idEndorsement) {
-                const newDocuments = await ClaimService.addDocumentsClaims({
-                    id: this.idEndorsement,
-                    files,
-                })
-                this.files.push(...newDocuments)
-            } else {
-                this.files.push(...files)
-            }
-            this.$emit("setEndorsementDocuments", { files: this.files })
-            // this.reloadFiles()
-        },
-        removeFile(index, file) {
-            this.files.splice(index, 1)
-            if (this.idEndorsement) {
-                ClaimService.deleteClaimDocumentById(file.id)
-            }
-            this.$emit("setEndorsementDocuments", { files: this.files })
-            // this.reloadFiles()
-        },
-        async handleFileSelect(event) {
-            const files = Array.from(event.target.files)
-            await this.addFiles(files);
-        },
-        dropFile(event) {
-            const files = Array.from(event.dataTransfer.files)
-            this.addFiles(files)
-            this.dragging = false
-            // this.reloadFiles()
-        },
-
+    async handleFileSelect(event) {
+      const files = Array.from(event.target.files);
+      await this.addFiles(files);
     },
-    mounted() {
-        if(this.endorsementDocuments.length > 0){
-            this.files = this.endorsementDocuments
-        }
+    dropFile(event) {
+      const files = Array.from(event.dataTransfer.files);
+      this.addFiles(files);
+      this.dragging = false;
+      // this.reloadFiles()
+    },
+  },
+  mounted() {
+    if (this.endorsementDocuments.length > 0) {
+      this.files = this.endorsementDocuments;
     }
+  },
 };
 </script>
 
 <style scoped lang="less">
 .endorsement-documents {
-    width: 100%;
-    height: auto;
-    border-radius: 15px;
-    background: white;
-    box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
-    margin-top: 28px;
-    padding: 0 20px;
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  background: white;
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  margin-top: 28px;
+  padding: 0 20px;
 }
 
 .endorsement-title {
-    font-weight: 800;
-    font-size: 20px;
+  font-weight: 800;
+  font-size: 20px;
 }
 
 .drop-zone {
-    // border: 2px dashed #ccc;
-    padding: 10px;
-    text-align: center;
+  // border: 2px dashed #ccc;
+  padding: 10px;
+  text-align: center;
 }
 
 .drop-zone input[type="file"] {
-    display: none;
+  display: none;
 }
 
-.drop-zone .button{
+.drop-zone .button {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -151,138 +144,138 @@ export default {
   font-size: 18px;
   font-weight: 800;
   background-color: white;
-  outline:none;
+  outline: none;
   border: none;
-  box-shadow:none !important;
+  box-shadow: none !important;
   margin-top: 10px;
   color: #003d6d;
-  i{
+  i {
     color: #003d6d;
     margin-right: 30px;
   }
-  &hover{
-    background-color:white
+  &hover {
+    background-color: white;
   }
-  &__btn{
+  &__btn {
     width: 50%;
     height: 100%;
     border-radius: 10px;
     background: transparent;
     justify-content: space-around;
-    color: #003D6D;
+    color: #003d6d;
     letter-spacing: normal;
-    i{
-      font-size:24px;
+    i {
+      font-size: 24px;
     }
-    button{
-      font-size:24px;
+    button {
+      font-size: 24px;
     }
   }
 }
 
 .documents-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
 }
 
 .InputFileContent {
-    width: 19%;
-    min-height: 180px;
-    border-radius: 15px;
-    position: relative;
-    background: #d2deed;
+  width: 19%;
+  min-height: 180px;
+  border-radius: 5px;
+  position: relative;
+  background: #d2deed;
 }
 
 .InputFileLabel {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  position: absolute;
+  border-radius: 5px;
+  overflow: hidden;
+  left: 0;
+  top: 0;
+  text-align: center;
+  font-weight: bold;
+  align-content: flex-start !important;
+  align-items: flex-start !important;
+
+  .NameFileCont {
     width: 100%;
     height: 100%;
-    z-index: 0;
-    position: absolute;
-    border-radius: 15px;
-    overflow: hidden;
-    left: 0;
-    top: 0;
-    text-align: center;
-    font-weight: bold;
-    align-content: flex-start !important;
-    align-items: flex-start !important;
 
-    .NameFileCont {
-        width: 100%;
-        height: 100%;
-
-        .FileName {
-            width: 100%;
-            height: 40px;
-            background: #edf2f8;
-            text-align: center;
-            word-break: break-all;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            font-size: 18px;
-            font-weight: 800;
-        }
-
-        .FileImage {
-            width: 100%;
-            height: calc(100% - 40px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            // padding-bottom: 45px;
-            padding-top: 10px;
-
-            .image {
-                height: 100%;
-            }
-        }
+    .FileName {
+      width: 100%;
+      height: 40px;
+      background: #edf2f8;
+      text-align: center;
+      word-break: break-all;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 18px;
+      font-weight: 800;
     }
+
+    .FileImage {
+      width: 100%;
+      height: calc(100% - 40px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // padding-bottom: 45px;
+      padding-top: 10px;
+
+      .image {
+        height: 100%;
+      }
+    }
+  }
 }
 
 .InputDeletContBtn {
-    width: 35px;
-    height: 35px;
-    position: absolute;
-    bottom: 7px;
-    right: 5px;
-    z-index: 1000;
-    cursor: pointer;
-    background: white;
-    border-radius: 35px;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: 7px;
+  right: 5px;
+  z-index: 1000;
+  cursor: pointer;
+  background: white;
+  border-radius: 35px;
 
-    i {
-        font-size: 19px;
-        color: #0069ba;
-    }
+  i {
+    font-size: 19px;
+    color: #0069ba;
+  }
 }
 
 //BOTON PARA DESCARGAR ARCHIVOS
 .DownloadCont {
-    width: 35px;
-    height: 35px;
-    position: absolute;
-    bottom: 7px;
-    right: 45px;
-    z-index: 1000;
-    cursor: pointer;
-    background: white;
-    border-radius: 35px;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: 7px;
+  right: 45px;
+  z-index: 1000;
+  cursor: pointer;
+  background: white;
+  border-radius: 35px;
 
-    i {
-        font-size: 19px;
-        color: #0069ba;
-    }
+  i {
+    font-size: 19px;
+    color: #0069ba;
+  }
 }
 .InputsContentFh {
-    width: 19%;
-    min-height: 180px;
+  width: 19%;
+  min-height: 180px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -292,7 +285,7 @@ export default {
   .InputFileContent {
     width: 18%;
     height: 180px;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
     margin-right: 2%;
     background: #d2deed;
@@ -303,7 +296,7 @@ export default {
       height: 100%;
       z-index: 0;
       position: absolute;
-      border-radius: 15px;
+      border-radius: 5px;
       overflow: hidden;
       left: 0;
       top: 0;
@@ -413,7 +406,7 @@ export default {
   .InputFileContentUpload {
     width: 100%;
     height: 180px;
-    border-radius: 15px;
+    border-radius: 5px;
     border: 2px dashed #ff4f56;
     position: relative;
     margin-right: 2%;
@@ -427,7 +420,7 @@ export default {
       height: 100%;
       z-index: 0;
       position: absolute;
-      border-radius: 15px;
+      border-radius: 5px;
       overflow: hidden;
       left: 0;
       top: 0;
@@ -472,7 +465,7 @@ export default {
           }
           .FileImageSpan {
             color: #ff4f56;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 18px;
           }
           .image {
@@ -483,7 +476,7 @@ export default {
             width: 80%;
             margin-top: 30px;
             border: 1px solid #ff4f56;
-            border-radius: 24px;
+            border-radius: 5px;
             padding: 5px 15px;
             color: #ff4f56;
             font-weight: 800;
@@ -550,7 +543,6 @@ export default {
       background: white;
       border-radius: 35px;
       i {
-        
         font-size: 19px;
         color: #0069ba;
       }
@@ -587,9 +579,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -613,6 +605,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -638,7 +631,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -758,11 +751,7 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper
-  .v-stepper__step:not(.v-stepper__step--active):not(
-    .v-stepper__step--complete
-  ):not(.v-stepper__step--error)
-  .v-stepper__step__step {
+.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 

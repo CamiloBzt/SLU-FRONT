@@ -131,6 +131,7 @@ export default {
       // Modal de confirmacion
       showConfirmationModal: false,
       selectedItemData: [],
+      type: "correspondence",
       // Drag & Drop
       dragBorder: false,
       dragBorderId: 0,
@@ -142,7 +143,6 @@ export default {
       "document",
       "subscription_id",
       "nameReference",
-      "type",
       "downloadDocUrl",
     ]),
   },
@@ -173,7 +173,7 @@ export default {
     ...mapMutations(["setLoading"]),
     /*
     CARGAMOS Y GUARDAMOS LAS IMAGENES,
-    RECIBE POR PARAMETROS EL EVENTO Y EL 
+    RECIBE POR PARAMETROS EL EVENTO Y EL
     NOMBRE DEL INPUT CON EL QUE TRABAJAREMOS
     */
     loadImage(file, inputName, item) {
@@ -303,7 +303,7 @@ export default {
             });
         } catch (e) {
           this.setLoading();
-          console.error("Could not be deleted");
+          // console.error("Could not be deleted");
         }
       }
     },

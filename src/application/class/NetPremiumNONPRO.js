@@ -405,25 +405,19 @@ class NetPremiumNonPro {
   //SLU Premium to be invoiced
 
   damageSluPremiumToBeInvoiced() {
-    const result = Decimal.sub(
-      this.damageNet(),
-      this.damageColombia()
-    ).toNumber();
+    const result = this.damageNet();
     this.data.damageSluPremiumToBeInvoiced = result;
     return result;
   }
 
   businessInterSluPremiumToBeInvoiced() {
-    const result = Decimal.sub(this.biNet(), this.biColombia()).toNumber();
+    const result = this.biNet();
     this.data.businessInterSluPremiumToBeInvoiced = result;
     return result;
   }
 
   stockSluPremiumToBeInvoiced() {
-    const result = Decimal.sub(
-      this.stocksNet(),
-      this.stocksColombia()
-    ).toNumber();
+    const result = this.stocksNet();
     this.data.stockSluPremiumToBeInvoiced = result;
     return result;
   }

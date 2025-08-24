@@ -1,19 +1,13 @@
 <template>
   <v-expansion-panels class="SubExpansionComponent">
     <v-expansion-panel>
-      <v-expansion-panel-header
-        @click="changeSubExpansion"
-        class="ExpansionTitle d-flex justify-start"
-        expand-icon=""
-      >
+      <v-expansion-panel-header @click="changeSubExpansion" class="ExpansionTitle d-flex justify-start" expand-icon="">
         <template v-slot:actions>
           <div class="subIconCont d-flex justify-start align-center">
             <v-icon class="iconExpand mr-1">
               {{ iconSubExpansion }}
             </v-icon>
-            <div class="SubExpansionTitle">
-              Increase insurable value / Inclusion risk
-            </div>
+            <div class="SubExpansionTitle">Increase insurable value / Inclusion risk</div>
           </div>
         </template>
       </v-expansion-panel-header>
@@ -23,76 +17,27 @@
           <!--Inputs-->
           <div class="InputsCont d-flex justify-start flex-wrap">
             <div class="InputCont">
-              <v-menu
-                v-model="menu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
+              <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="
-                      $v.increaseInsurableRisk.effectiveDateMovement.$model
-                    "
-                    label="Effective Date Movement"
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
+                  <v-text-field v-model="$v.increaseInsurableRisk.effectiveDateMovement.$model" label="Effective Date Movement" v-bind="attrs" v-on="on"></v-text-field>
                 </template>
-                <v-date-picker
-                  v-model="
-                    $v.increaseInsurableRisk.effectiveDateMovement.$model
-                  "
-                  @input="menu = false"
-                ></v-date-picker>
+                <v-date-picker v-model="$v.increaseInsurableRisk.effectiveDateMovement.$model" @input="menu = false"></v-date-picker>
               </v-menu>
             </div>
             <div class="InputCont">
-              <v-menu
-                v-model="menu2"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
+              <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="$v.increaseInsurableRisk.movementEndDate.$model"
-                    label="Movement End Date"
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
+                  <v-text-field v-model="$v.increaseInsurableRisk.movementEndDate.$model" label="Movement End Date" v-bind="attrs" v-on="on"></v-text-field>
                 </template>
-                <v-date-picker
-                  v-model="$v.increaseInsurableRisk.movementEndDate.$model"
-                  @input="menu2 = false"
-                ></v-date-picker>
+                <v-date-picker v-model="$v.increaseInsurableRisk.movementEndDate.$model" @input="menu2 = false"></v-date-picker>
               </v-menu>
             </div>
             <div class="InputCont">
-              <v-menu
-                v-model="menu3"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
+              <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="increaseInsurableRisk.premiumPaymentDate"
-                    label="Premium Payment Date"
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
+                  <v-text-field v-model="increaseInsurableRisk.premiumPaymentDate" label="Premium Payment Date" v-bind="attrs" v-on="on"></v-text-field>
                 </template>
-                <v-date-picker
-                  v-model="increaseInsurableRisk.premiumPaymentDate"
-                  @input="menu3 = false"
-                ></v-date-picker>
+                <v-date-picker v-model="increaseInsurableRisk.premiumPaymentDate" @input="menu3 = false"></v-date-picker>
               </v-menu>
             </div>
           </div>
@@ -162,20 +107,10 @@
             <div class="InputCont"></div>
           </div>
 
-          <h6 class="TitleInputs mt-7">
-            Increase insurable value / Inclusion risk Chart
-          </h6>
+          <h6 class="TitleInputs mt-7">Increase insurable value / Inclusion risk Chart</h6>
 
           <!--PRIMER TABLA-->
-          <div
-            class="
-              TableGeneralStyle
-              d-flex
-              flex-wrap
-              align-start
-              justify-center
-            "
-          >
+          <div class="TableGeneralStyle d-flex flex-wrap align-start justify-center">
             <div class="Head d-flex justify-space-between align-center">
               <div class="Label" />
               <div class="Row Bold">TIV Movement</div>
@@ -228,17 +163,7 @@
           </div>
 
           <!--SEGUNDA TABLA-->
-          <div
-            class="
-              TableGeneralStyle
-              d-flex
-              flex-wrap
-              align-start
-              justify-center
-              mt-12
-              Table3
-            "
-          >
+          <div class="TableGeneralStyle d-flex flex-wrap align-start justify-center mt-12 Table3">
             <div class="Head d-flex justify-space-between align-center">
               <div class="Label" />
               <div class="Row Bold">Premium SLU</div>
@@ -291,17 +216,7 @@
           </div>
 
           <!--TERCER TABLA-->
-          <div
-            class="
-              TableGeneralStyle
-              Table3
-              d-flex
-              flex-wrap
-              align-start
-              justify-center
-              mt-12
-            "
-          >
+          <div class="TableGeneralStyle Table3 d-flex flex-wrap align-start justify-center mt-12">
             <div class="Head d-flex justify-space-between align-center">
               <div class="Label" />
               <div class="Row Bold text-center">Engineering Fees</div>
@@ -371,26 +286,26 @@
   </v-expansion-panels>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from "vuex";
 /* mixins */
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* components */
-import FilesSubmission from '@/components/subscription/submission/FilesSubmission';
-import EmailRichEditor from '@/components/Email/EmailRichEditor';
+import FilesSubmission from "@/components/subscription/submission/FilesSubmission";
+import EmailRichEditor from "@/components/Email/EmailRichEditor";
 /* validations */
-import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
-import { DigitsAndDecimals, Percentage } from '@/constants/validations';
-import { formValidations } from '@/mixins/formValidations';
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { DigitsAndDecimals, Percentage } from "@/constants/validations";
+import { formValidations } from "@/mixins/formValidations";
 /* libs & helpers */
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 /* lodash */
-import { debounce } from 'lodash';
-import * as moment from 'moment';
+import { debounce } from "lodash";
+import * as moment from "moment";
 
 export default {
-  name: 'IncreaseInsurableRisk',
+  name: "IncreaseInsurableRisk",
   mixins: [stateExpansiveManager, formValidations, validationMixin],
   data() {
     return {
@@ -398,13 +313,13 @@ export default {
       menu2: false,
       menu3: false,
 
-      model1: '',
-      model2: '',
-      model3: '',
+      model1: "",
+      model2: "",
+      model3: "",
 
-      formatter: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      formatter: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       }),
     };
   },
@@ -418,18 +333,18 @@ export default {
     EmailRichEditor,
   },
   async mounted() {
-    await this.getEndorsementInformation('increaseInsurable');
+    await this.getEndorsementInformation("increaseInsurable");
   },
   computed: {
-    ...mapGetters(['deductions', 'endorsements']),
+    ...mapGetters(["deductions", "endorsements"]),
     ...mapGetters({
-      increaseInsure: 'increaseInsurableRisk',
-      insurancePolicy: 'newInsurancePolicy',
+      increaseInsure: "increaseInsurableRisk",
+      insurancePolicy: "newInsurancePolicy",
     }),
     increaseInsurableRisk: {
       get() {
         const current = this.endorsements[this.indexarr];
-        const id = current['movementId'];
+        const id = current["movementId"];
         const item = this.increaseInsure.findIndex((v) => v.id === id);
         return this.increaseInsure[item];
       },
@@ -437,7 +352,7 @@ export default {
     newInsurancePolicy: {
       get() {
         const index = this.endorsements.findIndex((v) => v.movementType === 1);
-        const id = this.endorsements[index]['movementId'];
+        const id = this.endorsements[index]["movementId"];
         const item = this.insurancePolicy.findIndex((v) => v.id === id);
         return this.insurancePolicy[item];
       },
@@ -445,51 +360,35 @@ export default {
     currentId: {
       get() {
         const current = this.endorsements[this.indexarr];
-        const id = current['movementId'];
+        const id = current["movementId"];
         return id;
       },
     },
     currentIndex: {
       get() {
         const current = this.endorsements[this.indexarr];
-        const id = current['movementId'];
+        const id = current["movementId"];
         const item = this.increaseInsure.findIndex((v) => v.id === id);
         return item;
       },
     },
     totalDamage: {
       get() {
-        const op = Decimal.sum(
-          numeral(
-            (this.increaseInsurableRisk.movementDamage || '$0').replace('$', '')
-          ).value(),
-          numeral(
-            (this.newInsurancePolicy.damageTiv || '$0').replace('$', '')
-          ).value()
-        );
+        const op = Decimal.sum(numeral((this.increaseInsurableRisk.movementDamage || "$0").replace("$", "")).value(), numeral((this.newInsurancePolicy.damageTiv || "$0").replace("$", "")).value());
 
         return this.formatter.format(op);
       },
     },
     totalAlop: {
       get() {
-        const op = Decimal.sum(
-          numeral(
-            (this.increaseInsurableRisk.movementAlop || '$0').replace('$', '')
-          ).value(),
-          numeral(
-            (this.newInsurancePolicy.alopTiv || '$0').replace('$', '')
-          ).value()
-        );
+        const op = Decimal.sum(numeral((this.increaseInsurableRisk.movementAlop || "$0").replace("$", "")).value(), numeral((this.newInsurancePolicy.alopTiv || "$0").replace("$", "")).value());
 
         return this.formatter.format(op);
       },
     },
     damageTivMovement: {
       get() {
-        const value = numeral(
-          (this.increaseInsurableRisk.movementDamage || '$0').replace('$', '')
-        ).value();
+        const value = numeral((this.increaseInsurableRisk.movementDamage || "$0").replace("$", "")).value();
 
         const op = Decimal(value);
         return this.formatter.format(op);
@@ -497,9 +396,7 @@ export default {
     },
     damageTiv: {
       get() {
-        const value = numeral(
-          (this.totalDamage || '$0').replace('$', '')
-        ).value();
+        const value = numeral((this.totalDamage || "$0").replace("$", "")).value();
 
         const op = Decimal(value);
         return this.formatter.format(op);
@@ -507,9 +404,7 @@ export default {
     },
     damageRate: {
       get() {
-        const value = numeral(
-          (this.newInsurancePolicy.damageRate || '$0').replace('$', '')
-        ).value();
+        const value = numeral((this.newInsurancePolicy.damageRate || "$0").replace("$", "")).value();
 
         const op = Decimal(value);
         return op;
@@ -518,28 +413,16 @@ export default {
     damagePremium: {
       get() {
         const percentage = new Decimal(this.damageRate || 0);
-        const op = Decimal.mul(
-          percentage,
-          numeral((this.damageTivMovement || '$0').replace('$', '')).value()
-        ).div(1000);
+        const op = Decimal.mul(percentage, numeral((this.damageTivMovement || "$0").replace("$", "")).value()).div(1000);
 
-        const effectiveDate = new Date(
-          this.newInsurancePolicy.effectiveDateMovement || 0
-        );
+        const effectiveDate = new Date(this.newInsurancePolicy.effectiveDateMovement || 0);
         const endDate = new Date(this.newInsurancePolicy.movementEndDate || 0);
 
-        const effectiveDateIncrease = new Date(
-          this.increaseInsurableRisk.effectiveDateMovement || 0
-        );
-        const endDateIncrease = new Date(
-          this.increaseInsurableRisk.movementEndDate || 0
-        );
+        const effectiveDateIncrease = new Date(this.increaseInsurableRisk.effectiveDateMovement || 0);
+        const endDateIncrease = new Date(this.increaseInsurableRisk.movementEndDate || 0);
 
-        const dateSubs1 =
-          (endDate.getTime() - effectiveDate.getTime()) / (1000 * 60 * 60 * 24);
-        const dateSubs2 =
-          (endDateIncrease.getTime() - effectiveDateIncrease.getTime()) /
-          (1000 * 60 * 60 * 24);
+        const dateSubs1 = (endDate.getTime() - effectiveDate.getTime()) / (1000 * 60 * 60 * 24);
+        const dateSubs2 = (endDateIncrease.getTime() - effectiveDateIncrease.getTime()) / (1000 * 60 * 60 * 24);
 
         const div = Decimal.div(op, dateSubs1);
         const result = Decimal.mul(div, dateSubs2);
@@ -550,10 +433,7 @@ export default {
     damagePremiumSlu: {
       get() {
         const percentage = Decimal.div(20, 100);
-        const op = Decimal.mul(
-          numeral((this.damagePremium || '$0').replace('$', '')).value() || 0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.damagePremium || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -561,11 +441,7 @@ export default {
     damageBrokerage: {
       get() {
         const percentage = Decimal.div(10, 100);
-        const op = Decimal.mul(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value() ||
-            0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -573,11 +449,7 @@ export default {
     damageTaxes: {
       get() {
         const percentage = Decimal.div(2, 100);
-        const op = Decimal.mul(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value() ||
-            0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -585,19 +457,10 @@ export default {
     damageFrontingFee: {
       get() {
         const percentage = new Decimal(5).div(100); // it can be raplced with .2
-        const op = new Decimal(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value() || 0
-        )
-          .sub(
-            numeral((this.damageBrokerage || '$0').replace('$', '')).value() ||
-              0
-          )
-          .sub(
-            numeral((this.damageTaxes || '$0').replace('$', '')).value() || 0
-          )
-          .sub(
-            numeral((this.damageEngFee || '$0').replace('$', '')).value() || 0
-          );
+        const op = new Decimal(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value() || 0)
+          .sub(numeral((this.damageBrokerage || "$0").replace("$", "")).value() || 0)
+          .sub(numeral((this.damageTaxes || "$0").replace("$", "")).value() || 0)
+          .sub(numeral((this.damageEngFee || "$0").replace("$", "")).value() || 0);
 
         const mul = Decimal.mul(op, percentage);
         return this.formatter.format(mul);
@@ -606,11 +469,7 @@ export default {
     damageEngFee: {
       get() {
         const percentage = Decimal.div(2.5, 100);
-        const op = Decimal.mul(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value() ||
-            0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -618,62 +477,38 @@ export default {
     damageReserve: {
       get() {
         const percentage = 0;
-        const op = Decimal.mul(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value() ||
-            0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
     },
     damageNet: {
       get() {
-        const op = new Decimal(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value()
-        )
-          .sub(numeral((this.damageBrokerage || '$0').replace('$', '')).value())
-          .sub(numeral((this.damageTaxes || '$0').replace('$', '')).value())
-          .sub(
-            numeral((this.damageFrontingFee || '$0').replace('$', '')).value()
-          );
+        const op = new Decimal(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value())
+          .sub(numeral((this.damageBrokerage || "$0").replace("$", "")).value())
+          .sub(numeral((this.damageTaxes || "$0").replace("$", "")).value())
+          .sub(numeral((this.damageFrontingFee || "$0").replace("$", "")).value());
 
-        const result =
-          this.deductions.deductionType === 'At inception'
-            ? op.minus(
-                numeral((this.damageEngFee || '$0').replace('$', '')).value()
-              )
-            : op;
+        const result = this.deductions.deductionType === "At inception" ? op.minus(numeral((this.damageEngFee || "$0").replace("$", "")).value()) : op;
 
         return this.formatter.format(result);
       },
     },
     damageNetPremium: {
       get() {
-        const op = new Decimal(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value()
-        )
-          .sub(numeral((this.damageBrokerage || '$0').replace('$', '')).value())
-          .sub(numeral((this.damageTaxes || '$0').replace('$', '')).value())
-          .sub(
-            numeral((this.damageFrontingFee || '$0').replace('$', '')).value()
-          );
+        const op = new Decimal(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value())
+          .sub(numeral((this.damageBrokerage || "$0").replace("$", "")).value())
+          .sub(numeral((this.damageTaxes || "$0").replace("$", "")).value())
+          .sub(numeral((this.damageFrontingFee || "$0").replace("$", "")).value());
 
-        const result =
-          this.deductions.deductionType === 'At inception'
-            ? op.minus(
-                numeral((this.damageEngFee || '$0').replace('$', '')).value()
-              )
-            : op;
+        const result = this.deductions.deductionType === "At inception" ? op.minus(numeral((this.damageEngFee || "$0").replace("$", "")).value()) : op;
 
         return this.formatter.format(result);
       },
     },
     alopTivMovement: {
       get() {
-        const value = numeral(
-          (this.increaseInsurableRisk.movementAlop || '$0').replace('$', '')
-        ).value();
+        const value = numeral((this.increaseInsurableRisk.movementAlop || "$0").replace("$", "")).value();
 
         const op = Decimal(value);
         return this.formatter.format(op);
@@ -681,9 +516,7 @@ export default {
     },
     alopTiv: {
       get() {
-        const value = numeral(
-          (this.totalAlop || '$0').replace('$', '')
-        ).value();
+        const value = numeral((this.totalAlop || "$0").replace("$", "")).value();
 
         const op = Decimal(value);
         return this.formatter.format(op);
@@ -691,9 +524,7 @@ export default {
     },
     alopRate: {
       get() {
-        const value = numeral(
-          (this.newInsurancePolicy.alopRate || '$0').replace('$', '')
-        ).value();
+        const value = numeral((this.newInsurancePolicy.alopRate || "$0").replace("$", "")).value();
 
         const op = Decimal(value);
         return op;
@@ -702,28 +533,16 @@ export default {
     alopPremium: {
       get() {
         const percentage = new Decimal(this.alopRate || 0);
-        const op = Decimal.mul(
-          percentage,
-          numeral((this.alopTivMovement || '$0').replace('$', '')).value()
-        ).div(1000);
+        const op = Decimal.mul(percentage, numeral((this.alopTivMovement || "$0").replace("$", "")).value()).div(1000);
 
-        const effectiveDate = new Date(
-          this.newInsurancePolicy.effectiveDateMovement || 0
-        );
+        const effectiveDate = new Date(this.newInsurancePolicy.effectiveDateMovement || 0);
         const endDate = new Date(this.newInsurancePolicy.movementEndDate || 0);
 
-        const effectiveDateIncrease = new Date(
-          this.increaseInsurableRisk.effectiveDateMovement || 0
-        );
-        const endDateIncrease = new Date(
-          this.increaseInsurableRisk.movementEndDate || 0
-        );
+        const effectiveDateIncrease = new Date(this.increaseInsurableRisk.effectiveDateMovement || 0);
+        const endDateIncrease = new Date(this.increaseInsurableRisk.movementEndDate || 0);
 
-        const dateSubs1 =
-          (endDate.getTime() - effectiveDate.getTime()) / (1000 * 60 * 60 * 24);
-        const dateSubs2 =
-          (endDateIncrease.getTime() - effectiveDateIncrease.getTime()) /
-          (1000 * 60 * 60 * 24);
+        const dateSubs1 = (endDate.getTime() - effectiveDate.getTime()) / (1000 * 60 * 60 * 24);
+        const dateSubs2 = (endDateIncrease.getTime() - effectiveDateIncrease.getTime()) / (1000 * 60 * 60 * 24);
 
         const div = Decimal.div(op, dateSubs1);
         const result = Decimal.mul(div, dateSubs2);
@@ -734,10 +553,7 @@ export default {
     alopPremiumSlu: {
       get() {
         const percentage = Decimal.div(20, 100);
-        const op = Decimal.mul(
-          numeral((this.alopPremium || '$0').replace('$', '')).value() || 0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.alopPremium || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -745,10 +561,7 @@ export default {
     alopBrokerage: {
       get() {
         const percentage = Decimal.div(10, 100);
-        const op = Decimal.mul(
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value() || 0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.alopPremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -756,10 +569,7 @@ export default {
     alopTaxes: {
       get() {
         const percentage = Decimal.div(2, 100);
-        const op = Decimal.mul(
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value() || 0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.alopPremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -767,16 +577,10 @@ export default {
     alopFrontingFee: {
       get() {
         const percentage = new Decimal(5).div(100); // it can be raplced with .2
-        const op = new Decimal(
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value() || 0
-        )
-          .sub(
-            numeral((this.alopBrokerage || '$0').replace('$', '')).value() || 0
-          )
-          .sub(numeral((this.alopTaxes || '$0').replace('$', '')).value() || 0)
-          .sub(
-            numeral((this.alopEngFee || '$0').replace('$', '')).value() || 0
-          );
+        const op = new Decimal(numeral((this.alopPremiumSlu || "$0").replace("$", "")).value() || 0)
+          .sub(numeral((this.alopBrokerage || "$0").replace("$", "")).value() || 0)
+          .sub(numeral((this.alopTaxes || "$0").replace("$", "")).value() || 0)
+          .sub(numeral((this.alopEngFee || "$0").replace("$", "")).value() || 0);
 
         const mul = Decimal.mul(op, percentage);
         return this.formatter.format(mul);
@@ -785,10 +589,7 @@ export default {
     alopEngFee: {
       get() {
         const percentage = Decimal.div(2.5, 100);
-        const op = Decimal.mul(
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value() || 0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.alopPremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
@@ -796,71 +597,44 @@ export default {
     alopReserve: {
       get() {
         const percentage = 0;
-        const op = Decimal.mul(
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value() || 0,
-          percentage
-        );
+        const op = Decimal.mul(numeral((this.alopPremiumSlu || "$0").replace("$", "")).value() || 0, percentage);
 
         return this.formatter.format(op);
       },
     },
     alopNet: {
       get() {
-        const op = new Decimal(
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value()
-        )
-          .sub(numeral((this.alopBrokerage || '$0').replace('$', '')).value())
-          .sub(numeral((this.alopTaxes || '$0').replace('$', '')).value())
-          .sub(
-            numeral((this.alopFrontingFee || '$0').replace('$', '')).value()
-          );
+        const op = new Decimal(numeral((this.alopPremiumSlu || "$0").replace("$", "")).value())
+          .sub(numeral((this.alopBrokerage || "$0").replace("$", "")).value())
+          .sub(numeral((this.alopTaxes || "$0").replace("$", "")).value())
+          .sub(numeral((this.alopFrontingFee || "$0").replace("$", "")).value());
 
-        const result =
-          this.deductions.deductionType === 'At inception'
-            ? op.minus(
-                numeral((this.alopEngFee || '$0').replace('$', '')).value()
-              )
-            : op;
+        const result = this.deductions.deductionType === "At inception" ? op.minus(numeral((this.alopEngFee || "$0").replace("$", "")).value()) : op;
 
         return this.formatter.format(result);
       },
     },
     alopNetPremium: {
       get() {
-        const op = new Decimal(
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value()
-        )
-          .sub(numeral((this.alopBrokerage || '$0').replace('$', '')).value())
-          .sub(numeral((this.alopTaxes || '$0').replace('$', '')).value())
-          .sub(
-            numeral((this.alopFrontingFee || '$0').replace('$', '')).value()
-          );
+        const op = new Decimal(numeral((this.alopPremiumSlu || "$0").replace("$", "")).value())
+          .sub(numeral((this.alopBrokerage || "$0").replace("$", "")).value())
+          .sub(numeral((this.alopTaxes || "$0").replace("$", "")).value())
+          .sub(numeral((this.alopFrontingFee || "$0").replace("$", "")).value());
 
-        const result =
-          this.deductions.deductionType === 'At inception'
-            ? op.minus(
-                numeral((this.alopEngFee || '$0').replace('$', '')).value()
-              )
-            : op;
+        const result = this.deductions.deductionType === "At inception" ? op.minus(numeral((this.alopEngFee || "$0").replace("$", "")).value()) : op;
 
         return this.formatter.format(result);
       },
     },
     tivMovementTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageTivMovement || '$0').replace('$', '')).value(),
-          numeral((this.alopTivMovement || '$0').replace('$', '')).value()
-        );
+        const op = Decimal.sum(numeral((this.damageTivMovement || "$0").replace("$", "")).value(), numeral((this.alopTivMovement || "$0").replace("$", "")).value());
         return this.formatter.format(op);
       },
     },
     tivTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageTiv || '$0').replace('$', '')).value(),
-          numeral((this.alopTiv || '$0').replace('$', '')).value()
-        );
+        const op = Decimal.sum(numeral((this.damageTiv || "$0").replace("$", "")).value(), numeral((this.alopTiv || "$0").replace("$", "")).value());
         return this.formatter.format(op);
       },
     },
@@ -872,96 +646,66 @@ export default {
     },
     premiumTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damagePremium || '$0').replace('$', '')).value() || 0,
-          numeral((this.alopPremium || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damagePremium || "$0").replace("$", "")).value() || 0, numeral((this.alopPremium || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     premiumSluTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damagePremiumSlu || '$0').replace('$', '')).value() ||
-            0,
-          numeral((this.alopPremiumSlu || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damagePremiumSlu || "$0").replace("$", "")).value() || 0, numeral((this.alopPremiumSlu || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     brokerageTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageBrokerage || '$0').replace('$', '')).value() || 0,
-          numeral((this.alopBrokerage || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damageBrokerage || "$0").replace("$", "")).value() || 0, numeral((this.alopBrokerage || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     taxesTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageTaxes || '$0').replace('$', '')).value() || 0,
-          numeral((this.alopTaxes || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damageTaxes || "$0").replace("$", "")).value() || 0, numeral((this.alopTaxes || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     frontingFeeTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageFrontingFee || '$0').replace('$', '')).value() ||
-            0,
-          numeral((this.alopFrontingFee || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damageFrontingFee || "$0").replace("$", "")).value() || 0, numeral((this.alopFrontingFee || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     engFeeTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageEngFee || '$0').replace('$', '')).value() || 0,
-          numeral((this.alopEngFee || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damageEngFee || "$0").replace("$", "")).value() || 0, numeral((this.alopEngFee || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     reserveTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageReserve || '$0').replace('$', '')).value() || 0,
-          numeral((this.alopReserve || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damageReserve || "$0").replace("$", "")).value() || 0, numeral((this.alopReserve || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     netTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageNet || '$0').replace('$', '')).value() || 0,
-          numeral((this.alopNet || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damageNet || "$0").replace("$", "")).value() || 0, numeral((this.alopNet || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     netPremiumTotal: {
       get() {
-        const op = Decimal.sum(
-          numeral((this.damageNetPremium || '$0').replace('$', '')).value() ||
-            0,
-          numeral((this.alopNetPremium || '$0').replace('$', '')).value() || 0
-        );
+        const op = Decimal.sum(numeral((this.damageNetPremium || "$0").replace("$", "")).value() || 0, numeral((this.alopNetPremium || "$0").replace("$", "")).value() || 0);
         return this.formatter.format(op);
       },
     },
     signature: {
       get() {
-        return this.increaseInsurableRisk.signature || '';
+        return this.increaseInsurableRisk.signature || "";
       },
     },
     support: {
       get() {
-        return this.increaseInsurableRisk.support || '';
+        return this.increaseInsurableRisk.support || "";
       },
     },
   },
@@ -970,385 +714,381 @@ export default {
       this.$v.increaseInsurableRisk.totalDamage.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'totalDamage',
+        key: "totalDamage",
         value: val,
       });
-      this.checkField('totalDamage');
+      this.checkField("totalDamage");
     }, 1000),
     totalAlop: debounce(function (val) {
       this.$v.increaseInsurableRisk.totalAlop.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'totalAlop',
+        key: "totalAlop",
         value: val,
       });
-      this.checkField('totalAlop');
+      this.checkField("totalAlop");
     }, 1000),
     damageTivMovement: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageTivMovement.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageTivMovement',
+        key: "damageTivMovement",
         value: val,
       });
-      this.checkField('damageTivMovement');
+      this.checkField("damageTivMovement");
     }, 1000),
     damageTiv: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageTiv.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageTiv',
+        key: "damageTiv",
         value: val,
       });
-      this.checkField('damageTiv');
+      this.checkField("damageTiv");
     }, 1000),
     damageRate: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageRate.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageRate',
+        key: "damageRate",
         value: val,
       });
-      this.checkField('damageRate');
+      this.checkField("damageRate");
     }, 1000),
     damagePremium: debounce(function (val) {
       this.$v.increaseInsurableRisk.damagePremium.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damagePremium',
+        key: "damagePremium",
         value: val,
       });
-      this.checkField('damagePremium');
+      this.checkField("damagePremium");
     }, 1000),
     damagePremiumSlu: debounce(function (val) {
       this.$v.increaseInsurableRisk.damagePremiumSlu.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damagePremiumSlu',
+        key: "damagePremiumSlu",
         value: val,
       });
-      this.checkField('damagePremiumSlu');
+      this.checkField("damagePremiumSlu");
     }, 1000),
     damageBrokerage: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageBrokerage.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageBrokerage',
+        key: "damageBrokerage",
         value: val,
       });
-      this.checkField('damageBrokerage');
+      this.checkField("damageBrokerage");
     }, 1000),
     damageTaxes: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageTaxes.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageTaxes',
+        key: "damageTaxes",
         value: val,
       });
-      this.checkField('damageTaxes');
+      this.checkField("damageTaxes");
     }, 1000),
     damageFrontingFee: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageFrontingFee.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageFrontingFee',
+        key: "damageFrontingFee",
         value: val,
       });
-      this.checkField('damageFrontingFee');
+      this.checkField("damageFrontingFee");
     }, 1000),
     damageEngFee: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageEngFee.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageEngFee',
+        key: "damageEngFee",
         value: val,
       });
-      this.checkField('damageEngFee');
+      this.checkField("damageEngFee");
     }, 1000),
     damageReserve: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageReserve.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageReserve',
+        key: "damageReserve",
         value: val,
       });
-      this.checkField('damageReserve');
+      this.checkField("damageReserve");
     }, 1000),
     damageNet: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageNet.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageNet',
+        key: "damageNet",
         value: val,
       });
-      this.checkField('damageNet');
+      this.checkField("damageNet");
     }, 1000),
     damageNetPremium: debounce(function (val) {
       this.$v.increaseInsurableRisk.damageNetPremium.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'damageNetPremium',
+        key: "damageNetPremium",
         value: val,
       });
-      this.checkField('damageNetPremium');
+      this.checkField("damageNetPremium");
     }, 1000),
     alopTivMovement: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopTivMovement.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopTivMovement',
+        key: "alopTivMovement",
         value: val,
       });
-      this.checkField('alopTivMovement');
+      this.checkField("alopTivMovement");
     }, 1000),
     alopTiv: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopTiv.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopTiv',
+        key: "alopTiv",
         value: val,
       });
-      this.checkField('alopTiv');
+      this.checkField("alopTiv");
     }, 1000),
     alopRate: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopRate.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopRate',
+        key: "alopRate",
         value: val,
       });
-      this.checkField('alopRate');
+      this.checkField("alopRate");
     }, 1000),
     alopPremium: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopPremium.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopPremium',
+        key: "alopPremium",
         value: val,
       });
-      this.checkField('alopPremium');
+      this.checkField("alopPremium");
     }, 1000),
     alopPremiumSlu: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopPremiumSlu.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopPremiumSlu',
+        key: "alopPremiumSlu",
         value: val,
       });
-      this.checkField('alopPremiumSlu');
+      this.checkField("alopPremiumSlu");
     }, 1000),
     alopBrokerage: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopBrokerage.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopBrokerage',
+        key: "alopBrokerage",
         value: val,
       });
-      this.checkField('alopBrokerage');
+      this.checkField("alopBrokerage");
     }, 1000),
     alopTaxes: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopTaxes.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopTaxes',
+        key: "alopTaxes",
         value: val,
       });
-      this.checkField('alopTaxes');
+      this.checkField("alopTaxes");
     }, 1000),
     alopFrontingFee: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopFrontingFee.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopFrontingFee',
+        key: "alopFrontingFee",
         value: val,
       });
-      this.checkField('alopFrontingFee');
+      this.checkField("alopFrontingFee");
     }, 1000),
     alopEngFee: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopEngFee.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopEngFee',
+        key: "alopEngFee",
         value: val,
       });
-      this.checkField('alopEngFee');
+      this.checkField("alopEngFee");
     }, 1000),
     alopReserve: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopReserve.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopReserve',
+        key: "alopReserve",
         value: val,
       });
-      this.checkField('alopReserve');
+      this.checkField("alopReserve");
     }, 1000),
     alopNet: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopNet.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopNet',
+        key: "alopNet",
         value: val,
       });
-      this.checkField('alopNet');
+      this.checkField("alopNet");
     }, 1000),
     alopNetPremium: debounce(function (val) {
       this.$v.increaseInsurableRisk.alopNetPremium.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'alopNetPremium',
+        key: "alopNetPremium",
         value: val,
       });
-      this.checkField('alopNetPremium');
+      this.checkField("alopNetPremium");
     }, 1000),
     tivMovementTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.tivMovementTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'tivMovementTotal',
+        key: "tivMovementTotal",
         value: val,
       });
-      this.checkField('tivMovementTotal');
+      this.checkField("tivMovementTotal");
     }, 1000),
     tivTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.tivTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'tivTotal',
+        key: "tivTotal",
         value: val,
       });
-      this.checkField('tivTotal');
+      this.checkField("tivTotal");
     }, 1000),
     rateTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.rateTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'rateTotal',
+        key: "rateTotal",
         value: val,
       });
-      this.checkField('rateTotal');
+      this.checkField("rateTotal");
     }, 1000),
     premiumTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.premiumTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'premiumTotal',
+        key: "premiumTotal",
         value: val,
       });
-      this.checkField('premiumTotal');
+      this.checkField("premiumTotal");
     }, 1000),
     premiumSluTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.premiumSluTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'premiumSluTotal',
+        key: "premiumSluTotal",
         value: val,
       });
-      this.checkField('premiumSluTotal');
+      this.checkField("premiumSluTotal");
     }, 1000),
     brokerageTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.brokerageTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'brokerageTotal',
+        key: "brokerageTotal",
         value: val,
       });
-      this.checkField('brokerageTotal');
+      this.checkField("brokerageTotal");
     }, 1000),
     taxesTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.taxesTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'taxesTotal',
+        key: "taxesTotal",
         value: val,
       });
-      this.checkField('taxesTotal');
+      this.checkField("taxesTotal");
     }, 1000),
     frontingFeeTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.frontingFeeTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'frontingFeeTotal',
+        key: "frontingFeeTotal",
         value: val,
       });
-      this.checkField('frontingFeeTotal');
+      this.checkField("frontingFeeTotal");
     }, 1000),
     engFeeTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.engFeeTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'engFeeTotal',
+        key: "engFeeTotal",
         value: val,
       });
-      this.checkField('engFeeTotal');
+      this.checkField("engFeeTotal");
     }, 1000),
     reserveTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.reserveTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'reserveTotal',
+        key: "reserveTotal",
         value: val,
       });
-      this.checkField('reserveTotal');
+      this.checkField("reserveTotal");
     }, 1000),
     netTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.netTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'netTotal',
+        key: "netTotal",
         value: val,
       });
-      this.checkField('netTotal');
+      this.checkField("netTotal");
     }, 1000),
     netPremiumTotal: debounce(function (val) {
       this.$v.increaseInsurableRisk.netPremiumTotal.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'netPremiumTotal',
+        key: "netPremiumTotal",
         value: val,
       });
-      this.checkField('netPremiumTotal');
+      this.checkField("netPremiumTotal");
     }, 1000),
-    'increaseInsurableRisk.effectiveDateMovement': debounce(function (val) {
+    "increaseInsurableRisk.effectiveDateMovement": debounce(function (val) {
       this.$v.increaseInsurableRisk.effectiveDateMovement.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'effectiveDateMovement',
+        key: "effectiveDateMovement",
         value: val,
       });
-      this.checkField('effectiveDateMovement');
+      this.checkField("effectiveDateMovement");
     }, 1000),
-    'increaseInsurableRisk.movementEndDate': debounce(function (val) {
+    "increaseInsurableRisk.movementEndDate": debounce(function (val) {
       this.$v.increaseInsurableRisk.movementEndDate.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'movementEndDate',
+        key: "movementEndDate",
         value: val,
       });
-      this.checkField('movementEndDate');
+      this.checkField("movementEndDate");
     }, 1000),
-    'increaseInsurableRisk.premiumPaymentDate': debounce(function (val) {
+    "increaseInsurableRisk.premiumPaymentDate": debounce(function (val) {
       this.$v.increaseInsurableRisk.premiumPaymentDate.$model = val;
       this.setIncreaseInsurableRisk({
         index: this.currentIndex,
-        key: 'premiumPaymentDate',
+        key: "premiumPaymentDate",
         value: val,
       });
-      this.checkField('premiumPaymentDate');
+      this.checkField("premiumPaymentDate");
     }, 1000),
   },
   methods: {
-    ...mapActions([
-      'saveQuotationColumn',
-      'saveEndorsementColumn',
-      'getEndorsementInformation',
-    ]),
-    ...mapMutations(['setIncreaseInsurableRisk']),
+    ...mapActions(["saveQuotationColumn", "saveEndorsementColumn", "getEndorsementInformation"]),
+    ...mapMutations(["setIncreaseInsurableRisk"]),
     async checkField(column) {
       this.$v.increaseInsurableRisk[column].$touch();
       if (this.$v.increaseInsurableRisk[column].$invalid) return;
       await this.saveEndorsementColumn({
-        table: 'increaseInsurable',
-        parent: 'increaseInsurableRisk',
+        table: "increaseInsurable",
+        parent: "increaseInsurableRisk",
         column,
         id: this.currentId,
       });
@@ -1363,7 +1103,7 @@ export default {
       await this.checkField(column);
     },
     dateValue(value) {
-      const valid = moment(value, 'YYYY-MM-DD', true).isValid();
+      const valid = moment(value, "YYYY-MM-DD", true).isValid();
       if (valid) return value;
       return 0;
     },
@@ -1424,8 +1164,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 /*Tablas*/
 /*
   Validar don Yesi si se deben usar estos estilos
@@ -1492,7 +1232,7 @@ export default {
   }
 
   .Bold {
-    font-weight: 700;
+    font-weight: 600;
   }
 }
 */

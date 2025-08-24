@@ -240,6 +240,14 @@ import numeral from "numeral";
 /* lodash */
 import { debounce } from "lodash";
 
+function safeDecimal(value) {
+  try {
+    return new Decimal(value ?? 0);
+  } catch {
+    return new Decimal(0);
+  }
+}
+
 export default {
   name: "TotalInsurableValueBound",
   mixins: [formValidations],
@@ -374,29 +382,29 @@ export default {
       },
     },
     // calculos
-    totalCurrency: function () {
-      return Decimal(this.tiv.propertyDamage)
-        .add(this.alopCurrency || 0)
+    totalCurrency() {
+      return safeDecimal(this.tiv?.propertyDamage)
+        .add(safeDecimal(this.alopCurrency))
         .toSignificantDigits(4);
     },
-    totalCurrencyUsd: function () {
-      return Decimal(this.tiv.propertyDamageUsd || "$0")
-        .add(this.alopCurrencyUsd || 0)
+    totalCurrencyUsd() {
+      return safeDecimal(this.tiv?.propertyDamageUsd)
+        .add(safeDecimal(this.alopCurrencyUsd))
         .toSignificantDigits(4);
     },
-    totalRate: function () {
-      return Decimal(this.premium.businessInterruptionRate || 0)
-        .add(this.premium.propertyDamageRate || 0)
+    totalRate() {
+      return safeDecimal(this.premium?.businessInterruptionRate)
+        .add(safeDecimal(this.premium?.propertyDamageRate))
         .toDecimalPlaces(2);
     },
-    totalNd: function () {
-      return Decimal(this.allRiskPremium || 0)
-        .add(this.alopCurrencyNd || 0)
+    totalNd() {
+      return safeDecimal(this.allRiskPremium)
+        .add(safeDecimal(this.alopCurrencyNd))
         .toSignificantDigits(4);
     },
-    totalPremium: function () {
-      return Decimal(this.allRiskPremiumUsd || 0)
-        .add(this.alopCurrencyPremium || 0)
+    totalPremium() {
+      return safeDecimal(this.allRiskPremiumUsd)
+        .add(safeDecimal(this.alopCurrencyPremium))
         .toSignificantDigits(4);
     },
     sluPremium: {
@@ -612,30 +620,30 @@ export default {
       });
     },
     calculateUSD() {
-      this.toBeDefined.limitedInsuredUsd = Decimal(
-        !this.toBeDefined.limitedInsured
-          ? 0
-          : Decimal(this.toBeDefined.limitedInsured)
-      ).div(Decimal(this.quotation.exchangeRate || 0));
+      const limit = safeDecimal(
+        !this.toBeDefined.limitedInsured ? 0 : this.toBeDefined.limitedInsured
+      );
+      const exchange = safeDecimal(this.quotation?.exchangeRate || 1);
+      this.toBeDefined.limitedInsuredUsd = limit.div(exchange).toNumber();
     },
     calcs() {
-      this.nd = Decimal(numeral(this.tiv.total).value() || 0)
+      this.nd = safeDecimal(numeral(this.tiv.total).value())
         .mul(this.rate || 0)
         .div(1000);
 
-      this.premiumTiv = Decimal(numeral(this.tiv.totalUsd || 0).value())
+      this.premiumTiv = safeDecimal(numeral(this.tiv.totalUsd || 0).value())
         .mul(this.rate || 0)
         .div(1000);
 
-      this.alopCurrencyUsd = Decimal(
-        this.alopCurrency || Decimal(this.alopCurrency || 0)
-      ).div(Decimal(this.quotation.exchangeRate));
+      this.alopCurrencyUsd = safeDecimal(this.alopCurrency).div(
+        safeDecimal(this.quotation.exchangeRate)
+      );
 
-      this.alopCurrencyNd = Decimal(this.alopCurrency || 0)
+      this.alopCurrencyNd = safeDecimal(this.alopCurrency)
         .mul(this.alopCurrencyRate || 0)
         .div(1000);
 
-      this.alopCurrencyPremium = Decimal(this.alopCurrencyUsd)
+      this.alopCurrencyPremium = safeDecimal(this.alopCurrencyUsd)
         .mul(this.alopCurrencyRate || 0)
         .div(1000);
     },
@@ -681,7 +689,7 @@ export default {
   }
   //Tabla
   .Table {
-    width: 80%;
+    width: 90%;
     height: auto;
 
     //Cabecera

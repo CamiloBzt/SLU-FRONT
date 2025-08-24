@@ -71,10 +71,7 @@ export default {
     }
   },
 
-  async save(
-    { commit, dispatch },
-    { document_id, subscription_id, type, docS3 }
-  ) {
+  async save({ commit, dispatch }, { document_id, subscription_id, type, docS3 }) {
     try {
       const {
         data: { saveDocument },
@@ -91,14 +88,12 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = saveDocument;
-      if (statusCode != 200)
-        throw new Error(`Failed upload document file: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed upload document file: ${message}`);
       const parsedResponse = JSON.parse(response);
       const doc_s3 = parsedResponse.doc_s3;
       commit("set_upload_document", { document: doc_s3 });
     } catch ({ message }) {
-      const messageToDisplay =
-        "Save doc error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "Save doc error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -115,14 +110,11 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = getCatalogDocuments;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching documents data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching documents data: ${message}`);
 
       commit("setCatalogByName", { name, response });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getCatalogByDocuments error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getCatalogByDocuments error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -140,21 +132,20 @@ export default {
     window.open(value, "_blank").focus();
   },
 
-  async DocumentsSubscriptionRisk(
-    { commit, dispatch },
-    { subscription_id, documents, typeOfRisk }
-  ) {
+  async DocumentsSubscriptionRisk({ commit, dispatch }, { subscription_id, documents, typeOfRisk }) {
     const docs = [];
     const newDocs = [];
-    documents.forEach((item) => {
-      if (item.idrisk === typeOfRisk) {
-        let newItem = {};
-        Object.assign(newItem, item);
-        newItem.text = "Upload the next document";
-        newDocs.push(newItem);
-        docs.push(item.id);
-      }
-    });
+    if (typeof documents === "object") {
+      documents.forEach((item) => {
+        if (item.idrisk === typeOfRisk) {
+          let newItem = {};
+          Object.assign(newItem, item);
+          newItem.text = "Upload the next document";
+          newDocs.push(newItem);
+          docs.push(item.id);
+        }
+      });
+    }
     commit("setDocuments", newDocs);
     try {
       const {
@@ -168,14 +159,11 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = getDocumentsSubscriptionRisk;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       const parsedResponse = JSON.parse(response);
       commit("setDocumentsLoader", parsedResponse);
     } catch ({ message }) {
-      const messageToDisplay =
-        "DocumentsSubscriptionRisk error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "DocumentsSubscriptionRisk error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -195,14 +183,11 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = getSlipDocumentsSubscription;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       const parsedResponse = JSON.parse(response);
       commit("setSlipDocuments", parsedResponse);
     } catch ({ message }) {
-      const messageToDisplay =
-        "SlipDocumentsSubscription error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "SlipDocumentsSubscription error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -214,10 +199,7 @@ export default {
     commit("RESET_SLIP_DOCUMENTS");
   },
 
-  async CorrespondenceDocumentsSubscription(
-    { commit, dispatch },
-    { subscription_id }
-  ) {
+  async CorrespondenceDocumentsSubscription({ commit, dispatch }, { subscription_id }) {
     try {
       const {
         data: { getCorrespondenceDocumentsSubscription },
@@ -228,10 +210,8 @@ export default {
         },
         fetchPolicy: "no-cache",
       });
-      const { statusCode, message, response } =
-        getCorrespondenceDocumentsSubscription;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      const { statusCode, message, response } = getCorrespondenceDocumentsSubscription;
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       const parsedResponse = JSON.parse(response);
       commit("setCorrespondenceDocuments", parsedResponse);
     } catch ({ message }) {
@@ -243,10 +223,7 @@ export default {
     commit("RESET_CORRESPONDENCE_DOCUMENTS");
   },
 
-  async LoadDocumentsByCatalog(
-    { commit, dispatch },
-    { subscription_id, catalog_document_id }
-  ) {
+  async LoadDocumentsByCatalog({ commit, dispatch }, { subscription_id, catalog_document_id }) {
     try {
       const {
         data: { getDocumentsByCatalog },
@@ -259,24 +236,18 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = getDocumentsByCatalog;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       const parsedResponse = JSON.parse(response);
       commit("setEndorsementDocuments", parsedResponse);
     } catch ({ message }) {
-      const messageToDisplay =
-        "LoadDocumentsByCatalog error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "LoadDocumentsByCatalog error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
-  async LoadDocumentsCatalogForEndorsements(
-    { commit, dispatch },
-    { catalog_document_id }
-  ) {
+  async LoadDocumentsCatalogForEndorsements({ commit, dispatch }, { catalog_document_id }) {
     try {
       const {
         data: { getCatalogForDocuments },
@@ -288,14 +259,11 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = getCatalogForDocuments;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       const parsedResponse = JSON.parse(response);
       commit("setEndorsementDocuments", parsedResponse);
     } catch ({ message }) {
-      const messageToDisplay =
-        "LoadDocumentsCatalogForEndorsements error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "LoadDocumentsCatalogForEndorsements error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -314,13 +282,11 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = getDownloadDoc;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       //const parsedResponse = JSON.parse(response);
       commit("setDownloadDocUrl", response);
     } catch ({ message }) {
-      const messageToDisplay =
-        "DownloadDoc error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "DownloadDoc error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,

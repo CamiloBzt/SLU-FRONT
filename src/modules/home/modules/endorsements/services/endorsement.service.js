@@ -213,8 +213,8 @@ class EndorsementsService {
     const variables = {
       data: { id, files },
     };
-    const { data } = await apolloClient.query({
-      query: updateDocumentsEndorsement,
+    const { data } = await apolloClient.mutate({
+      mutation: updateDocumentsEndorsement,
       variables,
       fetchPolicy: "no-cache",
     });

@@ -1,60 +1,56 @@
-.BarNavGeneralContent{
-	width: 100%;
-	height: 60px;
+.BarNavGeneralContent {
+  width: 100%;
+  height: 60px;
 
-	//CONTENEDOR DE LA BARRA DE LINKS
-	.BarNavGeneralCont{
-		width: 100%; height: 100%;
-		border-bottom: solid 1px var(--lightColor2);
+  //CONTENEDOR DE LA BARRA DE LINKS
+  .BarNavGeneralCont {
+    width: 100%;
+    height: 100%;
 
-		//CONTENEDOR DE LOS LINKS
-		.BarNavLinkApp{
-			width:auto !important;
-			height: 103.5%;
-			cursor: pointer;
-			font-weight: 450;
-			color: var(--lightColor) !important;
-			text-transform: capitalize !important;
-			font-size: 20px !important;
-			position: relative;
-		}
-		//LINK ACTIVO
-		.lnkActive{
-			color: black !important;
-			font-weight: bold;
-
-			&::after{
-				content: "";
-				width: 20px;
-				height: 2px;
-				background: var(--mainColor);
-				position:absolute;
-				bottom:12px;
-			}
-		}
-	}
+    //CONTENEDOR DE LOS LINKS
+    .BarNavLinkApp {
+      width: auto !important;
+      height: 103.5%;
+      cursor: pointer;
+      font-weight: 450;
+      color: var(--lightColor) !important;
+      text-transform: capitalize !important;
+      font-size: 20px !important;
+      position: relative;
+    }
+    //LINK ACTIVO
+    .lnkActive {
+      color: black !important;
+      font-weight: 600;
+      &::after {
+        content: "";
+        width: 20px;
+        height: 2px;
+        background: var(--mainColor);
+        position: absolute;
+        bottom: 12px;
+      }
+    }
+  }
 }
 
-@media(max-width: 640px)
-{
-	.BarNavGeneralContent{
-		height: 90px;
+@media (max-width: 640px) {
+  .BarNavGeneralContent {
+    height: 90px;
+    .BarNavGeneralCont {
+      .BarNavLinkApp {
+        height: auto;
+        flex-wrap: wrap;
+        align-content: center;
+      }
 
-		.BarNavGeneralCont{
+      .lnkActive {
+        &::after {
+          width: 25%;
 
-			.BarNavLinkApp{
-				height: auto;
-				flex-wrap: wrap;
-				align-content: center;
-			}
-
-			.lnkActive{
-				&::after{
-					width: 25%;
-
-					position:initial;
-				}
-			}
-		}
-	}
+          position: initial;
+        }
+      }
+    }
+  }
 }

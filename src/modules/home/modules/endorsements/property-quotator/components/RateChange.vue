@@ -1,22 +1,16 @@
 <template>
   <div class="outter-wrapper" ref="targetRef">
-    <div class="endorsement-title">Rate Change</div> 
+    <div class="endorsement-title">Rate Change</div>
     <div class="editAccount" v-if="accountComplete.reference">
       {{ accountComplete.reference }}
     </div>
     <v-stepper v-model="e1">
       <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607">
-          Endorsement
-        </v-stepper-step>
+        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607"> Endorsement </v-stepper-step>
 
-        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
-          Calculate premium
-        </v-stepper-step>
+        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607"> Calculate premium </v-stepper-step>
 
-        <v-stepper-step step="3" color="#F59607">
-          Admitted premium
-        </v-stepper-step>
+        <v-stepper-step step="3" color="#F59607"> Admitted premium </v-stepper-step>
       </v-stepper-header>
       <div class="endorsement-wrapper">
         <div class="content">
@@ -27,72 +21,25 @@
                 <div class="inner-title">Endorsement date</div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepOne.endorsementEffectiveDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menuControllStepOne.endorsementEffectiveDate" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="effectiveDate"
-                          label="Endorsement effective date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs" v-on="on"></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="effectiveDate"
-                        @input="
-                          menuControllStepOne.endorsementEffectiveDate = false
-                        "
-                        @change="
-                          endorsementDateValidation($event, effectiveDate)
-                        "
-                      ></v-date-picker>
+                      <v-date-picker v-model="effectiveDate" @input="menuControllStepOne.endorsementEffectiveDate = false" @change="endorsementDateValidation($event, effectiveDate)"></v-date-picker>
                     </v-menu>
-                    <div v-if="this.endorsementDateError" class="error-message">
-                      The new Endorsement effective date must be lower than
-                      expiry date.
-                    </div>
+                    <div v-if="this.endorsementDateError" class="error-message">The new Endorsement effective date must be lower than expiry date.</div>
                   </div>
                 </div>
 
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepOne.movementEndDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menuControllStepOne.movementEndDate" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="movementEndDate"
-                          label="Expiry date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          disabled
-                        ></v-text-field>
+                        <v-text-field v-model="movementEndDate" label="Expiry date" readonly v-bind="attrs" v-on="on" disabled></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="movementEndDate"
-                        @input="menuControllStepOne.movementEndDate = false"
-                      ></v-date-picker>
+                      <v-date-picker v-model="movementEndDate" @input="menuControllStepOne.movementEndDate = false"></v-date-picker>
                     </v-menu>
-                    <div
-                      v-if="this.errorsDates['movementEndDate'] && sent"
-                      class="error-message"
-                    >
-                      The new Movement end date must be later than Endorsement
-                      effective date.
-                    </div>
+                    <div v-if="this.errorsDates['movementEndDate'] && sent" class="error-message">The new Movement end date must be later than Endorsement effective date.</div>
                   </div>
                 </div>
               </div>
@@ -106,30 +53,15 @@
                     <div class="input-col">
                       <div class="column-title">Rate</div>
                       <div class="input-cont">
-                        <v-text-field
-                          v-model="newRates.damageRate"
-                          label="Damage"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
+                        <v-text-field v-model="newRates.damageRate" label="Damage" type="number" suffix="%"></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          v-model="newRates.biRate"
-                          label="BI"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
+                        <v-text-field v-model="newRates.biRate" label="BI" type="number" suffix="%"></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          v-model="newRates.stockRate"
-                          label="Stocks"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
+                        <v-text-field v-model="newRates.stockRate" label="Stocks" type="number" suffix="%"></v-text-field>
                       </div>
                     </div>
                   </div>
@@ -143,37 +75,15 @@
                     <div class="input-col">
                       <div class="column-title">Rate</div>
                       <div class="input-cont">
-                        <v-text-field
-                          v-model="
-                            accountComplete.tiv.premium.propertyDamageRate
-                          "
-                          label="Damage"
-                          type="number"
-                          suffix="%"
-                          disabled
-                        ></v-text-field>
+                        <v-text-field v-model="accountComplete.tiv.premium.propertyDamageRate" label="Damage" type="number" suffix="%" disabled></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          v-model="
-                            accountComplete.tiv.premium.businessInterruptionRate
-                          "
-                          label="BI"
-                          type="number"
-                          suffix="%"
-                          disabled
-                        ></v-text-field>
+                        <v-text-field v-model="accountComplete.tiv.premium.businessInterruptionRate" label="BI" type="number" suffix="%" disabled></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          v-model="accountComplete.tiv.premium.stockRate"
-                          label="Stocks"
-                          type="number"
-                          suffix="%"
-                          disabled
-                        ></v-text-field>
+                        <v-text-field v-model="accountComplete.tiv.premium.stockRate" label="Stocks" type="number" suffix="%" disabled></v-text-field>
                       </div>
                     </div>
                   </div>
@@ -184,51 +94,19 @@
                   <div class="inner-title">Additional</div>
                   <div class="input-col">
                     <div class="input-cont">
-                      <v-menu
-                        v-model="menuControllStepOne.premiumPaymentDate"
-                        :close-on-content-click="false"
-                        :nudge-right="40"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                      >
+                      <v-menu v-model="menuControllStepOne.premiumPaymentDate" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                         <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            v-model="premiumPaymentDate"
-                            label="Premium payment date"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                          ></v-text-field>
+                          <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly v-bind="attrs" v-on="on"></v-text-field>
                         </template>
-                        <v-date-picker
-                          v-model="premiumPaymentDate"
-                          @input="
-                            menuControllStepOne.premiumPaymentDate = false
-                          "
-                        ></v-date-picker>
+                        <v-date-picker v-model="premiumPaymentDate" @input="menuControllStepOne.premiumPaymentDate = false"></v-date-picker>
                       </v-menu>
-                      <div
-                        v-if="
-                          this.errorsDates['endorsementEffectiveDate'] && sent
-                        "
-                        class="error-message"
-                      >
-                        The new Endorment effective date must be lower than
-                        Inception date date .
-                      </div>
+                      <div v-if="this.errorsDates['endorsementEffectiveDate'] && sent" class="error-message">The new Endorment effective date must be lower than Inception date date .</div>
                     </div>
                   </div>
 
                   <div class="input-col">
                     <div class="input-cont">
-                      <v-autocomplete
-                        :label="'Clause'"
-                        v-model="clause"
-                        :items="clauseList"
-                        item-value="clause"
-                        item-text="clause"
-                      />
+                      <v-autocomplete :label="'Clause'" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" />
                     </div>
                   </div>
                 </div>
@@ -237,42 +115,19 @@
 
             <v-stepper-content step="2">
               <div class="detail-date">
-                <div class="table-title-detail table-title-detail--large">
-                  Detail
-                </div>
+                <div class="table-title-detail table-title-detail--large">Detail</div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menu4"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menu4" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          readonly
-                          disabled
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly disabled v-bind="attrs" v-on="on"></v-text-field>
                       </template>
                     </v-menu>
                   </div>
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-autocomplete
-                      label="Clause"
-                      v-model="clause"
-                      :items="clauseList"
-                      item-value="clause"
-                      item-text="clause"
-                      disabled
-                    />
+                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" disabled />
                   </div>
                 </div>
               </div>
@@ -291,15 +146,9 @@
                       <div class="table-title">New rate</div>
                       <div class="input-row">
                         <div class="inner-col wide-col">
-                          <div class="table-input blue-input">
-                            {{ newRates.damageRate }}%
-                          </div>
-                          <div class="table-input blue-input">
-                            {{ newRates.biRate }}%
-                          </div>
-                          <div class="table-input blue-input">
-                            {{ newRates.stockRate }}%
-                          </div>
+                          <div class="table-input blue-input">{{ newRates.damageRate }}%</div>
+                          <div class="table-input blue-input">{{ newRates.biRate }}%</div>
+                          <div class="table-input blue-input">{{ newRates.stockRate }}%</div>
                         </div>
                       </div>
                     </div>
@@ -312,20 +161,9 @@
                       <div class="table-title">Current rate</div>
                       <div class="input-row">
                         <div class="inner-col wide-col">
-                          <div class="table-input blue-input">
-                            {{
-                              accountComplete.tiv.premium.propertyDamageRate
-                            }}%
-                          </div>
-                          <div class="table-input blue-input">
-                            {{
-                              accountComplete.tiv.premium
-                                .businessInterruptionRate
-                            }}%
-                          </div>
-                          <div class="table-input blue-input">
-                            {{ accountComplete.tiv.premium.stockRate }}%
-                          </div>
+                          <div class="table-input blue-input">{{ accountComplete.tiv.premium.propertyDamageRate }}%</div>
+                          <div class="table-input blue-input">{{ accountComplete.tiv.premium.businessInterruptionRate }}%</div>
+                          <div class="table-input blue-input">{{ accountComplete.tiv.premium.stockRate }}%</div>
                         </div>
                       </div>
                     </div>
@@ -336,9 +174,7 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div
-                class="files-submit flex justify-content-start align-items-start align-content-start"
-              >
+              <div class="files-submit flex justify-content-start align-items-start align-content-start">
                 <AppFile
                   v-for="(item, clave) in files"
                   :key="clave"
@@ -362,20 +198,11 @@
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments
-        @setEndorsementDocuments="setEndorsementDocuments"
-        v-show="e1 == 1 || e1 == 3"
-      />
-      <AdmittedPremiumTable
-        v-if="e1 == 2"
-        @setTotalPremium="setTotalPremium"
-        :detailValues="totalPremium"
-      />
+      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
+      <AdmittedPremiumTable v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)"
-          :disabled="validationFirstStep">
+        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false" :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)" :disabled="validationFirstStep">
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -432,9 +259,7 @@ export default {
       endorsementDateError: false,
       loadingDocument: false,
       expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
-      expiryDateReal: new Date(this.accountComplete.deductibles.expiryDate)
-        .toISOString()
-        .substr(0, 10),
+      expiryDateReal: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
       loadingdocument: false,
       checkedModifyTable: false,
       internalAdjustments: {
@@ -598,8 +423,8 @@ export default {
       inceptionDate: this.initialDateValue(),
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       lastAccountInformacion: {},
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
     };
   },
   async beforeMount() {
@@ -610,20 +435,14 @@ export default {
     this.stockPercentagePMDUSD = this.stockPercentagePMD / this.exchangeRate;
   },
   async created() {
-    this.newRates.damageRate =
-      this.accountComplete.tiv.premium.propertyDamageRate;
-    this.newRates.biRate =
-      this.accountComplete.tiv.premium.businessInterruptionRate;
+    this.newRates.damageRate = this.accountComplete.tiv.premium.propertyDamageRate;
+    this.newRates.biRate = this.accountComplete.tiv.premium.businessInterruptionRate;
     this.newRates.stockRate = this.accountComplete.tiv.premium.stockRate;
   },
   mounted() {
     console.log("esto es account complete", this.accountComplete);
-    const effective = new Date(this.accountComplete.deductibles.expiryDate)
-      .toISOString()
-      .substring(0, 10);
-    const expiry = new Date(this.accountComplete.deductibles.expiryDate)
-      .toISOString()
-      .substring(0, 10);
+    const effective = new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10);
+    const expiry = new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10);
     this.expiryDate = expiry;
     this.inceptionDate = effective;
     this.movementEndDate = expiry;
@@ -649,11 +468,7 @@ export default {
       }
     },
     initialDateValue() {
-      const newDate = new Date(
-        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10);
+      const newDate = new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10);
 
       return newDate;
     },
@@ -709,18 +524,17 @@ export default {
         boundInsurableProp: this.accountComplete.tiv.boundInsurableProp,
       };
 
-      const accountCompleteResponse =
-        await AccountCompleteService.addAccountComplete(this.subscriptionId, {
-          ...this.accountComplete,
-          deductibles: this.accountComplete.deductibles,
-          tiv: tivUpdate,
-          netPremium: this.accountComplete.net_premium,
-          additionalInfo: this.accountComplete.additional_info,
-          cartera: {
-            ...this.accountComplete.cartera,
-            ...this.cartera,
-          },
-        });
+      const accountCompleteResponse = await AccountCompleteService.addAccountComplete(this.subscriptionId, {
+        ...this.accountComplete,
+        deductibles: this.accountComplete.deductibles,
+        tiv: tivUpdate,
+        netPremium: this.accountComplete.net_premium,
+        additionalInfo: this.accountComplete.additional_info,
+        cartera: {
+          ...this.accountComplete.cartera,
+          ...this.cartera,
+        },
+      });
 
       await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
@@ -771,7 +585,7 @@ export default {
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.nextStep();
       } else if (e1 == 2) {
@@ -782,7 +596,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -795,12 +609,12 @@ export default {
   watch: {
     e1: async function () {
       if (this.e1 === 1) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Cancel';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Cancel";
       }
       if (this.e1 === 2) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Return";
         //INICIO CALCULOS 2
 
         const options = {
@@ -812,49 +626,30 @@ export default {
         };
 
         const tiv = {
-          propertyDamageMovement:
-            this.accountComplete.tiv.insurable.propertyDamage,
-          businessInterruptionMovement:
-            this.accountComplete.tiv.insurable.businessInterruption,
+          propertyDamageMovement: this.accountComplete.tiv.insurable.propertyDamage,
+          businessInterruptionMovement: this.accountComplete.tiv.insurable.businessInterruption,
           stockMovement: this.accountComplete.tiv.insurable.stock,
 
           propertyDamageRate: this.newRates.damageRate,
           businessInterruptionRate: this.newRates.biRate,
           stockRate: this.newRates.stockRate,
-          stockPercentaje:
-            (this.accountComplete.tiv.premium.stockPercentaje ||
-              this.accountComplete.tiv.insurable.porcentaje ||
-              0) / 100,
+          stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
         };
 
         const dates = {
-          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-            .toISOString()
-            .substring(0, 10),
-          expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-            .toISOString()
-            .substring(0, 10),
+          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0, 10),
+          expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10),
           endormenteffetiveDate: new Date(this.effectiveDate),
           movementEndDate: new Date(this.expiryDateReal),
         };
 
-        const results = await netPremiumInclusionRiskAutoCalcs(
-          tiv,
-          this.accountComplete.deductibles,
-          this.accountComplete.tiv?.boundInsurableProp.sluLine,
-          false,
-          dates,
-          options
-        );
+        const results = await netPremiumInclusionRiskAutoCalcs(tiv, this.accountComplete.deductibles, this.accountComplete.tiv?.boundInsurableProp.sluLine, false, dates, options);
 
         console.log("results", results);
 
-        this.totalPremium[0].premiumDamage =
-          results.totalPremiumResult.damageTotalPremium;
-        this.totalPremium[0].premiumBi =
-          results.totalPremiumResult.biTotalPremium;
-        this.totalPremium[0].premiumStocks =
-          results.totalPremiumResult.stockTotalPremium;
+        this.totalPremium[0].premiumDamage = results.totalPremiumResult.damageTotalPremium;
+        this.totalPremium[0].premiumBi = results.totalPremiumResult.biTotalPremium;
+        this.totalPremium[0].premiumStocks = results.totalPremiumResult.stockTotalPremium;
         this.totalPremium[0].premiumTotal = results.totalPremiumResult.total;
 
         this.totalPremium[0].sluDamage = results.data.damagePremiumSlu;
@@ -872,8 +667,8 @@ export default {
       }
 
       if (this.e1 === 3) {
-        this.buttonTitle = 'Finalize'
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Finalize";
+        this.buttonTitleBack = "Return";
         //INICIO CALCULOS 3
         this.loadingDocument = true;
 
@@ -886,49 +681,26 @@ export default {
         };
 
         const tiv = {
-          propertyDamageMovement:
-            this.accountComplete.tiv.insurable.propertyDamage,
-          businessInterruptionMovement:
-            this.accountComplete.tiv.insurable.businessInterruption,
+          propertyDamageMovement: this.accountComplete.tiv.insurable.propertyDamage,
+          businessInterruptionMovement: this.accountComplete.tiv.insurable.businessInterruption,
           stockMovement: this.accountComplete.tiv.insurable.stock,
 
           propertyDamageRate: this.newRates.damageRate,
           businessInterruptionRate: this.newRates.biRate,
           stockRate: this.newRates.stockRate,
-          stockPercentaje:
-            (this.accountComplete.tiv.premium.stockPercentaje ||
-              this.accountComplete.tiv.insurable.porcentaje ||
-              0) / 100,
+          stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
         };
 
         const dates = {
-          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-            .toISOString()
-            .substring(0, 10),
-          expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-            .toISOString()
-            .substring(0, 10),
+          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0, 10),
+          expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10),
           endormenteffetiveDate: new Date(this.effectiveDate),
           movementEndDate: new Date(this.expiryDateReal),
         };
 
-        const results = await netPremiumInclusionRiskAutoCalcs(
-          tiv,
-          this.internalAdjustments.deductibles,
-          this.accountComplete.tiv?.boundInsurableProp.sluLine,
-          false,
-          dates,
-          options
-        );
+        const results = await netPremiumInclusionRiskAutoCalcs(tiv, this.internalAdjustments.deductibles, this.accountComplete.tiv?.boundInsurableProp.sluLine, false, dates, options);
 
-        const resultsUSD = await netPremiumInclusionRiskAutoCalcs(
-          tiv,
-          this.internalAdjustments.deductibles,
-          this.accountComplete.tiv?.boundInsurableProp.sluLine,
-          true,
-          dates,
-          options
-        );
+        const resultsUSD = await netPremiumInclusionRiskAutoCalcs(tiv, this.internalAdjustments.deductibles, this.accountComplete.tiv?.boundInsurableProp.sluLine, true, dates, options);
 
         // FIN CALCULOS 3
 
@@ -962,31 +734,20 @@ export default {
             propertyDamageRate: this.newRates.damageRate,
             businessInterruptionRate: this.newRates.biRate,
             stockRate: this.newRates.stockRate,
-            stockPercentaje:
-              (this.accountComplete.tiv.premium.stockPercentaje ||
-                this.accountComplete.tiv.insurable.porcentaje ||
-                0) / 100,
+            stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
             propertyDamage: this.totalPremium[0].premiumDamage,
             businessInterruption: this.totalPremium[0].premiumBi,
             stock: this.totalPremium[0].premiumStocks,
             total: this.totalPremium[0].premiumTotal,
             totalInsured: this.totalPremium[0].premiumTotal,
 
-            propertyDamageUsd:
-              this.totalPremium[0].premiumDamage /
-              this.accountComplete.deductibles.exchangeRate,
+            propertyDamageUsd: this.totalPremium[0].premiumDamage / this.accountComplete.deductibles.exchangeRate,
 
-            businessInterruptionUsd:
-              this.totalPremium[0].premiumBi /
-              this.accountComplete.deductibles.exchangeRate,
+            businessInterruptionUsd: this.totalPremium[0].premiumBi / this.accountComplete.deductibles.exchangeRate,
 
-            stockUsd:
-              this.totalPremium[0].premiumStocks /
-              this.accountComplete.deductibles.exchangeRate,
+            stockUsd: this.totalPremium[0].premiumStocks / this.accountComplete.deductibles.exchangeRate,
 
-            totalUsd:
-              this.totalPremium[0].premiumTotal /
-              this.accountComplete.deductibles.exchangeRate,
+            totalUsd: this.totalPremium[0].premiumTotal / this.accountComplete.deductibles.exchangeRate,
           },
           boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
           deductibles: this.accountComplete.deductibles,
@@ -1040,9 +801,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1094,6 +855,7 @@ export default {
   }
 
   .v-btn {
+    border-radius: 5px;
     justify-content: flex-start !important;
     color: #003d6d;
   }
@@ -1120,7 +882,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1252,11 +1014,7 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper
-  .v-stepper__step:not(.v-stepper__step--active):not(
-    .v-stepper__step--complete
-  ):not(.v-stepper__step--error)
-  .v-stepper__step__step {
+.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 

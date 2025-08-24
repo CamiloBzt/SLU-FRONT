@@ -1,12 +1,8 @@
 <template>
   <v-expansion-panels class="ExpansionComponent ExpansionBordered mt-6">
-    <v-expansion-panel :disabled="loadingPanel"  @change="$emit('panel-event')">
+    <v-expansion-panel :disabled="loadingPanel" @change="$emit('panel-event')">
       <!--TITULO DEL ACORDEON-->
-      <v-expansion-panel-header
-        @click="changeStateExpansive()"
-        class="ExpansionTitle"
-        expand-icon=""
-      >
+      <v-expansion-panel-header @click="changeStateExpansive()" class="ExpansionTitle" expand-icon="">
         Notes
         <div class="ExpansionState HideOnMovil">
           {{ stateExpansiveMessage }}
@@ -25,18 +21,9 @@
           <!--
           	BOTON PARA CREAR NOTAS
           -->
-          <NoteTextEditor
-            v-for="(item, index) in newNoteArray"
-            :key="index"
-            @NoteValue="GetNoteValue($event)"
-          />
+          <NoteTextEditor v-for="(item, index) in newNoteArray" :key="index" @NoteValue="GetNoteValue($event)" />
           <div class="CreateNoteCont d-flex justify-start align-center">
-            <v-btn
-              class="btn"
-              @click="addNote(newNoteArray.length)"
-              text
-              rounded
-            >
+            <v-btn class="btn" @click="addNote(newNoteArray.length)" text rounded>
               <v-icon class="mr-2">mdi-plus-circle</v-icon>
               Add New Note
             </v-btn>
@@ -47,29 +34,29 @@
   </v-expansion-panels>
 </template>
 <script>
-import NotesCreated from '@/components/Notes/NotesCreated';
-import NoteTextEditor from '@/components/Notes/NoteTextEditor';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import NotesCreated from "@/components/Notes/NotesCreated";
+import NoteTextEditor from "@/components/Notes/NoteTextEditor";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 export default {
-  name: 'Notes',
+  name: "Notes",
   mixins: [stateExpansiveManager],
   components: {
     NotesCreated,
     NoteTextEditor,
   },
-  data () {
+  data() {
     return {
       newNoteArray: [],
       loadingPanel: false,
-      subscription_id: null
+      subscription_id: null,
     };
   },
-  async mounted () {
-    this.subscription_id = Number(this.$route.params?.subscriptionId)
+  async mounted() {
+    this.subscription_id = Number(this.$route.params?.subscriptionId);
     /* set loadings (data) */
-    const lpa = 'loadingPanel';
+    const lpa = "loadingPanel";
 
     /* loaders to true */
     this[lpa] = !this[lpa];
@@ -79,18 +66,17 @@ export default {
     this[lpa] = false;
   },
   methods: {
-    ...mapActions(['noteSubscription']),
-    ...mapMutations(['setArrayNotes']),
-    addNote (value) {
-      console.log(this.newNoteArray);
+    ...mapActions(["noteSubscription"]),
+    ...mapMutations(["setArrayNotes"]),
+    addNote(value) {
       if ((this.newNoteArray = [] || this.newNoteArray[value - 1].value)) {
         this.newNoteArray.push({
           id: value++,
-          value: '',
+          value: "",
         });
       }
     },
-    async loadNotes () {
+    async loadNotes() {
       if (this.subscription_id) {
         await this.noteSubscription({ subscription_id: parseInt(this.subscription_id) });
       } else {
@@ -99,13 +85,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['mentionsObject', 'notesArray']),
+    ...mapGetters(["mentionsObject", "notesArray"]),
   },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/FilesStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/FilesStyle.less";
 .ExpansionComponent {
   z-index: 0;
 }
@@ -114,6 +100,7 @@ export default {
   width: 100%;
   height: 50px;
   .btn {
+    border-radius: 5px;
     text-transform: none;
     color: #003d6d;
     font-weight: 500 !important;

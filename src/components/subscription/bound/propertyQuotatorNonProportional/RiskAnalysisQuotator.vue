@@ -26,7 +26,9 @@
       <!--CONTENIDO DEL ACORDEON-->
       <v-expansion-panel-content>
         <div class="ExpandContent">
-          <InputsRiskQuotator />
+          <InputsRiskQuotator
+            @required-fields-change="onRequiredFieldsChange"
+          />
 
           <RiskInformationQuotator />
 
@@ -51,10 +53,14 @@
             class="my-10"
           />
 
-          <MainLocation />
+          <MainLocation @damage-field-change="onDamageFieldChange" />
+
           <div class="expansion-line-top mt-2" />
 
-          <PmlProperty :exchangeRate="quotation.exchangeRate" />
+          <PmlProperty
+            :exchangeRate="Number(quotation.exchangeRate) || 1"
+            @pml-fields-change="onPmlFieldsChange"
+          />
           <div class="expansion-line-top mt-7" />
 
           <DeductiblesQuotator
@@ -98,12 +104,14 @@
             </v-btn>
           </div>
 
-          <PremiumPaymentWarranty />
-          <Claims />
+          <PremiumPaymentWarranty
+            @payments-warranty-change="onPaymentsWarrantyChange"
+          />
+          <Claims @bound-claims-change="onBoundClaimsChange" />
 
           <div class="expansion-line-top mt-2" />
-          <Rational />
-          <RiskProfile />
+          <Rational @rational-comments-change="onRationalCommentsChange" />
+          <RiskProfile @risk-profile-change="onRiskProfileChange" />
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -158,6 +166,13 @@ export default {
       retryDelay: 1000, // Retraso entre reintentos en milisegundos
       currentRetry: 0, // Intentos actuales
       isLoading: true,
+      requiredFieldsCompleted: false,
+      damageFieldCompleted: false,
+      pmlFieldsCompleted: false,
+      paymentsWarrantyCompleted: true,
+      boundClaimsCompleted: false,
+      rationalCommentsCompleted: false,
+      riskProfileCompleted: false,
     };
   },
   props: {
@@ -263,6 +278,52 @@ export default {
     },
     changeTotalInsurableValueStocksRate(value) {
       this.$emit("changeTotalInsurableValueStocksRate", value);
+    },
+    onRequiredFieldsChange(isComplete) {
+      this.requiredFieldsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onDamageFieldChange(isComplete) {
+      this.damageFieldCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onPmlFieldsChange(isComplete) {
+      this.pmlFieldsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onPaymentsWarrantyChange(isComplete) {
+      this.paymentsWarrantyCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onBoundClaimsChange(isComplete) {
+      this.boundClaimsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onRationalCommentsChange(isComplete) {
+      this.rationalCommentsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onRiskProfileChange(isComplete) {
+      this.riskProfileCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    emitValidationStatus() {
+      const allFieldsComplete =
+        this.requiredFieldsCompleted &&
+        this.damageFieldCompleted &&
+        this.pmlFieldsCompleted &&
+        this.paymentsWarrantyCompleted &&
+        this.boundClaimsCompleted &&
+        this.rationalCommentsCompleted &&
+        this.riskProfileCompleted;
+      this.$emit("all-required-fields-complete", allFieldsComplete);
     },
   },
 };

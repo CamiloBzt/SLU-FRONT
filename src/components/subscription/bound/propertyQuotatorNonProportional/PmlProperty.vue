@@ -1,5 +1,5 @@
 <template>
-  <div class="pml-cont flex">
+  <div class="pml-cont flex" v-if="pmlProperty">
     <div class="title-cont">
       <h5>PML</h5>
     </div>
@@ -12,12 +12,13 @@
         </div>
 
         <div class="line">
-          <div class="input-row input-label">PML Total</div>
+          <div class="input-row input-label">PML Total*</div>
           <div class="input-row">
             <v-text-field
               type="number"
               v-model="pmlProperty.pmlTotal"
               @blur="saveField('pml_total', pmlProperty.pmlTotal)"
+              @input="handlePmlTotalChange"
               min="0"
               max="100"
               step="1"
@@ -42,10 +43,11 @@
       </div>
     </div>
 
-    <div class="title-text-area">PML Comments</div>
+    <div class="title-text-area">PML Comments*</div>
     <textarea
       v-model="pmlProperty.comments"
       @blur="saveField('comments', pmlProperty.comments)"
+      @input="handleCommentsChange"
     ></textarea>
   </div>
 </template>
@@ -121,25 +123,94 @@ export default {
       },
       set() {},
     },
+    pmlRequiredFieldsCompleted() {
+      if (!this.pmlProperty) {
+        return false;
+      }
+
+      const pmlTotalComplete = !!(
+        this.pmlProperty.pmlTotal && this.pmlProperty.pmlTotal > 0
+      );
+      const pmlCommentsComplete = !!(
+        this.pmlProperty.comments && this.pmlProperty.comments.trim().length > 0
+      );
+
+      return pmlTotalComplete && pmlCommentsComplete;
+    },
   },
   async mounted() {
     this.subscriptionId = this.$route.params?.subscriptionId;
     if (this.subscriptionId) {
       const data = await getPmlProperty(this.subscriptionId);
-      this.pmlProperty = data?.boundNonPropPmlProperty;
-      this.selectedLimit = data?.layers?.limit;
+
+      // Asegurar que pmlProperty siempre tenga la estructura correcta
+      this.pmlProperty = data?.boundNonPropPmlProperty || {
+        limit: 0,
+        pmlTotal: 0,
+        pmlTotalUsd: 0,
+        comments: "",
+      };
+
+      this.selectedLimit = data?.layers?.limit || 0;
+
+      // Emitir estado inicial después de cargar los datos
+      this.$nextTick(() => {
+        this.$emit("pml-fields-change", this.pmlRequiredFieldsCompleted);
+      });
     }
   },
   methods: {
     async saveField(column, value) {
-      if (this.subscriptionId)
+      if (this.subscriptionId && this.pmlProperty) {
         await savePmlProperty(this.subscriptionId, column, value);
+        this.$forceUpdate();
+      }
     },
+    handlePmlTotalChange: debounce(function (value) {
+      if (this.pmlProperty && this.subscriptionId) {
+        this.saveField("pml_total", value);
+        this.$emit("pml-fields-change", this.pmlRequiredFieldsCompleted);
+      }
+    }, 1000),
+
+    handleCommentsChange: debounce(function (value) {
+      if (this.pmlProperty && this.subscriptionId) {
+        this.saveField("comments", value);
+        this.$emit("pml-fields-change", this.pmlRequiredFieldsCompleted);
+      }
+    }, 1000),
   },
   watch: {
     "pmlProperty.pmlTotalUsd": debounce(function (value) {
-      this.saveField("pml_total_usd", value);
+      if (this.pmlProperty) {
+        this.saveField("pml_total_usd", value);
+      }
     }, 1000),
+
+    "pmlProperty.pmlTotal": debounce(function (value) {
+      if (this.pmlProperty && this.subscriptionId) {
+        this.saveField("pml_total", value);
+        this.$nextTick(() => {
+          this.$emit("pml-fields-change", this.pmlRequiredFieldsCompleted);
+        });
+      }
+    }, 1000),
+
+    "pmlProperty.comments": debounce(function (value) {
+      if (this.pmlProperty && this.subscriptionId) {
+        this.saveField("comments", value);
+        this.$nextTick(() => {
+          this.$emit("pml-fields-change", this.pmlRequiredFieldsCompleted);
+        });
+      }
+    }, 1000),
+
+    pmlRequiredFieldsCompleted: {
+      handler(newValue) {
+        this.$emit("pml-fields-change", newValue);
+      },
+      immediate: true,
+    },
   },
 };
 </script>
@@ -204,7 +275,7 @@ export default {
       font-size: 14px;
     }
     .bold-text {
-      font-weight: 700;
+      font-weight: 600;
       font-size: 16px;
     }
     .border-bottom {

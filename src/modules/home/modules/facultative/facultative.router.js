@@ -1,24 +1,24 @@
-import FacultativeDistributionViewVue from "./distribution/FacultativeDistributionView.vue"
-import FacultativeDetailViewVue from "./detail/FacultativeDetailView.vue"
-import FacultativeSummaryViewVue from "./summary/FacultativeSummaryView.vue"
+import FacultativeDistributionViewVue from "./distribution/FacultativeDistributionView.vue";
+import FacultativeDetailViewVue from "./detail/FacultativeDetailView.vue";
+import FacultativeSummaryViewVue from "./summary/FacultativeSummaryView.vue";
 
 export const facultativeRoutes = [
   {
-    path: '/facultative',
+    path: "/facultative",
     meta: { requiresAuth: false },
-    name: 'Facultative',
-		component: FacultativeDistributionViewVue
+    name: "FacultativeHome",
+    component: FacultativeDistributionViewVue,
   },
   {
-    path: '/facultative/detail',
+    path: "/facultative/detail",
     meta: { requiresAuth: false },
-    name: 'Facultative',
-		component: FacultativeDetailViewVue
+    name: "FacultativeDetail",
+    component: FacultativeDetailViewVue,
   },
   {
-    path: '/facultative/summary',
-    name: 'Facultative',
+    path: "/facultative/summary",
+    name: "FacultativeSummary",
     meta: { requiresAuth: false },
-		component: FacultativeSummaryViewVue
-  }
-]
+    component: FacultativeSummaryViewVue,
+  },
+];

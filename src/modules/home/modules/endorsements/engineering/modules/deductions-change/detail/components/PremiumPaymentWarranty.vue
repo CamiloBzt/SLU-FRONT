@@ -1,5 +1,9 @@
 <template>
   <div class="Cont">
+    <div class="TitleCont d-flex justify-start align-center flex-wrap">
+      <h5>Premium Payment Warranty</h5>
+    </div>
+
     <div class="InputsCont d-flex flex-wrap align-start">
       <div
         v-for="(payment, index) in paymentsWarranty"
@@ -17,8 +21,9 @@
               })
             "
             v-model="payment.installment"
-            :label="'Installment ' + (index + 1)"
+            :label="'Installment ' + (index + 1) + '*'"
             type="number"
+            :readonly="readonly"
           />
         </div>
         <div class="Row">
@@ -32,8 +37,9 @@
               })
             "
             v-model="payment.percent"
-            label="Percentage"
+            label="Percentage*"
             type="number"
+            :readonly="readonly"
           />
         </div>
         <div class="Row">
@@ -48,9 +54,10 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="payment.date"
-                label="PPW Due Date"
+                label="PPW Due Date*"
                 v-bind="attrs"
                 v-on="on"
+                :readonly="readonly"
               />
             </template>
             <v-date-picker
@@ -66,6 +73,7 @@
                 })
               "
               @input="payment.showCalendar = false"
+              :readonly="readonly"
             />
           </v-menu>
         </div>
@@ -80,10 +88,11 @@
               })
             "
             v-model="payment.idClause"
-            label="Clause"
+            label="Clause*"
             item-value="id"
             item-text="clause"
             :items="clauseList"
+            :readonly="readonly"
           />
         </div>
         <div class="Row">
@@ -98,25 +107,27 @@
               })
             "
             v-model="payment.days_of_prior_notice"
-            label="Days of prior notice"
+            label="Days of prior notice*"
             type="number"
+            :readonly="readonly"
           />
         </div>
-        <div class="remove-button">
+
+        <div class="remove-button" v-if="!readonly">
           <v-btn
             text
             @click="
-              [
-                removePaymentWarranty(payment.index),
-                deletePayment(payment.id, payment.index),
-              ]
+              [removePaymentWarranty(payment.id), deletePayment(payment.id)]
             "
           >
-            <v-icon> mdi-delete </v-icon>
+            <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
       </div>
-      <div class="finishButtonCont d-flex justify-start align-center">
+      <div
+        class="finishButtonCont d-flex justify-start align-center"
+        v-if="!readonly"
+      >
         <v-btn
           :disabled="addPaymentDisabled"
           rounded
@@ -135,178 +146,168 @@
 <script>
 import { mapGetters } from "vuex";
 import PaymentService from "@/modules/home/services/payments.service";
-import AccountCompleteService from "@/modules/home/services/account-complete.service";
 
 export default {
   name: "PremiumPaymentWarranty",
-  // inject: ['deepDisabled'],
+
+  props: {
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    installments: {
+      type: Array,
+      default: () => [],
+    },
+    clauseList: {
+      type: Array,
+      default: () => [],
+    },
+  },
+
   data() {
     return {
-      subscriptionId: this.$route.params.id,
+      subscriptionId: null,
       clauseList: [],
       paymentsWarranty: [],
       addPaymentDisabled: false,
       menu: false,
       exampleCalendar: "",
-      datasUpdate: [],
-      quotation: {},
-      accountComplete: {},
     };
   },
 
-  async beforeMount() {
-    this.clauseList = await PaymentService.getClauses();
-    this.paymentsWarranty = await PaymentService.getPayments(
-      this.subscriptionId
-    );
-    console.log("this.paymentsWarranty", this.paymentsWarranty);
-    this.accountComplete =
-      await AccountCompleteService.getLastAccountCompleteByIdSubscription(
-        this.subscriptionId
-      );
-    this.quotation = {
-      inceptionDate: this.accountComplete.deductibles.inceptionDate,
-    };
-    console.log("this.quotation", this.quotation);
-    if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
-  },
-  mounted() {
-    // this.deepDisabled()
+  async created() {
+    if (this.readonly) {
+      this.paymentsWarranty = [...this.installments];
+      this.internalClauseList = [...this.clauseList];
+    } else {
+      this.subscriptionId = this.getSubscriptionIdFromRoute();
+
+      if (!this.subscriptionId) {
+        console.error(
+          "No se pudo obtener subscriptionId de la ruta:",
+          this.$route.params
+        );
+        return;
+      }
+
+      await this.loadInitialData();
+    }
   },
 
   computed: {
-    // ...mapGetters([
-    //   'subscription_id',
-    // ]),
+    effectiveClauseList() {
+      return this.readonly ? this.internalClauseList : this.internalClauseList;
+    },
+  },
+
+  watch: {
+    "$route.params": {
+      handler(newParams) {
+        const newSubscriptionId = this.getSubscriptionIdFromRoute();
+        if (newSubscriptionId && newSubscriptionId !== this.subscriptionId) {
+          this.subscriptionId = newSubscriptionId;
+          this.loadInitialData();
+        }
+      },
+      deep: true,
+    },
   },
 
   methods: {
-    sumarDias(index) {
-      const subscriptionId = this.subscriptionId;
+    /**
+     * Obtiene el subscriptionId desde los parámetros de la ruta
+     */
+    getSubscriptionIdFromRoute() {
+      const params = this.$route.params;
+      return params.subscriptionId || params.id || null;
+    },
 
-      // Obtener el objeto de pago correspondiente
-      const payment = this.paymentsWarranty.find((p) => p.index === index);
+    /**
+     * Carga los datos iniciales del componente
+     */
+    async loadInitialData() {
+      try {
+        this.clauseList = await PaymentService.getClauses();
+        this.paymentsWarranty = await PaymentService.getPayments(
+          this.subscriptionId
+        );
 
-      // Obtener la cantidad de días a sumar
-      const dias = +payment.installment;
+        this.$emit("originalInstallmentsReceive", [...this.paymentsWarranty]);
 
-      // Crear un objeto de fecha
-      const arrDate = this.quotation.inceptionDate.split("-");
-      const resultado = new Date(
-        `${arrDate[1]}-${arrDate[2].slice(0, 2)}-${arrDate[0]}`
-      );
+        this.emitDataToParent();
 
-      // Agregar la cantidad de días indicada a la fecha
-      resultado.setDate(resultado.getDate() + dias);
+        this.addPaymentDisabled = this.paymentsWarranty.length === 3;
+      } catch (error) {
+        console.error("Error cargando datos iniciales:", error);
+      }
+    },
 
-      // Actualizar la fecha
-      payment.date = resultado.toISOString().slice(0, 10);
-
-      // Guardar en BD
-      // this.updatePayment({
-      //   id: payment.id,
-      //   column: 'ppw_date',
-      //   value: payment.date,
-      //   index: index
-      // })
-
-      // Guardar en datasUpdate antes de guardar en BD
-      this.datasUpdate = [
-        ...this.datasUpdate,
-        {
-          id: payment.id,
-          column: "ppw_date",
-          value: payment.date,
-          index: index,
-          typeOfOperation: "addOrUpdate",
-          subscriptionId,
-        },
-      ];
-      this.$emit("datasReceive", this.paymentsWarranty);
+    emitDataToParent() {
+      this.$emit("datasReceive", [...this.paymentsWarranty]);
     },
 
     isLSWClause(idClause) {
-      // Valida si el idClause corresponde a LSW
-      const clause = this.clauseList.find((cl) => cl.id === idClause);
+      const clause = this.effectiveClauseList.find((cl) => cl.id === idClause);
       return clause && clause.clause.includes("LSW");
     },
 
     async updatePayment({ id, column, value, index }) {
+      if (this.readonly) return;
+
       const subscriptionId = this.subscriptionId;
 
-      // Actualizar en datasUpdate para no actualizar en BD aún
-      this.datasUpdate = [
-        ...this.datasUpdate,
-        {
-          id,
-          column,
-          value,
+      if (!subscriptionId) {
+        console.error("subscriptionId no disponible para updatePayment");
+        return;
+      }
+
+      try {
+        const paymentResponse = await PaymentService.addOrUpdatePayment(
+          { id, column, value },
           index,
-          subscriptionId,
-          typeOfOperation: "addOrUpdate",
-        },
-      ];
-      this.$emit("datasReceive", this.paymentsWarranty);
+          subscriptionId
+        );
 
-      // Actualizar o agregar
-      // const paymentResponse = await PaymentService.addOrUpdatePayment({
-      //   id, column, value
-      // }, index, subscriptionId)
+        if (id === null) {
+          const payment = this.paymentsWarranty[index - 1];
+          payment.id = paymentResponse.id;
+        }
 
-      // asignar el id al objeto payment si el id es nulo
-      // if (id === null) {
-      //   const payment = this.paymentsWarranty[index - 1];
-      //   console.log(paymentResponse.id)
-      //   payment.id = paymentResponse.id
-      // }
-
-      // sumar los dias
-      if (column === "installment") {
-        // const paymentId = id || paymentResponse.id
-        this.sumarDias(index);
+        this.emitDataToParent();
+      } catch (error) {
+        console.error("Error actualizando pago:", error);
       }
     },
 
-    async deletePayment(id, index) {
-      // Eliminar en datasUpdate para no eliminar en BD aún
+    async deletePayment(id) {
+      if (this.readonly) return;
+
       const subscriptionId = this.subscriptionId;
-      this.datasUpdate = [
-        ...this.datasUpdate,
-        { id, subscriptionId, typeOfOperation: "deletePayment", index },
-      ];
 
-      this.paymentsWarranty = this.paymentsWarranty.map((payment, index) => {
-        // return payment.index = index + 1
-        return {
-          ...payment,
-          index: index + 1,
-        };
-      });
-
-      this.$emit("datasReceive", this.paymentsWarranty);
-      if (id) {
-        this.$emit("deleteInstallment", id);
+      if (!subscriptionId) {
+        console.error("subscriptionId no disponible para deletePayment");
+        return;
       }
-      // await PaymentService.deletePayment(id, subscriptionId)
+
+      try {
+        await PaymentService.deletePayment(id, subscriptionId);
+      } catch (error) {
+        console.error("Error eliminando pago:", error);
+      }
     },
 
     addPaymentWarranty() {
-      // setear la fecha por default
-
-      // Crear un objeto de fecha
-      const arrDate = this.quotation.inceptionDate.split("-");
-      const resultado = new Date(
-        `${arrDate[1]}-${arrDate[2].slice(0, 2)}-${arrDate[0]}`
-      );
-
-      // Actualizar la fecha
-      const defaultDate = resultado.toISOString().slice(0, 10);
+      if (this.readonly) return;
 
       if (this.paymentsWarranty.length < 3) {
         const totalPaymentsSaved = this.paymentsWarranty.length;
+
+        const defaultDate = new Date().toISOString().substr(0, 10);
+
         const newPayment = {
           id: null,
-          index: totalPaymentsSaved + 1,
+          paymentIndex: totalPaymentsSaved + 1,
           installment: "",
           percent: "",
           date: defaultDate,
@@ -314,21 +315,38 @@ export default {
           days_of_prior_notice: "",
           showCalendar: false,
         };
-        const addPayments = [...this.paymentsWarranty, newPayment];
-        this.paymentsWarranty = addPayments;
-        this.datasUpdate = [...this.datasUpdate, newPayment];
-      }
-      if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
 
-      this.$emit("datasReceive", this.paymentsWarranty);
+        this.paymentsWarranty = [...this.paymentsWarranty, newPayment];
+
+        this.emitDataToParent();
+      }
+
+      if (this.paymentsWarranty.length === 3) {
+        this.addPaymentDisabled = true;
+      }
     },
 
-    removePaymentWarranty(indexToDelete) {
+    removePaymentWarranty(idToDelete) {
+      if (this.readonly) return;
+
       const newArray = this.paymentsWarranty.filter(
-        (item) => item.index !== indexToDelete
+        (item) => item.id !== idToDelete
       );
+
       this.paymentsWarranty = newArray;
-      if (this.paymentsWarranty.length < 3) this.addPaymentDisabled = false;
+
+      if (this.paymentsWarranty.length < 3) {
+        this.addPaymentDisabled = false;
+      }
+
+      this.$emit("deleteInstallment", idToDelete);
+
+      this.emitDataToParent();
+    },
+
+    getClauseName(idClause) {
+      const clause = this.effectiveClauseList.find((cl) => cl.id === idClause);
+      return clause ? clause.clause : "Unknown Clause";
     },
   },
 };
@@ -350,16 +368,13 @@ export default {
     width: 65%;
     height: auto;
     row-gap: 15px;
-
     .Line {
       width: 100%;
       height: 50px;
-
       .Row {
         width: calc(24% - 20px);
         height: 50px;
       }
-
       .remove-button {
         width: 50px;
         height: 100%;
@@ -367,7 +382,6 @@ export default {
         justify-content: center;
         align-items: flex-end;
         align-content: flex-end;
-
         i {
           color: #003d6d;
         }
@@ -375,11 +389,9 @@ export default {
     }
   }
 }
-
 button.v-btn--disabled {
   opacity: 0.5 !important;
 }
-
 .theme--light.v-btn.v-btn--disabled {
   color: white !important;
 }

@@ -18,8 +18,7 @@ export default {
 
       return data["getUnderwriters"];
     } catch ({ message }) {
-      const messageToDisplay =
-        "getListUnderwriters error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getListUnderwriters error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -27,10 +26,7 @@ export default {
     }
   },
 
-  async createNotificationFourEye(
-    { commit, state },
-    { subscription_id, reviewer_user_id, notifying_user_id, status, commentary }
-  ) {
+  async createNotificationFourEye({ commit, state }, { subscription_id, reviewer_user_id, notifying_user_id, status, commentary }) {
     try {
       const { data } = await apolloClient.mutate({
         mutation: createNotificationFourEyeMutation,
@@ -45,9 +41,7 @@ export default {
       });
       return data["createNotificationFourEye"];
     } catch ({ message }) {
-      const messageToDisplay =
-        "createNotificationFourEye error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createNotificationFourEye error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -66,8 +60,7 @@ export default {
       });
       return data["updateNotificationFourEyesDetail"];
     } catch ({ message }) {
-      const messageToDisplay =
-        "updateNotification error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateNotification error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -98,9 +91,7 @@ export default {
         commit("setNotifications", data["getSuscriptorNotificationsFourEye"]);
       }
     } catch ({ message }) {
-      const messageToDisplay =
-        "getNotificationsFourEye error: " +
-        message.replace("GraphQL error: --", "");
+      const messageToDisplay = "getNotificationsFourEye error: " + message.replace("GraphQL error: --", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -119,9 +110,7 @@ export default {
 
       return data["updateIsArchivedNotification"];
     } catch ({ message }) {
-      const messageToDisplay =
-        "updateNotificationArchived error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateNotificationArchived error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -139,9 +128,7 @@ export default {
       });
       return data["getNotificationsFourEyeSuscriptor"];
     } catch ({ message }) {
-      const messageToDisplay =
-        "getNotificationsFourEyeSuscriptor error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getNotificationsFourEyeSuscriptor error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -162,7 +149,6 @@ export const getUserType = async (id) => {
     const underwriterList = data["getUnderwriters"]?.map((e) => Number(e.id));
     return underwriterList.includes(id);
   } catch (message) {
-    console.log(message);
     const messageToDisplay = message.replace("GraphQL error: ", "");
     return messageToDisplay;
   }

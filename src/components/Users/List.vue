@@ -3,16 +3,12 @@
     <!--TITULO DE LA TABLA-->
     <div class="TableTitle d-flex justify-space-between align-center">
       <!--TITULO-->
-      <div class="title">
-        SLU Users
-      </div>
+      <div class="title">SLU Users</div>
       <!-- Modal de add y update -->
       <div class="finishButtonCont mt-4 d-flex justify-end align-center">
         <v-dialog v-model="dialog" persistent width="1024">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn rounded outlined large class="finishBtn mb-4" v-bind="attrs" v-on="on">
-              Create User
-            </v-btn>
+            <v-btn rounded outlined large class="finishBtn mb-4" v-bind="attrs" v-on="on"> Create User </v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -23,58 +19,91 @@
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
                     <div class="ExpansionInputContent mb-7">
-                      <v-text-field v-model.trim="$v.createUserData.name.$model" autocomplete="new-password"
+                      <v-text-field
+                        v-model.trim="$v.createUserData.name.$model"
+                        autocomplete="new-password"
                         @input="$v.createUserData.name.$touch(), changeFirm($event)"
-                        @blur="$v.createUserData.name.$touch()" required :error-messages="requiredInputVuelidateParent('name', 'createUserData')
-                          " label="Name">
+                        @blur="$v.createUserData.name.$touch()"
+                        required
+                        :error-messages="requiredInputVuelidateParent('name', 'createUserData')"
+                        label="Name"
+                      >
                       </v-text-field>
                     </div>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <div class="ExpansionInputContent mb-7">
-                      <v-text-field v-model.trim="$v.createUserData.lastName.$model" @input="$v.createUserData.lastName.$touch(), changeFirm($event)
-                        " autocomplete="new-password" @blur="$v.createUserData.lastName.$touch()" required
-                        :error-messages="requiredInputVuelidateParent('lastName', 'createUserData')
-                          " label="Last Name">
+                      <v-text-field
+                        v-model.trim="$v.createUserData.lastName.$model"
+                        @input="$v.createUserData.lastName.$touch(), changeFirm($event)"
+                        autocomplete="new-password"
+                        @blur="$v.createUserData.lastName.$touch()"
+                        required
+                        :error-messages="requiredInputVuelidateParent('lastName', 'createUserData')"
+                        label="Last Name"
+                      >
                       </v-text-field>
                     </div>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <div class="ExpansionInputContent mb-7">
-                      <v-text-field v-model.trim="$v.createUserData.email.$model"
+                      <v-text-field
+                        v-model.trim="$v.createUserData.email.$model"
                         @input="$v.createUserData.email.$touch(), changeFirm($event)"
-                        @blur="$v.createUserData.email.$touch()" required :error-messages="requiredEmailVuelidateParent('email', 'createUserData')
-                          " label="E-mail">
+                        @blur="$v.createUserData.email.$touch()"
+                        required
+                        :error-messages="requiredEmailVuelidateParent('email', 'createUserData')"
+                        label="E-mail"
+                      >
                       </v-text-field>
                     </div>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <div class="ExpansionInputContent mb-7">
-                      <v-text-field v-model.trim="$v.createUserData.celular.$model"
+                      <v-text-field
+                        v-model.trim="$v.createUserData.celular.$model"
                         @input="$v.createUserData.celular.$touch(), changeFirm($event)"
-                        @blur="$v.createUserData.celular.$touch()" required :error-messages="requiredInputVuelidateParent('celular', 'createUserData')
-                          " label="Cell phone number">
+                        @blur="$v.createUserData.celular.$touch()"
+                        required
+                        :error-messages="requiredInputVuelidateParent('celular', 'createUserData')"
+                        label="Cell phone number"
+                      >
                       </v-text-field>
                     </div>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-
                     <div class="ExpansionInputContent">
-                      <v-select v-model.trim="$v.createUserData.country.$model"
-                        @input="$v.createUserData.country.$touch()" @blur="$v.createUserData.country.$touch()" required
-                        :error-messages="requiredInputVuelidateParent('country', 'createUserData')
-                          " label="Country" :items="countries" :loading="loadingCountries" item-text="description"
-                        item-value="id" return-object>
+                      <v-select
+                        v-model.trim="$v.createUserData.country.$model"
+                        @input="$v.createUserData.country.$touch()"
+                        @blur="$v.createUserData.country.$touch()"
+                        required
+                        :error-messages="requiredInputVuelidateParent('country', 'createUserData')"
+                        label="Country"
+                        :items="countries"
+                        :loading="loadingCountries"
+                        item-text="description"
+                        item-value="id"
+                        return-object
+                      >
                       </v-select>
                     </div>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <div class="ExpansionInputContent">
-                      <v-select v-model.trim="$v.createUserData.company.$model"
-                        @input="$v.createUserData.company.$touch()" @blur="$v.createUserData.company.$touch()" required
-                        :error-messages="requiredInputVuelidateParent('company', 'createUserData')
-                          " label="User Company" :items="companies" :loading="loadingCompanies" item-text="name"
-                        item-value="id" return-object>
+                      <v-select
+                        v-model.trim="$v.createUserData.company.$model"
+                        @input="$v.createUserData.company.$touch()"
+                        @blur="$v.createUserData.company.$touch()"
+                        required
+                        :error-messages="requiredInputVuelidateParent('company', 'createUserData')"
+                        label="User Company"
+                        :items="companies"
+                        :loading="loadingCompanies"
+                        item-text="name"
+                        item-value="id"
+                        return-object
+                      >
                         <template #append-item>
                           <div class="AddCompanyCont">
                             <v-btn text @click="setModalCreateCompany()" class="AddBtn">
@@ -88,20 +117,33 @@
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <div class="ExpansionInputContent">
-                      <v-select v-model.trim="$v.createUserData.role.$model"
-                        @input="$v.createUserData.role.$touch(), changeFirm()" @blur="$v.createUserData.role.$touch()"
-                        required :error-messages="requiredInputVuelidateParent('role', 'createUserData')
-                          " label="Role" multiple :items="roles" :loading="loadingCompanies" item-text="role"
-                        item-value="id" return-object>
+                      <v-select
+                        v-model.trim="$v.createUserData.role.$model"
+                        @input="$v.createUserData.role.$touch(), changeFirm()"
+                        @blur="$v.createUserData.role.$touch()"
+                        required
+                        :error-messages="requiredInputVuelidateParent('role', 'createUserData')"
+                        label="Role"
+                        multiple
+                        :items="roles"
+                        :loading="loadingCompanies"
+                        item-text="role"
+                        item-value="id"
+                        return-object
+                      >
                       </v-select>
                     </div>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <div class="ExpansionInputContent">
-                      <v-text-field v-model.trim="$v.createUserData.address.$model"
-                        @input="$v.createUserData.address.$touch()" @blur="$v.createUserData.address.$touch()" required
-                        :error-messages="requiredInputVuelidateParent('address', 'createUserData')
-                          " label="Address">
+                      <v-text-field
+                        v-model.trim="$v.createUserData.address.$model"
+                        @input="$v.createUserData.address.$touch()"
+                        @blur="$v.createUserData.address.$touch()"
+                        required
+                        :error-messages="requiredInputVuelidateParent('address', 'createUserData')"
+                        label="Address"
+                      >
                       </v-text-field>
                     </div>
                   </v-col>
@@ -109,19 +151,13 @@
 
                   <TextBox :textFirm="textFirm" @setFirm="setFirm" />
                   <div class="WhiteSpace HideOnMovil" />
-
                 </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn rounded large :loading="loading" depressed color="blue darken-1" text @click="close"
-                style="margin:10px">
-                Cancel
-              </v-btn>
-              <v-btn rounded outlined large class="finishBtn" :loading="loading" color="blue darken-1" text @click="submitForm()">
-                Save
-              </v-btn>
+              <v-btn rounded large :loading="loading" depressed color="blue darken-1" text @click="close" style="margin: 10px"> Cancel </v-btn>
+              <v-btn rounded outlined large class="finishBtn" :loading="loading" color="blue darken-1" text @click="submitForm()"> Save </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -129,28 +165,28 @@
     </div>
     <v-data-table :headers="headers" :items="list" class="elevation-1" ref="TableContent">
       <template v-slot:item.id="{ item }">
-        {{ item.id != undefined ? item.id : 'N/D' }}
+        {{ item.id != undefined ? item.id : "N/D" }}
       </template>
       <template v-slot:item.name="{ item }">
-        {{ item.name != undefined ? item.name : 'N/D' }}
+        {{ item.name != undefined ? item.name : "N/D" }}
       </template>
       <template v-slot:item.lastName="{ item }">
-        {{ item.lastName != undefined ? item.lastName : 'N/D' }}
+        {{ item.lastName != undefined ? item.lastName : "N/D" }}
       </template>
       <template v-slot:item.email="{ item }">
-        {{ item.email != undefined ? item.email : 'N/D' }}
+        {{ item.email != undefined ? item.email : "N/D" }}
       </template>
       <template v-slot:item.country="{ item }">
-        {{ item.country != undefined ? item.country : 'N/D' }}
+        {{ item.country != undefined ? item.country : "N/D" }}
       </template>
       <template v-slot:item.company="{ item }">
-        {{ item.company != undefined ? item.company : 'N/D' }}
+        {{ item.company != undefined ? item.company : "N/D" }}
       </template>
       <template v-slot:item.createdAt="{ item }">
         {{ formatDateMoment(item.createdAt) }}
       </template>
       <template v-slot:item.status="{ item }">
-        {{ Boolean(item.status) === true ? 'Activated' : '' }}
+        {{ Boolean(item.status) === true ? "Activated" : "" }}
       </template>
       <template v-slot:top>
         <v-toolbar flat>
@@ -172,19 +208,15 @@
           <v-tooltip right color="#003D6D">
             <template v-slot:activator="{ on, attrs }">
               <div class="Button__Action" @click="editItem(item)" icon v-bind="attrs" v-on="on">
-                <v-icon>
-                  mdi-pencil-outline
-                </v-icon>
+                <v-icon> mdi-pencil-outline </v-icon>
               </div>
             </template>
             <span class="white--text">Edit User</span>
           </v-tooltip>
           <v-tooltip right color="#003D6D">
             <template v-slot:activator="{ on, attrs }">
-              <div class="Button__Action" @click="deleteItem(item), user=item" icon v-bind="attrs" v-on="on">
-                <v-icon>
-                  mdi-delete-outline
-                </v-icon>
+              <div class="Button__Action" @click="deleteItem(item), (user = item)" icon v-bind="attrs" v-on="on">
+                <v-icon> mdi-delete-outline </v-icon>
               </div>
             </template>
 
@@ -193,9 +225,7 @@
           <v-tooltip right color="#003D6D">
             <template v-slot:activator="{ on, attrs }">
               <div class="Button__Action" @click="resendMail(item)" v-bind="attrs" v-on="on" icon>
-                <v-icon>
-                  mdi-email-alert
-                </v-icon>
+                <v-icon> mdi-email-alert </v-icon>
               </div>
             </template>
 
@@ -208,7 +238,7 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
-import moment from 'moment';
+import moment from "moment";
 /* vuelidate mixin & validations */
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
@@ -222,7 +252,7 @@ import AddCompanyModal from "@/components/Create/AddCompanyModal.vue";
 import TextBox from "@/components/Firm/TextBox.vue";
 
 export default {
-  name: 'UsersTable',
+  name: "UsersTable",
   mixins: [stateExpansiveManager, formValidations, validationMixin],
   props: {
     userId: {
@@ -231,21 +261,20 @@ export default {
   },
   components: {
     TextBox,
-    AddCompanyModal
+    AddCompanyModal,
   },
   data() {
     return {
       headers: [
-        { text: 'ID', value: 'id', },
-        { text: 'Name', value: 'name' },
-        { text: 'Last Name', value: 'lastName' },
-        { text: 'Email', value: 'email' },
-        { text: 'Country', value: 'country' },
-        { text: 'Company', value: 'company' },
-        { text: 'Created', value: 'createdAt' },
-        { text: 'Status', value: 'status' },
-        { text: 'Actions', value: 'actions' },
-
+        { text: "ID", value: "id" },
+        { text: "Name", value: "name" },
+        { text: "Last Name", value: "lastName" },
+        { text: "Email", value: "email" },
+        { text: "Country", value: "country" },
+        { text: "Company", value: "company" },
+        { text: "Created", value: "createdAt" },
+        { text: "Status", value: "status" },
+        { text: "Actions", value: "actions" },
       ],
       pagination: {
         limit: 10,
@@ -255,26 +284,26 @@ export default {
       dialog: false,
       columsArray: [
         {
-          refNumber: 'Ref number',
-          country: 'Country',
-          typeOfRisk: 'Type of Risk ',
-          Broker: 'Broker',
-          inceptionDate: 'Inception date',
-          expiringDate: 'Expiring date',
-          status: 'status',
+          refNumber: "Ref number",
+          country: "Country",
+          typeOfRisk: "Type of Risk ",
+          Broker: "Broker",
+          inceptionDate: "Inception date",
+          expiringDate: "Expiring date",
+          status: "status",
         },
       ],
       tableBodyContSnWidth: 0,
       editedIndex: -1,
       createUserData: {
-        name: '',
+        name: "",
         calories: 0,
         fat: 0,
         carbs: 0,
         protein: 0,
       },
       defaultItem: {
-        name: '',
+        name: "",
         calories: 0,
         fat: 0,
         carbs: 0,
@@ -287,31 +316,27 @@ export default {
       loadingCompanies: false,
       loadingCountries: false,
       createUserData: {
-        names: '',
-        lastName: '',
+        names: "",
+        lastName: "",
         company: 0,
-        address: '',
-        country: '',
-        celular: '',
-        email: '',
-        userSignature: '',
-        role: []
-      }
+        address: "",
+        country: "",
+        celular: "",
+        email: "",
+        userSignature: "",
+        role: [],
+      },
     };
   },
   computed: {
-    ...mapGetters([
-      'countries',
-      'companies',
-      'modalCreateCompany'
-    ]),
+    ...mapGetters(["countries", "companies", "modalCreateCompany"]),
     ...mapState({
       list: (state) => state.auth.list,
       roles: (state) => state.roles.list,
-      item: (state) => state.auth.item
+      item: (state) => state.auth.item,
     }),
     formTitle() {
-      return this.editedIndex === -1 ? 'New User' : 'Edit User'
+      return this.editedIndex === -1 ? "New User" : "Edit User";
     },
     textFirm: {
       set(val) {
@@ -336,23 +361,23 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getListUsers', 'resendMail', 'deleteUser', "getCatalogByName", "createUserTest", "getAllRoles", "getUserById", "resetUserEdit"]),
+    ...mapActions(["getListUsers", "resendMail", "deleteUser", "getCatalogByName", "createUserTest", "getAllRoles", "getUserById", "resetUserEdit"]),
     ...mapMutations(["setModalCreateCompany"]),
     moveRightTable() {
-      this.sideScroll('right', 25, 100, 10);
+      this.sideScroll("right", 25, 100, 10);
     },
     moveLeftTable() {
-      this.sideScroll('left', 25, 100, 10);
+      this.sideScroll("left", 25, 100, 10);
     },
     goToCreate(item) {
-      console.log(item)
-      this.$router.push({ name: 'create-user', query: { userId: item ? item.id : 0 } })
+      console.log(item);
+      this.$router.push({ name: "create-user", query: { userId: item ? item.id : 0 } });
     },
     sideScroll(direction, speed, distance, step) {
-      var container = document.querySelector('.TableContent');
+      var container = document.querySelector(".TableContent");
       var scrollAmount = 0;
       var slideTimer = setInterval(function () {
-        if (direction == 'left') {
+        if (direction == "left") {
           container.scrollLeft -= step;
         } else {
           container.scrollLeft += step;
@@ -366,87 +391,105 @@ export default {
     formatDateMoment(dateToFormat) {
       if (dateToFormat) {
         const date = moment(dateToFormat);
-        const day = date.format('DD');
-        const month = date.format('MM');
-        const year = date.format('YYYY');
-        const hour = date.format('HH:mm').toUpperCase();
+        const day = date.format("DD");
+        const month = date.format("MM");
+        const year = date.format("YYYY");
+        const hour = date.format("HH:mm").toUpperCase();
         return `${day} - ${month} - ${year}`;
       } else {
         return dateToFormat;
       }
     },
     editItem(item) {
-      console.log(item)
-      this.getUser(item.id)
-      this.editedIndex = this.list.indexOf(item)
-      this.createUserData = Object.assign({}, item)
-      this.dialog = true
+      console.log(item);
+      this.getUser(item.id);
+      this.editedIndex = this.list.indexOf(item);
+      this.createUserData = Object.assign({}, item);
+      this.dialog = true;
     },
-    async getUser(id){
-      console.log(id)
+    async getUser(id) {
+      console.log(id);
       if (parseFloat(id) > 0) {
-      console.log("yes")
-      await this.getUserById(id).then(() => {
-        this.createUserData = this.item
-        this.createUserData.company = this.companies.find(x => x.id == this.item.companyId)
-        this.createUserData.country = this.countries.find(x => x.id == this.item.countryId)
-        this.role = this.roles
-        this.createUserData.role = this.roles.reduce((accum, item) => {
-          const i = this.item.role.find(x => x.id == item.id)
-          if (i) {
-            accum.push(item);
-          }
-          return accum;
-        }, [])
+        console.log("yes");
+        await this.getUserById(id).then(() => {
+          this.createUserData = this.item;
+          this.createUserData.company = this.companies.find((x) => x.id == this.item.companyId);
+          this.createUserData.country = this.countries.find((x) => x.id == this.item.countryId);
+          this.role = this.roles;
+          this.createUserData.role = this.roles.reduce((accum, item) => {
+            const i = this.item.role.find((x) => x.id == item.id);
+            if (i) {
+              accum.push(item);
+            }
+            return accum;
+          }, []);
 
-        this.createUserData.userSignature = this.item.signature
-      })
-      console.log(this.createUserData)
-    }
+          this.createUserData.userSignature = this.item.signature;
+        });
+        console.log(this.createUserData);
+      }
     },
     deleteItem(item) {
-      this.editedIndex = this.list.indexOf(item)
-      this.createUserData = Object.assign({}, item)
-      this.dialogDelete = true
+      this.editedIndex = this.list.indexOf(item);
+      this.createUserData = Object.assign({}, item);
+      this.dialogDelete = true;
     },
     deleteItemConfirm(item) {
-      this.deleteUser(item)
-      this.list.splice(this.editedIndex, 1)
-      this.closeDelete()
+      this.deleteUser(item);
+      this.list.splice(this.editedIndex, 1);
+      this.closeDelete();
     },
     close() {
-      this.$router.push({ name: 'list-users' })
-      this.dialog = false
+      this.$router.push({ name: "list-users" });
+      this.dialog = false;
       this.$nextTick(() => {
-        this.createUserData = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
+        this.createUserData = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
     },
     closeDelete() {
-      this.dialogDelete = false
+      this.dialogDelete = false;
       this.$nextTick(() => {
-        this.createUserData = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
+        this.createUserData = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
     },
     submitForm() {
       this.$v.createUserData.$touch(); // valida el formulario
       const errorExists = this.$v.createUserData.$invalid;
-      const { role: { $model: role } } = this.$v.createUserData;
+      const {
+        role: { $model: role },
+      } = this.$v.createUserData;
       if (errorExists) this.userPanel = 0;
       if (errorExists) return;
-      const { name: { $model: name } } = this.$v.createUserData;
-      const { email: { $model: email } } = this.$v.createUserData;
-      const { celular: { $model: celular } } = this.$v.createUserData;
-      const { address: { $model: address } } = this.$v.createUserData;
-      const { company: { $model: company } } = this.$v.createUserData;
-      const { country: { $model: country } } = this.$v.createUserData;
-      const { lastName: { $model: lastName } } = this.$v.createUserData;
-      const { userSignature: { $model: userSignature } } = this.$v.createUserData;
-      console.log(this.$v.createUserData)
+      const {
+        name: { $model: name },
+      } = this.$v.createUserData;
+      const {
+        email: { $model: email },
+      } = this.$v.createUserData;
+      const {
+        celular: { $model: celular },
+      } = this.$v.createUserData;
+      const {
+        address: { $model: address },
+      } = this.$v.createUserData;
+      const {
+        company: { $model: company },
+      } = this.$v.createUserData;
+      const {
+        country: { $model: country },
+      } = this.$v.createUserData;
+      const {
+        lastName: { $model: lastName },
+      } = this.$v.createUserData;
+      const {
+        userSignature: { $model: userSignature },
+      } = this.$v.createUserData;
+      console.log(this.$v.createUserData);
       this.loading = true;
       const roles = role.reduce((accum, item) => {
-        accum.push(parseFloat(item.id))
+        accum.push(parseFloat(item.id));
         return accum;
       }, []);
       this.createUserTest({
@@ -459,16 +502,18 @@ export default {
         companyId: company.id,
         role: roles,
         signature: userSignature,
-        address
-      }).then(dato => {
-        this.resetUserEdit();
-        this.$v.createUserData.$reset();
-        setTimeout(() => {
-          this.$router.back();
-        }, 2500);
-      }).finally(() => {
-        this.loading = false;
-      });
+        address,
+      })
+        .then((dato) => {
+          this.resetUserEdit();
+          this.$v.createUserData.$reset();
+          setTimeout(() => {
+            this.$router.back();
+          }, 2500);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     changeFirm(val) {
       /*
@@ -480,36 +525,32 @@ export default {
         <p>
           <b>
             <span style='color:#547FA9'>
-          ${(this.createUserData.name ?? '')} ${(this.createUserData.lastName ?? '')}
+          ${this.createUserData.name ?? ""} ${this.createUserData.lastName ?? ""}
             </span>
           </b>
         </p>
-        
-        <p>${(this.createUserData.role && Array.isArray(this.createUserData.role) && this.createUserData.role.length > 0 ? this.createUserData.role[0].role : '')}</p>
 
-        <p>${(this.createUserData.celular ? this.createUserData.celular : '')}</p>
+        <p>${this.createUserData.role && Array.isArray(this.createUserData.role) && this.createUserData.role.length > 0 ? this.createUserData.role[0].role : ""}</p>
+
+        <p>${this.createUserData.celular ? this.createUserData.celular : ""}</p>
 
         <p>
           <span style='color:#547FA9'>
-          ${(this.createUserData.email ? this.createUserData.email : '')}
+          ${this.createUserData.email ? this.createUserData.email : ""}
           </span>
-        </p>`
-        ;
-
+        </p>`;
       this.textFirm = textValue;
     },
     setFirm(newFirm) {
-      this.$v.createUserData.userSignature.$model = newFirm
-    }
+      this.$v.createUserData.userSignature.$model = newFirm;
+    },
   },
   async beforeMount() {
     this.$emit("startLoading");
 
-    this.getListUsers().then(
-      () => {
-        this.$emit("finishLoading", "loading");
-      }
-    );
+    this.getListUsers().then(() => {
+      this.$emit("finishLoading", "loading");
+    });
     await this.getCatalogByName({ name: "countries" });
     await this.getCatalogByName({ name: "companies" });
     await this.getAllRoles();
@@ -522,21 +563,21 @@ export default {
     this[lcou] = false;
   },
   mounted() {
-    console.log(this.list)
+    console.log(this.list);
   },
   watch: {
     dialog(val) {
-      val || this.close()
+      val || this.close();
     },
     dialogDelete(val) {
-      val || this.closeDelete()
+      val || this.closeDelete();
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Table.less';
+@import "~@/assets/style/Subscription/Table.less";
 @import "~@/assets/style/AccordionStyle.less";
 
 //CONTENEDOR GENERAL DE LA TABLA
@@ -551,7 +592,7 @@ export default {
 
     .title {
       width: 200px;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 1.5rem;
     }
   }
@@ -563,6 +604,7 @@ export default {
 
     //CUERPO DE LA TABLA
     .TableBodyContent {
+      //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
       padding: 0 !important;
 
       //CONTENEDOR DE LAS FILAS DE LA TABLA
@@ -611,12 +653,11 @@ export default {
 
     .row9 {
       i {
-        color: #D2DEED;
+        color: #d2deed;
       }
     }
   }
 }
-
 
 .Button__Action {
   height: 100%;
@@ -626,8 +667,6 @@ export default {
   align-items: center;
   cursor: pointer;
 }
-
-
 
 @media (max-width: 600px) {
   .SubscriptionTable {
@@ -644,7 +683,7 @@ export default {
       width: 65px;
       height: 30px;
       border: solid 1px black;
-      border-radius: 15px;
+      border-radius: 5px;
 
       .ControlBtn {
         width: 45%;
@@ -653,7 +692,6 @@ export default {
     }
 
     .TableContent {
-
       //CABEZA DE LA TABLE
       .TableHeadContent {
         width: 750px;

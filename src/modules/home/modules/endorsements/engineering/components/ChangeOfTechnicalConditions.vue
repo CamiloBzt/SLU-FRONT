@@ -28,28 +28,28 @@
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu 
-                      v-model="menu2" 
-                      :close-on-content-click="false" 
+                    <v-menu
+                      v-model="menu2"
+                      :close-on-content-click="false"
                       :nudge-right="40"
-                      transition="scale-transition" 
-                      offset-y 
+                      transition="scale-transition"
+                      offset-y
                       min-width="auto"
                     >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field 
-                          v-model="effectiveDate" 
-                          label="Endorsement effective date" 
+                        <v-text-field
+                          v-model="effectiveDate"
+                          label="Endorsement effective date"
                           v-bind="attrs"
                           v-on="on"
                         >
                         </v-text-field>
                       </template>
 
-                      <v-date-picker 
-                        v-model="effectiveDate" 
+                      <v-date-picker
+                        v-model="effectiveDate"
                         @input="menu2 = false"
-                        @change="endorsementDateValidation($event, effectiveDate)"
+                        @change="endDateValidation($event, effectiveDate)"
                       >
                       </v-date-picker>
                     </v-menu>
@@ -58,539 +58,568 @@
                       The new Endorsement effective date must be lower than
                       expiry date.
                     </div>
+
+                    <div v-if="!showInfoEndorsement" class="error-message">
+                      Please provide a valid endorsement effective date.
+                    </div>
                   </div>
                 </div>
 
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu 
-                      v-model="menu" 
-                      :close-on-content-click="false" 
-                      :nudge-right="40" 
+                    <v-menu
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
                       transition="scale-transition"
-                      offset-y min-width="auto"
+                      offset-y
+                      min-width="auto"
                     >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field 
-                          v-model="expiryDateReal" 
-                          label="Expiry date" 
-                          disabled 
+                        <v-text-field
+                          v-model="expiryDateReal"
+                          label="Expiry date"
+                          disabled
                           v-bind="attrs"
-                          v-on="on">
+                          v-on="on"
+                        >
                         </v-text-field>
                       </template>
                     </v-menu>
                   </div>
                 </div>
 
-                <InputDaysDiference 
-                  :endorsementDate="effectiveDate" 
+                <InputDaysDiference
+                  :endorsementDate="effectiveDate"
                   :expiryDate="expiryDatetoCalc"
                   :key="effectiveDate"
                 />
               </div>
 
-              <template>
-                <div class="ExpandContent justify-center">
-                  <div class="TitleCont d-flex justify-space-between align-center">
-                    <h5>Location</h5>
+              <div v-if="showInfoEndorsement">
+                <!-- Sección de Deducibles -->
+                <div class="technical-conditions-section">
+                  <div class="section-title">
+                    <v-icon class="mr-2">mdi-shield-outline</v-icon>
+                    Current Deductibles
+                    <span class="highlight-info"
+                      >(Changes will be highlighted)</span
+                    >
                   </div>
 
-                  <!--Coverage B // ALOP-->
-                  <div class="DynamicItemsContent">
-                    <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
-                      <div class="InputRow">
-                        <!-- <v-text-field 
-                          v-model.trim="$v.boundEngCatDeductibles.location.$model" 
-                          @blur="
-                            SET_BOUND_ENG_CAT_DED({
-                              index: indexarr,
-                              key: 'location',
-                              value: $v.boundEngCatDeductibles.location.$model,
-                            });
-                            checkField('location');
-                          "
-                        /> -->
-                        <v-text-field 
-                          v-model.trim="location" 
-                          @blur=""
-                        />
+                  <div
+                    :class="{
+                      'highlighted-item': isDeductibleModified(
+                        technicalConditions.deductibles
+                          .underlyingCatDeductibles[0].id
+                      ),
+                    }"
+                  >
+                    <div class="ExpandContent justify-center">
+                      <div
+                        class="TitleCont d-flex justify-space-between align-center"
+                      >
+                        <h5>Location</h5>
                       </div>
-                    </div>
-                  </div>
 
-                  <div class="TitleCont d-flex justify-start align-center">
-                    <h5>Underlying Cat Deductibles</h5>
-                  </div>
-
-                  <div class="InputTitle d-flex justify-start align-center align-end">
-                    Coverage B, Earthquake, Tremor or Volcanic Eruption
-                  </div>
-
-                  <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
-                    <div class="InputRow Small">
-                      <v-select 
-                        v-model.trim="underlyingCatSelect" 
-                        @blur="" 
-                        :items="underlyingCat" 
-                        item-text="data" 
-                        item-value="id" 
-                        clearable
-                        :disabled="underlyingCat.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow Large">
-                      <v-select 
-                        v-model.trim="underlyingCatAplicaSelect" 
-                        @blur="" 
-                        :items="underlyingCatAplica" 
-                        item-text="data" 
-                        label="Total value"
-                        item-value="id" 
-                        clearable
-                        :disabled="underlyingCatAplica.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow">
-                      <v-select 
-                        v-model.trim="underlyingCatValuesSelect" 
-                        @blur="" 
-                        :items="underlyingCatValues" 
-                        item-text="data" 
-                        item-value="id" 
-                        label="Limit"
-                        clearable
-                        :disabled="underlyingCatValues.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow">
-                      <currency-input 
-                        v-model.trim="coverB" 
-                        @blur=""
-                        :options="currencyOptions"
-                      />
-                    </div>
-
-                    <div class="InputRow">
-                      <v-select 
-                        v-model.trim="underlyingCatValuesSelectTwo" 
-                        @blur="" 
-                        :items="underlyingCatValues" 
-                        item-text="data" 
-                        item-value="id" 
-                        label="Limit"
-                        clearable
-                        :disabled="underlyingCatValues.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow">
-                      <currency-input 
-                        v-model.trim="coverTwoB" 
-                        @blur=""
-                        :options="currencyOptions"
-                      />
-                    </div>
-                  </div>
-
-                  <!--Hydrometeorological Risk-->
-                  <div class="InputTitle d-flex justify-start align-end mt-7">Hidrometeorological Risk</div>
-
-                  <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
-                    <div class="InputRow Small">
-                      <v-select 
-                        v-model.trim="underlyingHidroSelect" 
-                        @blur="" 
-                        :items="underlyingCat" 
-                        item-text="data" 
-                        item-value="id" 
-                        clearable
-                        :disabled="underlyingCat.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow Large">
-                      <v-select 
-                        v-model.trim="underlyingHidroAplicaSelect" 
-                        @blur="" 
-                        :items="underlyingCatAplica" 
-                        item-text="data" 
-                        label="Total value" 
-                        item-value="id" 
-                        clearable
-                        :disabled="underlyingCatAplica.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow">
-                      <v-select 
-                        v-model.trim="underlyingHidroValuesSelect" 
-                        @blur="" 
-                        :items="underlyingCatValues" 
-                        item-text="data" 
-                        item-value="id" 
-                        label="Limit"
-                        clearable
-                        :disabled="underlyingCatValues.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow">
-                      <currency-input 
-                        v-model.trim="hidroRisk" 
-                        @blur=""
-                        :options="currencyOptions" 
-                      />
-                    </div>
-
-                    <div class="InputRow">
-                      <v-select 
-                        v-model.trim="underlyingHidroValuesSelectTwo"
-                        @blur=""
-                        :items="underlyingCatValues"
-                        item-text="data"
-                        item-value="id"
-                        label="Limit"
-                        clearable
-                        :disabled="underlyingCatValues.length === 0"
-                      >
-                      </v-select>
-                    </div>
-
-                    <div class="InputRow">
-                      <currency-input 
-                        v-model.trim="hidroRiskTwo" 
-                        @blur="" 
-                        :options="currencyOptions"
-                      />
-                    </div>
-                  </div>
-
-                  <!--Coverage B // ALOP-->
-                  <div class="DynamicItemsContent mt-8" v-if="this.showAlopLines">
-                    <div class="InputTitle d-flex justify-start align-center align-end">ALOP Coverage B, Earthquake,
-                      Tremor or Volcanic Eruption</div>
-                    <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
-                      <div class="InputRow">
-                        <v-text-field 
-                          type="number" 
-                          suffix="DAY(S)"
-                          v-model.trim="alopEarthquake" 
-                          @blur=""
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Hydrometeorological Risk // ALOP -->
-                  <div class="DynamicItemsContent mt-7" v-if="this.showAlopLines">
-                    <div class="InputTitle d-flex justify-start align-center align-end">
-                      ALOP Hidrometeorological Risk
-                    </div>
-
-                    <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
-                      <div class="InputRow">
-                        <v-text-field 
-                          type="number" 
-                          suffix="DAY(S)"
-                          v-model.trim="alopHidro" 
-                          @blur=""
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <!--Underlying Fire -->
-                  <div class="TitleCont mt-6 d-flex justify-start align-center">
-                    <h5>Underlying Fire &#38; EC Deductibles</h5>
-                  </div>
-
-                  <!--Contenedor de deducibles-->
-                  <div class="UnderlyingCont d-flex align-start flex-wrap"
-                    v-for="(item, index) in boundEngDeductibles" :key="index">
-                    <!--Fila con todos los inputs-->
-                    <div class="LineItems">
-                      <div class="Row">
-                        <v-combobox 
-                          v-model.trim="item.underlyingFireText" :filter="filter"
-                          :hide-no-data="!item.search" 
-                          :items="underlyingFire" 
-                          :search-input.sync="item.search"
-                          @change="" 
-                          hide-selected 
-                          item-text="data"
-                          item-value="id" 
-                          label="Search for an option" 
-                          clearable 
-                          return-object
-                          :disabled="underlyingFire.length === 0"
+                      <!--Coverage B // ALOP-->
+                      <div class="DynamicItemsContent">
+                        <div
+                          class="InputsCont d-flex justify-space-between align-start flex-wrap"
                         >
-                          <template v-slot:no-data>
-                            <v-list-item>
-                              <span class="subheading">Creating new </span>
-
-                              <v-chip label small> {{ item.search }} </v-chip>
-                            </v-list-item>
-                          </template>
-                          
-                          <template v-slot:selection="{ attrs, item }">
-                            <span v-if="typeof item === 'object'" v-bind="attrs">
-                              {{ item.data }}
-                            </span>
-                            <span v-else v-bind="attrs">
-                              {{ item }}
-                            </span>
-                          </template>
-                        </v-combobox>
+                          <div class="InputRow">
+                            <v-text-field
+                              v-model.trim="location"
+                              @blur="trackFieldChanges"
+                            />
+                          </div>
+                        </div>
                       </div>
 
-                      <div class="Row Small">
-                        <v-select 
-                          v-model.trim="item.underlyingFireNumberSelect"
-                          @input="item.underlyingFireNumberSelect.$touch()"
-                          @blur="" 
-                          :items="underlyingCat"
-                          item-text="data" 
-                          item-value="id" 
-                          clearable 
-                          :disabled="underlyingCat.length === 0"
+                      <div class="TitleCont d-flex justify-start align-center">
+                        <h5>Underlying Cat Deductibles</h5>
+                      </div>
+
+                      <div
+                        class="InputTitle d-flex justify-start align-center align-end"
+                      >
+                        Coverage B, Earthquake, Tremor or Volcanic Eruption
+                      </div>
+
+                      <div
+                        class="InputsCont d-flex justify-space-between align-start flex-wrap"
+                      >
+                        <div class="InputRow Small">
+                          <v-select
+                            v-model.trim="underlyingCatSelect"
+                            @change="trackFieldChanges"
+                            :items="underlyingCat"
+                            item-text="data"
+                            item-value="id"
+                            clearable
+                            :disabled="underlyingCat.length === 0"
+                          >
+                          </v-select>
+                        </div>
+
+                        <div class="InputRow Large">
+                          <v-select
+                            v-model.trim="underlyingCatAplicaSelect"
+                            @change="trackFieldChanges"
+                            :items="underlyingCatAplica"
+                            item-text="data"
+                            label="Total value"
+                            item-value="id"
+                            clearable
+                            :disabled="underlyingCatAplica.length === 0"
+                          >
+                          </v-select>
+                        </div>
+
+                        <div class="InputRow">
+                          <v-text-field value="Minimum" readonly />
+                        </div>
+
+                        <div class="InputRow">
+                          <currency-input
+                            v-model.trim="coverB"
+                            @blur="trackFieldChanges"
+                            :options="currencyOptions"
+                          />
+                        </div>
+
+                        <div class="InputRow">
+                          <v-text-field value="Maximum" readonly />
+                        </div>
+
+                        <div class="InputRow">
+                          <currency-input
+                            v-model.trim="coverTwoB"
+                            @blur="trackFieldChanges"
+                            :options="currencyOptions"
+                          />
+                        </div>
+                      </div>
+
+                      <!--Hydrometeorological Risk-->
+                      <div
+                        class="InputTitle d-flex justify-start align-end mt-7"
+                      >
+                        Hidrometeorological Risk
+                      </div>
+
+                      <div
+                        class="InputsCont d-flex justify-space-between align-start flex-wrap"
+                      >
+                        <div class="InputRow Small">
+                          <v-select
+                            v-model.trim="underlyingHidroSelect"
+                            @change="trackFieldChanges"
+                            :items="underlyingCat"
+                            item-text="data"
+                            item-value="id"
+                            clearable
+                            :disabled="underlyingCat.length === 0"
+                          >
+                          </v-select>
+                        </div>
+
+                        <div class="InputRow Large">
+                          <v-select
+                            v-model.trim="underlyingHidroAplicaSelect"
+                            @change="trackFieldChanges"
+                            :items="underlyingCatAplica"
+                            item-text="data"
+                            label="Total value"
+                            item-value="id"
+                            clearable
+                            :disabled="underlyingCatAplica.length === 0"
+                          >
+                          </v-select>
+                        </div>
+
+                        <div class="InputRow">
+                          <v-text-field value="Minimum" readonly />
+                        </div>
+
+                        <div class="InputRow">
+                          <currency-input
+                            v-model.trim="hidroRisk"
+                            @blur="trackFieldChanges"
+                            :options="currencyOptions"
+                          />
+                        </div>
+
+                        <div class="InputRow">
+                          <v-text-field value="Maximum" readonly />
+                        </div>
+
+                        <div class="InputRow">
+                          <currency-input
+                            v-model.trim="hidroRiskTwo"
+                            @blur="trackFieldChanges"
+                            :options="currencyOptions"
+                          />
+                        </div>
+                      </div>
+
+                      <!--Coverage B // ALOP-->
+                      <div
+                        class="DynamicItemsContent mt-8"
+                        v-if="this.showAlopLines"
+                      >
+                        <div
+                          class="InputTitle d-flex justify-start align-center align-end"
                         >
-                        </v-select>
-                      </div>
-
-                      <div class="Row Large">
-                        <v-select 
-                          v-model.trim="item.underlyingFireAplicaSelect"
-                          @input="item.underlyingFireAplicaSelect.$touch()"
-                          @blur="" 
-                          :items="underlyingFireAplica"
-                          item-text="data" 
-                          label="Total value" 
-                          item-value="id" 
-                          clearable
-                          :disabled="underlyingFireAplica.length === 0"
+                          ALOP Coverage B, Earthquake, Tremor or Volcanic
+                          Eruption
+                        </div>
+                        <div
+                          class="InputsCont d-flex justify-space-between align-start flex-wrap"
                         >
-                        </v-select>
+                          <div class="InputRow">
+                            <v-text-field
+                              type="number"
+                              suffix="DAY(S)"
+                              v-model.trim="alopEarthquake"
+                              @blur="trackFieldChanges"
+                            />
+                          </div>
+                        </div>
                       </div>
 
-                      <div class="Row">
-                        <v-select 
-                          v-model.trim="item.underlyingFireValuesSelect"
-                          @input="item.underlyingFireValuesSelect.$touch()"
-                          @blur="" 
-                          :items="underlyingCatValues"
-                          item-text="data" 
-                          item-value="id" 
-                          clearable
-                          :disabled="underlyingCatValues.length === 0"
+                      <!-- Hydrometeorological Risk // ALOP -->
+                      <div
+                        class="DynamicItemsContent mt-7"
+                        v-if="this.showAlopLines"
+                      >
+                        <div
+                          class="InputTitle d-flex justify-start align-center align-end"
                         >
-                        </v-select>
-                      </div>
+                          ALOP Hidrometeorological Risk
+                        </div>
 
-                      <div class="Row">
-                        <currency-input 
-                          v-model.trim="item.underlyingFireAmount"
-                          @input="item.underlyingFireAmount.$touch()"
-                          @blur="" 
-                          :options="currencyOptions"
-                        />
-                      </div>
-
-                      <div class="Row">
-                        <v-select 
-                          v-model.trim="item.underlyingFireValuesSelectTwo"
-                          @input="item.underlyingFireValuesSelectTwo.$touch()"
-                          @blur="" 
-                          :items="underlyingCatValues"
-                          item-text="data" 
-                          item-value="id" 
-                          clearable
-                          :disabled="underlyingCatValues.length === 0"
+                        <div
+                          class="InputsCont d-flex justify-space-between align-start flex-wrap"
                         >
-                        </v-select>
+                          <div class="InputRow">
+                            <v-text-field
+                              type="number"
+                              suffix="DAY(S)"
+                              v-model.trim="alopHidro"
+                              @blur="trackFieldChanges"
+                            />
+                          </div>
+                        </div>
                       </div>
 
-                      <div class="Row">
-                        <currency-input 
-                          v-model.trim="item.underlyingFireAmountTwo"
-                          @input="item.underlyingFireAmountTwo.$touch()"
-                          @blur="" 
-                          :options="currencyOptions"
-                        />
+                      <!--Underlying Fire -->
+                      <div
+                        class="TitleCont mt-6 d-flex justify-start align-center"
+                      >
+                        <h5>Underlying Fire &#38; EC Deductibles</h5>
                       </div>
 
-                      <!-- botón de eliminado -->
-                      <v-icon small @click="removeField(index)" class="mt-4"> mdi-minus-circle </v-icon>
+                      <!--Contenedor de deducibles-->
+                      <div
+                        class="UnderlyingCont d-flex align-start flex-wrap"
+                        v-for="(item, index) in boundEngDeductibles"
+                        :key="index"
+                      >
+                        <!--Fila con todos los inputs-->
+                        <div class="LineItems">
+                          <div class="Row">
+                            <v-combobox
+                              v-model.trim="item.underlyingFireText"
+                              :filter="filter"
+                              :hide-no-data="!item.search"
+                              :items="underlyingFire"
+                              :search-input.sync="item.search"
+                              @change="trackFieldChanges"
+                              hide-selected
+                              item-text="data"
+                              item-value="id"
+                              label="Search for an option"
+                              clearable
+                              return-object
+                              :disabled="underlyingFire.length === 0"
+                            >
+                              <template v-slot:no-data>
+                                <v-list-item>
+                                  <span class="subheading">Creating new </span>
+                                  <v-chip label small>
+                                    {{ item.search }}
+                                  </v-chip>
+                                </v-list-item>
+                              </template>
+
+                              <template v-slot:selection="{ attrs, item }">
+                                <span
+                                  v-if="typeof item === 'object'"
+                                  v-bind="attrs"
+                                >
+                                  {{ item.data }}
+                                </span>
+                                <span v-else v-bind="attrs">
+                                  {{ item }}
+                                </span>
+                              </template>
+                            </v-combobox>
+                          </div>
+
+                          <div class="Row Small">
+                            <v-select
+                              v-model.trim="item.underlyingFireNumberSelect"
+                              @change="trackFieldChanges"
+                              :items="underlyingCat"
+                              item-text="data"
+                              item-value="id"
+                              clearable
+                              :disabled="underlyingCat.length === 0"
+                            >
+                            </v-select>
+                          </div>
+
+                          <div class="Row Large">
+                            <v-select
+                              v-model.trim="item.underlyingFireAplicaSelect"
+                              @change="trackFieldChanges"
+                              :items="underlyingFireAplica"
+                              item-text="data"
+                              label="Total value"
+                              item-value="id"
+                              clearable
+                              :disabled="underlyingFireAplica.length === 0"
+                            >
+                            </v-select>
+                          </div>
+
+                          <div class="Row">
+                            <v-text-field value="Minimum" readonly />
+                          </div>
+
+                          <div class="Row">
+                            <currency-input
+                              v-model.trim="item.underlyingFireAmount"
+                              @blur="trackFieldChanges"
+                              :options="currencyOptions"
+                            />
+                          </div>
+
+                          <div class="Row">
+                            <v-text-field value="Maximum" readonly />
+                          </div>
+
+                          <div class="Row">
+                            <currency-input
+                              v-model.trim="item.underlyingFireAmountTwo"
+                              @blur="trackFieldChanges"
+                              :options="currencyOptions"
+                            />
+                          </div>
+
+                          <!-- botón de eliminado -->
+                          <v-icon
+                            small
+                            @click="removeField(index)"
+                            class="mt-4"
+                          >
+                            mdi-minus-circle
+                          </v-icon>
+                        </div>
+                      </div>
+
+                      <!--Boton para añadir deducible-->
+                      <div class="ButtonCont">
+                        <v-btn
+                          class="Btn"
+                          text
+                          rounded
+                          @click="addFields()"
+                          :loading="buttonLoader"
+                        >
+                          <v-icon class="mr-2"> mdi-plus-circle </v-icon>
+                          Add Deductible
+                        </v-btn>
+                      </div>
                     </div>
-                  </div>
-
-                  <!--Boton para añadir deducible-->
-                  <div class="ButtonCont">
-                    <v-btn class="Btn" text rounded @click="addFields()" :loading="buttonLoader">
-                      <v-icon class="mr-2"> mdi-plus-circle </v-icon>
-
-                      Add Deductible
-                    </v-btn>
                   </div>
                 </div>
-              </template>
 
-              <!-- <MovementValues type="Inclusion Risk" :accountComplete="accountComplete" ref="componente"
-                @onResultados="onResultados" /> -->
+                <!-- Sección de Sublímites -->
+                <div class="technical-conditions-section">
+                  <div class="section-title">
+                    <v-icon class="mr-2">mdi-format-list-numbered</v-icon>
+                    Current Sublimits
+                    <span class="highlight-info"
+                      >(Changes will be highlighted)</span
+                    >
+                  </div>
+
+                  <div
+                    :class="{
+                      'highlighted-item': isSublimeModified(
+                        technicalConditions.sublime.catSublimes.id
+                      ),
+                    }"
+                  >
+                    <Sublimes
+                      :boundSublimes="boundSublimes"
+                      :quotation="quotation"
+                      :boundSublimitsEng="boundSublimitsEng"
+                      :isHighlighted="
+                        isSublimeModified(
+                          technicalConditions.sublime.catSublimes.id
+                        )
+                      "
+                      @change="trackSublimeChanges"
+                    />
+                  </div>
+                </div>
+              </div>
 
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="inner-title">Additional</div>
-
                   <div class="input-cont">
-                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause"
-                      item-text="clause" />
+                    <v-autocomplete
+                      label="Clause"
+                      v-model="clause"
+                      :items="clauseList"
+                      item-value="clause"
+                      item-text="clause"
+                    />
+                  </div>
+                  <div v-if="!clause" class="error-message">
+                    Please select a clause.
                   </div>
                 </div>
-
                 <div class="input-col">
                   <div class="inner-title" style="opacity: 0">|</div>
-
                   <div class="input-cont">
-                    <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40"
-                      transition="scale-transition" offset-y min-width="auto">
+                    <v-menu
+                      v-model="menu3"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly v-bind="attrs"
-                          v-on="on"></v-text-field>
+                        <v-text-field
+                          v-model="premiumPaymentDate"
+                          label="Premium payment date"
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
                       </template>
-
-                      <v-date-picker v-model="premiumPaymentDate" @input="menu3 = false"></v-date-picker>
+                      <v-date-picker
+                        v-model="premiumPaymentDate"
+                        @input="menu3 = false"
+                      ></v-date-picker>
                     </v-menu>
                   </div>
                 </div>
-              </div> 
+              </div>
             </v-stepper-content>
 
             <v-stepper-content step="2">
               <div class="detail-date">
                 <div class="table-title-detail table-title-detail--large">
-                  Detail
+                  Admitted Premium Details
                 </div>
-
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu v-model="menu4" :close-on-content-click="false" :nudge-right="40"
-                      transition="scale-transition" offset-y min-width="auto">
+                    <v-menu
+                      v-model="menu4"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly disabled
-                          v-bind="attrs" v-on="on"></v-text-field>
+                        <v-text-field
+                          v-model="premiumPaymentDate"
+                          label="Premium payment date"
+                          readonly
+                          disabled
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
                       </template>
                     </v-menu>
                   </div>
                 </div>
-
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause"
-                      item-text="clause" disabled />
+                    <v-autocomplete
+                      label="Clause"
+                      v-model="clause"
+                      :items="clauseList"
+                      item-value="clause"
+                      item-text="clause"
+                      disabled
+                    />
                   </div>
                 </div>
               </div>
 
-              <div class="table-container input-row justify-center">
-                <div class="title-col">
-                  <div class="table-title-space"></div>
-
-                  <div class="col-subtitle">All Risk</div>
-
-                  <div class="col-subtitle">ALOP</div>
-
-                  <div class="col-subtitle">Total</div>
-
-                  <div class="table-subtitle"></div>
-                </div>
-
-                <template v-for="item in detailValues">
-                  <div v-if="item.id === 1" class="table-col">
-                    <div>
-                      <div class="table-title">{{ item.name }}</div>
-
-                      <div class="input-row">
-                        <div class="inner-col">
-                          <!--<div class="table-subtitle">Total premium</div>-->
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumAllRisk) }}
-                          </div>
-
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumAlop) }}
-                          </div>
-
-                          <div class="table-input">
-                            {{ formatCurrency(item.premiumTotal) }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-
-                <template v-for="item in detailValues">
-                  <div v-if="item.id === 2" :key="item.id" class="table-col">
-                    <div>
-                      <div class="table-title">{{ item.name }}</div>
-
-                      <div class="input-row">
-                        <div class="inner-col">
-                          <!--<div class="table-subtitle">Total premium</div>-->
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumAllRisk) }}
-                          </div>
-
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumAlop) }}
-                          </div>
-
-                          <div class="table-input">
-                            {{ formatCurrency(item.premiumTotal) }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </div>
+              <!-- Solo mostrar tabla de prima admitida -->
+              <AdmittedPremiumTableEngineering
+                @setTotalPremium="setTotalPremium"
+                :detailValues="totalPremium"
+                :exchangeRate="accountComplete.deductibles.exchangeRate"
+              />
             </v-stepper-content>
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-
-              <div class="files-submit flex justify-content-start align-items-start align-content-start">
-                <AppFile v-for="(item, clave) in files" :key="clave" :fileId="item.fileId" :fileName="item.fileName"
-                  :fileDownloadLink="item.fileDownloadLink" :loaded="item.loaded" :error="item.error"
-                  :errorMessage="item.errorMessage" :loading="item.loading" :fileType="item.fileType"
-                  :fileTypeMessage="item.fileTypeMessage" @removeFileById="removeFileById($event)"
-                  @errors="errors($event)" @loading="loadingFile($event)" @loadFile="updateFile($event)" />
+              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+                <EndorsementReportCompleteTable :report="cleanReport" />
+              </div>
+              <div
+                class="files-submit flex justify-content-start align-items-start align-content-start"
+              >
+                <AppFile
+                  v-for="(item, clave) in files"
+                  :key="clave"
+                  :fileId="item.fileId"
+                  :fileName="item.fileName"
+                  :fileDownloadLink="item.fileDownloadLink"
+                  :loaded="item.loaded"
+                  :error="item.error"
+                  :errorMessage="item.errorMessage"
+                  :loading="item.loading"
+                  :fileType="item.fileType"
+                  :fileTypeMessage="item.fileTypeMessage"
+                  @removeFileById="removeFileById($event)"
+                  @errors="errors($event)"
+                  @loading="loadingFile($event)"
+                  @loadFile="updateFile($event)"
+                />
               </div>
             </v-stepper-content>
           </v-stepper-items>
         </div>
       </div>
 
-      <Sublimes :boundSublimes="boundSublimes" :quotation="quotation" :boundSublimitsEng="boundSublimitsEng" v-if="e1 == 1" />
-
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />      
-
-      <AdmittedPremiumTableEngineering v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" />
+      <EndorsementDocuments
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
+        <v-btn
+          :outlined="e1 == 3 ? false : true"
+          rounded
+          large
+          :text="e1 == 3 ? true : false"
+          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 3 ? 'none' : '#003D6D'"
+          @click="goNext(e1)"
+          :disabled="validationFirstStep"
+        >
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -606,22 +635,23 @@
 
 <script>
 /* components */
-import AppFile from "../../components/AppFile.vue";
-import MovementValues from "./MovementValuesEng.vue";
-import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
-import InputDaysDiference from "../../components/DaysDiference.vue";
-import AdmittedPremiumTable from "../../components/AdmittedPremiumTable.vue";
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import AdmittedPremiumTableEngineering from "../../components/AdmittedPremiumTableEngineering.vue";
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
-import Sublimes from '../../components/Sublimes.vue'
+import AppFile from "../../components/AppFile.vue";
+import InputDaysDiference from "../../components/DaysDiference.vue";
+import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
+import Sublimes from "../../components/Sublimes.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
+import MovementValues from "./MovementValuesEng.vue";
 /* services */
-import { getFiles } from "../../services/mock-files.service";
-import netPremiumEng from "../services/netpremium.service";
-import EndorsementService from "../../services/endorsement.service";
 import AccountCompleteService from "@/modules/home/services/account-complete.service";
 import PaymentService from "@/modules/home/services/payments.service";
-import { netPremiumInclusionRiskEng, netPremiumInclusionRiskAutoCalcs } from "../class/netPremiumInclusionRiskEng";
-import Catalog from '../../services/catalog.service'
+import Catalog from "../../services/catalog.service";
+import EndorsementService from "../../services/endorsement.service";
+import {
+  netPremiumInclusionRiskAutoCalcs,
+  netPremiumInclusionRiskEng,
+} from "../class/netPremiumInclusionRiskEng";
 /* libs */
 import Decimal from "@/lib/decimal";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
@@ -633,11 +663,11 @@ export default {
     MovementValues,
     DocumentsEndorsement,
     InputDaysDiference,
-    AdmittedPremiumTable,
     AdmittedPremiumTableEngineering,
     EndorsementDocuments,
     CurrencyInput,
     Sublimes,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "Inclusion Risk" },
@@ -649,40 +679,77 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: { type: Boolean }
+    showInfoEndorsement: { type: Boolean },
   },
   data() {
-    const underlyingCatDeductibles = this.accountComplete.technical_conditions.deductibles.underlyingCatDeductibles[0]
-    const underlyingFireECDeductibles = this.accountComplete.technical_conditions.deductibles.underlyingFireEcDeductibles
-    const sublime = this.accountComplete.technical_conditions.sublime;
+    // Validaciones defensivas para evitar errores cuando los datos no están disponibles
+    const technicalConditions = this.accountComplete?.technical_conditions;
+    const deductibles = technicalConditions?.deductibles;
+    const underlyingCatDeductibles =
+      deductibles?.underlyingCatDeductibles?.[0] || {};
+    const underlyingFireECDeductibles =
+      deductibles?.underlyingFireEcDeductibles || [];
+    const sublime = technicalConditions?.sublime || {
+      catSublimes: {},
+      allOtherSublimits: [],
+    };
+
     return {
-      buttonLoader: false,
-      endorsementDateError: false,
-      expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
-      expiryDateReal: new Date(this.accountComplete.deductibles.expiryDate).toISOString()
-        .substr(0, 10),
-      menu3: false,
-      menu4: false,
-      clause: this.accountComplete.cartera.clausula,
-      clauseList: [],
-      cartera: {},
-      premiumPaymentDate: new Date()
-        .toISOString()
-        .substr(0, 10),
-      on: true,
-      movementValues: [],
-      netPremium: {},
-      subscriptionId: this.$route.params.id,
+      // Variables de estado del stepper y botones
       e1: 1,
-      menu: false,
-      menu2: false,
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
+
+      // Variables de validación y errores
+      endorsementDateError: false,
+      endDateError: false,
+      effectiveDateError: false,
+      premiumPaymentDateError: true,
+
+      // Variables de fechas
       effectiveDate: this.dateSaved,
+      expiryDatetoCalc: this.accountComplete?.deductibles?.expiryDate || null,
+      expiryDateReal: this.accountComplete?.deductibles?.expiryDate
+        ? new Date(this.accountComplete.deductibles.expiryDate)
+            .toISOString()
+            .substr(0, 10)
+        : new Date().toISOString().substr(0, 10),
+      premiumPaymentDate: new Date().toISOString().substr(0, 10),
       expiryDate: new Date(
         Date.now() + 31540000000 - new Date().getTimezoneOffset() * 60000
       )
         .toISOString()
         .substr(0, 10),
+      currentMovementEndDate: new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10),
+
+      // Variables de menús
+      menu: false,
+      menu2: false,
+      menu3: false,
+      menu4: false,
+      buttonLoader: false,
+
+      // Variables de datos principales
+      clause: this.accountComplete?.cartera?.clausula || "",
+      clauseList: [],
+      cartera: {},
+      subscriptionId: this.$route.params.id,
       admitedPremium: 0,
+      on: true,
+
+      // Variables de datos de negocio
+      movementValues: [],
+      netPremium: {},
+      endorsmentReporData: {},
+      endorsementDocuments: [],
+      insurable: [],
+      isEdited: {},
+
+      // Archivos
       files: [
         {
           fileId: 1,
@@ -696,8 +763,8 @@ export default {
           fileTypeMessage: "Download",
         },
       ],
-      endorsementDocuments: [],
-      insurable: [],
+
+      // Estructuras de datos para las tablas
       detailValues: [
         {
           id: 1,
@@ -732,142 +799,230 @@ export default {
           name: "USD",
           premiumAllRisk: 0,
           premiumAlop: 0,
+          premiumTotal: 0,
           sluAllRisk: 0,
           sluAlop: 0,
+          sluTotal: 0,
         },
       ],
-      currentMovementEndDate: new Date(
-        Date.now() - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
-      effectiveDateError: false,
-      endDateError: false,
-      premiumPaymentDateError: true,
-      endorsmentReporData: {},
-      location: underlyingCatDeductibles.location,
+
+      // Datos específicos de Engineering - Deducibles (con valores por defecto)
+      location: underlyingCatDeductibles.location || "",
       underlyingCat: [],
-      underlyingCatSelect: underlyingCatDeductibles.underlying_cat_select,
+      underlyingCatSelect:
+        underlyingCatDeductibles.underlying_cat_select || null,
       underlyingCatAplica: [],
-      underlyingCatAplicaSelect: underlyingCatDeductibles.underlying_cat_aplica_select,
-      underlyingCatValues: [],
+      underlyingCatAplicaSelect:
+        underlyingCatDeductibles.underlying_cat_aplica_select || null,
       underlyingFireAplica: [],
-      underlyingCatValuesSelect: underlyingCatDeductibles.underlying_cat_values_select,
-      coverB: underlyingCatDeductibles.cover_b,
-      underlyingCatValuesSelectTwo: underlyingCatDeductibles.underlying_cat_values_select_two,
-      coverTwoB: underlyingCatDeductibles.cover_two_b,
-      underlyingHidroSelect: underlyingCatDeductibles.underlying_hidro_select,
-      underlyingHidroAplicaSelect: underlyingCatDeductibles.underlying_hidro_aplica_select,
-      underlyingHidroValuesSelect: underlyingCatDeductibles.underlying_hidro_values_select,
-      hidroRisk: underlyingCatDeductibles.hidro_risk,
-      underlyingHidroValuesSelectTwo: underlyingCatDeductibles.underlying_hidro_values_select_two,
-      hidroRiskTwo: underlyingCatDeductibles.hidro_risk_two,
-      alopEarthquake: underlyingCatDeductibles.alop_earthquake,
+      coverB: underlyingCatDeductibles.cover_b || "0",
+      coverTwoB: underlyingCatDeductibles.cover_two_b || "0",
+      underlyingHidroSelect:
+        underlyingCatDeductibles.underlying_hidro_select || null,
+      underlyingHidroAplicaSelect:
+        underlyingCatDeductibles.underlying_hidro_aplica_select || null,
+      hidroRisk: underlyingCatDeductibles.hidro_risk || "0",
+      hidroRiskTwo: underlyingCatDeductibles.hidro_risk_two || "0",
+      alopEarthquake: underlyingCatDeductibles.alop_earthquake || null,
       showAlopLines: true,
-      alopHidro: underlyingCatDeductibles.alop_hidro,
-      boundEngDeductibles:underlyingFireECDeductibles.map(u => {
+      alopHidro: underlyingCatDeductibles.alop_hidro || null,
+
+      // Fire & EC Deductibles (con validación)
+      boundEngDeductibles: underlyingFireECDeductibles.map((u) => {
         return {
-          id: u.id,
-          underlyingFireText: u.underlying_fire_text,
-          search: u.search,
-          data: '',
-          underlyingFireNumberSelect: u.underlying_fire_number_select,
-          underlyingFireAplicaSelect: u.underlying_fire_aplica_select,
-          underlyingFireValuesSelect: u.underlying_fire_values_select,
-          underlyingFireAmount: u.underlying_fire_amount,
-          underlyingFireValuesSelectTwo: u.underlying_fire_values_select_two,
-          underlyingFireAmountTwo: u.underlying_fire_amount_two,
-        }
+          id: u.id || Math.random(),
+          underlyingFireText: u.underlying_fire_text || "",
+          search: u.search || "",
+          data: "",
+          underlyingFireNumberSelect: u.underlying_fire_number_select || null,
+          underlyingFireAplicaSelect: u.underlying_fire_aplica_select || null,
+          underlyingFireValuesSelect: u.underlying_fire_values_select || null,
+          underlyingFireAmount: u.underlying_fire_amount || "",
+          underlyingFireValuesSelectTwo:
+            u.underlying_fire_values_select_two || null,
+          underlyingFireAmountTwo: u.underlying_fire_amount_two || "",
+        };
       }),
       underlyingFire: [],
+
+      // Opciones de moneda
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
+
+      // Sublímites específicos de Engineering (con validación)
       boundSublimes: {
-        sublimits1: sublime.catSublimes.sublimits1,
-        sublimits2: sublime.catSublimes.sublimits2,
+        sublimits1: sublime.catSublimes?.sublimits1 || 0,
+        sublimits2: sublime.catSublimes?.sublimits2 || 0,
       },
       quotation: {
-        exchangeRate: this.accountComplete.deductibles.exchangeRate,
+        exchangeRate: this.accountComplete?.deductibles?.exchangeRate || 1,
       },
-      boundSublimitsEng: sublime.allOtherSublimits.map(s => {
+      boundSublimitsEng: (sublime.allOtherSublimits || []).map((s) => {
         return {
-          id: s.id,
-          endosoSelect: s.endoso_select,
-          endosoText: s.endoso_text,
-          endosoUsd: s.endoso_usd,
-        }
+          id: s.id || Math.random(),
+          endosoSelect: s.endoso_select || null,
+          endosoText: s.endoso_text || "",
+          endosoUsd: s.endoso_usd || 0,
+        };
       }),
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
+
+      // Tracking de cambios
+      originalTechnicalConditions: {},
+      modifiedDeductibles: new Set(),
+      modifiedSublimes: new Set(),
+
+      // Configuración específica de Engineering
+      quotationType: 1, // Para Engineering siempre es 1
+
+      // Estructura de condiciones técnicas específica para Engineering (con validación)
+      technicalConditions: {
+        deductibles: {
+          underlyingCatDeductibles: underlyingCatDeductibles.id
+            ? [underlyingCatDeductibles]
+            : [
+                {
+                  id: 1,
+                  location: "",
+                  underlying_cat_select: null,
+                  underlying_cat_aplica_select: null,
+                  underlying_cat_values_select: null,
+                  cover_b: "0",
+                  underlying_cat_values_select_two: null,
+                  cover_two_b: "0",
+                  underlying_hidro_select: null,
+                  underlying_hidro_aplica_select: null,
+                  underlying_hidro_values_select: null,
+                  hidro_risk: "0",
+                  underlying_hidro_values_select_two: null,
+                  hidro_risk_two: "0",
+                  alop_earthquake: null,
+                  alop_hidro: null,
+                },
+              ],
+          underlyingFireEcDeductibles:
+            underlyingFireECDeductibles.length > 0
+              ? underlyingFireECDeductibles
+              : [],
+        },
+        sublime: sublime.catSublimes?.id
+          ? sublime
+          : {
+              catSublimes: {
+                id: 1,
+                sublimits1: 0,
+                sublimits2: 0,
+              },
+              allOtherSublimits: [],
+            },
+      },
     };
   },
-  created() { },
+  created() {
+    this.initializeChangeTracking();
+  },
   async beforeMount() {
-    this.clauseList = await PaymentService.getClauses();
-    this.underlyingCat = await Catalog.getUnderlyingCat();
-    this.underlyingCatAplica = await Catalog.getUnderlyingCatAplica()
-    this.underlyingCatValues = await Catalog.getUnderlyingCatValues();
-    this.underlyingFireAplica = await Catalog.getUnderlyingFireAplica();
-    this.underlyingFire = await Catalog.getUnderlyingFire();
+    // Validar que tenemos los datos necesarios
+    if (!this.accountComplete) {
+      console.error("accountComplete is required but not provided");
+      return;
+    }
 
-    //console.log('accountComplete --->', this.accountComplete)
+    if (!this.accountComplete.technical_conditions) {
+      console.warn(
+        "technical_conditions not found in accountComplete, using default structure"
+      );
+    }
 
-    //console.log('underlyingFireAplica', this.underlyingFire);
+    try {
+      this.clauseList = await PaymentService.getClauses();
+      this.underlyingCat = (await Catalog.getUnderlyingCat()) || [];
+      this.underlyingCatAplica = (await Catalog.getUnderlyingCatAplica()) || [];
+      this.underlyingFireAplica =
+        (await Catalog.getUnderlyingFireAplica()) || [];
+      this.underlyingFire = (await Catalog.getUnderlyingFire()) || [];
+    } catch (error) {
+      console.error("Error loading catalogs:", error);
+      // Inicializar arrays vacíos en caso de error
+      this.underlyingCat = [];
+      this.underlyingCatAplica = [];
+      this.underlyingFireAplica = [];
+      this.underlyingFire = [];
+    }
+  },
+  computed: {
+    validationFirstStep() {
+      const showInfoEndorsement = this.showInfoEndorsement;
+      const clause = Boolean(this.clause);
+      const endorsementDateError = !this.endorsementDateError;
+
+      const result = !(showInfoEndorsement & clause & endorsementDateError);
+      return result;
+    },
+    cleanReport() {
+      return this.endorsmentReporData &&
+        Object.keys(this.endorsmentReporData).length > 0
+        ? {
+            endorsmentReporData: this.endorsmentReporData,
+            cartera: this.cartera,
+          }
+        : {};
+    },
   },
   watch: {
     e1: async function () {
       if (this.e1 === 1) {
-        this.isEdited = {}
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Cancel';
+        this.isEdited = {};
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Cancel";
       }
-
       if (this.e1 === 2) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Return";
         this.calcPremium();
       }
 
       if (this.e1 === 3) {
-        this.buttonTitle = 'Finalize'
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Finalize";
+        this.buttonTitleBack = "Return";
         const premiumOriginal = this.detailValues.find((el) => el.id === 1);
         const premiumUSD = this.detailValues.find((el) => el.id === 2);
-
 
         // Obteniendo los calculos de Net premium
         const tiv = this.accountComplete.tiv;
         const tivMovement = {
           allRisk: tiv.insurable.allRisk,
-          alop:tiv.insurable.alop,
+          alop: tiv.insurable.alop,
 
           allRiskRate: tiv.premium.allRiskRate,
           alopRate: tiv.premium.alopRate,
-        }
+        };
 
         const dates = {
-          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0, 10),
-          expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10),
+          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
+            .toISOString()
+            .substring(0, 10),
+          expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
+            .toISOString()
+            .substring(0, 10),
           endormenteffetiveDate: new Date(this.effectiveDate),
           movementEndDate: new Date(this.expiryDateReal),
-        }
+        };
 
         const options = {
-          isEdited:this.isEdited,
+          isEdited: this.isEdited,
           dataEdited: {
             // totalPremium
-            premiumAllRisk:this.totalPremium[0].premiumAllRisk,
-            premiumAlop:this.totalPremium[0].premiumAlop,
+            premiumAllRisk: this.totalPremium[0].premiumAllRisk,
+            premiumAlop: this.totalPremium[0].premiumAlop,
 
             // premiumSlu
-            sluAllRisk:this.totalPremium[0].sluAllRisk,
-            sluAlop:this.totalPremium[0].sluAlop,
-
+            sluAllRisk: this.totalPremium[0].sluAllRisk,
+            sluAlop: this.totalPremium[0].sluAlop,
           },
-        }
+        };
 
         const sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
         const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
@@ -877,7 +1032,7 @@ export default {
           false,
           dates,
           options
-        )
+        );
         const resultUSD = await netPremiumInclusionRiskAutoCalcs(
           tivMovement,
           this.accountComplete.deductibles,
@@ -885,8 +1040,7 @@ export default {
           true,
           dates,
           options
-        )
-
+        );
 
         // Obteniendo premium payment date
         const premiumPaymentDate = new Date(
@@ -981,7 +1135,16 @@ export default {
           file.loaded = true;
           file.loading = false;
         }
-
+      }
+    },
+    coverB(val) {
+      if (Number(val) > Number(this.coverTwoB)) {
+        this.coverTwoB = val;
+      }
+    },
+    hidroRisk(val) {
+      if (Number(val) > Number(this.hidroRiskTwo)) {
+        this.hidroRiskTwo = val;
       }
     },
   },
@@ -990,17 +1153,17 @@ export default {
       this.buttonLoader = true;
       const id = this.boundEngCatDeductibles;
       this.boundEngDeductibles.push({
-          id,
-          underlyingFireText: '',
-          search: '',
-          data: '',
-          underlyingFireNumberSelect: '',
-          underlyingFireAplicaSelect: '',
-          underlyingFireValuesSelect: '',
-          underlyingFireAmount: '',
-          underlyingFireValuesSelectTwo: '',
-          underlyingFireAmountTwo: '',
-        })
+        id,
+        underlyingFireText: "",
+        search: "",
+        data: "",
+        underlyingFireNumberSelect: "",
+        underlyingFireAplicaSelect: "",
+        underlyingFireValuesSelect: "",
+        underlyingFireAmount: "",
+        underlyingFireValuesSelectTwo: "",
+        underlyingFireAmountTwo: "",
+      });
       this.buttonLoader = false;
     },
     removeField(index) {
@@ -1012,16 +1175,19 @@ export default {
     filter(item, queryText, itemText) {
       if (item.header) return false;
 
-      const hasValue = (val) => (val != null ? val : '');
+      const hasValue = (val) => (val != null ? val : "");
 
       const text = hasValue(itemText);
       const query = hasValue(queryText);
 
-      return text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
+      return (
+        text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) >
+        -1
+      );
     },
     toUsd(value) {
-      const exchangeRate = this.accountComplete.deductibles.exchangeRate
-      return Decimal.div(value, exchangeRate).toNumber()
+      const exchangeRate = this.accountComplete.deductibles.exchangeRate;
+      return Decimal.div(value, exchangeRate).toNumber();
     },
     setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
@@ -1040,33 +1206,32 @@ export default {
       return formatter.format(amount);
     },
 
-    calcPremium(){
-
+    calcPremium() {
       const tiv = this.accountComplete.tiv;
-
       this.detailValues[0]["premiumAllRisk"] = tiv.insurable.allRisk;
       this.detailValues[0]["premiumAlop"] = tiv.insurable.alop;
       this.detailValues[0]["premiumTotal"] = tiv.insurable.total;
-
       this.detailValues[1]["premiumAllRisk"] = tiv.insurable.allRiskUsd;
       this.detailValues[1]["premiumAlop"] = tiv.insurable.alopUsd;
       this.detailValues[1]["premiumTotal"] = tiv.insurable.totalUsd;
 
-
       const tivMovement = {
         allRisk: tiv.insurable.allRisk,
-        alop:tiv.insurable.alop,
-
+        alop: tiv.insurable.alop,
         allRiskRate: tiv.premium.allRiskRate,
         alopRate: tiv.premium.alopRate,
-      }
+      };
 
       const dates = {
-        effetiveDate:new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0,10),
-        expiryDate:new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10),
-        endormenteffetiveDate: new Date (this.effectiveDate),
-        movementEndDate:new Date(this.expiryDateReal),
-      }
+        effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
+          .toISOString()
+          .substring(0, 10),
+        expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
+          .toISOString()
+          .substring(0, 10),
+        endormenteffetiveDate: new Date(this.effectiveDate),
+        movementEndDate: new Date(this.expiryDateReal),
+      };
 
       this.calcTotalPremium = new netPremiumInclusionRiskEng(
         tivMovement,
@@ -1077,18 +1242,13 @@ export default {
       );
 
       const totalPremiumResult = this.calcTotalPremium.calculateTotalPremium();
-
       const totalPremium = this.totalPremium.find((el) => el.id === 1);
-
       totalPremium.premiumAllRisk = totalPremiumResult.allRiskTotalPremium;
       totalPremium.premiumAlop = totalPremiumResult.alopTotalPremium;
       totalPremium.premiumTotal = totalPremiumResult.total;
-
-      totalPremium.sluAllRisk =  this.calcTotalPremium.allRiskPremiumSlu();
-      totalPremium.sluAlop =  this.calcTotalPremium.alopPremiumSlu();
-      totalPremium.sluTotal =  this.calcTotalPremium.totalPremiumSlu();
-
-
+      totalPremium.sluAllRisk = this.calcTotalPremium.allRiskPremiumSlu();
+      totalPremium.sluAlop = this.calcTotalPremium.alopPremiumSlu();
+      totalPremium.sluTotal = this.calcTotalPremium.totalPremiumSlu();
     },
 
     async stepone() {
@@ -1122,38 +1282,40 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
     async submit() {
       this.e1 = 1;
 
-      const OriginalUnderlyingCatDeductibles = this.accountComplete.technical_conditions.deductibles.underlyingCatDeductibles[0]
+      const OriginalUnderlyingCatDeductibles =
+        this.accountComplete.technical_conditions.deductibles
+          .underlyingCatDeductibles[0];
 
       // Obteniendo los inputs del usuario
       const technicalConditions = {
-        deductibles:{
-          underlyingCatDeductibles:[
+        deductibles: {
+          underlyingCatDeductibles: [
             {
               ...OriginalUnderlyingCatDeductibles,
               location: this.location,
               underlying_cat_select: this.underlyingCatSelect,
               underlying_cat_aplica_select: this.underlyingCatAplicaSelect,
-              underlying_cat_values_select: this.underlyingCatValuesSelect,
+              underlying_cat_values_select: null,
               cover_b: this.coverB,
-              underlying_cat_values_select_two: this.underlyingCatValuesSelectTwo,
+              underlying_cat_values_select_two: null,
               cover_two_b: this.coverTwoB,
               underlying_hidro_select: this.underlyingHidroSelect,
               underlying_hidro_aplica_select: this.underlyingHidroAplicaSelect,
-              underlying_hidro_values_select: this.underlyingHidroValuesSelect,
+              underlying_hidro_values_select: null,
               hidro_risk: this.hidroRisk,
-              underlying_hidro_values_select_two: this.underlyingHidroValuesSelectTwo,
+              underlying_hidro_values_select_two: null,
               hidro_risk_two: this.hidroRiskTwo,
               alop_earthquake: this.alopEarthquake,
               alop_hidro: this.alopHidro,
             },
           ],
-          underlyingFireEcDeductibles: this.boundEngDeductibles.map(u => {
+          underlyingFireEcDeductibles: this.boundEngDeductibles.map((u) => {
             return {
               id: u.id,
               underlying_fire_text: u.underlyingFireText,
@@ -1162,27 +1324,28 @@ export default {
               underlying_fire_aplica_select: u.underlyingFireAplicaSelect,
               underlying_fire_values_select: u.underlyingFireValuesSelect,
               underlying_fire_amount: u.underlyingFireAmount,
-              underlying_fire_values_select_two: u.underlyingFireValuesSelectTwo,
+              underlying_fire_values_select_two:
+                u.underlyingFireValuesSelectTwo,
               underlying_fire_amount_two: u.underlyingFireAmountTwo,
-            }
+            };
           }),
         },
 
-        sublime:{
-          catSublimes:{
+        sublime: {
+          catSublimes: {
             sublimits1: this.boundSublimes.sublimits1,
-            sublimits2:this.boundSublimes.sublimits2,
+            sublimits2: this.boundSublimes.sublimits2,
           },
-          allOtherSublimits:this.boundSublimitsEng.map(s => {
+          allOtherSublimits: this.boundSublimitsEng.map((s) => {
             return {
               id: s.id,
               endoso_select: s.endosoSelect,
               endoso_text: s.endosoText,
               endoso_usd: s.endosoUsd,
-            }
+            };
           }),
-        }
-      }
+        },
+      };
 
       // Obteniendo el insurable
       const tivTotal = this.detailValues.find((el) => el.id === 1);
@@ -1191,7 +1354,6 @@ export default {
       // actualizando tiv.insurable de account complete
       const tivUpdate = {
         insurable: {
-
           allRisk: tivTotal.premiumAllRisk,
           alop: tivTotal.premiumAlop,
           total: tivTotal.premiumTotal,
@@ -1199,15 +1361,13 @@ export default {
           allRiskUsd: tivTotalUsd.premiumAllRisk,
           alopUsd: tivTotalUsd.premiumAlop,
           totalUsd: tivTotalUsd.premiumTotal,
-
         },
         premium: {
           allRiskRate: this.accountComplete.tiv.premium.allRiskRate,
           alopRate: this.accountComplete.tiv.premium.alopRate,
         },
         boundInsurableProp: this.accountComplete.tiv.boundInsurableProp,
-      }
-
+      };
 
       // guardar la cuenta actualizada en BD
       const accountCompleteResponse =
@@ -1215,9 +1375,11 @@ export default {
           deductibles: this.accountComplete.deductibles,
           tiv: tivUpdate,
           netPremium: {
-              originalValues:{
-                netSluExcludingSurveyFeesTotal:this.accountComplete.net_premium.originalValues.netSluExcludingSurveyFeesTotal,
-              }
+            originalValues: {
+              netSluExcludingSurveyFeesTotal:
+                this.accountComplete.net_premium.originalValues
+                  .netSluExcludingSurveyFeesTotal,
+            },
           },
           technicalConditions,
           cartera: {
@@ -1252,10 +1414,17 @@ export default {
     },
 
     endDateValidation(event, incomingDate) {
-      if (Date.parse(incomingDate) <= Date.parse(this.accountComplete.deductibles.inceptionDate)) {
-        this.endDateError = true;
+      if (
+        Date.parse(incomingDate) <=
+        Date.parse(this.accountComplete.deductibles.inceptionDate)
+      ) {
+        this.endorsementDateError = true;
       } else {
-        this.endDateError = false;
+        this.endorsementDateError = false;
+        // Llamar al método del padre para habilitar showInfoEndorsement
+        if (this.changeDateEndorsement) {
+          this.changeDateEndorsement(incomingDate);
+        }
       }
     },
 
@@ -1266,21 +1435,9 @@ export default {
         this.premiumPaymentDateError = true;
       }
     },
-    async endorsementDateValidation(event, incomingDate) {
-
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.expiryDateReal)
-      ) {
-        this.endorsementDateError = true;
-      } else {
-        await this.changeDateEndorsement(incomingDate)
-        this.endorsementDateError = false;
-      }
-    },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.e1 = 2;
       } else if (e1 == 2) {
@@ -1291,7 +1448,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -1300,12 +1457,55 @@ export default {
         this.e1 = 2;
       }
     },
+    initializeChangeTracking() {
+      this.originalTechnicalConditions = _.cloneDeep(this.technicalConditions);
+    },
+
+    // Verificar si un deducible ha sido modificado
+    isDeductibleModified(deductibleId) {
+      return this.modifiedDeductibles.has(deductibleId);
+    },
+
+    // Verificar si un sublímite ha sido modificado
+    isSublimeModified(sublimeId) {
+      return this.modifiedSublimes.has(sublimeId);
+    },
+
+    // Marcar deducible como modificado
+    markDeductibleAsModified(deductibleId) {
+      this.modifiedDeductibles.add(deductibleId);
+    },
+
+    // Marcar sublímite como modificado
+    markSublimeAsModified(sublimeId) {
+      this.modifiedSublimes.add(sublimeId);
+    },
+
+    // Método para detectar cambios
+    trackFieldChanges() {
+      // Marcar como modificado cuando cambian los campos
+      this.markDeductibleAsModified(
+        this.technicalConditions.deductibles.underlyingCatDeductibles[0].id
+      );
+
+      if (this.technicalConditions.sublime?.catSublimes?.id) {
+        this.markSublimeAsModified(
+          this.technicalConditions.sublime.catSublimes.id
+        );
+      }
+    },
+
+    trackSublimeChanges(sublimeData) {
+      if (sublimeData.catSublimes?.id) {
+        this.markSublimeAsModified(sublimeData.catSublimes.id);
+      }
+    },
   },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 
 .endorsement-title {
   font-weight: 800;
@@ -1315,9 +1515,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1371,6 +1571,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -1395,7 +1596,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1514,7 +1715,11 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
+.theme--light.v-stepper
+  .v-stepper__step:not(.v-stepper__step--active):not(
+    .v-stepper__step--complete
+  ):not(.v-stepper__step--error)
+  .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 
@@ -1573,7 +1778,7 @@ export default {
     margin-left: 5px;
     letter-spacing: normal;
     color: #003d6d;
-
+    border-radius: 5px;
     .v-icon {
       font-size: 18px;
       margin-right: 10px;
@@ -1648,5 +1853,83 @@ export default {
 }
 .ButtonCont {
   margin-top: 15px;
+  border-radius: 5px;
+}
+.technical-conditions-section {
+  width: 100%;
+  margin: 30px 0;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #003d6d;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.highlight-info {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+  margin-left: 10px;
+  font-style: italic;
+}
+
+.highlighted-item {
+  position: relative;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 2px solid #f39c12;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+  animation: pulse-highlight 2s ease-in-out infinite;
+}
+
+.highlighted-item::before {
+  content: "MODIFIED";
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  background: #f39c12;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+@keyframes pulse-highlight {
+  0% {
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+  }
+  50% {
+    box-shadow: 0 6px 15px rgba(243, 156, 18, 0.4);
+  }
+  100% {
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+  }
+}
+
+/* Para items no modificados */
+.technical-conditions-section > div:not(.highlighted-item) {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.technical-conditions-section > div:not(.highlighted-item):hover {
+  border-color: #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

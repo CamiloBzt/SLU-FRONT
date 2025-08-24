@@ -312,7 +312,10 @@ export default {
   props: {
     detailValues: Array,
     typeEndorsement: String,
-    exchangeRate: Number,
+    exchangeRate: {
+      type: Number,
+      default: 1,
+    },
     canEditTable: Boolean,
   },
   data() {
@@ -343,40 +346,112 @@ export default {
         this.premiumTotal = this.sumTotalPremium();
         return this.premiumTotal;
       },
+      set(value) {
+        this.premiumTotal = value;
+        this.$emit("setTotalPremium", {
+          id: 1,
+          value: value,
+          concept: "premiumTotal",
+        });
+      },
     },
     sluTotalComputed: {
       get() {
         this.sluTotal = this.sumPremiumSlu();
         return this.sluTotal;
       },
+      set(value) {
+        this.sluTotal = value;
+        this.$emit("setTotalPremium", {
+          id: 1,
+          value: value,
+          concept: "sluTotal",
+        });
+      },
     },
-    premiumAllRiskUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.premiumAllRisk / this.exchangeRate).toFixed(2);
+    premiumAllRiskUSD: {
+      get() {
+        const admittedPremium = this.detailValues.find((el) => el.id === 1);
+        return (admittedPremium.premiumAllRisk / this.exchangeRate).toFixed(2);
+      },
+      set(value) {
+        this.$emit("setTotalPremium", {
+          id: 2,
+          value: parseFloat(value),
+          concept: "premiumAllRisk",
+        });
+      },
     },
-    premiumAlopUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.premiumAlop / this.exchangeRate).toFixed(2);
-    },
-    premiumTotalUSD() {
-      return (
-        parseFloat(this.premiumAllRiskUSD) + parseFloat(this.premiumAlopUSD)
-      ).toFixed(2);
+    premiumAlopUSD: {
+      get() {
+        const admittedPremium = this.detailValues.find((el) => el.id === 1);
+        return (admittedPremium.premiumAlop / this.exchangeRate).toFixed(2);
+      },
+      set(value) {
+        this.$emit("setTotalPremium", {
+          id: 2,
+          value: parseFloat(value),
+          concept: "premiumAlop",
+        });
+      },
     },
 
-    // Cálculos para Premium SLU (en USD)
-    sluAllRiskUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.sluAllRisk / this.exchangeRate).toFixed(2);
+    premiumTotalUSD: {
+      get() {
+        return (
+          parseFloat(this.premiumAllRiskUSD) + parseFloat(this.premiumAlopUSD)
+        ).toFixed(2);
+      },
+      set(value) {
+        this.$emit("setTotalPremium", {
+          id: 2,
+          value: parseFloat(value),
+          concept: "premiumTotal",
+        });
+      },
     },
-    sluAlopUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.sluAlop / this.exchangeRate).toFixed(2);
+
+    sluAllRiskUSD: {
+      get() {
+        const admittedPremium = this.detailValues.find((el) => el.id === 1);
+        return (admittedPremium.sluAllRisk / this.exchangeRate).toFixed(2);
+      },
+      set(value) {
+        this.$emit("setTotalPremium", {
+          id: 2,
+          value: parseFloat(value),
+          concept: "sluAllRisk",
+        });
+      },
     },
-    sluTotalUSD() {
-      return (
-        parseFloat(this.sluAllRiskUSD) + parseFloat(this.sluAlopUSD)
-      ).toFixed(2);
+
+    sluAlopUSD: {
+      get() {
+        const admittedPremium = this.detailValues.find((el) => el.id === 1);
+        return (admittedPremium.sluAlop / this.exchangeRate).toFixed(2);
+      },
+      set(value) {
+        this.$emit("setTotalPremium", {
+          id: 2,
+          value: parseFloat(value),
+          concept: "sluAlop",
+        });
+      },
+    },
+
+    sluTotalUSD: {
+      get() {
+        return (
+          parseFloat(this.sluAllRiskUSD) + parseFloat(this.sluAlopUSD)
+        ).toFixed(2);
+      },
+      set(value) {
+        this.$emit("setTotalPremium", {
+          id: 2,
+          value: parseFloat(value),
+          concept: "sluTotal",
+        });
+      },
     },
   },
   watch: {
@@ -394,6 +469,21 @@ export default {
         concept: "sluTotal",
       });
     },
+    premiumTotalUSD: function (value) {
+      this.$emit("setTotalPremium", {
+        id: 2,
+        value: parseFloat(value),
+        concept: "premiumTotal",
+      });
+    },
+    sluTotalUSD: function (value) {
+      this.$emit("setTotalPremium", {
+        id: 2,
+        value: parseFloat(value),
+        concept: "sluTotal",
+      });
+    },
+
     showTable: function () {
       this.showDialog();
     },
@@ -441,9 +531,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -497,6 +587,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -567,7 +658,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -591,7 +682,7 @@ export default {
 }
 
 #card-eye {
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 #divisor {
@@ -603,7 +694,7 @@ export default {
 #border-blue {
   margin: 20px;
   border: solid 2px #a8bfd9;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .blue-text {

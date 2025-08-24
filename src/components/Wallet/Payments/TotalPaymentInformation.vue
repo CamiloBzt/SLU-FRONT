@@ -17,24 +17,17 @@
       <v-expansion-panel-content>
         <div class="ExpandContent justify-center">
           <!--Total Payment Information-->
-        	<div class="Table">
-
-        		<div class="Line BorderBottom">
-        			<div class="Row Label" />
-        			<div class="Row Medium" />
-        			<div class="Row Small" />
-        			<div class="Row font-weight-bold">
-        				Deductions
-        			</div>
-              <div class="Row font-weight-bold">
-                USD
-              </div>
+          <div class="Table">
+            <div class="Line BorderBottom">
+              <div class="Row Label" />
+              <div class="Row Medium" />
+              <div class="Row Small" />
+              <div class="Row font-weight-bold">Deductions</div>
+              <div class="Row font-weight-bold">USD</div>
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                SLU Gross Premium
-              </div>
+              <div class="Row Label">SLU Gross Premium</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -50,9 +43,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Brokerage
-              </div>
+              <div class="Row Label">Brokerage</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -68,9 +59,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Tax
-              </div>
+              <div class="Row Label">Tax</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -86,9 +75,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Eng Fee
-              </div>
+              <div class="Row Label">Eng Fee</div>
               <div class="Row Medium NoDrop">
                 <v-select :items="EngFeeOptions" v-model="deductions.deductionType" />
               </div>
@@ -104,9 +91,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                LTA
-              </div>
+              <div class="Row Label">LTA</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -122,9 +107,7 @@
             </div>
 
             <div class="Line BorderBottom">
-              <div class="Row Label">
-                Others
-              </div>
+              <div class="Row Label">Others</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -140,9 +123,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Fronting Fee
-              </div>
+              <div class="Row Label">Fronting Fee</div>
               <div class="Row Medium">
                 <v-select :items="FrontingFeeOptions" />
               </div>
@@ -158,9 +139,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Net Premium
-              </div>
+              <div class="Row Label">Net Premium</div>
               <div class="Row Medium">
                 <v-text-field />
               </div>
@@ -184,18 +163,12 @@
               <div class="Row Label" />
               <div class="Row Medium" />
               <div class="Row Small" />
-              <div class="Row font-weight-bold">
-                Deductions
-              </div>
-              <div class="Row font-weight-bold">
-                  
-              </div>
+              <div class="Row font-weight-bold">Deductions</div>
+              <div class="Row font-weight-bold"></div>
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                SLU Gross Premium
-              </div>
+              <div class="Row Label">SLU Gross Premium</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -211,9 +184,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Brokerage
-              </div>
+              <div class="Row Label">Brokerage</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -229,9 +200,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Tax
-              </div>
+              <div class="Row Label">Tax</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -247,9 +216,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Eng Fee
-              </div>
+              <div class="Row Label">Eng Fee</div>
               <div class="Row Medium NoDrop">
                 <v-select :items="EngFeeOptions" v-model="deductions.deductionType" />
               </div>
@@ -265,9 +232,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                LTA
-              </div>
+              <div class="Row Label">LTA</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -283,9 +248,7 @@
             </div>
 
             <div class="Line BorderBottom">
-              <div class="Row Label">
-                Others
-              </div>
+              <div class="Row Label">Others</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -301,9 +264,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Fronting Fee
-              </div>
+              <div class="Row Label">Fronting Fee</div>
               <div class="Row Medium">
                 <v-select :items="FrontingFeeOptions" />
               </div>
@@ -319,9 +280,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Net Premium
-              </div>
+              <div class="Row Label">Net Premium</div>
               <div class="Row Medium">
                 <v-text-field />
               </div>
@@ -342,18 +301,12 @@
               <div class="Row Label" />
               <div class="Row Medium" />
               <div class="Row Small" />
-              <div class="Row font-weight-bold">
-                Original Currency
-              </div>
-              <div class="Row font-weight-bold">
-                USD
-              </div>
+              <div class="Row font-weight-bold">Original Currency</div>
+              <div class="Row font-weight-bold">USD</div>
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                SLU Gross Premium
-              </div>
+              <div class="Row Label">SLU Gross Premium</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -369,9 +322,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Brokerage
-              </div>
+              <div class="Row Label">Brokerage</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -387,9 +338,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Tax
-              </div>
+              <div class="Row Label">Tax</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -405,9 +354,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Eng Fee
-              </div>
+              <div class="Row Label">Eng Fee</div>
               <div class="Row Medium NoDrop">
                 <v-select :items="EngFeeOptions" v-model="deductions.deductionType" />
               </div>
@@ -423,9 +370,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                LTA
-              </div>
+              <div class="Row Label">LTA</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -441,9 +386,7 @@
             </div>
 
             <div class="Line BorderBottom">
-              <div class="Row Label">
-                Others
-              </div>
+              <div class="Row Label">Others</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -459,9 +402,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Fronting Fee
-              </div>
+              <div class="Row Label">Fronting Fee</div>
               <div class="Row Medium">
                 <v-select :items="FrontingFeeOptions" />
               </div>
@@ -477,9 +418,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Net Premium
-              </div>
+              <div class="Row Label">Net Premium</div>
               <div class="Row Medium">
                 <v-text-field />
               </div>
@@ -499,18 +438,12 @@
               <div class="Row Label" />
               <div class="Row Medium" />
               <div class="Row Small" />
-              <div class="Row font-weight-bold">
-                Original Currency
-              </div>
-              <div class="Row font-weight-bold">
-                USD
-              </div>
+              <div class="Row font-weight-bold">Original Currency</div>
+              <div class="Row font-weight-bold">USD</div>
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                SLU Gross Premium
-              </div>
+              <div class="Row Label">SLU Gross Premium</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -526,9 +459,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Brokerage
-              </div>
+              <div class="Row Label">Brokerage</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -544,9 +475,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Tax
-              </div>
+              <div class="Row Label">Tax</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -562,9 +491,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Eng Fee
-              </div>
+              <div class="Row Label">Eng Fee</div>
               <div class="Row Medium NoDrop">
                 <v-select :items="EngFeeOptions" v-model="deductions.deductionType" />
               </div>
@@ -580,9 +507,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                LTA
-              </div>
+              <div class="Row Label">LTA</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -598,9 +523,7 @@
             </div>
 
             <div class="Line BorderBottom">
-              <div class="Row Label">
-                Others
-              </div>
+              <div class="Row Label">Others</div>
               <div class="Row Medium NoDrop">
                 <v-text-field :disabled="DisabledInputs" />
               </div>
@@ -616,9 +539,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Fronting Fee
-              </div>
+              <div class="Row Label">Fronting Fee</div>
               <div class="Row Medium">
                 <v-select :items="FrontingFeeOptions" />
               </div>
@@ -634,9 +555,7 @@
             </div>
 
             <div class="Line">
-              <div class="Row Label">
-                Net Premium
-              </div>
+              <div class="Row Label">Net Premium</div>
               <div class="Row Medium">
                 <v-text-field />
               </div>
@@ -655,94 +574,94 @@
   </v-expansion-panels>
 </template>
 <script>
-import { stateExpansiveManager } from '@/mixins/subscription.js';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import Decimal from 'decimal.js';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import Decimal from "decimal.js";
 export default {
-  name: 'TotalPaymentWallet',
+  name: "TotalPaymentWallet",
   mixins: [stateExpansiveManager],
   data() {
     return {
       DisabledInputs: true,
-      EngFeeOptions: ['As Incurrent', 'As Inception'],
-      FrontingFeeOptions: ['Apply', 'No Apply'],
-      sluGrossPorcentaje: '',
-      total: '',
+      EngFeeOptions: ["As Incurrent", "As Inception"],
+      FrontingFeeOptions: ["Apply", "No Apply"],
+      sluGrossPorcentaje: "",
+      total: "",
       form1: {
-        sluGrossUSD: '',
-        brokerageOC: '',
-        brokerageUSD: '',
-        taxesOC: '',
-        taxesUSD: '',
-        engOC: '',
-        engUSD: '',
-        ltaOC: '',
-        ltaUSD: '',
-        othersOC: '',
-        othersUSD: '',
-        frontingOC: '',
-        frontingUSD: '',
-        netPremiumOC: '',
-        netPremiumUSD: '',
+        sluGrossUSD: "",
+        brokerageOC: "",
+        brokerageUSD: "",
+        taxesOC: "",
+        taxesUSD: "",
+        engOC: "",
+        engUSD: "",
+        ltaOC: "",
+        ltaUSD: "",
+        othersOC: "",
+        othersUSD: "",
+        frontingOC: "",
+        frontingUSD: "",
+        netPremiumOC: "",
+        netPremiumUSD: "",
       },
       form3: {
-        sluGrossUSD: '',
-        brokerageOC: '',
-        brokerageUSD: '',
-        taxesOC: '',
-        taxesUSD: '',
-        engOC: '',
-        engUSD: '',
-        ltaOC: '',
-        ltaUSD: '',
-        othersOC: '',
-        othersUSD: '',
-        frontingOC: '',
-        frontingUSD: '',
-        netPremiumOC: '',
-        netPremiumUSD: '',
+        sluGrossUSD: "",
+        brokerageOC: "",
+        brokerageUSD: "",
+        taxesOC: "",
+        taxesUSD: "",
+        engOC: "",
+        engUSD: "",
+        ltaOC: "",
+        ltaUSD: "",
+        othersOC: "",
+        othersUSD: "",
+        frontingOC: "",
+        frontingUSD: "",
+        netPremiumOC: "",
+        netPremiumUSD: "",
       },
       form2: {
-        sluGrossUSD: '',
-        brokerageOC: '',
-        brokerageUSD: '',
-        taxesOC: '',
-        taxesUSD: '',
-        engOC: '',
-        engUSD: '',
-        ltaOC: '',
-        ltaUSD: '',
-        othersOC: '',
-        othersUSD: '',
-        frontingOC: '',
-        frontingUSD: '',
-        netPremiumOC: '',
-        netPremiumUSD: '',
+        sluGrossUSD: "",
+        brokerageOC: "",
+        brokerageUSD: "",
+        taxesOC: "",
+        taxesUSD: "",
+        engOC: "",
+        engUSD: "",
+        ltaOC: "",
+        ltaUSD: "",
+        othersOC: "",
+        othersUSD: "",
+        frontingOC: "",
+        frontingUSD: "",
+        netPremiumOC: "",
+        netPremiumUSD: "",
       },
     };
   },
   watch: {
-    'checkPayment.value1.value': function() {
+    "checkPayment.value1.value": function () {
       this.calculateCheck1();
     },
-    'checkPayment.value2.value': function() {
+    "checkPayment.value2.value": function () {
       this.calculateCheck2();
     },
-    'checkPayment.value3.value': function() {
+    "checkPayment.value3.value": function () {
       this.calculateCheck3();
     },
-    'checkPayment.value1.active': function() {
+    "checkPayment.value1.active": function () {
       this.calculateCheck1();
     },
-    'checkPayment.value2.active': function() {
+    "checkPayment.value2.active": function () {
       this.calculateCheck2();
     },
-    'checkPayment.value3.active': function() {
+    "checkPayment.value3.active": function () {
       this.calculateCheck3();
     },
   },
   methods: {
-    ...mapActions(['getQuotationInformation', 'checkSubscriptionStored', 'getBoundInformation']),
+    ...mapActions(["getQuotationInformation", "checkSubscriptionStored", "getBoundInformation"]),
     calculateCheck1() {
       const total = this.checkPayment.value1.value;
       this.form1.sluGrossUSD = Decimal.div(total || 0, 100).mul(this.quotation.exchangeRate);
@@ -770,24 +689,8 @@ export default {
       this.form1.frontingUSD = Decimal.mul(this.deductions.fronting || 0, total || 0)
         .div(100)
         .mul(this.quotation.exchangeRate);
-      this.form1.netPremiumOC = Decimal.sum(
-        this.form1.sluGross || 0,
-        this.form1.brokerageOC || 0,
-        this.form1.taxesOC || 0,
-        this.form1.engOC || 0,
-        this.form1.ltaOC || 0,
-        this.form1.othersOC || 0,
-        this.form1.frontingOC || 0
-      );
-      this.form1.netPremiumUSD = Decimal.sum(
-        this.form1.sluGrossUSD || 0,
-        this.form1.brokerageUSD || 0,
-        this.form1.taxesUSD || 0,
-        this.form1.engUSD || 0,
-        this.form1.ltaUSD || 0,
-        this.form1.othersUSD || 0,
-        this.form1.frontingUSD || 0
-      );
+      this.form1.netPremiumOC = Decimal.sum(this.form1.sluGross || 0, this.form1.brokerageOC || 0, this.form1.taxesOC || 0, this.form1.engOC || 0, this.form1.ltaOC || 0, this.form1.othersOC || 0, this.form1.frontingOC || 0);
+      this.form1.netPremiumUSD = Decimal.sum(this.form1.sluGrossUSD || 0, this.form1.brokerageUSD || 0, this.form1.taxesUSD || 0, this.form1.engUSD || 0, this.form1.ltaUSD || 0, this.form1.othersUSD || 0, this.form1.frontingUSD || 0);
     },
     calculateCheck2() {
       const total = this.checkPayment.value2.value;
@@ -816,24 +719,8 @@ export default {
       this.form2.frontingUSD = Decimal.mul(this.deductions.fronting || 0, total || 0)
         .div(100)
         .mul(this.quotation.exchangeRate);
-      this.form2.netPremiumOC = Decimal.sum(
-        this.form1.sluGross || 0,
-        this.form1.brokerageOC || 0,
-        this.form1.taxesOC || 0,
-        this.form1.engOC || 0,
-        this.form1.ltaOC || 0,
-        this.form1.othersOC || 0,
-        this.form1.frontingOC || 0
-      );
-      this.form2.netPremiumUSD = Decimal.sum(
-        this.form1.sluGrossUSD || 0,
-        this.form1.brokerageUSD || 0,
-        this.form1.taxesUSD || 0,
-        this.form1.engUSD || 0,
-        this.form1.ltaUSD || 0,
-        this.form1.othersUSD || 0,
-        this.form1.frontingUSD || 0
-      );
+      this.form2.netPremiumOC = Decimal.sum(this.form1.sluGross || 0, this.form1.brokerageOC || 0, this.form1.taxesOC || 0, this.form1.engOC || 0, this.form1.ltaOC || 0, this.form1.othersOC || 0, this.form1.frontingOC || 0);
+      this.form2.netPremiumUSD = Decimal.sum(this.form1.sluGrossUSD || 0, this.form1.brokerageUSD || 0, this.form1.taxesUSD || 0, this.form1.engUSD || 0, this.form1.ltaUSD || 0, this.form1.othersUSD || 0, this.form1.frontingUSD || 0);
     },
     calculateCheck3() {
       const total = this.checkPayment.value3.value;
@@ -862,35 +749,19 @@ export default {
       this.form3.frontingUSD = Decimal.mul(this.deductions.fronting || 0, total || 0)
         .div(100)
         .mul(this.quotation.exchangeRate);
-      this.form3.netPremiumOC = Decimal.sum(
-        this.form1.sluGross || 0,
-        this.form1.brokerageOC || 0,
-        this.form1.taxesOC || 0,
-        this.form1.engOC || 0,
-        this.form1.ltaOC || 0,
-        this.form1.othersOC || 0,
-        this.form1.frontingOC || 0
-      );
-      this.form3.netPremiumUSD = Decimal.sum(
-        this.form1.sluGrossUSD || 0,
-        this.form1.brokerageUSD || 0,
-        this.form1.taxesUSD || 0,
-        this.form1.engUSD || 0,
-        this.form1.ltaUSD || 0,
-        this.form1.othersUSD || 0,
-        this.form1.frontingUSD || 0
-      );
+      this.form3.netPremiumOC = Decimal.sum(this.form1.sluGross || 0, this.form1.brokerageOC || 0, this.form1.taxesOC || 0, this.form1.engOC || 0, this.form1.ltaOC || 0, this.form1.othersOC || 0, this.form1.frontingOC || 0);
+      this.form3.netPremiumUSD = Decimal.sum(this.form1.sluGrossUSD || 0, this.form1.brokerageUSD || 0, this.form1.taxesUSD || 0, this.form1.engUSD || 0, this.form1.ltaUSD || 0, this.form1.othersUSD || 0, this.form1.frontingUSD || 0);
     },
   },
   async mounted() {
     await this.checkSubscriptionStored();
     await this.getQuotationInformation();
-    await this.getBoundInformation('boundInsurable');
-    this.total = this.premium.totalInsured.replace('$', '');
+    await this.getBoundInformation("boundInsurable");
+    this.total = this.premium.totalInsured.replace("$", "");
   },
 
   computed: {
-    ...mapGetters(['subscription_id', 'quotation', 'premium', 'deductions', 'checkPayment', 'boundInsurable']),
+    ...mapGetters(["subscription_id", "quotation", "premium", "deductions", "checkPayment", "boundInsurable"]),
     sluGross: {
       get() {
         const op = this.total || 0;
@@ -1003,7 +874,7 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@import '~@/assets/style/AccordionStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
 /*
 Clases que se repiten en el componente
 */
@@ -1026,24 +897,23 @@ Clases que se repiten en el componente
 }
 
 //Estilos de las tablas grandes
-.Table{
-	width: 57%;
-	height: auto;
-	flex-wrap: wrap;
-	align-content: flex-start;
-	align-items:flex-start;
+.Table {
+  width: 57%;
+  height: auto;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
   justify-content: space-between;
 
-
   //Titulo
-  .TableTitle{
+  .TableTitle {
     font-size: 16px;
     margin-top: 35px;
-    font-weight: 700;
+    font-weight: 600;
   }
-  .Separator{
+  .Separator {
     width: 100%;
-    border-bottom:solid 1px #d2deed;
+    border-bottom: solid 1px #d2deed;
   }
   .Line {
     .flex();
@@ -1058,7 +928,7 @@ Clases que se repiten en el componente
       height: 100%;
 
       .Bold {
-        font-weight: 700;
+        font-weight: 600;
         ::v-deep .v-label {
           color: black;
         }
@@ -1066,9 +936,9 @@ Clases que se repiten en el componente
     }
 
     //Tamaños y estilos de las filas
-    .Label{
+    .Label {
       width: 127px;
-      color:#547FA9;
+      color: #547fa9;
       font-size: 14px;
       justify-content: flex-end;
       text-align: right;
@@ -1105,9 +975,11 @@ Clases que se repiten en el componente
 
 //Boton para añadir pagos
 .ButtonCont {
+  border-radius: 5px;
   width: 100%;
   margin-top: 25px;
   .v-btn {
+    border-radius: 5px;
     text-transform: none;
     color: white;
     width: 217px;

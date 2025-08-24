@@ -9,30 +9,37 @@
   </div>
 </template>
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from "vuex";
 export default {
-  name: 'ButtonActiveModalRate',
+  name: "ButtonActiveModalRate",
   data() {
     return {
       resultado: [],
     };
   },
   computed: {
-    ...mapGetters(['accountInformation', 'risk_type']),
+    ...mapGetters(["accountInformation", "risk_type"]),
     typeRate() {
-      if (this.accountInformation.typeOfRisk === 1 || this.accountInformation.typeOfRisk === 2) {
-        return 'Car & Ear Modal';
-      } else if (this.accountInformation.typeOfRisk === 3 || this.accountInformation.typeOfRisk === 5 || this.accountInformation.typeOfRisk === 4) {
-        return 'Other Line of Risks Modal';
+      if (
+        this.accountInformation.typeOfRisk === 1 ||
+        this.accountInformation.typeOfRisk === 2
+      ) {
+        return "Car & Ear Modal";
+      } else if (
+        this.accountInformation.typeOfRisk === 3 ||
+        this.accountInformation.typeOfRisk === 5 ||
+        this.accountInformation.typeOfRisk === 4
+      ) {
+        return "Other Line of Business Modal";
       }
     },
   },
   async mounted() {
-    await this.getCatalogByName({ name: 'risk_type' });
+    await this.getCatalogByName({ name: "risk_type" });
   },
   methods: {
-    ...mapMutations(['setModalRate']),
-    ...mapActions(['getCatalogByName']),
+    ...mapMutations(["setModalRate"]),
+    ...mapActions(["getCatalogByName"]),
   },
 };
 </script>
@@ -46,6 +53,7 @@ export default {
   align-items: center;
 
   .btn {
+    border-radius: 5px;
     text-transform: none;
     letter-spacing: normal;
     font-weight: 400;

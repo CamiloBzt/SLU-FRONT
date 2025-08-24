@@ -12,7 +12,7 @@
       </div>
 
       <div class="Line">
-        <div class="Row Label">Damage</div>
+        <div class="Row Label">Damage*</div>
         <div class="Row">
           <v-text-field
             type="number"
@@ -77,63 +77,66 @@
       <div class="Line BorderBottom">
         <div class="Row Label Bold">Total</div>
         <div class="Row Bold justify-start" />
-        <div class="Row Bold justify-start">{{ formatNumber(pmlTotalUsd) }} USD</div>
+        <div class="Row Bold justify-start">
+          {{ formatNumber(pmlTotalUsd) }} USD
+        </div>
       </div>
     </div>
 
-    <div class="TitleTextArea">PML Comments</div>
+    <div class="TitleTextArea">PML Comments*</div>
     <textarea
       v-model="$v.boundPml.pmlComments.$model"
       @blur="
         SET_BOUND_PML('pmlComments', this);
         checkField('pmlComments');
       "
+      placeholder="Please enter PML comments"
     ></textarea>
   </div>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from "vuex";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* libs */
-import Decimal from 'decimal.js';
+import Decimal from "decimal.js";
 /* validations */
-import { required } from 'vuelidate/lib/validators';
+import { required } from "vuelidate/lib/validators";
 /* lodash */
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
 export default {
-  name: 'PmlProperty',
+  name: "PmlProperty",
   data() {
     return {
       pmlDamage: null,
       pmlBi: null,
       pmlStocks: null,
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
-      formatter: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      formatter: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       }),
     };
   },
   components: { CurrencyInput },
   computed: {
     ...mapGetters([
-      'quotation',
-      'tiv',
-      'premium',
-      'typeCoverage',
-      'applySir',
-      'tivBound',
-      'mliv',
-      'boundPml',
-      'boundInsurableProp',
-      'risk_type',
-      'accountInformation',
+      "quotation",
+      "tiv",
+      "premium",
+      "typeCoverage",
+      "applySir",
+      "tivBound",
+      "mliv",
+      "boundPml",
+      "boundInsurableProp",
+      "risk_type",
+      "accountInformation",
     ]),
     // type of risk
     selectedRisk: {
@@ -152,10 +155,10 @@ export default {
       },
     },
     selectedRiskKey() {
-      return this.selectedRisk.key || '';
+      return this.selectedRisk.key || "";
     },
     propEng() {
-      const valid = ['PRO', 'CPE', 'CECR'];
+      const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return true;
       return false;
     },
@@ -202,43 +205,56 @@ export default {
         .add(this.pmlBiUsd || 0)
         .add(this.pmlStocksUsd || 0);
     },
+    pmlRequiredFieldsCompleted() {
+      const pmlDamageComplete = !!(
+        this.boundPml.pmlDamage && this.boundPml.pmlDamage > 0
+      );
+      const pmlCommentsComplete = !!(
+        this.boundPml.pmlComments && this.boundPml.pmlComments.trim().length > 0
+      );
+
+      return pmlDamageComplete && pmlCommentsComplete;
+    },
   },
   watch: {
     pmlDamageUsd: debounce(function (val) {
       this.$v.boundPml.pmlDamageUsd.$model = val.toNumber();
-      this.SET_BOUND_PML('pmlDamageUsd', val.toNumber());
-      this.checkField('pmlDamageUsd');
+      this.SET_BOUND_PML("pmlDamageUsd", val.toNumber());
+      this.checkField("pmlDamageUsd");
     }, 1000),
     pmlStocksUsd: debounce(function (val) {
       this.$v.boundPml.pmlStocksUsd.$model = val.toNumber();
-      this.SET_BOUND_PML('pmlStocksUsd', val.toNumber());
-      this.checkField('pmlStocksUsd');
+      this.SET_BOUND_PML("pmlStocksUsd", val.toNumber());
+      this.checkField("pmlStocksUsd");
     }, 1000),
     pmlBiUsd: debounce(function (val) {
       this.$v.boundPml.pmlBiUsd.$model = val.toNumber();
-      this.SET_BOUND_PML('pmlBiUsd', val.toNumber());
-      this.checkField('pmlBiUsd');
+      this.SET_BOUND_PML("pmlBiUsd", val.toNumber());
+      this.checkField("pmlBiUsd");
     }, 1000),
     pmlTotalUsd: debounce(function (val) {
       this.$v.boundPml.pmlTotalUsd.$model = val.toNumber();
-      this.SET_BOUND_PML('pmlTotalUsd', val.toNumber());
-      this.checkField('pmlTotalUsd');
+      this.SET_BOUND_PML("pmlTotalUsd", val.toNumber());
+      this.checkField("pmlTotalUsd");
     }, 1000),
+    pmlRequiredFieldsCompleted: {
+      handler(newValue) {
+        this.$emit("pml-fields-change", newValue);
+      },
+      immediate: true,
+    },
   },
   methods: {
-    ...mapActions(['saveBoundColumn']),
-    ...mapMutations(['SET_BOUND_PML']),
+    ...mapActions(["saveBoundColumn"]),
+    ...mapMutations(["SET_BOUND_PML"]),
     async checkField(column) {
       this.$v.boundPml[column].$touch();
-      console.log(
-        this.$v.boundPml[column].$invalid,
-        this.$v.boundPml[column].$error
-      );
+      // console.log(this.$v.boundPml[column].$invalid, this.$v.boundPml[column].$error);
       if (this.$v.boundPml[column].$invalid || this.$v.boundPml[column].$error)
         return;
       await this.saveBoundColumn({
-        table: 'boundPml',
-        parent: 'boundPml',
+        table: "boundPml",
+        parent: "boundPml",
         column,
       });
     },
@@ -263,7 +279,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/Subscription/Bound.less";
 
 .Cont {
   width: 100%;
@@ -302,8 +318,8 @@ export default {
       font-size: 14px;
     }
     .Bold {
-      font-weight: 700;
-      font-size: 16px;
+      font-weight: 600;
+      font-size: 15px;
     }
     .BorderBottom {
       border-bottom: solid 1px #d2deed;

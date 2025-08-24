@@ -41,23 +41,6 @@
         counter="500"
       />
     </div>
-
-    <!-- Additional -->
-    <div class="input-row">
-      <div class="inner-title">Additional</div>
-
-      <div class="input-col">
-        <v-text-field
-          v-model="data.premiumPaymentDate"
-          label="Premium payment date"
-          readonly
-        />
-      </div>
-
-      <div class="input-col">
-        <v-text-field v-model="data.additionalClause" label="Clause" readonly />
-      </div>
-    </div>
   </div>
 </template>
 

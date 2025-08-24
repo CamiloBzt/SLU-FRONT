@@ -21,7 +21,7 @@
               })
             "
             v-model="payment.installment"
-            :label="'Installment ' + (index + 1)"
+            :label="'Installment ' + (index + 1) + '*'"
             type="number"
           />
         </div>
@@ -36,7 +36,7 @@
               })
             "
             v-model="payment.percent"
-            label="Percentage"
+            label="Percentage*"
             type="number"
           />
         </div>
@@ -52,7 +52,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="payment.date"
-                label="PPW Due Date"
+                label="PPW Due Date*"
                 v-bind="attrs"
                 v-on="on"
               />
@@ -84,7 +84,7 @@
               })
             "
             v-model="payment.idClause"
-            label="Clause"
+            label="Clause*"
             item-value="id"
             item-text="clause"
             :items="clauseList"
@@ -102,7 +102,7 @@
               })
             "
             v-model="payment.days_of_prior_notice"
-            label="Days of prior notice"
+            label="Days of prior notice*"
             type="number"
           />
         </div>
@@ -157,9 +157,9 @@ export default {
     this.paymentsWarranty = await PaymentService.getPayments(
       this.subscriptionId
     );
-    console.log("this.paymentsWarranty", this.paymentsWarranty);
+    //console.log("this.paymentsWarranty", this.paymentsWarranty);
     //console.log('date',new Date().toISOString().slice(0, 10))
-    console.log("this.quotation", this.quotation);
+    //console.log("this.quotation", this.quotation);
     if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
   },
   mounted() {
@@ -168,6 +168,62 @@ export default {
 
   computed: {
     ...mapGetters(["quotation"]),
+    paymentsWarrantyCompleted() {
+      // Si no hay pagos, está completo
+      if (this.paymentsWarranty.length === 0) return true;
+
+      // Verificar que cada pago tenga todos los campos requeridos completos
+      return this.paymentsWarranty.every((payment) => {
+        const installmentComplete = !!(
+          payment.installment && Number(payment.installment) > 0
+        );
+        const percentComplete = !!(
+          payment.percent && Number(payment.percent) > 0
+        );
+        const dateComplete = !!payment.date;
+        const clauseComplete = !!payment.idClause;
+
+        // Si es LSW clause, también verificar days_of_prior_notice
+        const isLSW = this.isLSWClause(payment.idClause);
+        const daysComplete =
+          !isLSW ||
+          !!(
+            payment.days_of_prior_notice &&
+            Number(payment.days_of_prior_notice) > 0
+          );
+
+        return (
+          installmentComplete &&
+          percentComplete &&
+          dateComplete &&
+          clauseComplete &&
+          daysComplete
+        );
+      });
+    },
+  },
+
+  watch: {
+    paymentsWarrantyCompleted: {
+      handler(newValue) {
+        this.$emit("payments-warranty-change", newValue);
+      },
+      immediate: true,
+    },
+
+    // También observar cambios en el array de pagos
+    paymentsWarranty: {
+      handler() {
+        // Emit después de un pequeño delay para asegurar que los cambios se han procesado
+        this.$nextTick(() => {
+          this.$emit(
+            "payments-warranty-change",
+            this.paymentsWarrantyCompleted
+          );
+        });
+      },
+      deep: true,
+    },
   },
 
   methods: {

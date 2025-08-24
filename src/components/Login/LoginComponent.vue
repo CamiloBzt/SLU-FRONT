@@ -41,25 +41,13 @@
       <!-- Recordar contraseña -->
       <div class="RememberPassword d-flex justify-start align-center inputMargin">
         <v-container class="px-0" fluid>
-          <v-checkbox
-          v-model="checkbox" color="#003D6D" label="Remember Password"></v-checkbox>
+          <v-checkbox v-model="checkbox" color="#003D6D" label="Remember Password"></v-checkbox>
         </v-container>
       </div>
 
       <!--BOTON-->
       <div class="FinishButtonCont mt-2 mx-auto">
-        <v-btn
-          class="FinishButton"
-          rounded
-          large
-          depressed
-          :color="colorButton"
-          :loading="loading"
-          @click="loader = 'loading'"
-          type="submit"
-        >
-          Sign in
-        </v-btn>
+        <v-btn class="FinishButton" rounded large depressed :color="colorButton" :loading="loading" @click="loader = 'loading'" type="submit"> Sign in </v-btn>
       </div>
     </v-form>
     <loading :show="show" position="absolute" />
@@ -69,18 +57,18 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 import { formValidations } from "@/mixins/formValidations";
-import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
-import { Client } from '@microsoft/microsoft-graph-client';
-import { AuthCodeMSALBrowserAuthenticationProvider } from '@microsoft/microsoft-graph-client/authProviders/authCodeMsalBrowser';
-import Loading from '@/components/loading.vue'
+import { PublicClientApplication, InteractionType } from "@azure/msal-browser";
+import { Client } from "@microsoft/microsoft-graph-client";
+import { AuthCodeMSALBrowserAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/authCodeMsalBrowser";
+import Loading from "@/components/loading.vue";
 export default {
   mixins: [formValidations],
   components: {
-    Loading
+    Loading,
   },
   data() {
     return {
-      colorButton:'#003D6D',
+      colorButton: "#003D6D",
       showPassword: false,
       email: null,
       password: null,
@@ -92,8 +80,7 @@ export default {
       loading: false,
     };
   },
-  mounted() {
-  },
+  mounted() {},
   async created() {
     this.$msalInstance = new PublicClientApplication(this.config);
     this.signIn();
@@ -103,20 +90,19 @@ export default {
       config: (state) => state.outlook.config,
       params: (state) => state.outlook.params,
     }),
-	},
+  },
   methods: {
-    ...mapActions(["loginNew", "showMessageLogin", 'socketConnectNewUser']),
+    ...mapActions(["loginNew", "showMessageLogin", "socketConnectNewUser"]),
     ...mapMutations(["setTokenOutlook"]),
 
     async signIn() {
       try {
         await this.$msalInstance.loginPopup(this.params);
-        this.show= true;
+        this.show = true;
         const accounts = this.$msalInstance.getAllAccounts();
-        let account = accounts[0]
-        accounts.forEach(element => {
-          if (element.idTokenClaims.iat > account?.idTokenClaims.iat)
-            account = element
+        let account = accounts[0];
+        accounts.forEach((element) => {
+          if (element.idTokenClaims.iat > account?.idTokenClaims.iat) account = element;
         });
         localStorage.setItem("accountOutlook", JSON.stringify(account));
         const silentResult = await this.$msalInstance.acquireTokenSilent({
@@ -126,22 +112,19 @@ export default {
         const data = {
           token: account.localAccountId,
           homeAccountIdMs: account.homeAccountId,
-          email: account.username
+          email: account.username,
         };
 
         await this.loginNew(data);
         this.setTokenOutlook(silentResult.accessToken);
         localStorage.setItem("tokenOutlook", silentResult.accessToken);
-        const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(
-          this.$msalInstance,
-          {
-            account: accounts,
-            scopes: this.params.scopes,
-            interactionType: InteractionType.Popup
-          }
-        );
-        this.show= false;
-        await this.socketConnectNewUser()
+        const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(this.$msalInstance, {
+          account: accounts,
+          scopes: this.params.scopes,
+          interactionType: InteractionType.Popup,
+        });
+        this.show = false;
+        await this.socketConnectNewUser();
       } catch (e) {
         console.log(e);
         this.showMessageLogin(e.message);
@@ -152,5 +135,5 @@ export default {
 </script>
 
 <style lang="less">
-@import '~@/assets/style/LoginStyle.less';
+@import "~@/assets/style/LoginStyle.less";
 </style>

@@ -1,184 +1,178 @@
 //ESTA CLASE LE AÑADE EL BORDE AL ACORDEON
-.expansion-bordered{
-	border-radius: 12px;
+.expansion-bordered {
+  border-radius: 5px;
 }
 //TITULO DE SUB-ACORDEON
-.expand-mini-title{
-	font-weight: normal !important;
-	font-size: 16px;
-	color: grey;
-	margin-left: -25px !important;
+.expand-mini-title {
+  font-weight: normal !important;
+  font-size: 16px;
+  color: grey;
+  margin-left: -25px !important;
 }
 //CONTENEDOR PRINCIPAL DEL ACORDEON
-.expansion-component{
-	box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+.expansion-component {
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
 }
-
 
 /*
 Usar la clase .SubExpansionComponent en
 acordeones que estan dentro de otros acordeones
 */
-.sub-expansion-component{
-	.v-expansion-panel{
-		.v-expansion-panel-header{
-			padding:0 !important;
-		}
-		.v-expansion-panel-content{
-			margin-left: -24px;
-			width: calc(100% + 24px) !important;
-			.sub-form{
-				width: calc(100% + 24px) !important;
-			}
-		}
-	}
-
-	
+.sub-expansion-component {
+  .v-expansion-panel {
+    .v-expansion-panel-header {
+      padding: 0 !important;
+    }
+    .v-expansion-panel-content {
+      margin-left: -24px;
+      width: calc(100% + 24px) !important;
+      .sub-form {
+        width: calc(100% + 24px) !important;
+      }
+    }
+  }
 }
-.expansion-component,.sub-expansion-component{
-	width: 100%; 
-	height: auto;
-	
-	//TITULO DEL ACORDEON
-	.expansion-title{
-		font-weight: 600 ;
-		font-size: 20px;
-		height: 55px;
-		text-transform: capitalize;
-		.sub-icon-cont{
-			position: absolute;
-			left: 0; top: 0;
-			width: 100%;
-			height: 100%;
-			.sub-expansion-title{
-				font-weight: 600!important;
-				font-size: 16px;
-				.sub-icon-cont{
-					width: 30px;
-					height: 30px;
-					background:#D2DEED;
-					border-radius:35px;
-					margin-right: 15px;
-					i{
-						font-size: 18px;
-						color: #003D6D;
-						margin-top: -1px;
-						margin-left: 1px;
-					}
-				}
-			}
-		}
-	}
+.expansion-component,
+.sub-expansion-component {
+  width: 100%;
+  height: auto;
 
-	//AVISO ABIERTO / CERRADO
+  //TITULO DEL ACORDEON
+  .expansion-title {
+    font-weight: 600;
+    font-size: 20px;
+    height: 55px;
+    text-transform: capitalize;
+    .sub-icon-cont {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      .sub-expansion-title {
+        font-weight: 600 !important;
+        font-size: 16px;
+        .sub-icon-cont {
+          width: 30px;
+          height: 30px;
+          background: #d2deed;
+          border-radius: 35px;
+          margin-right: 15px;
+          i {
+            font-size: 18px;
+            color: #003d6d;
+            margin-top: -1px;
+            margin-left: 1px;
+          }
+        }
+      }
+    }
+  }
 
-	.expansion-state{
-		height: 100%;
-		display: flex;
-		justify-content: flex-end;
-		align-items:center;
-		color: #547FA9;
-		font-size: 16px;
-		margin-right: 15px;
-		font-weight: normal;
+  //AVISO ABIERTO / CERRADO
 
-	}
+  .expansion-state {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: #547fa9;
+    font-size: 16px;
+    margin-right: 15px;
+    font-weight: normal;
+  }
 
-	//CONTENIDO DEL ACORDEON
-	.expand-content{
-		width: 100%; 
-		display: flex;
-		flex-wrap: wrap;
-		align-content: flex-start;
-		align-items: flex-start;
-		justify-content: space-between;
+  //CONTENIDO DEL ACORDEON
+  .expand-content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    justify-content: space-between;
 
+    //TITULO DEL COMPONENTE
+    .title-files {
+      width: 100%;
+      height: 75px;
+      font-weight: 600;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-size: 17px;
+    }
 
-		//TITULO DEL COMPONENTE
-		.title-files{
-			width: 100%;
-			height: 75px;
-			font-weight: bold;
-			display: flex;
-			justify-content: flex-start;
-			align-items:center;
-			font-size: 17px;
-		}
+    //LINEA DIVISORIO DE LA PARTE SUPERIOR
+    .expansion-line-top {
+      width: 100%;
+      height: 1px;
+      background: grey;
+      margin-bottom: 15px;
+    }
 
-		//LINEA DIVISORIO DE LA PARTE SUPERIOR
-		.expansion-line-top{
-			width: 100%; 
-			height: 1px;
-			background: grey;
-			margin-bottom: 15px;
-		}
-		
-
-		//CONTENEDORERS DE INPUTS
-		.expansion-input-content{
-			width: 23%; 
-			height: 50px;
-		}
-		//INPUTS DE BOUND
-		.input-cont{
-			width: 19%;
-			@media(max-width: 900px){
-				width: 32%;
-			}
-			@media(max-width: 650px){
-				width: 100%;
-			}
-		}
-
-	}
+    //CONTENEDORERS DE INPUTS
+    .expansion-input-content {
+      width: 23%;
+      height: 50px;
+    }
+    //INPUTS DE BOUND
+    .input-cont {
+      width: 19%;
+      @media (max-width: 900px) {
+        width: 32%;
+      }
+      @media (max-width: 650px) {
+        width: 100%;
+      }
+    }
+  }
 }
 
 //COLOR DE LOS ICONO MAS Y MENOS
-.icon-expand{
-	width: 20px;
-	height: 20px;
-	background:#D2DEED;
-	color: #003D6D !important;
-	font-size: 17px !important;
-	border-radius: 20px;
+.icon-expand {
+  width: 20px;
+  height: 20px;
+  background: #d2deed;
+  color: #003d6d !important;
+  font-size: 17px !important;
+  border-radius: 5px;
 }
 .v-expansion-panel::before {
   box-shadow: none !important;
 }
-.v-expansion-panels:not(.v-expansion-panels--accordion):not(.v-expansion-panels--tile) > .v-expansion-panel--active{
-	border-radius:12px!important;
+.v-expansion-panels:not(.v-expansion-panels--accordion):not(.v-expansion-panels--tile) > .v-expansion-panel--active {
+  border-radius: 5px !important;
 }
 //Quitar las sombras
-.remove-shadow{
-	box-shadow: none !important;
+.remove-shadow {
+  box-shadow: none !important;
 }
-@media(max-width: 600px)
-{
-//CONTENEDOR PRINCIPAL DEL ACORDEON
-.margin-top-movil{margin-top: 35px !important;}
-.expansion-component,.sub-expansion-component{
-	
-	//TITULO DEL ACORDEON
-	.expansion-title{
-		font-weight: bold;
-		font-size: 18px;
-		height: 55px;
-	}
+@media (max-width: 600px) {
+  //CONTENEDOR PRINCIPAL DEL ACORDEON
+  .margin-top-movil {
+    margin-top: 35px !important;
+  }
+  .expansion-component,
+  .sub-expansion-component {
+    //TITULO DEL ACORDEON
+    .expansion-title {
+      font-weight: 600;
+      font-size: 18px;
+      height: 55px;
+    }
 
-	//CONTENIDO DEL ACORDEON
-	.expand-content{
-		//LINEA DIVISORIA
-		.expansion-line-top{
-			display: none;
-		}
-		//CONTENEDOR DE LOS INPUTS
-		.expansion-input-content{
-			width: 100%; 
-			height: 50px;
-			margin-bottom: 5px !important;
-		}
-
-	}
-}
-
+    //CONTENIDO DEL ACORDEON
+    .expand-content {
+      //LINEA DIVISORIA
+      .expansion-line-top {
+        display: none;
+      }
+      //CONTENEDOR DE LOS INPUTS
+      .expansion-input-content {
+        width: 100%;
+        height: 50px;
+        margin-bottom: 5px !important;
+      }
+    }
+  }
 }

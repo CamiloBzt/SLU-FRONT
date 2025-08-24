@@ -65,7 +65,6 @@ export default {
     },
     async signIn() {
       try {
-        console.log(this.isSingingSuccesOutlook);
         if (!this.isSingingSuccesOutlook == true) {
           await this.$msalInstance.loginPopup(this.params);
           const accounts = this.$msalInstance.getAllAccounts();
@@ -87,6 +86,5 @@ export default {
 </script>
 <style lang="less" scoped>
 .border-decoration {
-  border-bottom: 1px solid #a8bfd9;
 }
 </style>

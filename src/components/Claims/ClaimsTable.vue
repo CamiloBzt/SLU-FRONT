@@ -1,67 +1,68 @@
 <template>
-  <div class="ClaimsTable">
-    <div class="TableContent">
-      <!--CABEZA DE LA TABLA-->
-      <div class="TableHeadContent mt-7 d-flex justify-start align-start">
-        <!--NOMBRES DE LAS COLUMNAS-->
-        <div class="TableHeadName d-flex justify-start align-center row1">
-          Ref Number
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row2">
-          Country
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row3">
-          Line of risk
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row4">
-          Name
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row5">
-          Broker
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row6">
-          Cedent
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row7">
-          Expediition risk
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row8">
-          Inception Date
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row9">
-          Expiry Date
-        </div>
-        <div class="TableHeadName d-flex justify-start align-center row10">
-          Status
-        </div>
-      </div>
+  <div class="table-wrapper">
+    <table class="subscription-table">
+      <thead>
+        <tr>
+          <th class="ref">Ref Number</th>
+          <th class="country">Country</th>
+          <th class="risk">Line of Business</th>
+          <th class="submission_name">Name</th>
+          <th class="broker">Broker</th>
+          <th class="cedent">Cedent</th>
+          <th class="status">Status</th>
+          <th class="expedition">Expedition Risk</th>
+          <th class="inception">Inception Date</th>
+          <th class="expiry">Expiry Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, i) in list" :key="i">
+          <td class="ref" @click="redirect(item.id, item.insured_name)">
+            {{ item.reference || "N/D" }}
+          </td>
+          <td class="country">
+            {{ item.country != undefined ? item.country : "N/D" }}
+          </td>
+          <td class="risk">
+            {{ item.risk_type != undefined ? item.risk_type : "N/D" }}
+          </td>
+          <td class="submission_name">
+            {{ item.insured_name ? item.insured_name : "N/D" }}
+          </td>
+          <td class="broker">
+            {{ item.broker_name ? item.broker_name : "N/D" }}
+          </td>
+          <td class="cedent">
+            {{ item.cedent_name ? item.cedent_name : "N/D" }}
+          </td>
+          <td class="status">
+            {{ item.status }}
+          </td>
+          <td class="expedition">
+            {{ formatDateMoment(item.created_at) }}
+          </td>
+          <td class="inception">
+            {{ formatDateMoment(item.inception_date) }}
+          </td>
+          <td class="expiry">
+            {{ formatDateMoment(item.expiry_date) }}
+          </td>
+        </tr>
+      </tbody>
+      <!-- <div class="TableBodyContent mt-4">
 
-      <!--CUERPO DE LA TABLA-->
-      <div class="TableBodyContent mt-4">
-        <!--
-        AQUI EMPIEZA EL CICLO A ITERAR 
-        PARA MOSTRAR LAS FILAS DE LA TABLA
-      -->
         <div class="TableContentInner scrollable" ref="tableContentInner">
-          <div
-            v-for="(item, i) in list"
-            :key="i"
+          <div v-for="(item, i) in list" :key="i"
             class="TableBodyContSn d-flex justify-start align-start clickable"
             :style="{
               width: '100%',
             }"
             @click="redirect(item.id, item.insured_name)"
           >
-            <!--INFORMACIÓN DE LA TABLA-->
-            <div
-              class="TableBodyTextLink d-flex justify-start align-center row1"
-            >
+
+            <div class="TableBodyTextLink d-flex justify-start align-center row1">
               <div v-if="item.facultative_reference">
-                {{
-                  item.facultative_reference != undefined
-                    ? item.facultative_reference
-                    : "N/D"
-                }}
+                {{ item.facultative_reference != undefined ? item.facultative_reference : "N/D" }}
               </div>
               <div v-else>
                 {{ item.reference != undefined ? item.reference : "N/D" }}
@@ -96,8 +97,8 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div> -->
+    </table>
   </div>
 </template>
 
@@ -160,84 +161,27 @@ export default {
   beforeMount() {
     this.getClaimsHistoryList(this.pagination);
     console.table([...this.list]);
-    console.log(this.list);
   },
   mounted() {
-    this.tableBodyContSnWidth = this.$refs.tableContentInner.offsetWidth;
+    this.$nextTick(() => {
+      const el = this.$refs.tableContentInner;
+      if (el) {
+        const width = el.offsetWidth;
+      }
+    });
   },
 };
 </script>
 
 <style lang="less" scoped>
+@import "~@/assets/global.less";
 @import "~@/assets/style/Claims/Table.less";
-
+@import "~@/assets/style/Subscription/Table.less";
 /*
   Controla el ancho de cada columna empezando por ref number
 */
 .clickable {
   cursor: pointer;
-}
-
-.row1 {
-  width: 10% !important;
-  padding-left: 15px;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row2 {
-  width: 8% !important;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row3 {
-  width: 12% !important;
-  text-align: center;
-  justify-content: center !important;
-  padding: 0 10px;
-}
-
-.row4 {
-  width: 12% !important;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row5 {
-  width: 11% !important;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row6 {
-  width: 10% !important;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row7 {
-  width: 10% !important;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row8 {
-  width: 8% !important;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row9 {
-  width: 8% !important;
-  text-align: center;
-  justify-content: center !important;
-}
-
-.row10 {
-  width: 12% !important;
-  text-align: center;
-  justify-content: center !important;
 }
 
 .claim-icon {

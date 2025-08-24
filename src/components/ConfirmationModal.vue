@@ -1,20 +1,11 @@
 <template>
-  <div
-    v-if="showConfirmationModal"
-    class="Modal py-13 d-flex justify-center"
-  > 
+  <div v-if="showConfirmationModal" class="Modal py-13 d-flex justify-center">
     <div class="Form px-6 confirmationModal">
       <!-- Close button -->
       <div class="CloseModalBtn">
-        <v-btn
-          class="closeBtn"
-          icon
-          @click="closeConfirmationModal"
-        >
-          <img
-            class="iconClose"
-            src="@/assets/img/icons/close.png">
-          </v-btn>
+        <v-btn class="closeBtn" icon @click="closeConfirmationModal">
+          <img class="iconClose" src="@/assets/img/icons/close.png" />
+        </v-btn>
       </div>
 
       <!-- Header -->
@@ -22,13 +13,9 @@
 
       <!-- Actions -->
       <v-row justify="space-around">
-        <v-btn outlined rounded color="#003D6D" class="buttons" @click="closeConfirmationModal">
-          Cancel
-        </v-btn>
+        <v-btn outlined rounded color="#003D6D" class="buttons" @click="closeConfirmationModal"> Cancel </v-btn>
 
-        <v-btn rounded color="#003D6D" class="buttons white--text" @click="confirmAction">
-          Ok
-        </v-btn>
+        <v-btn rounded color="#003D6D" class="buttons white--text" @click="confirmAction"> Ok </v-btn>
       </v-row>
     </div>
   </div>
@@ -45,22 +32,22 @@ export default {
   props: {
     showConfirmationModal: {
       type: Boolean,
-      default: false
+      default: false,
     },
     title: {
       type: String,
-      default: 'Do you want to continue?'
+      default: "Do you want to continue?",
     },
   },
   methods: {
-    closeConfirmationModal () {
-      this.$emit('closeConfirmationModal')
+    closeConfirmationModal() {
+      this.$emit("closeConfirmationModal");
     },
-    confirmAction () {
-      this.$emit('closeConfirmationModal')
-      this.$emit('confirmAction')
+    confirmAction() {
+      this.$emit("closeConfirmationModal");
+      this.$emit("confirmAction");
     },
-  }
+  },
 };
 </script>
 
@@ -68,12 +55,12 @@ export default {
 .buttons {
   text-transform: none;
   width: 7rem;
-};
+}
 
 .confirmationModal {
   width: auto !important;
   height: 128px !important;
-};
+}
 
 .Modal {
   width: 100%;
@@ -98,7 +85,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 1.5rem;
     }
 
@@ -111,6 +98,7 @@ export default {
       }
     }
     .btn {
+      border-radius: 5px;
       width: 190px;
       height: 40px;
       position: absolute;
@@ -128,8 +116,8 @@ export default {
       }
     }
 
-      // Cerrar modal
-    .CloseModalBtn{
+    // Cerrar modal
+    .CloseModalBtn {
       width: auto;
       height: auto;
       position: absolute;
@@ -137,17 +125,17 @@ export default {
       top: -15px;
       z-index: 1000;
       border-radius: 25px;
-      cursor: pointer; 
+      cursor: pointer;
 
-      .closeBtn{
+      .closeBtn {
         width: 30px !important;
         height: 30px !important;
-        .iconClose{
+        .iconClose {
           width: 34px;
           height: 34px;
         }
       }
     }
   }
-};
+}
 </style>

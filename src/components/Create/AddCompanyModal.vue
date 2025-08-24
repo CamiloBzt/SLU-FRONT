@@ -1,27 +1,12 @@
 <template>
-  <div
-    @click.self="setModalCreateCompany()"
-    v-if="showModal"
-    class="Modal py-13 d-flex justify-center"
-  > 
-    
+  <div @click.self="setModalCreateCompany()" v-if="showModal" class="Modal py-13 d-flex justify-center">
     <!--FORMULARIO-->
     <div class="Form px-6">
-
       <!--BOTON CERRAR-->
-      <div 
-        @click="setModalCreateCompany()"
-        class="CloseModalBtn"
-        >
-
-        <v-btn
-          class="closeBtn"
-          icon
-          >
-          <img
-            class="iconClose"
-            src="@/assets/img/icons/close.png">
-          </v-btn>
+      <div @click="setModalCreateCompany()" class="CloseModalBtn">
+        <v-btn class="closeBtn" icon>
+          <img class="iconClose" src="@/assets/img/icons/close.png" />
+        </v-btn>
       </div>
 
       <!--HEADER-->
@@ -46,9 +31,7 @@
             v-model.trim="$v.addCompany.country.$model"
             @input="$v.addCompany.country.$touch()"
             @blur="$v.addCompany.country.$touch()"
-            :error-messages="
-              requiredInputVuelidateParent('country', 'addCompany')
-            "
+            :error-messages="requiredInputVuelidateParent('country', 'addCompany')"
             placeholder="Country"
             label="Country"
             required
@@ -79,9 +62,7 @@
             v-model.trim="$v.addCompany.address.$model"
             @input="$v.addCompany.address.$touch()"
             @blur="$v.addCompany.address.$touch()"
-            :error-messages="
-              requiredInputVuelidateParent('address', 'addCompany')
-            "
+            :error-messages="requiredInputVuelidateParent('address', 'addCompany')"
             placeholder="Address"
             label="Address"
             required
@@ -89,21 +70,11 @@
         </div>
 
         <div class="InputCont">
-          <v-text-field
-            v-model.trim="$v.addCompany.phone.$model"
-            @input="$v.addCompany.phone.$touch()"
-            @blur="$v.addCompany.phone.$touch()"
-            type="number"
-            placeholder="Phone"
-            label="Phone"
-            required
-          ></v-text-field>
+          <v-text-field v-model.trim="$v.addCompany.phone.$model" @input="$v.addCompany.phone.$touch()" @blur="$v.addCompany.phone.$touch()" type="number" placeholder="Phone" label="Phone" required></v-text-field>
         </div>
       </v-form>
 
-      <v-btn class="btn" rounded depressed @click="submitForm" :loading="loading">
-        Save Company
-      </v-btn>
+      <v-btn class="btn" rounded depressed @click="submitForm" :loading="loading"> Save Company </v-btn>
     </div>
   </div>
 </template>
@@ -146,10 +117,7 @@ export default {
     },
   },
   methods: {
-		...mapActions([
-      'createCompany',
-      'getCatalogByName'
-    ]),
+    ...mapActions(["createCompany", "getCatalogByName"]),
     ...mapMutations(["setModalCreateCompany"]),
     submitForm() {
       this.$v.$touch(); // valida el formulario
@@ -178,10 +146,10 @@ export default {
       })
         .then(async () => {
           this.$v.$reset();
-					
+
           await this.getCatalogByName({ name: "companies" });
 
-          this.setModalCreateCompany(false)
+          this.setModalCreateCompany(false);
         })
         .finally(() => {
           this.endLoad("loading");
@@ -223,7 +191,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 10px;
     }
 
@@ -236,6 +204,7 @@ export default {
       }
     }
     .btn {
+      border-radius: 5px;
       width: 190px;
       height: 40px;
       position: absolute;
@@ -248,14 +217,13 @@ export default {
       font-style: normal !important;
       font-weight: 500 !important;
       letter-spacing: normal !important;
-      i{
+      i {
         padding-right: 0px;
       }
     }
 
-
     //CERRAR MODAL
-    .CloseModalBtn{
+    .CloseModalBtn {
       width: auto;
       height: auto;
       position: absolute;
@@ -263,19 +231,17 @@ export default {
       top: -15px;
       z-index: 1000;
       border-radius: 25px;
-      cursor: pointer; 
+      cursor: pointer;
 
-      .closeBtn{
+      .closeBtn {
         width: 30px !important;
         height: 30px !important;
-        .iconClose{
+        .iconClose {
           width: 34px;
           height: 34px;
         }
       }
     }
   }
-
-  
 }
 </style>

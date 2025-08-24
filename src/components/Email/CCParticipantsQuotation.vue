@@ -2,26 +2,11 @@
   <div>
     <h5>CC Participants</h5>
     <div class="OptionsCont">
-      <v-combobox
-        v-model="select"
-        :search-input.sync="dato"
-        @update:search-input="inputText"
-        ref="autoComplete"
-        solo
-        flat
-        label="Choose CC participants"
-        color="white"
-        multiple
-        chips
-        deletable-chips
-      >
+      <v-combobox v-model="select" :search-input.sync="dato" @update:search-input="inputText" ref="autoComplete" solo flat label="Choose CC participants" color="white" multiple chips deletable-chips>
         <template slot="no-data">
           <v-container>
             <v-row>
-              <v-col cols="12">
-                Press <code class="font-weight-bold">Enter</code> or
-                <code class="font-weight-bold">Tab</code> to add new item.
-              </v-col>
+              <v-col cols="12"> Press <code class="font-weight-bold">Enter</code> or <code class="font-weight-bold">Tab</code> to add new item. </v-col>
             </v-row>
           </v-container>
         </template>
@@ -72,8 +57,7 @@ export default {
     },
     keydown(event) {
       if (event.key === "Enter" || event.key == "Tab") {
-        const regex =
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!regex.test(String(this.dato).toLowerCase())) return false;
         this.ccParticipants.push(this.dato);
       }
@@ -83,7 +67,7 @@ export default {
       this.$refs.autoComplete.search = "";
     },
     selectedSearchedCandidate(event) {
-      console.log(event);
+      //console.log(event);
     },
   },
 };

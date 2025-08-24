@@ -1,17 +1,8 @@
 <template>
-  <div
-    class="CopyAccount HideOnMovil d-flex justify-space-between align-center"
-  >
+  <div class="CopyAccount HideOnMovil d-flex justify-space-between align-center">
     <v-menu left z-index="3000">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          v-bind="attrs"
-          v-on="on"
-          class="btn"
-          text
-          rounded
-          v-if="!disabled"
-        >
+        <v-btn v-bind="attrs" v-on="on" class="btn" text rounded v-if="!disabled">
           <div class="ButtonText">Copy Account</div>
 
           <div class="icon">
@@ -23,13 +14,7 @@
       <div>
         <v-list>
           <div class="">
-            <v-btn
-              v-for="(item, index) in CopyOptions"
-              :key="index"
-              text
-              class="button d-flex justify-start align-center"
-              @click="createCopyAccount(copySection)"
-            >
+            <v-btn v-for="(item, index) in CopyOptions" :key="index" text class="button d-flex justify-start align-center" @click="createCopyAccount(copySection)">
               {{ item.content }}
             </v-btn>
           </div>
@@ -39,33 +24,33 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: 'CopyAccount',
+  name: "CopyAccount",
   data() {
     return {
       CopyOptions: [
         {
-          content: 'New Account',
+          content: "New Account",
         },
       ],
       settings: {
-        'Subs submission': 'submission',
-        'Edit Subs submission': 'submission',
-        'Quotation non proportional': 'quotation',
-        'Quotation proportional': 'quotation',
-        'Edit Subs quotation': 'quotation',
-        'Edit Subs quotation non-proportional': 'quotation',
-        Bound: 'bound',
-        'Edit Bound': 'bound',
-        'Bound Property Quotator': 'bound',
-        'Edit Bound Property Quotator': 'bound',
+        "Subs submission": "submission",
+        "Edit Subs submission": "submission",
+        "Quotation non proportional": "quotation",
+        "Quotation proportional": "quotation",
+        "Edit Subs quotation": "quotation",
+        "Edit Subs quotation non-proportional": "quotation",
+        Bound: "bound",
+        "Edit Bound": "bound",
+        "Bound Property Quotator": "bound",
+        "Edit Bound Property Quotator": "bound",
       },
     };
   },
   computed: {
-    ...mapGetters(['subscription_id']),
+    ...mapGetters(["subscription_id"]),
     disabled: {
       get() {
         if (this.subscription_id) return false;
@@ -79,7 +64,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['createCopyAccount']),
+    ...mapActions(["createCopyAccount"]),
   },
 };
 </script>
@@ -90,6 +75,7 @@ export default {
   position: absolute;
   right: 0;
   .btn {
+    border-radius: 5px;
     font-weight: normal !important;
     font-size: 16px;
     color: #547fa9 !important;
@@ -104,7 +90,7 @@ export default {
     .icon {
       width: 30px;
       height: 30px;
-      border-radius: 30px;
+      border-radius: 5px;
       background: #a8bfd9;
       margin-left: 15px;
       display: flex;
@@ -130,6 +116,7 @@ export default {
   .CopyAccount {
     height: 40px;
     .btn {
+      border-radius: 5px;
       width: 30px !important;
       height: 30px;
 

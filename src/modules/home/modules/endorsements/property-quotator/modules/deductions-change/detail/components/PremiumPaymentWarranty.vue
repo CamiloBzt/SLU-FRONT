@@ -1,11 +1,7 @@
 <template>
   <div class="Cont">
     <div class="InputsCont d-flex flex-wrap align-start">
-      <div
-        v-for="(payment, index) in paymentsWarranty"
-        :key="index"
-        class="Line d-flex justify-space-between align-center"
-      >
+      <div v-for="(payment, index) in paymentsWarranty" :key="index" class="Line d-flex justify-space-between align-center">
         <div class="Row">
           <v-text-field
             @change="
@@ -39,22 +35,9 @@
           />
         </div>
         <div class="Row">
-          <v-menu
-            v-model="payment.showCalendar"
-            :close-on-content-click="false"
-            offset-y
-            min-width="auto"
-            content-class="elevation-3"
-            transition="scale-transition"
-          >
+          <v-menu v-model="payment.showCalendar" :close-on-content-click="false" offset-y min-width="auto" content-class="elevation-3" transition="scale-transition">
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="payment.date"
-                label="PPW Due Date"
-                v-bind="attrs"
-                v-on="on"
-                :readonly="readonly"
-              />
+              <v-text-field v-model="payment.date" label="PPW Due Date" v-bind="attrs" v-on="on" :readonly="readonly" />
             </template>
             <v-date-picker
               no-title
@@ -110,33 +93,13 @@
         </div>
 
         <div v-if="!readonly" class="remove-button">
-          <v-btn
-            text
-            @click="
-              [
-                removePaymentWarranty(payment.index),
-                deletePayment(payment.id, payment.index),
-              ]
-            "
-          >
+          <v-btn text @click="[removePaymentWarranty(payment.index), deletePayment(payment.id, payment.index)]">
             <v-icon> mdi-delete </v-icon>
           </v-btn>
         </div>
       </div>
-      <div
-        v-if="!readonly"
-        class="finishButtonCont d-flex justify-start align-center"
-      >
-        <v-btn
-          :disabled="addPaymentDisabled"
-          rounded
-          large
-          text
-          class="finishBtn"
-          @click="addPaymentWarranty()"
-        >
-          Add New
-        </v-btn>
+      <div v-if="!readonly" class="finishButtonCont d-flex justify-start align-center">
+        <v-btn :disabled="addPaymentDisabled" rounded large text class="finishBtn" @click="addPaymentWarranty()"> Add New </v-btn>
       </div>
     </div>
   </div>
@@ -172,18 +135,13 @@ export default {
 
   async beforeMount() {
     this.clauseList = await PaymentService.getClauses();
-    this.paymentsWarranty = await PaymentService.getPayments(
-      this.subscriptionId
-    );
-    console.log("this.paymentsWarranty", this.paymentsWarranty);
-    this.accountComplete =
-      await AccountCompleteService.getLastAccountCompleteByIdSubscription(
-        this.subscriptionId
-      );
+    this.paymentsWarranty = await PaymentService.getPayments(this.subscriptionId);
+    // console.log("this.paymentsWarranty", this.paymentsWarranty);
+    this.accountComplete = await AccountCompleteService.getLastAccountCompleteByIdSubscription(this.subscriptionId);
     this.quotation = {
       inceptionDate: this.accountComplete.deductibles.inceptionDate,
     };
-    console.log("this.quotation", this.quotation);
+    // console.log("this.quotation", this.quotation);
     if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
   },
   mounted() {
@@ -208,9 +166,7 @@ export default {
 
       // Crear un objeto de fecha
       const arrDate = this.quotation.inceptionDate.split("-");
-      const resultado = new Date(
-        `${arrDate[1]}-${arrDate[2].slice(0, 2)}-${arrDate[0]}`
-      );
+      const resultado = new Date(`${arrDate[1]}-${arrDate[2].slice(0, 2)}-${arrDate[0]}`);
 
       // Agregar la cantidad de días indicada a la fecha
       resultado.setDate(resultado.getDate() + dias);
@@ -286,10 +242,7 @@ export default {
     async deletePayment(id, index) {
       // Eliminar en datasUpdate para no eliminar en BD aún
       const subscriptionId = this.subscriptionId;
-      this.datasUpdate = [
-        ...this.datasUpdate,
-        { id, subscriptionId, typeOfOperation: "deletePayment", index },
-      ];
+      this.datasUpdate = [...this.datasUpdate, { id, subscriptionId, typeOfOperation: "deletePayment", index }];
 
       this.paymentsWarranty = this.paymentsWarranty.map((payment, index) => {
         // return payment.index = index + 1
@@ -311,9 +264,7 @@ export default {
 
       // Crear un objeto de fecha
       const arrDate = this.quotation.inceptionDate.split("-");
-      const resultado = new Date(
-        `${arrDate[1]}-${arrDate[2].slice(0, 2)}-${arrDate[0]}`
-      );
+      const resultado = new Date(`${arrDate[1]}-${arrDate[2].slice(0, 2)}-${arrDate[0]}`);
 
       // Actualizar la fecha
       const defaultDate = resultado.toISOString().slice(0, 10);
@@ -340,9 +291,7 @@ export default {
     },
 
     removePaymentWarranty(indexToDelete) {
-      const newArray = this.paymentsWarranty.filter(
-        (item) => item.index !== indexToDelete
-      );
+      const newArray = this.paymentsWarranty.filter((item) => item.index !== indexToDelete);
       this.paymentsWarranty = newArray;
       if (this.paymentsWarranty.length < 3) this.addPaymentDisabled = false;
     },

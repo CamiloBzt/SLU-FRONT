@@ -23,24 +23,8 @@
           <NonCat ref="noncat" />
           <Summary ref="summary" />
           <div class="ButtonsCont d-flex flex-column">
-            <v-btn
-              color="#003D6D"
-              @click="saveForm()"
-              class="Btn"
-              outlined
-              rounded
-              :loading="loader"
-            >
-              Load
-            </v-btn>
-            <v-btn
-              @click="setModalRate(typeRate)"
-              color="#003D6D"
-              class="Btn White"
-              rounded
-            >
-              Exit
-            </v-btn>
+            <v-btn color="#003D6D" @click="saveForm()" class="Btn" outlined rounded :loading="loader"> Load </v-btn>
+            <v-btn @click="setModalRate(typeRate)" color="#003D6D" class="Btn White" rounded> Exit </v-btn>
           </div>
         </div>
       </div>
@@ -101,27 +85,12 @@ export default {
         this.loader = false;
       }
 
-      this.premium.propertyDamageRate = Decimal(
-        numeral(
-          (`${this.$refs.summary.totalRate}` || "$0").replace(/[^0-9.]/g, "")
-        ).value() || 0
-      );
-      this.premium.businessInterruptionRate = Decimal(
-        numeral(
-          (`${this.$refs.summary.totalRate}` || "$0").replace(/[^0-9.]/g, "")
-        ).value() || 0
-      );
+      this.premium.propertyDamageRate = Decimal(numeral((`${this.$refs.summary.totalRate}` || "$0").replace(/[^0-9.]/g, "")).value() || 0);
+      this.premium.businessInterruptionRate = Decimal(numeral((`${this.$refs.summary.totalRate}` || "$0").replace(/[^0-9.]/g, "")).value() || 0);
       // this.premium.businessInterruptionRate = Decimal(numeral((`${this.$refs.summary.premiumRate}` || '$0').replace(/[^0-9.]/g, '')).value() || 0);
-      this.premiumNon.rate = Decimal(
-        numeral(
-          (`${this.$refs.summary.totalRate}` || "$0").replace(/[^0-9.]/g, "")
-        ).value() || 0
-      );
+      this.premiumNon.rate = Decimal(numeral((`${this.$refs.summary.totalRate}` || "$0").replace(/[^0-9.]/g, "")).value() || 0);
 
-      this.premium.stockRate = Decimal.mul(
-        this.premium.propertyDamageRate || 0,
-        this.tiv.porcentaje || 0
-      ).div(100);
+      this.premium.stockRate = Decimal.mul(this.premium.propertyDamageRate || 0, this.tiv.porcentaje || 0).div(100);
 
       setTimeout(() => {
         this.loader = false;
@@ -146,11 +115,11 @@ export default {
   padding: 5px;
 
   .ModalContent {
-    width: 95%;
+    width: 80%;
     height: 94%;
     background: white;
     padding: 25px 10px;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
 
     //CERRAR MODAL
@@ -164,6 +133,7 @@ export default {
       border-radius: 25px;
       cursor: pointer;
       .btn {
+        border-radius: 5px;
         width: 30px !important;
         height: 30px !important;
         .iconClose {
@@ -205,6 +175,7 @@ export default {
           justify-content: center;
 
           .Btn {
+            border-radius: 5px;
             width: 190px;
             text-transform: none;
             height: 40px;

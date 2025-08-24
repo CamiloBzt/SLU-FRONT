@@ -27,18 +27,20 @@
               </div>
 
               <div class="line" v-for="(item, key) in ClaimsArray" :key="key">
-                <div class="input-row small light">{{ item.date }}</div>
+                <div class="input-row small light">{{ item.date }}*</div>
                 <div class="input-row medium">
                   <currency-input
                     v-model="item.amount"
                     :options="currencyOptions"
                     @blur="updateByColumn('amount', item.amount, item.sub)"
+                    @input="$emit('bound-claims-change', boundClaimsCompleted)"
                   />
                 </div>
                 <div class="input-row large">
                   <v-text-field
                     v-model="item.select"
                     @blur="updateByColumn('select', item.select, item.sub)"
+                    @input="$emit('bound-claims-change', boundClaimsCompleted)"
                     clearable
                   />
                 </div>
@@ -101,8 +103,10 @@ export default {
     //Catalogs
     const catalogRazonClaim = await getCatalog({ name: "razon_claim" });
     this.catalogRazonClaim = catalogRazonClaim ? catalogRazonClaim : [];
+
     //Services
     const boundClaims = await getBoundClaims(this.subscription_id, "property");
+
     //Convert to array
     if (boundClaims) {
       this.id = boundClaims.id;
@@ -110,42 +114,42 @@ export default {
         {
           id: 1,
           sub: "six",
-          amount: parseFloat(boundClaims.amount_six),
+          amount: parseFloat(boundClaims.amount_six) || 0,
           date: boundClaims.date_six,
           select: boundClaims.select_six,
         },
         {
           id: 2,
           sub: "five",
-          amount: parseFloat(boundClaims.amount_five),
+          amount: parseFloat(boundClaims.amount_five) || 0,
           date: boundClaims.date_five,
           select: boundClaims.select_five,
         },
         {
           id: 3,
           sub: "four",
-          amount: parseFloat(boundClaims.amount_four),
+          amount: parseFloat(boundClaims.amount_four) || 0,
           date: boundClaims.date_four,
           select: boundClaims.select_four,
         },
         {
           id: 4,
           sub: "three",
-          amount: parseFloat(boundClaims.amount_three),
+          amount: parseFloat(boundClaims.amount_three) || 0,
           date: boundClaims.date_three,
           select: boundClaims.select_three,
         },
         {
           id: 5,
           sub: "two",
-          amount: parseFloat(boundClaims.amount_two),
+          amount: parseFloat(boundClaims.amount_two) || 0,
           date: boundClaims.date_two,
           select: boundClaims.select_two,
         },
         {
           id: 6,
           sub: "one",
-          amount: parseFloat(boundClaims.amount_one),
+          amount: parseFloat(boundClaims.amount_one) || 0,
           date: boundClaims.date_one,
           select: boundClaims.select_one,
         },
@@ -153,9 +157,46 @@ export default {
       this.total = this.ClaimsArray.reduce((a, b) => a + (b["amount"] || 0), 0);
     }
   },
-
   computed: {
     ...mapGetters(["subscription_id"]),
+    boundClaimsCompleted() {
+      return this.ClaimsArray.every((item) => {
+        const amountComplete = !!(
+          item.amount !== null &&
+          item.amount !== undefined &&
+          Number(item.amount) >= 0 &&
+          !isNaN(Number(item.amount))
+        );
+        return amountComplete;
+      });
+    },
+  },
+  watch: {
+    boundClaimsCompleted: {
+      handler(newValue) {
+        this.$emit("bound-claims-change", newValue);
+      },
+      immediate: true,
+    },
+
+    // También observar cambios en ClaimsArray
+    ClaimsArray: {
+      handler() {
+        this.$nextTick(() => {
+          this.$emit("bound-claims-change", this.boundClaimsCompleted);
+        });
+      },
+      deep: true,
+    },
+
+    // Observar cambios en el total
+    total: {
+      handler() {
+        this.$nextTick(() => {
+          this.$emit("bound-claims-change", this.boundClaimsCompleted);
+        });
+      },
+    },
   },
   methods: {
     async updateByColumn(column, data, sub) {
@@ -229,7 +270,7 @@ export default {
 
       .bold-text {
         justify-content: center;
-        font-weight: 700;
+        font-weight: 600;
         font-size: 16px;
       }
 

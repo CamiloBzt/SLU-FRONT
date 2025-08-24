@@ -56,7 +56,7 @@
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
       />
-      <DeductionsChange
+      <!---DeductionsChange
         v-if="endorsementType == 4"
         :backToCreateEndorsement="backToCreateEndorsement"
         :accountComplete="accountComplete"
@@ -66,7 +66,7 @@
         :key="reloadEndorsementData"
         :isFirstEndorsement="this.listEndorsement.length < 1"
         :listendorsement="this.listEndorsement"
-      />
+      /--->
       <MovementWithoutPremium
         v-if="endorsementType == 5"
         :backToCreateEndorsement="backToCreateEndorsement"
@@ -76,7 +76,7 @@
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
       />
-      <ChangeOfShare
+      <!---ChangeOfShare
         v-if="endorsementType == 6"
         :backToCreateEndorsement="backToCreateEndorsement"
         :accountComplete="accountComplete"
@@ -84,8 +84,8 @@
         :dateSaved="dateSaved"
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
-      />
-      <RateChange
+      /--->
+      <!---RateChange
         v-if="endorsementType == 7"
         :backToCreateEndorsement="backToCreateEndorsement"
         :accountComplete="accountComplete"
@@ -93,7 +93,7 @@
         :dateSaved="dateSaved"
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
-      />
+      /--->
       <ChangeOfPeriod
         v-if="endorsementType == 8"
         :backToCreateEndorsement="backToCreateEndorsement"
@@ -114,6 +114,7 @@
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
         :selectedEndorsementId="selectedEndorsementId"
+        :listEndorsement="listEndorsement"
       />
       <ChangeOfTechnicalConditions
         v-if="endorsementType == 11"
@@ -141,7 +142,7 @@
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
       />
-      <BiAdjustments
+      <!---BiAdjustments
         v-if="endorsementType == 14"
         :backToCreateEndorsement="backToCreateEndorsement"
         :accountComplete="accountComplete"
@@ -151,7 +152,7 @@
         :key="reloadEndorsementData"
         :newShare="newShare"
         :newExchangeRate="newExchangeRate"
-      />
+      /--->
       <InternalAdjustments
         v-if="endorsementType == 15"
         :backToCreateEndorsement="backToCreateEndorsement"
@@ -163,42 +164,39 @@
       />
     </div>
 
-    <div
-      class="cards_endorsement"
-      v-if="!endorsementHistory && !onCreatrEndorsement"
-    >
-      <v-card
+    <div class="grid-cards" v-if="!endorsementHistory && !onCreatrEndorsement">
+      <div
+        class="card-item"
         v-for="(endorsement, index) in listEndorsement"
         :key="endorsement.id"
-        width="24%"
-        height="12.5rem"
-        class="margin_cards"
       >
-        <v-list-item three-line>
-          <v-list-item-content>
-            <div class="text-wrap text-h6">
-              Endorsement [{{ index + 1 }}]:
-              {{ endorsement.EndorsementType.type }}
-            </div>
-            <v-list-item-subtitle>{{
-              endorsement.effective_date | formattedDate
-            }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-card-actions>
-          <v-btn
-            class="color_endorsement mx-auto"
-            width="12rem"
-            outlined
-            rounded
-            text
-            color="white"
-            @click="backHistoryTableToId(endorsement.id)"
-          >
-            See endorsement
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+        <v-card class="card-content pt-2 borertopcard">
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-wrap text-h7 text-reinsurerText">
+                Endorsement [{{ index + 1 }}]:
+                {{ endorsement.EndorsementType.type }}
+              </div>
+              <v-list-item-subtitle>
+                {{ endorsement.effective_date | formattedDate }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-card-actions>
+            <v-btn
+              class="mx-auto"
+              width="13.7rem"
+              outlined
+              rounded
+              text
+              textbottom
+              @click="backHistoryTableToId(endorsement.id)"
+            >
+              See endorsement
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </div>
     </div>
 
     <div v-if="endorsementHistory">
@@ -267,27 +265,55 @@
         <div
           v-if="
             informationCard &&
+            typeof informationCard === 'object' &&
             informationCard.report &&
-            this.informationCard.id_endorsement_type !== 10
+            informationCard.id_endorsement_type === 8
+          "
+        >
+          <ChangeOfPeriodReadOnly :data="changeOfPeriodReadOnlyData" />
+        </div>
+        <div
+          v-else-if="
+            informationCard &&
+            typeof informationCard === 'object' &&
+            informationCard.report &&
+            informationCard.id_endorsement_type === 10
+          "
+        >
+          <ExtensionGPWReadOnly :data="extensionGPWReadOnlyData" />
+        </div>
+        <div
+          v-else-if="
+            informationCard &&
+            typeof informationCard === 'object' &&
+            informationCard.report &&
+            informationCard.id_endorsement_type === 11
+          "
+        >
+          <ChangeOfTechnicalConditionsReadOnly
+            :data="technicalConditionsReadOnlyData"
+          />
+        </div>
+        <div
+          v-else-if="
+            informationCard &&
+            typeof informationCard === 'object' &&
+            informationCard.report &&
+            informationCard.id_endorsement_type !== 8 &&
+            informationCard.id_endorsement_type !== 10 &&
+            informationCard.id_endorsement_type !== 11
           "
         >
           <EndorsementReportCompleteTable :report="cleanReport" />
         </div>
         <div
-          v-else-if="
-            informationCard &&
-            informationCard.report &&
-            this.informationCard.id_endorsement_type == 10
-          "
-        >
-          <ExtensionGPWReadOnly :data="extensionGPWReadOnlyData" />
-        </div>
-
-        <div
           class="files-submit flex justify-content-start align-items-start align-content-start"
           v-if="
             endorsementHistory &&
-            this.informationCard.id_endorsement_type !== 10
+            informationCard &&
+            informationCard.id_endorsement_type !== 8 &&
+            informationCard.id_endorsement_type !== 10 &&
+            informationCard.id_endorsement_type !== 11
           "
         >
           <AppFile
@@ -329,11 +355,11 @@
     </div>
 
     <EndorsementDocuments
+      v-if="endorsementHistory && idEndorsementDinamic"
       :idEndorsement="idEndorsementDinamic"
       :endorsementDocuments="endorsementDocuments"
       :reloadFiles="reloadFiles"
-      v-if="endorsementHistory"
-      :key="endorsementDocuments"
+      :key="idEndorsementDinamic"
     />
 
     <!-- Boton return para la vista de endosos creados -->
@@ -379,6 +405,8 @@ import TableEndorsementMovement from "../components/TableEndorsementMovement.vue
 import TableEndorsementDeductions from "../components/TableEndorsementDeductions.vue";
 import ChangeOfTechnicalConditions from "./components/ChangeOfTechnicalConditions.vue";
 import Cancellation from "./components/Cancellation.vue";
+import ChangeOfPeriodReadOnly from "./components/ChangeOfPeriodReadOnly.vue";
+import ChangeOfTechnicalConditionsReadOnly from "./components/ChangeOfTechnicalConditionsReadOnly.vue";
 // Services
 import { BarNavData } from "./services/mock-bar-nav.service.js";
 import { GetCloseAccount } from "./services/mock-get-close-account.service";
@@ -414,6 +442,8 @@ export default {
     TableEndorsementDeductions,
     ChangeOfTechnicalConditions,
     Cancellation,
+    ChangeOfPeriodReadOnly,
+    ChangeOfTechnicalConditionsReadOnly,
   },
   props: {
     type: { type: String, default: "Inclusion Risk" },
@@ -605,12 +635,16 @@ export default {
       this.showEndorsement = false;
     },
     async createEndorsement() {
-      if (this.movementsValue != "") {
+      if (this.movementsValue != "" && this.accountComplete) {
         this.onCreatrEndorsement = true;
         this.disabledSelect = true;
         this.showEndorsement = true;
         this.endorsementType = this.movementsValue;
         await this.saveEndorsmentType(this.movementsValue);
+      } else if (!this.accountComplete) {
+        console.warn(
+          "Cannot create endorsement: No account complete data available"
+        );
       }
     },
     async backToCreateEndorsement() {
@@ -678,8 +712,29 @@ export default {
       this.endorsementHistory = true;
       this.idDinamyc = id;
       this.informationCard = await EndorsementService.getEndorsementById(id);
-      console.log("informationCard =>", this.informationCard);
 
+      if (!this.informationCard) {
+        console.warn("No existe id:", id);
+        return;
+      }
+
+      if (!this.informationCard.report) {
+        console.warn("El endoso no tiene un 'report' definido.");
+        return;
+      }
+
+      if (!this.informationCard.report.cartera) {
+        console.warn("El objeto 'report' no tiene 'cartera'.");
+        return;
+      }
+
+      // Verificar que accountComplete esté disponible
+      if (!this.accountComplete) {
+        console.warn("No accountComplete available");
+        return;
+      }
+
+      // Si todo está bien, ahora sí accedemos:
       this.clause = this.informationCard.report.cartera.clausula;
 
       this.premiumPaymentDate =
@@ -712,12 +767,6 @@ export default {
         this.endorsementHistory = true;
       } else {
         this.endorsementDocuments = this.informationCard.EndorsementDocuments;
-        //     if(
-        // this.listEndorsement.find(element => element.id === this.idDinamyc).EndorsementType.type === 'Increase insurable value/ inclusion risk' ||
-        // this.listEndorsement.find(element => element.id === this.idDinamyc).EndorsementType.type === 'Reduction of insurable value/ Risk Exclusion' ||
-        // this.listEndorsement.find(element => element.id === this.idDinamyc).EndorsementType.type === 'Extension'
-        // ){
-        // Primera Tabla
         if (this.informationCard.id_endorsement_type == 3) {
           // Si es Extension (endorsement type 3), usamos totalValues
           this.totalPremiumHistoryTable[0].premiumDamage =
@@ -792,36 +841,6 @@ export default {
           this.informationCard.report.endorsmentReporData.netPremiumUSD.stocksSluShare;
         this.totalPremium[1].sluTotal =
           this.informationCard.report.endorsmentReporData.netPremiumUSD.sluShareTotal;
-        // } else if(this.listEndorsement.find(element => element.id === this.idDinamyc).EndorsementType.type === 'Deductions Change'){
-
-        /*  this.detailValues[0].premiumDamage = this.informationCard.report.endorsementReportData.movementValues.damage
-          this.detailValues[0].premiumBi = this.informationCard.report.endorsementReportData.movementValues.bi
-          this.detailValues[0].premiumStocks = this.informationCard.report.endorsementReportData.movementValues.stocks
-          this.detailValues[0].premiumTotal = this.informationCard.report.endorsementReportData.movementValues.total
-          this.detailValues[0].premiumDamage2 = this.informationCard.report.endorsementReportData.movementValues.damageUsd
-          this.detailValues[0].premiumBi2 = this.informationCard.report.endorsementReportData.movementValues.biUsd
-          this.detailValues[0].premiumStocks2 = this.informationCard.report.endorsementReportData.movementValues.stocksUsd
-          this.detailValues[0].premiumTotal2 = this.informationCard.report.endorsementReportData.movementValues.totalUsd
-
-          this.premiumSlu[0].premiumDamage = this.informationCard.report.endorsementReportData.premium.propertyDamage
-          this.premiumSlu[0].premiumBi = this.informationCard.report.endorsementReportData.premium.businessInterruption
-          this.premiumSlu[0].premiumStocks = this.informationCard.report.endorsementReportData.premium.stock
-          this.premiumSlu[0].premiumTotal = this.informationCard.report.endorsementReportData.premium.total
-          this.premiumSlu[0].premiumDamage2 = this.informationCard.report.endorsementReportData.premium.propertyDamageUsd
-          this.premiumSlu[0].premiumBi2 = this.informationCard.report.endorsementReportData.premium.businessInterruptionUsd
-          this.premiumSlu[0].premiumStocks2 = this.informationCard.report.endorsementReportData.premium.stockUsd
-          this.premiumSlu[0].premiumTotal2 = this.informationCard.report.endorsementReportData.premium.totalUsd
-
-          this.netPremium[0].premiumDamage = this.informationCard.report.endorsementReportData.netPremium.damageNet
-          this.netPremium[0].premiumBi = this.informationCard.report.endorsementReportData.netPremium.biNet
-          this.netPremium[0].premiumStocks = this.informationCard.report.endorsementReportData.netPremium.stocksNet
-          this.netPremium[0].premiumTotal = this.informationCard.report.endorsementReportData.netPremium.netTotal
-          this.netPremium[0].premiumDamage2 = this.informationCard.report.endorsementReportData.netPremiumUSD.damageNet
-          this.netPremium[0].premiumBi2 = this.informationCard.report.endorsementReportData.netPremiumUSD.biNet
-          this.netPremium[0].premiumStocks2 = this.informationCard.report.endorsementReportData.netPremiumUSD.stocksNet
-          this.netPremium[0].premiumTotal2 = this.informationCard.report.endorsementReportData.netPremiumUSD.netTotal
-*/
-        // }
       }
 
       // Invoca el  servicio para generar el excel
@@ -864,29 +883,130 @@ export default {
   },
 
   async mounted() {
-    this.catalogEndorsements = await EndorsementService.getEndorsementType();
-    this.accountComplete =
-      await AccountCompleteService.getLastAccountCompleteByIdSubscription(
-        this.subscriptionId
-      );
-    this.listEndorsement =
-      await EndorsementService.getEndorsementsBySubscriptionId(
-        this.subscriptionId
-      );
-    console.log("listEndorsement =>", this.listEndorsement);
-    if (!this.accountComplete) router.back();
+    try {
+      this.catalogEndorsements = await EndorsementService.getEndorsementType();
+      this.accountComplete =
+        await AccountCompleteService.getLastAccountCompleteByIdSubscription(
+          this.subscriptionId
+        );
+      this.listEndorsement =
+        await EndorsementService.getEndorsementsBySubscriptionId(
+          this.subscriptionId
+        );
+      console.log("listEndorsement =>", this.listEndorsement);
 
-    this.newShare =
-      this.accountComplete.tiv.boundInsurableProp.sluLine.toString();
-    this.newExchangeRate =
-      this.accountComplete.deductibles.exchangeRate.toString();
+      if (!this.accountComplete) {
+        console.warn(
+          "No account complete found for subscription:",
+          this.subscriptionId
+        );
+        router.back();
+        return;
+      }
 
-    //if (!this.accountComplete.reference.includes("PRO")) router.back();
+      // Verificar que accountComplete tenga la estructura necesaria antes de acceder
+      if (this.accountComplete?.tiv?.boundInsurableProp?.sluLine) {
+        this.newShare =
+          this.accountComplete.tiv.boundInsurableProp.sluLine.toString();
+      } else {
+        this.newShare = "0";
+      }
+
+      if (this.accountComplete?.deductibles?.exchangeRate) {
+        this.newExchangeRate =
+          this.accountComplete.deductibles.exchangeRate.toString();
+      } else {
+        this.newExchangeRate = "1";
+      }
+
+      //if (!this.accountComplete.reference.includes("PRO")) router.back();
+    } catch (error) {
+      console.error("Error loading endorsement data:", error);
+      router.back();
+    }
   },
-
   computed: {
     cleanReport() {
-      return Object.assign({}, this.informationCard.report);
+      return this.informationCard && this.informationCard.report
+        ? Object.assign({}, this.informationCard.report)
+        : {};
+    },
+    changeOfPeriodReadOnlyData() {
+      const info = this.informationCard;
+      const report = info?.report?.endorsmentReporData || {};
+
+      const formatDate = (dateStr) =>
+        dateStr ? new Date(dateStr).toLocaleDateString("en-US") : "";
+
+      const calculateDays = (start, end) => {
+        if (!start || !end) return 0;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+      };
+
+      // Obtener fechas del endorsement
+      const currentDeductibles = this.accountComplete?.deductibles || {};
+      const newDeductibles = report?.deductibles || {};
+
+      return {
+        endorsementEffectiveDate: formatDate(info.effective_date),
+
+        // Current period information
+        currentInceptionDate: formatDate(currentDeductibles.inceptionDate),
+        currentExpiryDate: formatDate(currentDeductibles.expiryDate),
+        currentPolicyDays: calculateDays(
+          currentDeductibles.inceptionDate,
+          currentDeductibles.expiryDate
+        ),
+
+        // New period information
+        newInceptionDate: formatDate(newDeductibles.inceptionDate),
+        newExpiryDate: formatDate(newDeductibles.expiryDate),
+        newPolicyDays: calculateDays(
+          newDeductibles.inceptionDate,
+          newDeductibles.expiryDate
+        ),
+
+        // Additional information
+        clause: report?.cartera?.clausula || "",
+        premiumPaymentDate: formatDate(report?.cartera?.premiumPaymentDate),
+
+        // Premium calculations (estas ya están en el endorsement guardado)
+        originalValues: {
+          lastInformation: {
+            totalPremiumMovement:
+              report?.movementValues?.lastPremiumMovement || 0,
+            PremiumSlu: report?.netPremium?.lastPremiumSlu || 0,
+            netPremium: report?.netPremium?.lastNetPremium || 0,
+            total: report?.totals?.lastTotal || 0,
+          },
+          newInformation: {
+            totalPremiumMovement:
+              report?.movementValues?.newPremiumMovement || 0,
+            PremiumSlu: report?.netPremium?.sluShareTotal || 0,
+            netPremium: report?.netPremium?.netTotal || 0,
+            total: report?.totals?.newTotal || 0,
+          },
+        },
+
+        usdValues: {
+          lastInformation: {
+            totalPremiumMovement:
+              report?.movementValues?.lastPremiumMovementUsd || 0,
+            PremiumSlu: report?.netPremiumUSD?.lastPremiumSlu || 0,
+            netPremium: report?.netPremiumUSD?.lastNetPremium || 0,
+            total: report?.totals?.lastTotalUsd || 0,
+          },
+          newInformation: {
+            totalPremiumMovement:
+              report?.movementValues?.newPremiumMovementUsd || 0,
+            PremiumSlu: report?.netPremiumUSD?.sluShareTotal || 0,
+            netPremium: report?.netPremiumUSD?.netTotal || 0,
+            total: report?.totals?.newTotalUsd || 0,
+          },
+        },
+      };
     },
     extensionGPWReadOnlyData() {
       const info = this.informationCard;
@@ -906,17 +1026,71 @@ export default {
         endorsementEffectiveDate: formatDate(info.effective_date),
         expiryDate: formatDate(report?.deductibles?.expiryDate),
         days: daysDiff(info.effective_date, report?.deductibles?.expiryDate),
+
         installments:
           additionalInfo.paymentsWarranty?.map((item) => ({
+            id: item.id,
             installment: item.installment,
-            percentage: item.percent,
-            ppwDueDate: formatDate(item.date),
-            clause: this.getClauseName(item.idClause),
-            priorNoticeDays: item.days_of_prior_notice,
+            percent: item.percent,
+            date: formatDate(item.date),
+            idClause: item.idClause,
+            days_of_prior_notice: item.days_of_prior_notice,
+            showCalendar: false,
           })) || [],
+
         reason: additionalInfo.detailDescription || "",
         premiumPaymentDate: formatDate(report?.cartera?.premiumPaymentDate),
         additionalClause: report?.cartera?.clausula || report?.clause,
+      };
+    },
+    technicalConditionsReadOnlyData() {
+      const info = this.informationCard;
+      const report = info?.report?.endorsmentReporData || {};
+
+      const formatDate = (dateStr) =>
+        dateStr ? new Date(dateStr).toLocaleDateString("en-US") : "";
+
+      const calculateDays = (start, end) => {
+        if (!start || !end) return 0;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+      };
+
+      return {
+        endorsementEffectiveDate: formatDate(info.effective_date),
+        expiryDate: formatDate(this.accountComplete?.deductibles?.expiryDate),
+        days: calculateDays(
+          info.effective_date,
+          this.accountComplete?.deductibles?.expiryDate
+        ),
+
+        // Technical conditions changes - you may need to adjust this based on your data structure
+        technicalConditionsChanges: {
+          deductibles: report?.technicalConditions?.deductibles || [],
+          sublimits: report?.technicalConditions?.sublime || [],
+        },
+
+        // Additional information
+        clause: report?.cartera?.clausula || "",
+        premiumPaymentDate: formatDate(report?.cartera?.premiumPaymentDate),
+
+        // Premium calculations
+        originalValues: {
+          totalPremiumMovement:
+            report?.movementValues?.totalPremiumMovement || 0,
+          premiumSlu: report?.netPremium?.sluShareTotal || 0,
+          netPremium: report?.netPremium?.netTotal || 0,
+          total: report?.premium?.total || 0,
+        },
+
+        usdValues: {
+          totalPremiumMovement:
+            report?.movementValues?.totalPremiumMovementUsd || 0,
+          premiumSlu: report?.netPremiumUSD?.sluShareTotal || 0,
+          netPremium: report?.netPremiumUSD?.netTotal || 0,
+          total: report?.premium?.totalUsd || 0,
+        },
       };
     },
   },
@@ -931,62 +1105,6 @@ export default {
   @media (max-width: 650px) {
     overflow-x: hidden;
   }
-
-  /* .content {
-    width: 100%;
-    height: auto;
-    border-radius: 15px;
-    background: white;
-    box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
-    margin-top: 28px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-content: center;
-    padding: 0 20px;
-    @media (max-width: 650px) {
-      overflow-x: auto !important;
-    }
-    //CABEZA DE LA TABLA
-
-    .body-content {
-      width: 100%;
-      height: auto;
-      padding-top: 10px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-      align-content: flex-start;
-      flex-wrap: wrap;
-      padding-bottom: 10px;
-      .button-cont {
-        width: 100%;
-        height: auto;
-        margin-top: 20;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        .blue-btn {
-          color: white;
-          width: 200px;
-          height: 35px;
-          background: #003d6d;
-          font-size: 15px;
-          font-weight: 500;
-          letter-spacing: normal;
-          text-transform: capitalize;
-        }
-        .clear-btn {
-          width: 200px;
-          height: 35px;
-        }
-      }
-    }
-    .v-btn {
-      justify-content: flex-start !important;
-      color: #003d6d;
-    }
-  } */
 }
 
 .create-endorsement {
@@ -1013,6 +1131,7 @@ export default {
     align-items: center;
 
     .btn {
+      border-radius: 5px;
       color: white;
       width: 200px;
       height: 35px;
@@ -1046,11 +1165,22 @@ export default {
 }
 
 .cards_endorsement {
-  margin-top: 1rem;
-  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.endorsement-card {
+  width: 25%;
+  padding: 0 8px; /* compensa el margin negativo del contenedor */
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.fill-card {
+  height: 12.5rem;
+  width: 100%;
 }
 
 .margin_cards {
@@ -1067,9 +1197,8 @@ export default {
 .formatEndorsementHistoryTable {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1100,5 +1229,39 @@ export default {
 }
 .mt {
   margin-top: 30px;
+}
+
+.v-list--three-line .v-list-item,
+.v-list-item--three-line {
+  min-height: 135px;
+}
+
+.cards-reinsurer {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.card-reinsurer {
+  width: calc(25% - 10px);
+  height: 12.5rem;
+}
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); // 4 columnas
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-item {
+  width: 100%;
+}
+
+.card-content {
+  height: 12.5rem;
+}
+.text-reinsurerText {
+  font-weight: 600;
 }
 </style>

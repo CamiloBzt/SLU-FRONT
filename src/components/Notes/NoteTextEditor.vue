@@ -1,16 +1,7 @@
 <template>
   <div class="AddNotesComponent">
     <div class="CreateNote">
-      <Mentionable
-        :keys="['@']"
-        :items="mentionsObject"
-        offset="6"
-        insert-space
-        @open="loadIssues()"
-        @search="loadIssues($event)"
-        @apply="apply"
-        filtering-disabled
-      >
+      <Mentionable :keys="['@']" :items="mentionsObject" offset="6" insert-space @open="loadIssues()" @search="loadIssues($event)" @apply="apply" filtering-disabled>
         <textarea class="textNote" v-model="text" />
         <template #no-result>
           <div class="dim">
@@ -25,13 +16,7 @@
           </div>
         </template>
       </Mentionable>
-      <v-btn
-        @click="showData()"
-        class="AddNewNoteButton"
-        rounded
-        depressed
-        text
-      >
+      <v-btn @click="showData()" class="AddNewNoteButton" rounded depressed text>
         <v-icon class="mr-2"> mdi-send-circle </v-icon>
 
         Send Note
@@ -167,6 +152,7 @@ export default {
 }
 
 .btn {
+  border-radius: 5px;
   text-transform: none;
   color: #003d6d;
   font-weight: 500 !important;

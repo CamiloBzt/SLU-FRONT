@@ -25,7 +25,10 @@
       <!--CONTENIDO DEL ACORDEON-->
       <v-expansion-panel-content>
         <div class="ExpandContent">
-          <InputsRiskQuotator />
+          <InputsRiskQuotator
+            @required-fields-change="onRequiredFieldsChange"
+          />
+
           <RiskInformationQuotator />
           <!-- <CedentInformation /> -->
           <Deductions />
@@ -40,21 +43,24 @@
             v-if="propEng && propEng != ''"
           />
 
-          <MainLocation />
+          <MainLocation @damage-field-change="onDamageFieldChange" />
+
           <div class="ExpansionLineTop mt-2" />
 
-          <PmlProperty />
+          <PmlProperty @pml-fields-change="onPmlFieldsChange" />
+
           <div class="ExpansionLineTop mt-7" />
 
           <Deductibles v-if="!propEng" />
-          <DeductiblesQuotator
-            v-else-if="propEng && propEng != ''"
-            v-for="(item, index) in boundPropDeductibles"
-            @deleteDeductible="deleteDeductible"
-            :deductibleIndex="index"
-            :deductibleId="item.id"
-            :key="`D${index}`"
-          />
+          <template v-if="propEng && propEng !== ''">
+            <DeductiblesQuotator
+              v-for="(item, index) in boundPropDeductibles"
+              @deleteDeductible="deleteDeductible"
+              :deductibleIndex="index"
+              :deductibleId="item.id"
+              :key="`D${item.id || index}`"
+            />
+          </template>
 
           <div class="ButtonCont" v-if="propEng && propEng != ''">
             <v-btn class="Btn" text rounded @click="addDeductible()">
@@ -66,14 +72,15 @@
           <div class="ExpansionLineTop mt-2" />
 
           <Sublimes v-if="!propEng" />
-          <SublimesQuotator
-            v-else-if="propEng && propEng != ''"
-            v-for="(item, index) in boundSublimesProp"
-            @deleteSublime="deleteSublime"
-            :sublimeIndex="index"
-            :sublimeId="item.id"
-            :key="index"
-          />
+          <template v-if="propEng && propEng !== ''">
+            <SublimesQuotator
+              v-for="(item, index) in boundSublimesProp"
+              @deleteSublime="deleteSublime"
+              :sublimeIndex="index"
+              :sublimeId="item.id"
+              :key="item.id"
+            />
+          </template>
 
           <div class="ButtonCont" v-if="propEng && propEng != ''">
             <v-btn class="Btn" text rounded @click="addLocation()">
@@ -82,12 +89,16 @@
             </v-btn>
           </div>
 
-          <PremiumPaymentWarranty />
-          <BoundClaims />
+          <PremiumPaymentWarranty
+            @payments-warranty-change="onPaymentsWarrantyChange"
+          />
+
+          <BoundClaims @bound-claims-change="onBoundClaimsChange" />
 
           <div class="ExpansionLineTop mt-2" />
-          <Rational />
-          <RiskProfile />
+          <Rational @rational-comments-change="onRationalCommentsChange" />
+
+          <RiskProfile @risk-profile-change="onRiskProfileChange" />
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -121,6 +132,13 @@ export default {
   data() {
     return {
       riskAnalysisQuotatorPanel: 1,
+      requiredFieldsCompleted: false,
+      damageFieldCompleted: false,
+      pmlFieldsCompleted: false,
+      paymentsWarrantyCompleted: true,
+      boundClaimsCompleted: false,
+      rationalCommentsCompleted: false,
+      riskProfileCompleted: false,
     };
   },
   props: {
@@ -214,6 +232,52 @@ export default {
         value: false,
       });
       await this.getDeductiblesProperty();
+    },
+    onRequiredFieldsChange(isComplete) {
+      this.requiredFieldsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onDamageFieldChange(isComplete) {
+      this.damageFieldCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onPmlFieldsChange(isComplete) {
+      this.pmlFieldsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onPaymentsWarrantyChange(isComplete) {
+      this.paymentsWarrantyCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onBoundClaimsChange(isComplete) {
+      this.boundClaimsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onRationalCommentsChange(isComplete) {
+      this.rationalCommentsCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    onRiskProfileChange(isComplete) {
+      this.riskProfileCompleted = isComplete;
+      this.emitValidationStatus();
+    },
+
+    emitValidationStatus() {
+      const allFieldsComplete =
+        this.requiredFieldsCompleted &&
+        this.damageFieldCompleted &&
+        this.pmlFieldsCompleted &&
+        this.paymentsWarrantyCompleted &&
+        this.boundClaimsCompleted &&
+        this.rationalCommentsCompleted &&
+        this.riskProfileCompleted;
+      this.$emit("all-required-fields-complete", allFieldsComplete);
     },
   },
 };

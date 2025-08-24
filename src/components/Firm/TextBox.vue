@@ -51,17 +51,17 @@
 /*
 	tip tap y librerias para el editor de firma
 */
-import { textActions } from '@/mixins/richEditor.js';
-import { Editor, EditorContent } from '@tiptap/vue-2';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Document from '@tiptap/extension-document';
-import Text from '@tiptap/extension-text';
-import TextStyle from '@tiptap/extension-text-style';
-import { Color } from '@tiptap/extension-color';
+import { textActions } from "@/mixins/richEditor.js";
+import { Editor, EditorContent } from "@tiptap/vue-2";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import Document from "@tiptap/extension-document";
+import Text from "@tiptap/extension-text";
+import TextStyle from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
 export default {
-  name: 'FirmComponent',
+  name: "FirmComponent",
   components: {
     EditorContent,
   },
@@ -69,7 +69,7 @@ export default {
   props: {
     textFirm: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   data() {
@@ -108,18 +108,18 @@ export default {
         TextStyle,
         Color,
         TextAlign.configure({
-          types: ['heading', 'paragraph'],
+          types: ["heading", "paragraph"],
         }),
       ],
       content: this.firmData,
       // GUARDAR EL HTML DE LA FIRMA
       /*
 				El metodo this.editor.getHTML()
-				obtiene el html generado y lo 
+				obtiene el html generado y lo
 				guarda en la variable content
       */
       onUpdate: () => {
-        this.$emit('setFirm', this.editor.getHTML());
+        this.$emit("setFirm", this.editor.getHTML());
       },
     });
   },
@@ -170,6 +170,7 @@ export default {
     align-items: center;
 
     .Btn {
+      border-radius: 5px;
       margin-right: 5px;
       width: 30px;
       height: 30px;

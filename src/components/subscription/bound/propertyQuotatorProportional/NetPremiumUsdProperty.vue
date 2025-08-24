@@ -47,7 +47,7 @@
           <currency-input :value="calculates.stocksBrokerage()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">
-          {{ calculates.brokerageTotal() }} 
+          {{ calculates.brokerageTotal() }}
         </div>
       </div>
 
@@ -159,13 +159,13 @@
         <div class="input input--title">Net premium</div>
         <div class="divider" />
         <div class="input">
-          <currency-input  :value="calculates.damageNet()"  :options="currencyOptions" disabled/>
+          <currency-input :value="calculates.damageNet()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input :value="calculates.biNet()"  :options="currencyOptions" disabled/>
+          <currency-input :value="calculates.biNet()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stocksNet()"  :options="currencyOptions" disabled/>
+          <currency-input :value="calculates.stocksNet()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.netTotal() }}</div>
       </div>
@@ -174,22 +174,13 @@
         <div class="input input--title">Net premium excluding fronting</div>
         <div class="divider" />
         <div class="input">
-          <currency-input  
-            :value="calculates.damageNetPremiumExcludingFronting()"  
-            :options="currencyOptions" disabled
-          />
+          <currency-input :value="calculates.damageNetPremiumExcludingFronting()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input 
-          :value="calculates.businessInterNetPremiumExcludingFronting()"  
-          :options="currencyOptions" disabled
-          />
+          <currency-input :value="calculates.businessInterNetPremiumExcludingFronting()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input 
-            :value="calculates.stockNetPremiumExcludingFronting()"  
-            :options="currencyOptions" disabled
-          />
+          <currency-input :value="calculates.stockNetPremiumExcludingFronting()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.totalNetPremiumExcludingFronting() }}</div>
       </div>
@@ -198,60 +189,52 @@
         <div class="input input--title">SLU Premium to be invoiced</div>
         <div class="divider" />
         <div class="input">
-          <currency-input  :value="calculates.damageSluPremiumToBeInvoiced()"  
-          :options="currencyOptions" disabled
-        />
+          <currency-input :value="calculates.damageSluPremiumToBeInvoiced()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input :value="calculates.businessInterSluPremiumToBeInvoiced()"  
-          :options="currencyOptions" disabled
-          />
+          <currency-input :value="calculates.businessInterSluPremiumToBeInvoiced()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input :value="calculates.stockSluPremiumToBeInvoiced()"  
-          :options="currencyOptions" disabled
-          />
+          <currency-input :value="calculates.stockSluPremiumToBeInvoiced()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.totalSluPremiumToBeInvoiced() }}</div>
       </div>
-      
     </div>
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from "vuex";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 
 /**services */
-import NetPremiumService from '@/modules/home/services/net-premium.service'
+import NetPremiumService from "@/modules/home/services/net-premium.service";
 
 /**strategies */
-import netPremiumStrategy from  '../class/NetPremiumPRO'
-
+import netPremiumStrategy from "../class/NetPremiumPRO";
 
 export default {
-  name: 'NetPremiumUsdProperty',
+  name: "NetPremiumUsdProperty",
   components: { CurrencyInput },
   data() {
     return {
       subscriptionId: this.$route.params.subscriptionId,
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
-      formatter: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      formatter: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
       }),
     };
   },
   async beforeMount() {
-    await Promise.all([this.getCatalogByName({ name: 'type_coverages' }), this.getCatalogByName({ name: 'apply_sir' })]);
+    await Promise.all([this.getCatalogByName({ name: "type_coverages" }), this.getCatalogByName({ name: "apply_sir" })]);
   },
   computed: {
-    ...mapGetters(['deductions', 'tiv', 'premium', 'boundInsurable', 'boundInsurableProp', 'accountInformation', 'risk_type', 'quotation']),
+    ...mapGetters(["deductions", "tiv", "premium", "boundInsurable", "boundInsurableProp", "accountInformation", "risk_type", "quotation"]),
     ...mapState({
       boundInsurableProp(state) {
         if (this.propEng) return state.boundInsurableProp;
@@ -263,7 +246,7 @@ export default {
       },
     }),
     isNonProportional() {
-      const valids = [2, '2'];
+      const valids = [2, "2"];
       if (valids.includes(this.quotation.typeQuotation)) {
         return true;
       }
@@ -280,22 +263,22 @@ export default {
       },
     },
     selectedRiskKey() {
-      return this.selectedRisk.key || '';
+      return this.selectedRisk.key || "";
     },
     typeSelect() {
-      const valid = ['PRO', 'CPE', 'CECR'];
+      const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return 1;
       return 2;
     },
     propEng() {
-      const valid = ['PRO', 'CPE', 'CECR'];
+      const valid = ["PRO", "CPE", "CECR"];
       if (valid.includes(this.selectedRiskKey)) return true;
       return false;
     },
     // country
     isColombia() {
       const country = this.accountInformation.country;
-      const valids = [13, '13'];
+      const valids = [13, "13"];
       if (valids.includes(country)) return true;
       return false;
     },
@@ -303,10 +286,8 @@ export default {
      * @template T {typeof import '../class/NetPremiumPRO' }
      * @returns {T}
      */
-     calculates(){
-      return  new netPremiumStrategy(
-          this.premium, this.deductions,  this.boundInsurableProp, true
-        )
+    calculates() {
+      return new netPremiumStrategy(this.premium, this.deductions, this.boundInsurableProp, true);
     },
     // vuex aliases
     premiumDamage: {
@@ -326,16 +307,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCatalogByName']),
+    ...mapActions(["getCatalogByName"]),
   },
- async  updated () {
-   const data =  this.calculates.getData()
-   await NetPremiumService.addOrUpdateNetPremium(this.subscriptionId, data, true)
-  }
+  async updated() {
+    const data = this.calculates.getData();
+    await NetPremiumService.addOrUpdateNetPremium(this.subscriptionId, data, true);
+  },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/Subscription/Bound.less";
 .back {
   background: red;
 }
@@ -378,13 +359,12 @@ export default {
         width: 100%;
         height: 60px;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: left;
         padding: 0px 15px;
         margin-bottom: 5px;
         margin-top: 5px;
         &--title {
-          font-weight: 700;
+          font-weight: 600;
         }
         &--label {
           justify-content: flex-end;

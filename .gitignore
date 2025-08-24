@@ -7,7 +7,7 @@
 node_modules/
 dist/
 /package-lock.json
-/.env.development
+
 /.prettierrc
 /.vscode
 
@@ -73,5 +73,5 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 
-.env*
+
 *.zip

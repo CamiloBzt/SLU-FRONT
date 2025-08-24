@@ -127,7 +127,7 @@
           </div>
           <div class="inputCont">
             <v-text-field
-              label="Exchange Rate"
+              label="Rate of Exchange"
               v-model="quotation.exchangeRate"
               disabled
             />
@@ -274,12 +274,12 @@ export default {
     },
     async checkField(column) {
       this.$v.boundEng[column].$touch();
-      console.log(
+      /*console.log(
         this.$v.boundEng[column].$invalid,
         this.$v.boundEng[column].$error,
         this.$v.boundEng[column].$model,
         column
-      );
+      );*/
       if (this.$v.boundEng[column].$invalid || this.$v.boundEng[column].$error)
         return;
       await this.saveBoundColumn({

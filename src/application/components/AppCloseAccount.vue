@@ -1,96 +1,80 @@
 <template>
-  <div 
-    class="app-close-account d-flex justify-center align-center"
-    :class=" classRounded ? 'button-submit--outlined' : ''"
-    >
-		<v-menu :top="top" :left="top? false: true" z-index="3000" >
-        <template #activator="{ on, attrs }">
-          <v-btn
-            class="activateButton"
-            rounded
-            text
-            v-bind="attrs"
-            v-on="on"
-            large
-            :loading="loading"
-          >
-            <div class="ButtonText">
-							{{ text ? text : "Close Account" }} 
-						</div>
-            <v-icon :color="iconColor">
-							{{ icon }}
-						</v-icon>
-          </v-btn>
-        </template>
+  <div class="app-close-account d-flex justify-center align-center" :class="classRounded ? 'button-submit--outlined' : ''">
+    <v-menu :top="top" :left="top ? false : true" z-index="3000">
+      <template #activator="{ on, attrs }">
+        <v-btn class="activateButton" rounded text v-bind="attrs" v-on="on" large :loading="loading">
+          <div class="ButtonText">
+            {{ text ? text : "Close Account" }}
+          </div>
+          <v-icon :color="iconColor">
+            {{ icon }}
+          </v-icon>
+        </v-btn>
+      </template>
 
-        <v-list  class="pl-5 pr-5">
-          <div v-if="header!==''" class="headerClose d-flex justify-start align-center">
-            {{ header }}
-          </div>
-          <div
-            @click="CloseAccount(item.id)"
-            class="button"
-            v-for="(item, index) in closeAccountData"
-            :key="index"
-          >
-            <v-list-item-title>
-              {{ item.reasonText ||  item.description }}
-            </v-list-item-title>
-          </div>
-        </v-list>
-      </v-menu>
-	</div>
+      <v-list class="pl-5 pr-5">
+        <div v-if="header !== ''" class="headerClose d-flex justify-start align-center">
+          {{ header }}
+        </div>
+        <div @click="CloseAccount(item.id)" class="button" v-for="(item, index) in closeAccountData" :key="index">
+          <v-list-item-title>
+            {{ item.reasonText || item.description }}
+          </v-list-item-title>
+        </div>
+      </v-list>
+    </v-menu>
+  </div>
 </template>
 <script>
 export default {
-	name: 'AppCloseAccount',
-	props: {
-		iconColor: {
-			type: String,
-			default: '#F59607'
-		},
-		icon: {
-			type: String
-		},
-		header: {
-			type: String,
-			default: ''
-		},
-		closeAccountData: {
-			type: Array,
-			required: true
-		},
-		loading: {
-			type: Boolean
-		},
+  name: "AppCloseAccount",
+  props: {
+    iconColor: {
+      type: String,
+      default: "#F59607",
+    },
+    icon: {
+      type: String,
+    },
+    header: {
+      type: String,
+      default: "",
+    },
+    closeAccountData: {
+      type: Array,
+      required: true,
+    },
+    loading: {
+      type: Boolean,
+    },
     classRounded: {
-			type: Boolean
-		},
+      type: Boolean,
+    },
     top: {
       type: Boolean,
-      default:false
+      default: false,
     },
-    text:{
-      type:String,
-      default:'	Close Account',
-      required: false
-    }
-	},
-	methods: {
-		CloseAccount (idOptionSelected) {
-			this.$emit('close-account', {
-				idOptionSelected
-			})
-		}
-	}
-}
+    text: {
+      type: String,
+      default: "	Close Account",
+      required: false,
+    },
+  },
+  methods: {
+    CloseAccount(idOptionSelected) {
+      this.$emit("close-account", {
+        idOptionSelected,
+      });
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 //CERRAR CUENTA
 .app-close-account {
   width: auto;
   height: 100%;
-	
+
   .activateButton {
     font-weight: normal !important;
     font-size: 16px;
@@ -125,7 +109,7 @@ export default {
   }
 }
 .button-submit--outlined {
-  border-radius: 25px !important;
+  border-radius: 5px !important;
 }
 .flexClass {
   display: flex;

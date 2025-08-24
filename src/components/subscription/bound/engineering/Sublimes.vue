@@ -7,7 +7,7 @@
             <v-icon class="iconExpand mr-1">
               {{ iconSubExpansion }}
             </v-icon>
-            <div class="SubExpansionTitle">Sublimes</div>
+            <div class="SubExpansionTitle">Sublimits</div>
           </div>
         </template>
       </v-expansion-panel-header>
@@ -16,14 +16,12 @@
         <div class="ExpandContent justify-center">
           <!--Cat Sublimes-->
           <div class="TitleCont d-flex justify-start align-center">
-            <h5>Cat Sublimes</h5>
+            <h5>Cat Sublimits</h5>
           </div>
           <div class="CatCont d-flex justify-start align-center">
             <div class="InputRow">
               <!--Label-->
-              <div class="Label">
-                Coverage B Earthquake, Tremor or volcanic Eruption
-              </div>
+              <div class="Label">Coverage B Earthquake, Tremor or volcanic Eruption</div>
               <!--Input-->
               <div class="InputCont">
                 <v-select
@@ -80,29 +78,14 @@
                 ></v-select>
               </div>
               <div class="Row">
-                <currency-input
-                  v-model.trim="item.endosoText.$model"
-                  label="Original Currency"
-                  @blur="checkMultipleField(index, 'endosoUsd')"
-                  @change="checkMultipleField(index, 'endosoText')"
-                  :options="currencyOptions"
-                />
+                <currency-input v-model.trim="item.endosoText.$model" label="Original Currency" @blur="checkMultipleField(index, 'endosoUsd')" @change="checkMultipleField(index, 'endosoText')" :options="currencyOptions" />
               </div>
               <div class="Row">
                 <!-- v-model.trim="item.endosoUSD.$model" -->
-                <currency-input
-                  v-model.trim="computedUsd[index]"
-                  label="USD"
-                  disabled
-                  @input="item.endosoUsd.$touch()"
-                  @blur="checkMultipleField(index, 'endosoUsd')"
-                  :options="currencyOptions"
-                />
+                <currency-input v-model.trim="computedUsd[index]" label="USD" disabled @input="item.endosoUsd.$touch()" @blur="checkMultipleField(index, 'endosoUsd')" :options="currencyOptions" />
               </div>
               <!-- botón de eliminado (debug only) -->
-              <v-icon small @click="removeField(index)" class="mt-4">
-                mdi-minus-circle
-              </v-icon>
+              <v-icon small @click="removeField(index)" class="mt-4"> mdi-minus-circle </v-icon>
             </div>
           </div>
 
@@ -119,41 +102,40 @@
   </v-expansion-panels>
 </template>
 <script>
-import { stateExpansiveManager } from '@/mixins/subscription.js';
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* validations */
-import { required } from 'vuelidate/lib/validators';
+import { required } from "vuelidate/lib/validators";
 /* numbers */
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 
 export default {
-  name: 'Sublimes',
+  name: "Sublimes",
   mixins: [stateExpansiveManager],
   components: { CurrencyInput },
-  inject: ['deepDisabled'],
+  inject: ["deepDisabled"],
   data() {
     return {
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
     };
   },
   async beforeMount() {
-    await this.getCatalogByName({ name: 'sublimits' });
-    await this.getCatalogByName({ name: 'endoso' });
+    await this.getCatalogByName({ name: "sublimits" });
+    await this.getCatalogByName({ name: "endoso" });
   },
   computed: {
-    ...mapGetters(['sublimits', 'boundSublimes', 'boundSublimitsEng', 'subscription_id', 'endoso', 'quotation']),
+    ...mapGetters(["sublimits", "boundSublimes", "boundSublimitsEng", "subscription_id", "endoso", "quotation"]),
     computedUsd: {
       get() {
-        console.log('entoro');
         const arr = this.boundSublimitsEng.map((i) => {
-          const mynumber = new Decimal(numeral((`${i.endosoText}` || '$0').replace(/[^0-9.]/g, '')).value() || 0);
+          const mynumber = new Decimal(numeral((`${i.endosoText}` || "$0").replace(/[^0-9.]/g, "")).value() || 0);
           const op = mynumber.div(numeral(this.quotation.exchangeRate || 0).value() || 0);
           return op.toNumber();
         });
@@ -162,18 +144,18 @@ export default {
     },
   },
   async mounted() {
-    await this.loadMultipleDeductiblesEng({ table: 'boundSublimitsEng' });
+    await this.loadMultipleDeductiblesEng({ table: "boundSublimitsEng" });
   },
   methods: {
-    ...mapActions(['saveBoundColumn', 'loadMultipleDeductiblesEng', 'saveEngDeductibleColumn', 'addNewFieldBound', 'getCatalogByName']),
-    ...mapMutations(['SET_BOUND_ENG']),
+    ...mapActions(["saveBoundColumn", "loadMultipleDeductiblesEng", "saveEngDeductibleColumn", "addNewFieldBound", "getCatalogByName"]),
+    ...mapMutations(["SET_BOUND_ENG"]),
     async checkField(column) {
       this.$v.boundSublimes[column].$touch();
-      console.log(this.$v.boundSublimes[column].$invalid, this.$v.boundSublimes[column].$error);
+      //console.log(this.$v.boundSublimes[column].$invalid, this.$v.boundSublimes[column].$error);
       if (this.$v.boundSublimes[column].$invalid || this.$v.boundSublimes[column].$error) return;
       await this.saveBoundColumn({
-        table: 'boundSublimesEng',
-        parent: 'boundSublimes',
+        table: "boundSublimesEng",
+        parent: "boundSublimes",
         column,
         type: 1,
       });
@@ -183,35 +165,33 @@ export default {
       const value = this.$v.boundSublimitsEng.$each[index][column].$model;
       const id = this.$v.boundSublimitsEng.$each[index].$model.id;
       if (this.$v.boundSublimitsEng.$each[index].endosoText.$model) {
-        this.$v.boundSublimitsEng.$each[index].endosoUsd.$model = Decimal(this.$v.boundSublimitsEng.$each[index].endosoText.$model).mul(
-          this.quotation.exchangeRate
-        );
+        this.$v.boundSublimitsEng.$each[index].endosoUsd.$model = Decimal(this.$v.boundSublimitsEng.$each[index].endosoText.$model).mul(this.quotation.exchangeRate);
         //this.$v.boundSublimitsEng.$each[index].endosoUsd.$model
       }
       await this.saveEngDeductibleColumn({
-        table: 'boundSublimitsEng',
+        table: "boundSublimitsEng",
         key: column,
         value,
         id,
       });
     },
     addSublimits() {
-      this.addNewFieldBound({ table: 'boundSublimitsEng' });
+      this.addNewFieldBound({ table: "boundSublimitsEng" });
     },
     removeField(index) {
       const id = this.$v.boundSublimitsEng.$each[index].$model.id;
       this.boundSublimitsEng.splice(index, 1);
       this.saveEngDeductibleColumn({
-        table: 'boundSublimitsEng',
-        key: 'active',
+        table: "boundSublimitsEng",
+        key: "active",
         value: false,
         id,
       });
     },
     numberWithDotsElement(e) {
       let val = e.target.value;
-      let onlyNumbers = val.toString().replace(/[^0-9]+/g, '');
-      let newVal = /^\d+$/.test(onlyNumbers) ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+      let onlyNumbers = val.toString().replace(/[^0-9]+/g, "");
+      let newVal = /^\d+$/.test(onlyNumbers) ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "";
       e.target.value = newVal;
     },
   },
@@ -231,8 +211,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 
 .CatCont {
   width: 100%;

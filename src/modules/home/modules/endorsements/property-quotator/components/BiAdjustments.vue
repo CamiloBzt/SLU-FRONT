@@ -25,21 +25,21 @@
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
-                        <v-text-field
-                          v-model="newExchangeRateInTo"
-                          label="Exchange rate"
-                          type="number"
-                        ></v-text-field>
+                    <v-text-field
+                      v-model="newExchangeRateInTo"
+                      label="Rate of Exchange"
+                      type="number"
+                    ></v-text-field>
                   </div>
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                        <v-text-field
-                          v-model="newShareInTo"
-                          label="Share"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
+                    <v-text-field
+                      v-model="newShareInTo"
+                      label="Share"
+                      type="number"
+                      suffix="%"
+                    ></v-text-field>
                   </div>
                 </div>
               </div>
@@ -135,7 +135,14 @@
                       <v-date-picker
                         v-model="newEffectiveDate"
                         @input="menu4 = false"
-                        @change="endorsementDateValidation($event, newEffectiveDate, newShareInTo, newExchangeRateInTo)"
+                        @change="
+                          endorsementDateValidation(
+                            $event,
+                            newEffectiveDate,
+                            newShareInTo,
+                            newExchangeRateInTo
+                          )
+                        "
                       ></v-date-picker>
                     </v-menu>
                     <div v-if="this.endorsementDateError" class="error-message">
@@ -173,107 +180,128 @@
                 <InputDaysDiference
                   :endorsementDate="newEffectiveDate"
                   :expiryDate="movementEndDate"
-                  :key="newEffectiveDate+movementEndDate"
+                  :key="newEffectiveDate + movementEndDate"
                 />
               </div>
               <div v-if="showInfoEndorsement">
-              <MovementValues
-                type="Bi Adjustment"
-                :insurableRiskData="biAdjustment"
-                :accountComplete="accountComplete"
-                ref="componente"
-                @onResultados="onResultados"
-              />
+                <MovementValues
+                  type="Bi Adjustment"
+                  :insurableRiskData="biAdjustment"
+                  :accountComplete="accountComplete"
+                  ref="componente"
+                  @onResultados="onResultados"
+                />
 
-              <div class="input-row w-100 d-flex flex-wrap">
-                <div class="input-col">
-                  <div class="inner-title">Additional</div>
-                  <div class="input-cont">
-                    <v-autocomplete
-                      label="Clause"
-                      v-model="clause"
-                      :items="clauseList"
-                      item-value="clause"
-                      item-text="clause"
-                    />
+                <div class="input-row w-100 d-flex flex-wrap">
+                  <div class="input-col">
+                    <div class="inner-title">Additional</div>
+                    <div class="input-cont">
+                      <v-autocomplete
+                        label="Clause"
+                        v-model="clause"
+                        :items="clauseList"
+                        item-value="clause"
+                        item-text="clause"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div class="input-col">
-                  <div class="inner-title" style="opacity: 0">|</div>
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menu3"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
+                  <div class="input-col">
+                    <div class="inner-title" style="opacity: 0">|</div>
+                    <div class="input-cont">
+                      <v-menu
+                        v-model="menu3"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="premiumPaymentDate"
+                            label="Premium payment date"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
                           v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                        @input="menu3 = false"
-                      ></v-date-picker>
-                    </v-menu>
+                          @input="menu3 = false"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
                   </div>
                 </div>
-              </div>
               </div>
             </v-stepper-content>
 
             <v-stepper-content step="2">
               <ModalEndorsement
-              v-if="modalOpen"
-              :modal="modal"
-              :actionButton1="actionButton1"
-              :actionButton2="actionButton2" />
+                v-if="modalOpen"
+                :modal="modal"
+                :actionButton1="actionButton1"
+                :actionButton2="actionButton2"
+              />
               <div class="detail-container-step2">
                 Admited premium
-              <div class="detail-container-step2">
-              <div class="input-row w-80 d-flex flex-wrap detail-subcontainer-step2">
-                <div class="input-col">
-                  <div class="inner-title">Detail</div>
-                  <div class="input-cont">
-                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" disabled />
-                  </div>
-                </div>
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-menu
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
+                <div class="detail-container-step2">
+                  <div
+                    class="input-row w-80 d-flex flex-wrap detail-subcontainer-step2"
+                  >
+                    <div class="input-col">
+                      <div class="inner-title">Detail</div>
+                      <div class="input-cont">
+                        <v-autocomplete
+                          label="Clause"
+                          v-model="clause"
+                          :items="clauseList"
+                          item-value="clause"
+                          item-text="clause"
                           disabled
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                      ></v-date-picker>
-                    </v-menu>
+                        />
+                      </div>
+                    </div>
+                    <div class="input-col">
+                      <div class="input-cont">
+                        <v-menu
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="premiumPaymentDate"
+                              label="Premium payment date"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              disabled
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="premiumPaymentDate"
+                          ></v-date-picker>
+                        </v-menu>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            </div>
-            <div class="container-modify-general"><div class="subcontainer-modify-general">Modify table <input @change="onChangeModifyTable($event)" :checked="checkedModifyTable"  v-model="checkedModifyTable" id="checkbox" type="checkbox"></div></div>
+              <div class="container-modify-general">
+                <div class="subcontainer-modify-general">
+                  Modify table
+                  <input
+                    @change="onChangeModifyTable($event)"
+                    :checked="checkedModifyTable"
+                    v-model="checkedModifyTable"
+                    id="checkbox"
+                    type="checkbox"
+                  />
+                </div>
+              </div>
               <div class="table-container container-input-row justify-center">
                 <div class="table-col-subtitle">
                   <div class="table-title-empty"></div>
@@ -282,10 +310,8 @@
                       <div class="table-input table-title-without-bg">
                         Damage
                       </div>
+                      <div class="table-input table-title-without-bg">Bi</div>
                       <div class="table-input table-title-without-bg">
-                        Bi
-                      </div>
-                        <div class="table-input table-title-without-bg">
                         Stocks
                       </div>
                       <div class="table-input table-title-without-bg">
@@ -297,9 +323,8 @@
                 <div class="table-col">
                   <div class="table-title-empty-two">Total premium</div>
                   <div class="container-table-subtitles">
-                  
-                  <div class="table-title-left">Original currency</div>
-                  <div class="table-title-rigth">USD</div>
+                    <div class="table-title-left">Original currency</div>
+                    <div class="table-title-rigth">USD</div>
                   </div>
                   <div class="input-row">
                     <div class="inner-col">
@@ -312,20 +337,24 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.totalpremium.damage) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.totalpremium.damage) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data">
+                        <div class="table-input-data">
                           <v-text-field
-                          v-model="result.totalpremium.bi"
-                          label=""
-                          type="number"
-                          prefix="$"
-                          @input="changeTableData()"
-                          :disabled="enabledInputs"
-                        ></v-text-field>
+                            v-model="result.totalpremium.bi"
+                            label=""
+                            type="number"
+                            prefix="$"
+                            @input="changeTableData()"
+                            :disabled="enabledInputs"
+                          ></v-text-field>
                         </div>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.totalpremium.bi) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.totalpremium.bi) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
                         <v-text-field
@@ -336,17 +365,23 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div  class="table-input-data"> {{ formatCurrency( resultUsd.totalpremium.stocks) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.totalpremium.stocks) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> {{ formatCurrency( result.totalpremium.total) }}</div>
-                        <div  class="table-input-data"> {{ formatCurrency( resultUsd.totalpremium.total) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(result.totalpremium.total) }}
+                        </div>
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.totalpremium.total) }}
+                        </div>
                       </div>
                       <!--
                       <div class="table-input-heigth blue-input space-between">
                         <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div> 
-                      </div> 
+                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
+                      </div>
                       -->
                     </div>
                   </div>
@@ -354,8 +389,8 @@
                 <div class="table-col">
                   <div class="table-title-empty-two">Premium SLU</div>
                   <div class="container-table-subtitles">
-                  <div class="table-title-left">Original currency</div>
-                  <div class="table-title-rigth">USD</div>
+                    <div class="table-title-left">Original currency</div>
+                    <div class="table-title-rigth">USD</div>
                   </div>
                   <div class="input-row">
                     <div class="inner-col">
@@ -368,7 +403,9 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div class="table-input-data"> {{ formatCurrency(resultUsd.premiumslu.damage) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.premiumslu.damage) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
                         <v-text-field
@@ -379,7 +416,9 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.premiumslu.bi) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.premiumslu.bi) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
                         <v-text-field
@@ -390,15 +429,21 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.premiumslu.stocks) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.premiumslu.stocks) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> {{ formatCurrency(result.premiumslu.total) }}</div>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.premiumslu.total) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(result.premiumslu.total) }}
+                        </div>
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.premiumslu.total) }}
+                        </div>
                       </div>
                       <!--<div class="table-input-heigth blue-input space-between">
                         <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div> 
+                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
                       </div>-->
                     </div>
                   </div>
@@ -406,10 +451,8 @@
                 <div class="table-col">
                   <div class="table-title-empty-two">Net premium</div>
                   <div class="container-table-subtitles">
-
-                 
-                  <div class="table-title-left">Original currency</div>
-                  <div class="table-title-rigth">USD</div>
+                    <div class="table-title-left">Original currency</div>
+                    <div class="table-title-rigth">USD</div>
                   </div>
                   <div class="input-row">
                     <div class="inner-col">
@@ -422,7 +465,9 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div class="table-input-data"> {{ formatCurrency(resultUsd.netpremium.damage) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.netpremium.damage) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
                         <v-text-field
@@ -433,7 +478,9 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.netpremium.bi) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.netpremium.bi) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
                         <v-text-field
@@ -444,15 +491,21 @@
                           @input="changeTableData()"
                           :disabled="enabledInputs"
                         ></v-text-field>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.netpremium.stocks) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.netpremium.stocks) }}
+                        </div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> {{ formatCurrency(result.netpremium.total) }}</div>
-                        <div  class="table-input-data"> {{ formatCurrency(resultUsd.netpremium.total) }}</div> 
+                        <div class="table-input-data">
+                          {{ formatCurrency(result.netpremium.total) }}
+                        </div>
+                        <div class="table-input-data">
+                          {{ formatCurrency(resultUsd.netpremium.total) }}
+                        </div>
                       </div>
                       <!--<div class="table-input-heigth blue-input space-between">
                         <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div> 
+                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
                       </div>-->
                     </div>
                   </div>
@@ -488,11 +541,21 @@
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments"  v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
+        <v-btn
+          :outlined="e1 == 3 ? false : true"
+          rounded
+          large
+          :text="e1 == 3 ? true : false"
+          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 3 ? 'none' : '#003D6D'"
+          @click="goNext(e1)"
+        >
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -551,92 +614,92 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: {type: Boolean},
-    newShare: {type: String},
-    newExchangeRate: {type: String},
+    showInfoEndorsement: { type: Boolean },
+    newShare: { type: String },
+    newExchangeRate: { type: String },
   },
   data() {
     return {
       newShareInTo: this.newShare,
       newExchangeRateInTo: this.newExchangeRate,
-    result: {
-      totalpremium:{
-      bi: 0,
-      damage: 0,
-      stocks: 0,
-      total: 0
+      result: {
+        totalpremium: {
+          bi: 0,
+          damage: 0,
+          stocks: 0,
+          total: 0,
+        },
+        premiumslu: {
+          bi: 0,
+          damage: 0,
+          stocks: 0,
+          total: 0,
+        },
+        netpremium: {
+          bi: 0,
+          damage: 0,
+          stocks: 0,
+          total: 0,
+        },
       },
-      premiumslu:{
-      bi: 0,
-      damage: 0,
-      stocks: 0,
-      total: 0
+      resultUsd: {
+        totalpremium: {
+          bi: 0,
+          damage: 0,
+          stocks: 0,
+          total: 0,
+        },
+        premiumslu: {
+          bi: 0,
+          damage: 0,
+          stocks: 0,
+          total: 0,
+        },
+        netpremium: {
+          bi: 0,
+          damage: 0,
+          stocks: 0,
+          total: 0,
+        },
       },
-      netpremium:{
-      bi: 0,
-      damage: 0,
-      stocks: 0,
-      total: 0
-      }
-    },
-    resultUsd: {
-      totalpremium:{
-      bi: 0,
-      damage: 0,
-      stocks: 0,
-      total: 0
-      },
-      premiumslu:{
-      bi: 0,
-      damage: 0,
-      stocks: 0,
-      total: 0
-      },
-      netpremium:{
-      bi: 0,
-      damage: 0,
-      stocks: 0,
-      total: 0
-      }
-    },
-    checkedModifyTable: false,
-    modalOpen: false,
-    modal:{
-      title: 'Changes admited premium',
-      body: `If you continue, the data entered in the
+      checkedModifyTable: false,
+      modalOpen: false,
+      modal: {
+        title: "Changes admited premium",
+        body: `If you continue, the data entered in the
         <br />
         admitted premium table will be taken.`,
-      Button1: 'Accept',
-      Button2: 'Cancel',
-      includeFooter: true,
-      includeCloseButton: false
-    },
+        Button1: "Accept",
+        Button2: "Cancel",
+        includeFooter: true,
+        includeCloseButton: false,
+      },
       totalPremium: [
         {
           id: 1,
           name: "Original Currency",
           premiumAllRisk: 0,
           premiumAlop: 0,
-          premiumTotal:0,
+          premiumTotal: 0,
           sluAllRisk: 0,
           sluAlop: 0,
-          sluTotal:0,
-          netAllRisk:0,
-          netAlop:0,
-          netTotal:0,
+          sluTotal: 0,
+          netAllRisk: 0,
+          netAlop: 0,
+          netTotal: 0,
         },
         {
           id: 2,
           name: "USD",
           premiumAllRisk: 0,
           premiumAlop: 0,
-          premiumTotal:0,
+          premiumTotal: 0,
           sluAllRisk: 0,
           sluAlop: 0,
-          sluTotal:0,
-          netAllRisk:0,
-          netAlop:0,
-          netTotal:0,
+          sluTotal: 0,
+          netAllRisk: 0,
+          netAlop: 0,
+          netTotal: 0,
         },
       ],
       endorsementDateError: false,
@@ -659,11 +722,11 @@ export default {
       menu4: false,
       menu5: false,
       effectiveDate: this.dateSaved,
-      inceptionDate:  new Date(this.accountComplete.deductibles.inceptionDate)
-      .toISOString()
-      .substr(0, 10),
-      newEffectiveDate:  this.dateSaved,
-      movementEndDate: new Date( this.accountComplete.deductibles.expiryDate)
+      inceptionDate: new Date(this.accountComplete.deductibles.inceptionDate)
+        .toISOString()
+        .substr(0, 10),
+      newEffectiveDate: this.dateSaved,
+      movementEndDate: new Date(this.accountComplete.deductibles.expiryDate)
         .toISOString()
         .substr(0, 10),
       newMovementEndDate: new Date(
@@ -729,15 +792,15 @@ export default {
       endDateError: false,
       endorsmentReporData: {},
       enabledInputs: true,
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
     };
   },
   async beforeMount() {
     this.clauseList = await PaymentService.getClauses();
   },
   created() {
-    console.log('this.accountComplete --->', this.accountComplete)
+    console.log("this.accountComplete --->", this.accountComplete);
     const tiv = this.accountComplete.tiv;
     this.biAdjustment = {
       property_damage: tiv.insurable.propertyDamage,
@@ -758,16 +821,16 @@ export default {
   watch: {
     e1: async function () {
       if (this.e1 === 1) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Cancel';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Cancel";
       }
       if (this.e1 === 2) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Return";
       }
       if (this.e1 === 3) {
-        this.buttonTitle = 'Finalize'
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Finalize";
+        this.buttonTitleBack = "Return";
         if (this.admittedPremium !== 0) {
           this.detailValues[0].premiumTotal = this.admittedPremium;
         }
@@ -880,20 +943,20 @@ export default {
     },
   },
   methods: {
-    onChangeModifyTable(event){
-      this.modalOpen = event.target.checked
-      if(!event.target.checked){
-        this.checkedModifyTable = false
+    onChangeModifyTable(event) {
+      this.modalOpen = event.target.checked;
+      if (!event.target.checked) {
+        this.checkedModifyTable = false;
       }
     },
     actionButton1() {
-      this.modalOpen = false
-      this.enabledInputs = false
+      this.modalOpen = false;
+      this.enabledInputs = false;
     },
-    actionButton2(){
-      this.checkedModifyTable = !this.checkedModifyTable
-      document.getElementById("checkbox").checked = false
-      this.modalOpen = false
+    actionButton2() {
+      this.checkedModifyTable = !this.checkedModifyTable;
+      document.getElementById("checkbox").checked = false;
+      this.modalOpen = false;
     },
     formatCurrency(amount) {
       if (isNaN(amount)) {
@@ -910,15 +973,15 @@ export default {
     activarVistaDatos() {
       this.$refs.componente.reciboLllamada();
     },
-    toUsd(value){
-      const exchangeRate = this.accountComplete.deductibles.exchangeRate
-      return Decimal.div(value, exchangeRate).toNumber()
+    toUsd(value) {
+      const exchangeRate = this.accountComplete.deductibles.exchangeRate;
+      return Decimal.div(value, exchangeRate).toNumber();
     },
 
     unFormatCurrency(strAmount) {
-      return +( ( strAmount ).replace('$','').replace(',','') );
+      return +strAmount.replace("$", "").replace(",", "");
     },
-   async onResultados(datasMV) {
+    async onResultados(datasMV) {
       // console.log("dataMV", datasMV);
       this.movementValues = datasMV;
       this.detailValues.map((value, index) => {
@@ -941,25 +1004,31 @@ export default {
         value.sluTotal = value.sluDamage + value.sluBi + value.sluStocks;
       });
 
-      const tivModificado =  {
+      const tivModificado = {
         propertyDamageMovement: this.movementValues[0].damage,
-        businessInterruptionMovement:this.movementValues[0].bi,
-        stockMovement:this.movementValues[0].stocks,
+        businessInterruptionMovement: this.movementValues[0].bi,
+        stockMovement: this.movementValues[0].stocks,
 
-        propertyDamageRate:this.accountComplete.tiv.premium.propertyDamageRate,
-        businessInterruptionRate:this.accountComplete.tiv.premium.businessInterruptionRate,
-        stockRate:this.accountComplete.tiv.premium.stockRate,
-        stockPercentaje:(this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) /100,
-      }
+        propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
+        businessInterruptionRate:
+          this.accountComplete.tiv.premium.businessInterruptionRate,
+        stockRate: this.accountComplete.tiv.premium.stockRate,
+        stockPercentaje:
+          (this.accountComplete.tiv.premium.stockPercentaje ||
+            this.accountComplete.tiv.insurable.porcentaje ||
+            0) / 100,
+      };
 
-      
       const dates = {
-        effetiveDate:new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0,10),
-        expiryDate:new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10),
-        endormenteffetiveDate: new Date (this.newEffectiveDate),
-        movementEndDate:new Date(this.newMovementEndDate),
-      }
-
+        effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
+          .toISOString()
+          .substring(0, 10),
+        expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
+          .toISOString()
+          .substring(0, 10),
+        endormenteffetiveDate: new Date(this.newEffectiveDate),
+        movementEndDate: new Date(this.newMovementEndDate),
+      };
 
       const totalPremium = new netPremiumInclusionRisk(
         tivModificado,
@@ -972,123 +1041,172 @@ export default {
       const retultTotalPremium = totalPremium.totalPremium();
       const premiumOriginal2 = this.totalPremium.find((el) => el.id === 1);
 
-      this.result.totalpremium.bi = retultTotalPremium.biTotalPremium.toFixed(2);
-      this.result.totalpremium.damage = retultTotalPremium.damageTotalPremium.toFixed(2);
-      this.result.totalpremium.stocks = retultTotalPremium.stockTotalPremium.toFixed(2);
+      this.result.totalpremium.bi =
+        retultTotalPremium.biTotalPremium.toFixed(2);
+      this.result.totalpremium.damage =
+        retultTotalPremium.damageTotalPremium.toFixed(2);
+      this.result.totalpremium.stocks =
+        retultTotalPremium.stockTotalPremium.toFixed(2);
       this.result.totalpremium.total = retultTotalPremium.total.toFixed(2);
 
-      this.result.premiumslu.bi = totalPremium.biPremiumSlu().toFixed(2),
-      this.result.premiumslu.damage = totalPremium.damagePremiumSlu().toFixed(2),
-      this.result.premiumslu.stocks = totalPremium.stocksPremiumSlu().toFixed(2)
-      this.result.premiumslu.total = +(totalPremium.totalPremiumSlu().replace("$", "").replace(',',''))
+      (this.result.premiumslu.bi = totalPremium.biPremiumSlu().toFixed(2)),
+        (this.result.premiumslu.damage = totalPremium
+          .damagePremiumSlu()
+          .toFixed(2)),
+        (this.result.premiumslu.stocks = totalPremium
+          .stocksPremiumSlu()
+          .toFixed(2));
+      this.result.premiumslu.total = +totalPremium
+        .totalPremiumSlu()
+        .replace("$", "")
+        .replace(",", "");
 
-      this.resultUsd.totalpremium.bi = this.toUsd(retultTotalPremium.biTotalPremium).toFixed(2);
-      this.resultUsd.totalpremium.damage = this.toUsd(retultTotalPremium.damageTotalPremium).toFixed(2)
-      this.resultUsd.totalpremium.stocks = this.toUsd(retultTotalPremium.stockTotalPremium).toFixed(2);
-      this.resultUsd.totalpremium.total = this.toUsd(retultTotalPremium.total).toFixed(2);
+      this.resultUsd.totalpremium.bi = this.toUsd(
+        retultTotalPremium.biTotalPremium
+      ).toFixed(2);
+      this.resultUsd.totalpremium.damage = this.toUsd(
+        retultTotalPremium.damageTotalPremium
+      ).toFixed(2);
+      this.resultUsd.totalpremium.stocks = this.toUsd(
+        retultTotalPremium.stockTotalPremium
+      ).toFixed(2);
+      this.resultUsd.totalpremium.total = this.toUsd(
+        retultTotalPremium.total
+      ).toFixed(2);
 
-      this.resultUsd.premiumslu.bi = this.toUsd(totalPremium.biPremiumSlu().toFixed(2)),
-      this.resultUsd.premiumslu.damage = this.toUsd(totalPremium.damagePremiumSlu().toFixed(2)),
-      this.resultUsd.premiumslu.stocks = this.toUsd(totalPremium.stocksPremiumSlu().toFixed(2))
-      this.resultUsd.premiumslu.total = this.toUsd(+(totalPremium.totalPremiumSlu().replace("$", "").replace(',','')))
+      (this.resultUsd.premiumslu.bi = this.toUsd(
+        totalPremium.biPremiumSlu().toFixed(2)
+      )),
+        (this.resultUsd.premiumslu.damage = this.toUsd(
+          totalPremium.damagePremiumSlu().toFixed(2)
+        )),
+        (this.resultUsd.premiumslu.stocks = this.toUsd(
+          totalPremium.stocksPremiumSlu().toFixed(2)
+        ));
+      this.resultUsd.premiumslu.total = this.toUsd(
+        +totalPremium.totalPremiumSlu().replace("$", "").replace(",", "")
+      );
 
       const options = {
-          isEdited:this.isEdited,
-          dataEdited: {
-            // totalPremium
-            premiumDamage:this.totalPremium[0].premiumDamage,
-            premiumBi:this.totalPremium[0].premiumBi,
-            premiumStocks:this.totalPremium[0].premiumStocks,
+        isEdited: this.isEdited,
+        dataEdited: {
+          // totalPremium
+          premiumDamage: this.totalPremium[0].premiumDamage,
+          premiumBi: this.totalPremium[0].premiumBi,
+          premiumStocks: this.totalPremium[0].premiumStocks,
 
-            // premiumSlu
-            sluDamage:this.totalPremium[0].sluDamage,
-            sluBi:this.totalPremium[0].sluBi,
-            sluStocks:this.totalPremium[0].sluStocks,
+          // premiumSlu
+          sluDamage: this.totalPremium[0].sluDamage,
+          sluBi: this.totalPremium[0].sluBi,
+          sluStocks: this.totalPremium[0].sluStocks,
+        },
+      };
 
-          },
-        }
+      // Obteniendo los calculos de Net premium
+      const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
+        tivModificado,
+        this.accountComplete.deductibles,
+        this.accountComplete.tiv?.boundInsurableProp.sluLine,
+        false,
+        dates,
+        options
+      );
 
-        // Obteniendo los calculos de Net premium
-        const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
-          tivModificado,
-          this.accountComplete.deductibles,
-          this.accountComplete.tiv?.boundInsurableProp.sluLine,
-          false,
-          dates,
-          options
-        );
+      const resultUSD = await netPremiumInclusionRiskAutoCalcs(
+        tivModificado,
+        this.accountComplete.deductibles,
+        this.accountComplete.tiv?.boundInsurableProp.sluLine,
+        true,
+        dates,
+        options
+      );
 
-        const resultUSD = await netPremiumInclusionRiskAutoCalcs(
-          tivModificado,
-          this.accountComplete.deductibles,
-          this.accountComplete.tiv?.boundInsurableProp.sluLine,
-          true,
-          dates,
-          options
-        );
-
-      this.result.netpremium.bi = resultOriginalCurenncy.data.biPremiumSlu.toFixed(2),
-      this.result.netpremium.damage = resultOriginalCurenncy.data.damagePremiumSlu.toFixed(2),
-      this.result.netpremium.stocks = resultOriginalCurenncy.data.stocksPremiumSlu.toFixed(2)
-      this.result.netpremium.total =  resultOriginalCurenncy.data.totalPremiumSlu.toFixed(2)
-      this.resultUsd.netpremium.bi = resultUSD.data.biPremiumSlu.toFixed(2),
-      this.resultUsd.netpremium.damage =  resultUSD.data.damagePremiumSlu.toFixed(2),
-      this.resultUsd.netpremium.stocks = resultUSD.data.stocksPremiumSlu.toFixed(2)
-      this.resultUsd.netpremium.total =  resultUSD.data.totalPremiumSlu.toFixed(2)
+      (this.result.netpremium.bi =
+        resultOriginalCurenncy.data.biPremiumSlu.toFixed(2)),
+        (this.result.netpremium.damage =
+          resultOriginalCurenncy.data.damagePremiumSlu.toFixed(2)),
+        (this.result.netpremium.stocks =
+          resultOriginalCurenncy.data.stocksPremiumSlu.toFixed(2));
+      this.result.netpremium.total =
+        resultOriginalCurenncy.data.totalPremiumSlu.toFixed(2);
+      (this.resultUsd.netpremium.bi = resultUSD.data.biPremiumSlu.toFixed(2)),
+        (this.resultUsd.netpremium.damage =
+          resultUSD.data.damagePremiumSlu.toFixed(2)),
+        (this.resultUsd.netpremium.stocks =
+          resultUSD.data.stocksPremiumSlu.toFixed(2));
+      this.resultUsd.netpremium.total =
+        resultUSD.data.totalPremiumSlu.toFixed(2);
     },
-    changeTableData(){
+    changeTableData() {
       this.resultUsd.totalpremium.bi = this.toUsd(this.result.totalpremium.bi);
-      this.resultUsd.totalpremium.damage = this.toUsd(this.result.totalpremium.damage)
-      this.resultUsd.totalpremium.stocks = this.toUsd(this.result.totalpremium.stocks);
-      this.result.totalpremium.total =  
-      Number(this.result.totalpremium.bi) +
-      Number(this.result.totalpremium.damage) +
-      Number(this.result.totalpremium.stocks); 
+      this.resultUsd.totalpremium.damage = this.toUsd(
+        this.result.totalpremium.damage
+      );
+      this.resultUsd.totalpremium.stocks = this.toUsd(
+        this.result.totalpremium.stocks
+      );
+      this.result.totalpremium.total =
+        Number(this.result.totalpremium.bi) +
+        Number(this.result.totalpremium.damage) +
+        Number(this.result.totalpremium.stocks);
       try {
-        this.resultUsd.totalpremium.total =this.toUsd(+(this.result.totalpremium.total.replace("$", "").replace(',',''))) 
-      } catch (error) {
-        
-      }
+        this.resultUsd.totalpremium.total = this.toUsd(
+          +this.result.totalpremium.total.replace("$", "").replace(",", "")
+        );
+      } catch (error) {}
 
-      this.resultUsd.premiumslu.bi = this.toUsd(this.result.premiumslu.bi),
-      this.resultUsd.premiumslu.damage = this.toUsd(this.result.premiumslu.damage),
-      this.resultUsd.premiumslu.stocks = this.toUsd(this.result.premiumslu.stocks)
-      this.result.premiumslu.total =  
-      Number(this.result.premiumslu.bi) +
-      Number(this.result.premiumslu.damage) +
-      Number(this.result.premiumslu.stocks); 
+      (this.resultUsd.premiumslu.bi = this.toUsd(this.result.premiumslu.bi)),
+        (this.resultUsd.premiumslu.damage = this.toUsd(
+          this.result.premiumslu.damage
+        )),
+        (this.resultUsd.premiumslu.stocks = this.toUsd(
+          this.result.premiumslu.stocks
+        ));
+      this.result.premiumslu.total =
+        Number(this.result.premiumslu.bi) +
+        Number(this.result.premiumslu.damage) +
+        Number(this.result.premiumslu.stocks);
       try {
-        this.resultUsd.premiumslu.total = this.toUsd(+(this.result.premiumslu.total.replace("$", "").replace(',','')))
-      } catch (error) {
-        
-      }
+        this.resultUsd.premiumslu.total = this.toUsd(
+          +this.result.premiumslu.total.replace("$", "").replace(",", "")
+        );
+      } catch (error) {}
 
-      this.resultUsd.netpremium.bi = this.toUsd(this.result.netpremium.bi),
-      this.resultUsd.netpremium.damage =  this.toUsd(this.result.netpremium.damage),
-      this.resultUsd.netpremium.stocks = this.toUsd(this.result.netpremium.stocks),
-      this.result.netpremium.total =  
-      Number(this.result.netpremium.bi) +
-      Number(this.result.netpremium.damage) +
-      Number(this.result.netpremium.stocks); 
-      try{
-       this.resultUsd.netpremium.total =  this.toUsd(+(this.result.netpremium.total.replace("$", "").replace(',','')))
-      }catch(e){
-
-      }
+      (this.resultUsd.netpremium.bi = this.toUsd(this.result.netpremium.bi)),
+        (this.resultUsd.netpremium.damage = this.toUsd(
+          this.result.netpremium.damage
+        )),
+        (this.resultUsd.netpremium.stocks = this.toUsd(
+          this.result.netpremium.stocks
+        )),
+        (this.result.netpremium.total =
+          Number(this.result.netpremium.bi) +
+          Number(this.result.netpremium.damage) +
+          Number(this.result.netpremium.stocks));
+      try {
+        this.resultUsd.netpremium.total = this.toUsd(
+          +this.result.netpremium.total.replace("$", "").replace(",", "")
+        );
+      } catch (e) {}
     },
     async stepone() {
       this.e1 = 2;
       console.log(this.e1);
     },
-    async endorsementDateValidation(event, incomingDate, newShareInTo, newExchangeRateInTo) {
-      
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.expiryDatetoCalc)
-      ) {
+    async endorsementDateValidation(
+      event,
+      incomingDate,
+      newShareInTo,
+      newExchangeRateInTo
+    ) {
+      if (Date.parse(incomingDate) >= Date.parse(this.expiryDatetoCalc)) {
         this.endorsementDateError = true;
       } else {
-        await this.changeDateEndorsementAndShare(incomingDate, newShareInTo, newExchangeRateInTo)
+        await this.changeDateEndorsementAndShare(
+          incomingDate,
+          newShareInTo,
+          newExchangeRateInTo
+        );
         this.endorsementDateError = false;
       }
     },
@@ -1119,15 +1237,19 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
     async submit() {
       this.e1 = 1;
 
       // Actualizando Share
-      this.accountComplete.tiv.boundInsurableProp.sluLine = Number(this.newShareInTo);
-      this.accountComplete.deductibles.exchangeRate = Number(this.newExchangeRateInTo);
+      this.accountComplete.tiv.boundInsurableProp.sluLine = Number(
+        this.newShareInTo
+      );
+      this.accountComplete.deductibles.exchangeRate = Number(
+        this.newExchangeRateInTo
+      );
 
       // Obteniendo el insurable
       const premiumOriginal = this.detailValues.find((el) => el.id === 1);
@@ -1199,7 +1321,7 @@ export default {
         files: this.endorsementDocuments,
       });
 
-      await this.backToCreateEndorsement()
+      await this.backToCreateEndorsement();
     },
 
     endDateValidation(event, incomingDate) {
@@ -1211,10 +1333,10 @@ export default {
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.e1 = 2;
-        this.activarVistaDatos()
+        this.activarVistaDatos();
       } else if (e1 == 2) {
         this.e1 = 3;
       } else if (e1 == 3) {
@@ -1223,7 +1345,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -1247,9 +1369,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1303,6 +1425,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -1329,7 +1452,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1517,35 +1640,35 @@ export default {
   align-items: center;
   padding: 20px 0 0;
 }
-.table-input-data{
+.table-input-data {
   display: flex;
   width: 50%;
   align-items: center;
   justify-content: flex-start;
   padding: 0px 5px;
 }
-.space-between{
+.space-between {
   display: flex;
   justify-content: space-between;
 }
-.container-modify-general{
+.container-modify-general {
   width: 100%;
   display: flex;
   justify-content: flex-end;
   padding: 10px;
 }
-.subcontainer-modify-general{
+.subcontainer-modify-general {
   display: flex;
   font-size: 18px;
   font-weight: 600;
-  input{
+  input {
     cursor: pointer;
     accent-color: #003d6d;
     margin-left: 10px;
-    transform: scale(1.8)
+    transform: scale(1.8);
   }
 }
-.detail-container-step2{
+.detail-container-step2 {
   font-size: 18px;
   font-weight: 600;
   display: flex;
@@ -1554,7 +1677,7 @@ export default {
   margin-left: 20px;
 }
 
-.detail-subcontainer-step2{
+.detail-subcontainer-step2 {
   margin-left: 50px;
 }
 .textarea-stopped-container {
@@ -1580,9 +1703,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1606,6 +1729,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -1627,11 +1751,11 @@ export default {
     width: 100%;
   }
 }
-.container-table-subtitles{
+.container-table-subtitles {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content:space-between;
+  justify-content: space-between;
   margin: 10px 0px;
 }
 .table-title-left {

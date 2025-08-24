@@ -1,118 +1,190 @@
-import Vue from 'vue'
-import VueApollo from 'vue-apollo'
-import { setContext } from 'apollo-link-context'
-import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
+import Vue from "vue";
+import VueApollo from "vue-apollo";
+import { setContext } from "apollo-link-context";
+import { createApolloClient, restartWebsockets } from "vue-cli-plugin-apollo/graphql-client";
+import { createUploadLink } from "apollo-upload-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
-// Install the vue plugin
-Vue.use(VueApollo)
+Vue.use(VueApollo);
 
-// Name of the localStorage item
-const AUTH_TOKEN = 'sessionToken'
+const AUTH_TOKEN = "sessionToken";
 
 // Http endpoint
-const httpEndpoint = process.env.VUE_APP_API_URL || 'http://localhost:5000'
+const httpEndpoint = process.env.VUE_APP_API_URL || "http://localhost:5000";
 
-// Config
+// Auth link: incluye el token en cada request
 const authLink = setContext(async (_, { headers }) => {
-  // async token function
-  const token = localStorage.getItem(AUTH_TOKEN)
-  // Return the headers to the context so httpLink can read them
+  const token = localStorage.getItem(AUTH_TOKEN);
   return {
     headers: {
       ...headers,
-      Authorization: token || ''
-    }
-  }
-})
+      Authorization: token || "",
+    },
+  };
+});
 
-const cache = new InMemoryCache()
+// Cache con configuración opcional para mejorar normalización
+const cache = new InMemoryCache({
+  // typePolicies: {
+  //   Query: {
+  //     fields: {
+  //       myList: {
+  //         merge(existing = [], incoming) {
+  //           return incoming;
+  //         },
+  //       },
+  //     },
+  //   },
+  // },
+});
+
+// Link HTTP con soporte para uploads multipart
+const uploadLink = createUploadLink({
+  uri: httpEndpoint,
+  credentials: "include",
+});
 
 const defaultOptions = {
-  // You can use `https` for secure connection (recommended in production)
   httpEndpoint,
-  // You can use `wss` for secure connection (recommended in production)
-  // Use `null` to disable subscriptions
-  wsEndpoint: null, // process.env.VUE_APP_GRAPHQL_WS || 'ws://localhost:5000',
-  // LocalStorage token
+  wsEndpoint: null,
   tokenName: AUTH_TOKEN,
-  // Enable Automatic Query persisting with Apollo Engine
   persisting: false,
-  // Use websockets for everything (no HTTP)
-  // You need to pass a `wsEndpoint` for this to work
   websocketsOnly: false,
-  // Is being rendered on the server?
   ssr: false,
-
-  // Override default apollo link
-  // note: don't override httpLink here, specify httpLink options in the
-  // httpLinkOptions property of defaultOptions.
-  link: authLink,
-
-  // Override default cache
+  // Encadenar authLink -> uploadLink para soportar cabeceras + Upload scalar
+  link: authLink.concat(uploadLink),
   cache,
+};
 
-  // Override the way the Authorization header is set
-  // getAuth: (tokenName) => ...
-
-  // Additional ApolloClient options
-  // apollo: { ... }
-
-  // Client local data (see apollo-link-state)
-  // clientState: { resolvers: { ... }, defaults: { ... } }
-}
-
-// Create apollo client
-export const { apolloClient, wsClient } = createApolloClient({
+// Crear cliente Apollo
+export const { apolloClient } = createApolloClient({
   ...defaultOptions,
-  // ...options,
-})
-apolloClient.wsClient = wsClient
+});
 
-// Call this in the Vue app file
-export function createProvider (options = {}) {
-  // Create vue apollo provider
+export function createProvider(options = {}) {
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
     defaultOptions: {
       $query: {
-        fetchPolicy: 'cache-and-network',
-        errorPolicy: 'all'
+        fetchPolicy: "cache-first",
+        errorPolicy: "all",
       },
     },
-    errorHandler (error) {
-      // eslint-disable-next-line no-console
-      console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
+    errorHandler(error) {
+      console.log("%cGraphQL Error", "background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;", error.message);
     },
-  })
+  });
 
-  return apolloProvider
+  return apolloProvider;
 }
 
-// Manually call this when user log in
-export async function onLogin (apolloClient, token) {
-  if (typeof localStorage !== 'undefined' && token) {
-    localStorage.setItem(AUTH_TOKEN, token)
+// LOGIN: guardar token y limpiar cache
+export async function onLogin(apolloClient, token) {
+  if (typeof localStorage !== "undefined" && token) {
+    localStorage.setItem(AUTH_TOKEN, token);
   }
-  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient);
+  Vue.nextTick(() => {
+    setTimeout(async () => {
+      try {
+        if (!apolloClient.queryManager || !apolloClient.queryManager.queries.size) {
+          // no hay consultas en vuelo, puedes hacer resetStore sin problemas
+          await apolloClient.resetStore();
+        }
+      } catch (error) {
+        console.error("Error al resetear el store:", error.message);
+      }
+    }, 1000);
+  });
+}
+
+// LOGOUT: eliminar token y limpiar cache
+export async function onLogout(apolloClient) {
+  if (typeof localStorage !== "undefined") {
+    localStorage.removeItem(AUTH_TOKEN);
+  }
+  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient);
   try {
-    // await apolloClient.resetStore()
+    await apolloClient.clearStore();
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('%cError on cache reset (login)', 'color: orange;', e.message)
+    console.log("%cError on cache reset (logout)", "color: orange;", e.message);
   }
 }
 
-// Manually call this when user log out
-export async function onLogout (apolloClient) {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem(AUTH_TOKEN)
+/*import Vue from "vue";
+import VueApollo from "vue-apollo";
+import { setContext } from "apollo-link-context";
+import { createApolloClient, restartWebsockets } from "vue-cli-plugin-apollo/graphql-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+
+Vue.use(VueApollo);
+const AUTH_TOKEN = "sessionToken";
+
+const httpEndpoint = process.env.VUE_APP_API_URL || "http://localhost:5001";
+
+const authLink = setContext(async (_, { headers }) => {
+  const token = localStorage.getItem(AUTH_TOKEN);
+  return {
+    headers: {
+      ...headers,
+      Authorization: token || "",
+    },
+  };
+});
+
+const cache = new InMemoryCache();
+
+const defaultOptions = {
+  httpEndpoint,
+  wsEndpoint: null,
+  tokenName: AUTH_TOKEN,
+  persisting: false,
+  websocketsOnly: false,
+  ssr: false,
+  link: authLink,
+  cache,
+};
+
+export const { apolloClient, wsClient } = createApolloClient({
+  ...defaultOptions,
+});
+apolloClient.wsClient = wsClient;
+
+export function createProvider(options = {}) {
+  const apolloProvider = new VueApollo({
+    defaultClient: apolloClient,
+    defaultOptions: {
+      $query: {
+        fetchPolicy: "cache-and-network",
+        errorPolicy: "all",
+      },
+    },
+    errorHandler(error) {
+      console.log("%cError", "background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;", error.message);
+    },
+  });
+
+  return apolloProvider;
+}
+
+export async function onLogin(apolloClient, token) {
+  if (typeof localStorage !== "undefined" && token) {
+    localStorage.setItem(AUTH_TOKEN, token);
   }
-  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient);
   try {
-    // await apolloClient.resetStore()
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
+    console.log("%cError on cache reset (login)", "color: orange;", e.message);
   }
 }
+
+export async function onLogout(apolloClient) {
+  if (typeof localStorage !== "undefined") {
+    localStorage.removeItem(AUTH_TOKEN);
+  }
+  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient);
+  try {
+  } catch (e) {
+    console.log("%cError on cache reset (logout)", "color: orange;", e.message);
+  }
+}*/

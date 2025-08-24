@@ -3,10 +3,7 @@
     <div v-if="openEmailEditor" class="modal" @click.self="closeModal()">
       <div class="modalSn">
         <!--CERRAR MODAL-->
-        <div
-          @click="closeModal()"
-          class="CloseModalCont d-flex justify-center align-center"
-        >
+        <div @click="closeModal()" class="CloseModalCont d-flex justify-center align-center">
           <v-icon> mdi-close-circle </v-icon>
         </div>
         <div class="emailContainer">
@@ -30,34 +27,15 @@
             </div>
           </div>
           <div class="emailCont pl-3 pr-3 pt-2 pb-1">
-            <EmailHeader
-              :header="headerEmail"
-              :account="account"
-              reference="nameReference"
-            />
+            <EmailHeader :header="headerEmail" :account="account" reference="nameReference" />
             <CcParticipants :ccParticipants="ccParticipants" />
-            <CcoParticipants
-              ref="ccoClose"
-              :ccoParticipants="ccoParticipants"
-            />
+            <CcoParticipants ref="ccoClose" :ccoParticipants="ccoParticipants" />
             <div class="ExpansionLineTop mt-4"></div>
             <!--EDITOR DE TEXTO DEL EMAIL-->
-            <EmailEditor 
-              ref="emailEditor" 
-              :htmlEmail="htmlEmail" 
-              :fileUpload="fileUpload"
-              />
+            <EmailEditor ref="emailEditor" :htmlEmail="htmlEmail" :fileUpload="fileUpload" />
           </div>
           <div class="sendCont">
-            <v-btn
-              rounded
-              depressed
-              color="#003D6D"
-              class="button"
-              @click="closeAccountAndSendEmail()"
-            >
-              Send
-            </v-btn>
+            <v-btn rounded depressed color="#003D6D" class="button" @click="closeAccountAndSendEmail()"> Send </v-btn>
           </div>
         </div>
       </div>
@@ -66,19 +44,18 @@
 </template>
 
 <script>
-import EmailTemplateService from '../services/mailTemplates.service'
-import StarterKit from '@tiptap/starter-kit';
-import EmailEditor from '@/components/Email/EmailEditor.vue';
-import CcParticipants from '@/components/Email/CcParticipants.vue';
-import CcoParticipants from '@/components/Email/CcoParticipants.vue';
-import EmailHeader from '@/components/Email/EmailHeader.vue';
-
+import EmailTemplateService from "../services/mailTemplates.service";
+import StarterKit from "@tiptap/starter-kit";
+import EmailEditor from "@/components/Email/EmailEditor.vue";
+import CcParticipants from "@/components/Email/CcParticipants.vue";
+import CcoParticipants from "@/components/Email/CcoParticipants.vue";
+import EmailHeader from "@/components/Email/EmailHeader.vue";
 
 /* mixins */
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 
 export default {
-  name: 'EmailRichEditor',
+  name: "EmailRichEditor",
   mixins: [stateExpansiveManager],
   components: {
     EmailEditor,
@@ -88,20 +65,20 @@ export default {
   },
   props: {
     openEmailEditor: {
-			type: Boolean,
-			required: true,
-			default: false
-		},
-    idTemplate:{
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    idTemplate: {
       type: Number,
-      required:false
+      required: false,
     },
     headerEmail: {
       type: String,
     },
-    account:{
-      type:String
-    }
+    account: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -110,61 +87,60 @@ export default {
       //CcParticipants
       ccParticipants: [],
       ccValue: null, //cc que elige el usuario
-      template:{},
+      template: {},
       //CCO Participants
       ccoParticipants: [],
       ccoValue: null, //cco que elige el usuario,
       showModal: false,
-			htmlEmail: '',
-      fileUpload:[],
-			lang: ['Spanish','English']
+      htmlEmail: "",
+      fileUpload: [],
+      lang: ["Spanish", "English"],
     };
   },
   methods: {
-		currentLang () {
-			return 'currentLang'
-		},
-		resetTemplateLang (){
-			return 'resetTemplateLang'
-		},
-		getCurrentTemplateLanguage (){
-			return 'getCurrentTemplateLanguage'
-		},
-		setCurrentTemplateLanguage (){
-			return 'setCurrentTemplateLanguage'
-		},
-		getCatalogByName (){
-			return 'getCatalogByName'
-		},
-		setEmailTemplate (){
-			return 'setEmailTemplate'
-		},
-		getEmailTemplate (){
-			return 'getEmailTemplate'
-		},
-		sendEmailAction (){
-			return 'sendEmailAction'
-		},
-    updateData() {
-			return 'updateData'
+    currentLang() {
+      return "currentLang";
     },
-    setTemplateLang () {
-			return 'setTemplateLang'
-		},
-    closeAccountAndSendEmail () {
-			return 'closeAccountAndSendEmail'
-		},
+    resetTemplateLang() {
+      return "resetTemplateLang";
+    },
+    getCurrentTemplateLanguage() {
+      return "getCurrentTemplateLanguage";
+    },
+    setCurrentTemplateLanguage() {
+      return "setCurrentTemplateLanguage";
+    },
+    getCatalogByName() {
+      return "getCatalogByName";
+    },
+    setEmailTemplate() {
+      return "setEmailTemplate";
+    },
+    getEmailTemplate() {
+      return "getEmailTemplate";
+    },
+    sendEmailAction() {
+      return "sendEmailAction";
+    },
+    updateData() {
+      return "updateData";
+    },
+    setTemplateLang() {
+      return "setTemplateLang";
+    },
+    closeAccountAndSendEmail() {
+      return "closeAccountAndSendEmail";
+    },
     closeModal() {
-      this.$emit('close-modal')
-    }
+      this.$emit("close-modal");
+    },
   },
   watch: {
     // watch para automatizar el cambio del id y hace el request para traerlo de la bade de datos
-    idTemplate:async function(id){
-      this.template = await EmailTemplateService.getEmailTemplateById(id)
-      this.htmlEmail = this.template.html_template
-    }
-    
+    idTemplate: async function (id) {
+      this.template = await EmailTemplateService.getEmailTemplateById(id);
+      this.htmlEmail = this.template.html_template;
+    },
   },
 };
 </script>
@@ -178,7 +154,7 @@ export default {
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index:5000;
+  z-index: 5000;
   display: flex;
   align-content: center;
   align-items: center;
@@ -188,7 +164,7 @@ export default {
     width: 650px;
     height: 95%;
     background: white;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
     //CERRAR MODAL
     .CloseModalCont {
@@ -257,7 +233,7 @@ export default {
       .emailCont {
         width: 100%;
         height: auto;
-        border-radius: 15px;
+        border-radius: 5px;
         overflow: auto;
         position: relative;
         margin-top: 15px;

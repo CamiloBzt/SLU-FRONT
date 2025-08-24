@@ -1,73 +1,55 @@
 <template>
   <div class="Cont d-flex align-start flex-wrap">
     <div class="InputsCont d-flex flex-wrap justify-start align-center pa-3">
-      <div class="InputCont" style="margin-left: 0.25rem;">
+      <div class="InputCont" style="margin-left: 0.25rem">
         <v-text-field v-model="search" label="Account" />
       </div>
       <div class="InputCont">
         <v-text-field v-model="search" label="Reference Number" />
       </div>
       <div class="InputCont">
-        <v-select
-          v-model.trim="country"
-          label="Country"
-          :items="countries"
-          item-text="description"
-          item-value="id"
-          :loading="loadingCountries"
-          :disabled="countries.length === 0"
-          clearable
-        ></v-select>
+        <v-select v-model.trim="country" label="Country" :items="countries" item-text="description" item-value="id" :loading="loadingCountries" :disabled="countries.length === 0" clearable></v-select>
       </div>
     </div>
 
     <div class="ButtonCont d-flex justify-end align-center">
-      <v-btn
-        color="#003D6D"
-        class="btn"
-        rounded
-        depressed
-        @click="searchRenewal()"
-      >
-        Search Account
-      </v-btn>
+      <v-btn color="#003D6D" class="btn" rounded depressed @click="searchRenewal()"> Search Account </v-btn>
     </div>
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 export default {
-  name: 'RenewalsSearch',
+  name: "RenewalsSearch",
   data() {
     return {
       loadingCountries: false,
-      country: '',
-			search: '',
+      country: "",
+      search: "",
     };
   },
   async mounted() {
-    const lco = 'loadingCountries';
+    const lco = "loadingCountries";
     this[lco] = !this[lco];
-    await this.getCatalogByName({ name: 'countries' });
+    await this.getCatalogByName({ name: "countries" });
     this[lco] = false;
   },
   computed: {
-    ...mapGetters(['countries']),
+    ...mapGetters(["countries"]),
   },
   methods: {
-    ...mapActions(['getCatalogByName', 'getSubscriptionList']),
+    ...mapActions(["getCatalogByName", "getSubscriptionList"]),
     searchRenewal() {
       const data = {
         limit: 10,
         offset: 0,
         query: this.search,
         filter: [
-          ['s.id', 'desc'],
-          ['s.created_at', 'desc'],
+          ["s.id", "desc"],
+          ["s.created_at", "desc"],
         ],
       };
       this.getSubscriptionList(data);
-      console.log('qus');
     },
   },
 };
@@ -103,6 +85,7 @@ export default {
     margin-top: 15px;
 
     .btn {
+      border-radius: 5px;
       color: white;
       width: 170px;
       text-transform: none;

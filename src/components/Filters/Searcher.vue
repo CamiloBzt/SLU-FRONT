@@ -150,7 +150,7 @@ export default {
       filterItems: [
         { value: "s.reference", text: "Ref Number" },
         { value: "ct.description", text: "Country" },
-        { value: "rt.description", text: "Line of Risk" },
+        { value: "rt.description", text: "Line of Business" },
         { value: 'sm."insured_name"', text: "Name" },
         { value: 'b."name"', text: "Broker" },
         { value: 'c."name"', text: "Cedent" },
@@ -388,7 +388,7 @@ export default {
 
     .SearchForm {
       width: 83% !important;
-      border-radius: 15px;
+      border-radius: 5px;
       z-index: 1000;
     }
   }

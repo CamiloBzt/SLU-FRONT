@@ -4,7 +4,7 @@
       <!--NOMBRE DEL CREADOR DE LA NOTA-->
       <div class="NoteCreator">
         <h6>
-          {{ item.user_name + ' ' + item.date }}
+          {{ item.user_name + " " + item.date }}
         </h6>
       </div>
 
@@ -16,15 +16,11 @@
         </div>
 
         <!--RESPUESTAS DE LA NOTA-->
-        <div
-          class="ResNote"
-          v-for="(res, index) in item.arrayResponse"
-          :key="index"
-        >
+        <div class="ResNote" v-for="(res, index) in item.arrayResponse" :key="index">
           <!--USUARIO DE LA RESPUESTA-->
           <div class="resNoteUser">
             <h6>
-              {{ res.user_name + ' ' + res.date }}
+              {{ res.user_name + " " + res.date }}
             </h6>
           </div>
 
@@ -36,20 +32,11 @@
 
         <!--FORMULARIO PARA RESPONDER NOTA-->
         <div v-if="item.showRes" class="ResForm">
-          <Mentionable
-            :keys="['@']"
-            :items="mentionsObject"
-            offset="6"
-            insert-space
-            @open="loadIssues()"
-            @search="loadIssues($event)"
-            @apply="apply"
-            filtering-disabled
-          >
+          <Mentionable :keys="['@']" :items="mentionsObject" offset="6" insert-space @open="loadIssues()" @search="loadIssues($event)" @apply="apply" filtering-disabled>
             <textarea class="textNote" v-model="text" />
             <template #no-result>
               <div class="dim">
-                {{ loading ? 'Loading...' : 'No result' }}
+                {{ loading ? "Loading..." : "No result" }}
               </div>
             </template>
 
@@ -68,29 +55,17 @@
         </div>
 
         <!--BOTON RESPONDER NOTA-->
-        <div
-          v-if="!item.showRes"
-          @click="item.showRes = !item.showRes"
-          class="respNote d-flex justify-center align-center"
-        >
+        <div v-if="!item.showRes" @click="item.showRes = !item.showRes" class="respNote d-flex justify-center align-center">
           <v-icon> mdi-chat-outline </v-icon>
         </div>
 
         <!--BOTON ELIMINAR NOTA-->
-        <div
-          v-if="!item.showRes"
-          @click="btnDeleteNote(item, index)"
-          class="DeleteNote d-flex justify-center align-center"
-        >
+        <div v-if="!item.showRes" @click="btnDeleteNote(item, index)" class="DeleteNote d-flex justify-center align-center">
           <v-icon> mdi-trash-can-outline </v-icon>
         </div>
 
         <!--BOTON CERRAR RESPUESTA-->
-        <div
-          v-if="item.showRes"
-          @click="item.showRes = !item.showRes"
-          class="CloseRes d-flex justify-center align-center"
-        >
+        <div v-if="item.showRes" @click="item.showRes = !item.showRes" class="CloseRes d-flex justify-center align-center">
           <v-icon> mdi-close </v-icon>
         </div>
       </div>
@@ -101,27 +76,27 @@
   </div>
 </template>
 <script>
-import VTooltip from 'v-tooltip';
-import { Mentionable } from 'vue-mention';
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import VTooltip from "v-tooltip";
+import { Mentionable } from "vue-mention";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      text: '',
+      text: "",
       items: [],
-      loading: false
-    }
+      loading: false,
+    };
   },
   components: {
     VTooltip,
     Mentionable,
   },
   computed: {
-    ...mapGetters(['mentionsObject', 'notesArray', 'subscription_id', 'user']),
+    ...mapGetters(["mentionsObject", "notesArray", "subscription_id", "user"]),
   },
   methods: {
-    ...mapActions(['deleteNote', 'usersName', , 'responseNote']),
-    ...mapMutations(['setLoading']),
+    ...mapActions(["deleteNote", "usersName", , "responseNote"]),
+    ...mapMutations(["setLoading"]),
     btnDeleteNote(item, index) {
       if (item.arrayResponse) {
         item.arrayResponse.forEach((value, index2) => {
@@ -137,22 +112,22 @@ export default {
       });
     },
     async sendResponse(item, noteResponse) {
-      this.setLoading()
-      
+      this.setLoading();
+
       const users_ids = this.items.filter((element, index) => {
         return this.items.indexOf(element) === index;
-      })
-      
+      });
+
       await this.responseNote({
         description: noteResponse,
         subscription_id: this.subscription_id,
         parent_note_id: item.id,
-        users_ids
+        users_ids,
       })
         .then((res) => {
           if (res) {
-            this.text = ''
-            this.items = []
+            this.text = "";
+            this.items = [];
           }
           this.setLoading();
           this.$forceUpdate();
@@ -161,14 +136,14 @@ export default {
           this.setLoading();
         });
     },
-    async loadIssues(searchText = '') {
+    async loadIssues(searchText = "") {
       this.loading = true;
       await this.usersName({ name: searchText });
       this.loading = false;
     },
     apply(item) {
-      this.items.push(item.id)
-    }
+      this.items.push(item.id);
+    },
   },
 };
 </script>
@@ -254,7 +229,7 @@ export default {
         margin-top: 15px;
         overflow: hidden;
         border: solid 1px #547fa9;
-        border-radius: 15px;
+        border-radius: 5px;
 
         .mentionable {
           width: 100%;
@@ -321,7 +296,7 @@ export default {
       .CloseRes {
         width: 30px;
         height: 30px;
-        border-radius: 30px;
+        border-radius: 5px;
         background: #edf2f8;
         cursor: pointer;
         position: absolute;

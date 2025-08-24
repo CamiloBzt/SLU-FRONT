@@ -245,7 +245,7 @@ export default {
     state.modalCreateBrokerOrCedent = !state.modalCreateBrokerOrCedent;
   },
   setModalRate(state, type) {
-    if (type == "Other Line of Risks Modal") {
+    if (type == "Other Line of Business Modal") {
       state.modalRate = !state.modalRate;
     } else if (type == "Car & Ear Modal") {
       state.modalRateCarEar = !state.modalRateCarEar;

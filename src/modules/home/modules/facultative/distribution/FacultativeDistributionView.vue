@@ -1,121 +1,93 @@
 <template>
   <div>
-    <BarNavGeneral 
-      :NavContent="BarNavData"
-    />
-    <!-- Copy account -->
-		<div class="full-container d-flex justify-end align-center mt-5">
-			<AppCloseAccount 
-				icon="mdi-close-circle"
-				header="Reason to close account"
-				:closeAccountData="CloseAccountData" 
-				@close-account="closeAccountById($event)"
-			/>
-		</div>
-    <!-- Tabla Facultative  -->
-    <div class="TableContent tableStyle">
-      <!--CABEZA DE LA TABLA-->
-      <div class="TableHeadContent d-flex justify-start align-start">
-        <!--NOMBRES DE LAS COLUMNAS-->
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Ref Number
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Country
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Line of Risk
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Name
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Broker
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Cedent
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Expedition Date
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Inception Date
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row2">
-          Expiry Date
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Status
-        </div>
-        <div class="TableHeadName d-flex justify-center align-center row1">
-          Actions
-        </div>
-      </div>
-
-      <!--CUERPO DE LA TABLA-->
-      <div class="TableBodyContent mt-4">
-        <!--
-        AQUI EMPIEZA EL CICLO A ITERAR 
-        PARA MOSTRAR LAS FILAS DE LA TABLA
-      -->
-        <div class="TableContentInner scrollable" ref="tableContentInner">
-          <div v-for="(item, i) in list" :key="i" class="TableBodyContSn d-flex justify-center align-start"
-            :style="{ width: tableBodyContSnWidth > 0 ? `${tableBodyContSnWidth}px` : '100%' }">
-            <!--INFORMACIÓN DE LA TABLA-->
-            <div class="TableBodyTextLink d-flex justify-center align-center row3" @click="setSubscriptionInfo(item)">
-              <div class="text-style" v-if="item.facultative_reference">
-                {{ item.facultative_reference != undefined ? item.facultative_reference : 'N/D' }}
-              </div>
-              <div class="text-style" v-else>
-                {{ item.reference != undefined ? item.reference : 'N/D' }}
-              </div>
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ item.country != undefined ? item.country : 'N/D' }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ item.risk_type != undefined ? item.risk_type : 'N/D' }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ item.submission_name ? item.submission_name : 'N/D' }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ item.broker_name ? item.broker_name : 'N/D' }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ item.cedent_name ? item.cedent_name : 'N/D' }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ formatDateMoment(item.created_at) }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ formatDateMoment(item.inception_date) }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row4">
-              {{ formatDateMoment(item.expiry_date) }}
-            </div>
-            <div class="TableBodyText d-flex justify-center align-center row3">
-              {{ item.status }}
-            </div>
-            <div @click="ShowNotesHistory(item.id)" class="TableBodyText d-flex justify-center align-center row3">
-              <v-icon>mdi-comment-outline</v-icon>
-            </div>
-          </div>
-        </div>
-      </div>
-      <ShowMoreButtonFacultative/>
+    <BarNavGeneral :NavContent="BarNavData" />
+    <div class="full-container d-flex justify-end align-center">
+      <AppCloseAccount
+        icon="mdi-close-circle"
+        header="Reason to close account"
+        :closeAccountData="CloseAccountData"
+        @close-account="closeAccountById($event)"
+      />
     </div>
-		<!-- Stepper -->
-		<AppStepper :steps="StepperData" />
-		<!-- Close account -->
-		<div class="full-container d-flex justify-end align-center">
-			<AppCloseAccount 
-				iconColor="#003D6D"
-				icon="mdi-content-copy"
-				:closeAccountData="CloseAccountData" 
-				@close-account="closeAccountById($event)"
-			/>
-		</div>
+    <div class="table-wrapper">
+      <table class="subscription-table">
+        <!--Titulos de la tabla-->
+        <thead>
+          <tr>
+            <td class="ref">Ref Number</td>
+            <td class="country">Country</td>
+            <td class="risk">Line of Business</td>
+            <td class="name">Name</td>
+            <td class="broker">Broker</td>
+            <td class="cedent">Cedent</td>
+            <td class="expedition">Expedition Date</td>
+            <td class="expedition">Inception Date</td>
+            <td class="expedition">Expiry Date</td>
+            <td class="status">Status</td>
+            <td class="actions">Actions</td>
+          </tr>
+        </thead>
+        <!--Columnas de la tabla-->
+        <tbody>
+          <tr v-for="(item, i) in list" :key="i">
+            <td class="ref" @click="setSubscriptionInfo(item)">
+              <div class="ref" v-if="item.facultative_reference">
+                {{
+                  item.facultative_reference != undefined
+                    ? item.facultative_reference
+                    : "N/D"
+                }}
+              </div>
+              <div class="ref" v-else>
+                {{ item.reference != undefined ? item.reference : "N/D" }}
+              </div>
+            </td>
+            <td class="country">
+              {{ item.country != undefined ? item.country : "N/D" }}
+            </td>
+            <td class="risk">
+              {{ item.risk_type != undefined ? item.risk_type : "N/D" }}
+            </td>
+            <td class="name">
+              {{ item.submission_name ? item.submission_name : "N/D" }}
+            </td>
+            <td class="name">
+              {{ item.broker_name ? item.broker_name : "N/D" }}
+            </td>
+            <td class="name">
+              {{ item.cedent_name ? item.cedent_name : "N/D" }}
+            </td>
+            <td class="expedition">
+              {{ formatDateMoment(item.created_at) }}
+            </td>
+            <td class="expedition">
+              {{ formatDateMoment(item.inception_date) }}
+            </td>
+            <td class="expedition">
+              {{ formatDateMoment(item.expiry_date) }}
+            </td>
+            <td class="status">
+              {{ item.status }}
+            </td>
+            <td @click="ShowNotesHistory(item.id)" class="status">
+              <v-icon>mdi-comment-outline</v-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ShowMoreButtonFacultative />
+    </div>
+    <!-- Stepper -->
+    <AppStepper :steps="StepperData" />
+    <!-- Close account -->
+    <div class="full-container d-flex justify-end align-center">
+      <AppCloseAccount
+        iconColor="#003D6D"
+        icon="mdi-content-copy"
+        :closeAccountData="CloseAccountData"
+        @close-account="closeAccountById($event)"
+      />
+    </div>
     <div class="ditrtibution-container mt-5">
       <div class="content">
         <!--Encabezado-->
@@ -131,7 +103,12 @@
             :item="item"
           />
           <div class="reinsurer-actions">
-            <v-btn text rounded class="delete-button" @click="deleteReinsurer()">
+            <v-btn
+              text
+              rounded
+              class="delete-button"
+              @click="deleteReinsurer()"
+            >
               <v-icon class="mr-2 remove-button"> mdi-minus </v-icon>
               Remove
             </v-btn>
@@ -147,43 +124,42 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import BarNavGeneral from "@/components/BarNavGeneral"
-import AppCloseAccount from "@/application/components/AppCloseAccount"
-import AppStepper from '@/application/components/AppStepper'
+import { mapActions, mapState } from "vuex";
+import BarNavGeneral from "@/components/BarNavGeneral";
+import AppCloseAccount from "@/application/components/AppCloseAccount";
+import AppStepper from "@/application/components/AppStepper";
 import InputPro from "./components/InputPro.vue";
 import Reinsurer from "./components/Reinsurer.vue";
 import { getReinsurer } from "./services/mock-distribution.service.js";
-import moment from 'moment';
-import ShowMoreButtonFacultative from './ShowMoreButtonFacultative.vue';
-
+import moment from "moment";
+import ShowMoreButtonFacultative from "./ShowMoreButtonFacultative.vue";
 // Services
-import { BarNavData } from './services/mock-bar-nav.service.js'
-import { GetCloseAccount } from './services/mock-get-close-account.service'
-import { GetStepper } from './services/mock-get-stepper.service.js'
+import { BarNavData } from "./services/mock-bar-nav.service.js";
+import { GetCloseAccount } from "./services/mock-get-close-account.service";
+import { GetStepper } from "./services/mock-get-stepper.service.js";
 
 export default {
   name: "FacultativeDistributionView",
   components: {
     AppCloseAccount,
-		BarNavGeneral,
-		AppStepper,
+    BarNavGeneral,
+    AppStepper,
     ShowMoreButtonFacultative,
     InputPro,
-    Reinsurer
+    Reinsurer,
   },
   data() {
     return {
       pagination: {
         limit: 10,
         offset: 0,
-        query3: '7',
-        filterSearch3: 's.status_id'
+        query3: "7",
+        filterSearch3: "s.status_id",
       },
-      BarNavData:[],
-			StepperData: [],
-			CloseAccountData: [],
-      title:'PRO 22 - 00652 BIMBO',
+      BarNavData: [],
+      StepperData: [],
+      CloseAccountData: [],
+      title: "PRO 22 - 00652 BIMBO",
       ReinsurerArray: [],
       // list: [
       //   {
@@ -209,10 +185,10 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(['getSubscriptionList']),
+    ...mapActions(["getSubscriptionList"]),
     formatDateMoment(dateToFormat) {
       if (dateToFormat) {
-        return moment(String(dateToFormat)).utc().format('DD - MM - YYYY');
+        return moment(String(dateToFormat)).utc().format("DD - MM - YYYY");
       } else {
         return dateToFormat;
       }
@@ -238,66 +214,29 @@ export default {
       this.ReinsurerArray.splice(this.ReinsurerArray.length, 0, newReinsurer);
     },
     deleteReinsurer() {
-      const lastElement = this.ReinsurerArray[this.ReinsurerArray.length - 1]
+      const lastElement = this.ReinsurerArray[this.ReinsurerArray.length - 1];
       this.ReinsurerArray = this.ReinsurerArray.filter(function (f) {
         return f.id !== lastElement.id;
       });
     },
-    closeAccountById ( { idOptionSelected } ) {}
+    closeAccountById({ idOptionSelected }) {},
   },
   async beforeMount() {
     this.getSubscriptionList(this.pagination);
     this.ReinsurerArray = await getReinsurer();
-    this.BarNavData = await BarNavData()
-		this.CloseAccountData = await GetCloseAccount()
-		this.StepperData = await GetStepper()
+    this.BarNavData = await BarNavData();
+    this.CloseAccountData = await GetCloseAccount();
+    this.StepperData = await GetStepper();
   },
 };
 </script>
 
 <style lang="less" scoped>
-.tableStyle {
-  background-color: white;
-  border: none;
-  border-radius: 16px;
-}
-.row1 {
-  width: 9% !important;
-  height: 4rem;
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 17.6px;
-}
+@import "~@/assets/global.less";
+@import "~@/assets/style/Subscription/Table.less";
 
-.row2 {
-  width: 10% !important;
-  height: 4rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 17.6px;
-}
-.row3 {
-  width: 9% !important;
-  height: 4rem;
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 17.6px;
-}
-.row4 {
-  width: 10% !important;
-  height: 4rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 17.6px;
-}
 .text-style {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 17.6px;
@@ -312,9 +251,9 @@ export default {
   .content {
     width: 100%;
     height: auto;
-    border-radius: 15px;
+    border-radius: 5px;
     background: white;
-    box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+    //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
     margin-top: 28px;
     display: flex;
     flex-wrap: wrap;
@@ -356,23 +295,23 @@ export default {
       flex-wrap: wrap;
       padding-bottom: 10px;
     }
-    .reinsurer-actions{
+    .reinsurer-actions {
       display: flex;
       flex-direction: column;
       .add-button {
         color: #003d6d;
       }
       .remove-button {
-        background: #D2DEED;
+        background: #d2deed;
         color: #003d6d;
-        border-radius: 30px;
+        border-radius: 5px;
       }
     }
-    .v-btn{
-    justify-content: flex-start !important;
-    color: #003d6d
-  }
-    
+    .v-btn {
+      border-radius: 5px;
+      justify-content: flex-start !important;
+      color: #003d6d;
+    }
   }
 }
 </style>

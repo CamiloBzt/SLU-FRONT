@@ -8,9 +8,7 @@
           </div>
 
           <div class="head-items-cont-checkbox">
-            <div class="endorsement-title" style="padding: 20px">
-              Admitted premium
-            </div>
+            <div class="endorsement-title" style="padding: 20px">Admitted premium</div>
 
             <div class="endorsement-title" style="padding: 20px">
               <v-checkbox v-model="showTable"></v-checkbox>
@@ -38,18 +36,12 @@
                     <div class="inner-col wide-col">
                       <div class="table-input blue-input">
                         <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
+                          :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''"
                           v-model="item.premiumDamage"
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumDamage = changeHandler(
-                                item.id,
-                                item.premiumDamage,
-                                'premiumDamage'
-                              );
+                              item.premiumDamage = changeHandler(item.id, item.premiumDamage, 'premiumDamage');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -59,18 +51,12 @@
 
                       <div class="table-input blue-input">
                         <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
+                          :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''"
                           v-model="item.premiumBi"
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumBi = changeHandler(
-                                item.id,
-                                item.premiumBi,
-                                'premiumBi'
-                              );
+                              item.premiumBi = changeHandler(item.id, item.premiumBi, 'premiumBi');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -80,18 +66,12 @@
 
                       <div class="table-input blue-input">
                         <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
+                          :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''"
                           v-model="item.premiumStocks"
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.premiumStocks = changeHandler(
-                                item.id,
-                                item.premiumStocks,
-                                'premiumStocks'
-                              );
+                              item.premiumStocks = changeHandler(item.id, item.premiumStocks, 'premiumStocks');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -100,14 +80,7 @@
                       </div>
 
                       <div class="table-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="premiumTotalComputed"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="premiumTotalComputed" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -126,18 +99,12 @@
                     <div class="inner-col wide-col">
                       <div class="table-input blue-input">
                         <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
+                          :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''"
                           v-model="item.sluDamage"
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluDamage = changeHandler(
-                                item.id,
-                                item.sluDamage,
-                                'sluDamage'
-                              );
+                              item.sluDamage = changeHandler(item.id, item.sluDamage, 'sluDamage');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -147,18 +114,12 @@
 
                       <div class="table-input blue-input">
                         <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
+                          :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''"
                           v-model="item.sluBi"
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluBi = changeHandler(
-                                item.id,
-                                item.sluBi,
-                                'sluBi'
-                              );
+                              item.sluBi = changeHandler(item.id, item.sluBi, 'sluBi');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -168,18 +129,12 @@
 
                       <div class="table-input blue-input">
                         <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
+                          :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''"
                           v-model="item.sluStocks"
                           :options="currencyOptions"
                           @blur="
                             ($event) => {
-                              item.sluStocks = changeHandler(
-                                item.id,
-                                item.sluStocks,
-                                'sluStocks'
-                              );
+                              item.sluStocks = changeHandler(item.id, item.sluStocks, 'sluStocks');
                             }
                           "
                           :disabled="item.name == 'USD'"
@@ -188,14 +143,7 @@
                       </div>
 
                       <div class="table-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="sluTotalComputed"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="sluTotalComputed" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -223,50 +171,19 @@
                   <div class="input-row">
                     <div class="inner-col wide-col">
                       <div class="table-input blue-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="premiumDamageUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                          :readonly="!showTable"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="premiumDamageUSD" :options="currencyOptions" :disabled="true" :readonly="!showTable" />
                       </div>
 
                       <div class="table-input blue-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="premiumBiUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                          :readonly="!showTable"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="premiumBiUSD" :options="currencyOptions" :disabled="true" :readonly="!showTable" />
                       </div>
 
                       <div class="table-input blue-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="premiumStocksUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                          :readonly="!showTable"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="premiumStocksUSD" :options="currencyOptions" :disabled="true" :readonly="!showTable" />
                       </div>
 
                       <div class="table-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="premiumTotalUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="premiumTotalUSD" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -284,50 +201,19 @@
                   <div class="input-row">
                     <div class="inner-col wide-col">
                       <div class="table-input blue-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="sluDamageUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                          :readonly="!showTable"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="sluDamageUSD" :options="currencyOptions" :disabled="true" :readonly="!showTable" />
                       </div>
 
                       <div class="table-input blue-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="sluBiUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                          :readonly="!showTable"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="sluBiUSD" :options="currencyOptions" :disabled="true" :readonly="!showTable" />
                       </div>
 
                       <div class="table-input blue-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="sluStocksUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                          :readonly="!showTable"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="sluStocksUSD" :options="currencyOptions" :disabled="true" :readonly="!showTable" />
                       </div>
 
                       <div class="table-input">
-                        <currency-input
-                          :prefix="
-                            typeEndorsement == 'Exclusion Risk' ? '-' : ''
-                          "
-                          v-model="sluTotalUSD"
-                          :options="currencyOptions"
-                          :disabled="true"
-                        />
+                        <currency-input :prefix="typeEndorsement == 'Exclusion Risk' ? '-' : ''" v-model="sluTotalUSD" :options="currencyOptions" :disabled="true" />
                       </div>
                     </div>
                   </div>
@@ -343,50 +229,24 @@
       <v-card id="card-eye" class="pb-3">
         <v-card-actions class="px-3 pb-3">
           <v-flex text-xs-right>
-            <v-btn
-              @click="dialog = false"
-              color="orange"
-              dark
-              small
-              absolute
-              fab
-              right
-            >
+            <v-btn @click="dialog = false" color="orange" dark small absolute fab right>
               <v-icon color="white">mdi-close</v-icon>
             </v-btn>
           </v-flex>
         </v-card-actions>
 
-        <v-card-title class="font-weight-bold text-h5"
-          >Changes admitted premium</v-card-title
-        >
+        <v-card-title class="font-weight-bold text-h5">Changes admitted premium</v-card-title>
 
         <v-divider id="divisor"></v-divider>
 
         <div id="border-blue" class="mb-8">
-          <v-card-text class="font-weight-bold text-h6 blue-text">
-            If you continue, the data entered in the admitted premium table will
-            be taken.
-          </v-card-text>
+          <v-card-text class="font-weight-bold text-h6 blue-text"> If you continue, the data entered in the admitted premium table will be taken. </v-card-text>
         </div>
 
-        <div
-          class="stepper-btn mt-7 mb-3 d-flex justify-space-around align-center"
-        >
-          <v-btn text rounded large class="blue-btn" @click="dialog = false">
-            Accept
-          </v-btn>
+        <div class="stepper-btn mt-7 mb-3 d-flex justify-space-around align-center">
+          <v-btn text rounded large class="blue-btn" @click="dialog = false"> Accept </v-btn>
 
-          <v-btn
-            outlined
-            rounded
-            large
-            class="clear-btn"
-            color="#003D6D"
-            @click="cancelModifyTable"
-          >
-            Cancel
-          </v-btn>
+          <v-btn outlined rounded large class="clear-btn" color="#003D6D" @click="cancelModifyTable"> Cancel </v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -455,68 +315,122 @@ export default {
         this.premiumTotal = this.sumTotalPremium();
         return this.premiumTotal;
       },
+      set() {},
     },
     sluTotalComputed: {
       get() {
         this.sluTotal = this.sumPremiumSlu();
         return this.sluTotal;
       },
+      set() {},
     },
-    premiumDamageUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.premiumDamage / this.exchangeRate).toFixed(2);
+    premiumDamageUSD: {
+      get() {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (!item || !this.exchangeRate) return 0;
+        return Number((item.premiumDamage / this.exchangeRate).toFixed(2));
+      },
+      set(newValue) {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (item && this.exchangeRate) {
+          item.premiumDamage = parseFloat(newValue) * this.exchangeRate;
+        }
+      },
     },
-    premiumBiUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.premiumBi / this.exchangeRate).toFixed(2);
+
+    premiumBiUSD: {
+      get() {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (!item || !this.exchangeRate) return 0;
+        return Number((item.premiumBi / this.exchangeRate).toFixed(2));
+      },
+      set(newValue) {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (item && this.exchangeRate) {
+          item.premiumBi = parseFloat(newValue) * this.exchangeRate;
+        }
+      },
     },
-    premiumStocksUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.premiumStocks / this.exchangeRate).toFixed(2);
+
+    premiumStocksUSD: {
+      get() {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (!item || !this.exchangeRate) return 0;
+        return Number((item.premiumStocks / this.exchangeRate).toFixed(2));
+      },
+      set(newValue) {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (item && this.exchangeRate) {
+          item.premiumStocks = parseFloat(newValue) * this.exchangeRate;
+        }
+      },
     },
-    premiumTotalUSD() {
-      // Suma los valores en USD
-      return (
-        parseFloat(this.premiumDamageUSD) +
-        parseFloat(this.premiumBiUSD) +
-        parseFloat(this.premiumStocksUSD)
-      ).toFixed(2);
+
+    premiumTotalUSD: {
+      get() {
+        return (parseFloat(this.premiumDamageUSD || 0) + parseFloat(this.premiumBiUSD || 0) + parseFloat(this.premiumStocksUSD || 0)).toFixed(2);
+      },
+      set() {},
     },
-    sluDamageUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.sluDamage / this.exchangeRate).toFixed(2);
+
+    sluDamageUSD: {
+      get() {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (!item || !this.exchangeRate) return 0;
+        return Number((item.sluDamage / this.exchangeRate).toFixed(2));
+      },
+      set(newValue) {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (item && this.exchangeRate) {
+          item.sluDamage = parseFloat(newValue) * this.exchangeRate;
+        }
+      },
     },
-    sluBiUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.sluBi / this.exchangeRate).toFixed(2);
+
+    sluBiUSD: {
+      get() {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (!item || !this.exchangeRate) return 0;
+        return Number((item.sluBi / this.exchangeRate).toFixed(2));
+      },
+      set(newValue) {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (item && this.exchangeRate) {
+          item.sluBi = parseFloat(newValue) * this.exchangeRate;
+        }
+      },
     },
-    sluStocksUSD() {
-      const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      return (admittedPremium.sluStocks / this.exchangeRate).toFixed(2);
+
+    sluStocksUSD: {
+      get() {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (!item || !this.exchangeRate) return 0;
+        return Number((item.sluStocks / this.exchangeRate).toFixed(2));
+      },
+      set(newValue) {
+        const item = this.detailValues.find((el) => el.id === 1);
+        if (item && this.exchangeRate) {
+          item.sluStocks = parseFloat(newValue) * this.exchangeRate;
+        }
+      },
     },
-    sluTotalUSD() {
-      return (
-        parseFloat(this.sluDamageUSD) +
-        parseFloat(this.sluBiUSD) +
-        parseFloat(this.sluStocksUSD)
-      ).toFixed(2);
+
+    sluTotalUSD: {
+      get() {
+        return (parseFloat(this.sluDamageUSD || 0) + parseFloat(this.sluBiUSD || 0) + parseFloat(this.sluStocksUSD || 0)).toFixed(2);
+      },
+      set() {},
     },
   },
   methods: {
     sumTotalPremium() {
       const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      const sum =
-        admittedPremium.premiumDamage +
-        admittedPremium.premiumBi +
-        admittedPremium.premiumStocks;
+      const sum = admittedPremium.premiumDamage + admittedPremium.premiumBi + admittedPremium.premiumStocks;
       return sum;
     },
     sumPremiumSlu() {
       const admittedPremium = this.detailValues.find((el) => el.id === 1);
-      const sum =
-        admittedPremium.sluDamage +
-        admittedPremium.sluBi +
-        admittedPremium.sluStocks;
+      const sum = admittedPremium.sluDamage + admittedPremium.sluBi + admittedPremium.sluStocks;
       return sum;
     },
     changeHandler(id, value, concept) {
@@ -551,9 +465,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -607,6 +521,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -685,7 +600,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -709,7 +624,7 @@ export default {
 }
 
 #card-eye {
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 #divisor {
@@ -721,7 +636,7 @@ export default {
 #border-blue {
   margin: 20px;
   border: solid 2px #a8bfd9;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .blue-text {

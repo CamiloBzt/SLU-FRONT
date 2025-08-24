@@ -1,49 +1,38 @@
 <template>
   <div class="AppMain d-flex flex-wrap">
-    <!--MENU LATERAL IZQUIERDO-->
+    <!--Menu sidebar -->
     <div class="LateralMenuContent HideOnMovil">
-      <MenuGeneral></MenuGeneral>
+      <MenuGeneral />
     </div>
-
-    <!--CONTENEDOR GENERAL-->
+    <!--Contenedor principal-->
     <div class="GeneralContent FullOnMovil pl-10 pr-10">
-      <!--TITULO DE LA PÁGINA-->
-      <TitlePage
-        :title="`${this.$store.state.auth.user.name} ${this.$store.state.auth.user.lastName}`"
-      ></TitlePage>
-
-      <!--INFORMACION DE CONTACTO-->
-      <div
-        class="GridDashboard d-flex justify-space-between align-start align-content-start flex-wrap"
-      >
+      <!--Titulo -->
+      <TitlePage v-if="user" :title="userFullName" />
+      <!--Información contacto-->
+      <div class="GridDashboard d-flex justify-space-between align-start align-content-start flex-wrap">
         <div class="columnLeft">
           <ContactInformation />
           <DownloadFileCards />
-          <!-- <Contacts></Contacts> -->
+          <!-- <Contacts /> -->
         </div>
         <div class="columnRight">
           <NotificationsModal />
-          <!-- <Calendar></Calendar>
-        <WeeklyTasks></WeeklyTasks> -->
         </div>
       </div>
-
-      <!--ESPACIO EN BLANCO-->
-      <WhiteSpace></WhiteSpace>
+      <!--Espacio en blanco-->
+      <WhiteSpace />
     </div>
   </div>
 </template>
+
 <script>
 import TitlePage from "@/components/TitlePage.vue";
 import MenuGeneral from "@/components/Menu/MenuGeneral.vue";
 import ContactInformation from "@/components/Dashboard/ContactInformation.vue";
 import DownloadFileCards from "@/components/Dashboard/DownloadFileCards.vue";
-// import Contacts from '@/components/Dashboard/Contacts.vue'
 import NotificationsModal from "@/components/Dashboard/NotificationsModal.vue";
-// import Calendar from '@/components/Dashboard/Calendar.vue'
-// import WeeklyTasks from '@/components/Dashboard/WeeklyTasks.vue'
-
 import WhiteSpace from "@/components/WhiteSpace.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -53,9 +42,6 @@ export default {
     ContactInformation,
     DownloadFileCards,
     NotificationsModal,
-    // Contacts,
-    // Calendar,
-    // WeeklyTasks,
     WhiteSpace,
   },
   data() {
@@ -65,8 +51,13 @@ export default {
       subscription_id: 0,
     };
   },
+  computed: {
+    ...mapGetters(["user"]),
+    userFullName() {
+      return `${this.user.name} ${this.user.lastName}`;
+    },
+  },
   methods: {
-    //MOSTRAR EL MODAL DE FILTROS
     filtersAction() {
       this.ShowFilters = !this.ShowFilters;
     },
@@ -79,13 +70,11 @@ export default {
   width: 100%;
   height: auto;
   display: flex;
-
   .columnLeft {
-    width: 33%;
+    width: 48%;
     height: auto;
     margin-top: 15px;
   }
-
   .columnRight {
     width: 48%;
     height: auto;

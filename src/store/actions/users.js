@@ -4,7 +4,7 @@ import { apolloClient } from "../../lib/api";
 /* queries */
 import getUsersList from "./queries/getUsersList";
 import getUserByNameQuery from "./queries/getUserByName";
-import getSignatureByEmailQuery from './queries/getSignatureByEmail';
+import getSignatureByEmailQuery from "./queries/getSignatureByEmail";
 import GET_USER_BY_ID from "./queries/getUserById";
 
 /* mutations */
@@ -26,7 +26,7 @@ export default {
         query: allUserQuery,
       });
     } catch ({ message }) {
-      const messageToDisplay = 'getAllUsers error: ' + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getAllUsers error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -36,26 +36,24 @@ export default {
 
   async getListUsers({ commit, dispatch }) {
     try {
-      console.log("Entrando")
       const { data } = await apolloClient.query({
         query: getUsersList,
       });
-      commit('setUsersList', { users: data["getUsersList"] })
+      commit("setUsersList", { users: data["getUsersList"] });
     } catch ({ message }) {
-      console.log(message)
-      const messageToDisplay = 'getListUsers error: ' + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getListUsers error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
-  async resendMail({commit }, user) {
+  async resendMail({ commit }, user) {
     try {
-      console.log(user)
+      console.log(user);
       const variables = {
-        userId: user.id
-      }
+        userId: user.id,
+      };
       const {
         data: { resendMail },
       } = await apolloClient.mutate({
@@ -67,19 +65,18 @@ export default {
         type: messages.SUCCESS,
         text: "Resend Mail for Activation!",
       });
-    }catch({message}) {
-      console.log(message)
-      const messageToDisplay = 'resendMail error: ' + message.replace("GraphQL error: ", "");
+    } catch ({ message }) {
+      const messageToDisplay = "resendMail error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
-  async deleteUser({ commit, dispatch }, {id}) {
+  async deleteUser({ commit, dispatch }, { id }) {
     const variables = {
-      userId: id
-    }
+      userId: id,
+    };
     try {
       const {
         data: { deleteUser },
@@ -93,55 +90,50 @@ export default {
         type: messages.SUCCESS,
         text: "SLU User Deleted!",
       });
-    }catch ({ message }) {
-      const messageToDisplay = 'deleteUser error: ' + message.replace("GraphQL error: ", "");
+    } catch ({ message }) {
+      const messageToDisplay = "deleteUser error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
-    
   },
   async createUserTest({ commit }, userData) {
     const variables = {
-      ...userData
-    }
+      ...userData,
+    };
     try {
-      const method = userData.id ? 'updateUser' : 'createUserNew'
+      const method = userData.id ? "updateUser" : "createUserNew";
       // console.log(userData.id ? UPDATE_SLU_USER_NEW_MUTATION : CREATE_SLU_USER_NEW_MUTATION)
-        const {
-          data,
-        } = await apolloClient.mutate({
-          mutation: userData.id ? UPDATE_SLU_USER_NEW_MUTATION : CREATE_SLU_USER_NEW_MUTATION,
-          variables,
-          fetchPolicy: "no-cache",
-        });
-      console.log(data, data[method])
+      const { data } = await apolloClient.mutate({
+        mutation: userData.id ? UPDATE_SLU_USER_NEW_MUTATION : CREATE_SLU_USER_NEW_MUTATION,
+        variables,
+        fetchPolicy: "no-cache",
+      });
+      console.log(data, data[method]);
       if (data[method].statusCode && data[method].statusCode == 400) {
-        const messageToDisplay = 'createUserTestStatus error: ' + data[method].message.replace("GraphQL error: ", "");
+        const messageToDisplay = "createUserTestStatus error: " + data[method].message.replace("GraphQL error: ", "");
         commit("addNotification", {
           type: messages.DANGER,
           text: messageToDisplay,
         });
-      }
-      else 
+      } else
         commit("addNotification", {
           type: messages.SUCCESS,
           text: "SLU User Success!",
         });
-    }catch({message}) {
-      console.log(message)
-      const messageToDisplay = 'createUserTest error: ' + message.replace("GraphQL error: ", "");
+    } catch ({ message }) {
+      console.log(message);
+      const messageToDisplay = "createUserTest error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
-
   },
   async createUser({ commit }, { createUserData }) {
     try {
-      commit('SAVE_CREATE_SLU_USER', createUserData)
+      commit("SAVE_CREATE_SLU_USER", createUserData);
       const variables = {
         role: createUserData.userRole,
         name: createUserData.userName,
@@ -171,14 +163,14 @@ export default {
 
       commit("RESET_CREATE_SLU_USER");
     } catch ({ message }) {
-      const messageToDisplay = 'createUser error: ' + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "createUser error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
-  async getUserById({commit}, userId) {
+  async getUserById({ commit }, userId) {
     try {
       const {
         data: { getUserById },
@@ -191,18 +183,18 @@ export default {
       });
       commit("setUserEdit", getUserById);
     } catch ({ message }) {
-      const messageToDisplay = 'getUserById error: ' + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getUserById error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
       });
     }
   },
-  async resetUserEdit({commit}) {
+  async resetUserEdit({ commit }) {
     try {
       commit("setUserEdit", {});
     } catch ({ message }) {
-      const messageToDisplay = 'resetUserEdit error: ' + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "resetUserEdit error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -222,10 +214,10 @@ export default {
       });
 
       const { statusCode, response } = getUsersByName;
-      if (statusCode !== 200) throw new Error('Error getting Users');
+      if (statusCode !== 200) throw new Error("Error getting Users");
 
-      const parsedResponse = JSON.parse(response)
-      const users = parsedResponse.map(value => {
+      const parsedResponse = JSON.parse(response);
+      const users = parsedResponse.map((value) => {
         const { id, name, last_name } = value;
         return {
           id,
@@ -236,7 +228,7 @@ export default {
       });
       commit("setMentionsObject", users);
     } catch ({ message }) {
-      const messageToDisplay = 'usersName error: ' + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "usersName error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -250,22 +242,22 @@ export default {
       } = await apolloClient.query({
         query: getSignatureByEmailQuery,
         variables: {
-          email
+          email,
         },
-        fetchPolicy: 'no-cache',
-      })
+        fetchPolicy: "no-cache",
+      });
 
-      const { statusCode, signature } = getSignatureByEmail
-      if (statusCode !== 200) throw new Error('Error getting signature by email')
+      const { statusCode, signature } = getSignatureByEmail;
+      if (statusCode !== 200) throw new Error("Error getting signature by email");
 
-      commit('setUserSignature', signature);
+      commit("setUserSignature", signature);
     } catch ({ message }) {
-      const messageToDisplay = 'getSignatureByEmail error: ' + message.replace('GraphQL error: ', '')
+      const messageToDisplay = "getSignatureByEmail error: " + message.replace("GraphQL error: ", "");
 
-      commit('addNotification', {
+      commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
-      })
+      });
     }
   },
 };

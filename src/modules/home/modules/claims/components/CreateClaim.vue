@@ -13,35 +13,21 @@
                   <div class="input-row">
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Bound number'"
-                          item-value="boundNumber"
-                          item-text="boundNumber"
-                        />
+                        <v-autocomplete :label="'Bound number'" item-value="boundNumber" item-text="boundNumber" />
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Expiry"
-                          type="number"
-                        ></v-text-field>
+                        <v-text-field label="Expiry" type="number"></v-text-field>
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Insured'"
-                          item-value="insured"
-                          item-text="insured"
-                        />
+                        <v-autocomplete :label="'Insured'" item-value="insured" item-text="insured" />
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Country"
-                          type="text"
-                        ></v-text-field>
+                        <v-text-field label="Country" type="text"></v-text-field>
                       </div>
                     </div>
 
@@ -57,10 +43,7 @@
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-text-field
-                          label="Inception"
-                          type="text"
-                        ></v-text-field>
+                        <v-text-field label="Inception" type="text"></v-text-field>
                       </div>
 
                       <div class="input-cont">
@@ -77,94 +60,51 @@
                   <div class="input-row">
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-text-field
-                          label="Claimant"
-                          type="text"
-                        ></v-text-field>
+                        <v-text-field label="Claimant" type="text"></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Loss type'"
-                          item-value="lossType"
-                          item-text="lossType"
-                        />
+                        <v-autocomplete :label="'Loss type'" item-value="lossType" item-text="lossType" />
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-menu
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
+                        <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                           <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              label="Loss ocurrence date"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
+                            <v-text-field label="Loss ocurrence date" readonly v-bind="attrs" v-on="on"></v-text-field>
                           </template>
                           <v-date-picker></v-date-picker>
                         </v-menu>
                       </div>
 
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Loss country'"
-                          item-value="lossCountry"
-                          item-text="lossCountry"
-                        />
+                        <v-autocomplete :label="'Loss country'" item-value="lossCountry" item-text="lossCountry" />
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-menu
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
+                        <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                           <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              label="Loss reported date"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
+                            <v-text-field label="Loss reported date" readonly v-bind="attrs" v-on="on"></v-text-field>
                           </template>
                           <v-date-picker></v-date-picker>
                         </v-menu>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Loss city"
-                          type="text"
-                        ></v-text-field>
+                        <v-text-field label="Loss city" type="text"></v-text-field>
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Loss cause'"
-                          item-value="lossCause"
-                          item-text="lossCause"
-                        />
+                        <v-autocomplete :label="'Loss cause'" item-value="lossCause" item-text="lossCause" />
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Loss location"
-                          type="text"
-                        ></v-text-field>
+                        <v-text-field label="Loss location" type="text"></v-text-field>
                       </div>
                     </div>
                   </div>
@@ -174,16 +114,7 @@
                 <div class="mt-6">
                   <div class="claim-title">Loss description</div>
                   <div class="textArea-cont">
-                    <v-textarea
-                      background-color="#EDF2F8"
-                      height="180"
-                      solo
-                      flat
-                      rounded
-                      no-resize
-                      class="textArea"
-                      counter="500"
-                    />
+                    <v-textarea background-color="#EDF2F8" height="180" solo flat rounded no-resize class="textArea" counter="500" />
                   </div>
                 </div>
               </div>
@@ -198,83 +129,41 @@
                   <div class="input-row">
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Bound number'"
-                          item-value="boundNumber"
-                          item-text="boundNumber"
-                          readonly
-                          disabled
-                        />
+                        <v-autocomplete :label="'Bound number'" item-value="boundNumber" item-text="boundNumber" readonly disabled />
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Expiry"
-                          type="number"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Expiry" type="number" readonly disabled></v-text-field>
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Insured'"
-                          item-value="insured"
-                          item-text="insured"
-                          readonly
-                          disabled
-                        />
+                        <v-autocomplete :label="'Insured'" item-value="insured" item-text="insured" readonly disabled />
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Country"
-                          type="text"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Country" type="text" readonly disabled></v-text-field>
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-text-field
-                          label="Line"
-                          type="number"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Line" type="number" readonly disabled></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Cedent"
-                          type="text"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Cedent" type="text" readonly disabled></v-text-field>
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-text-field
-                          label="Inception"
-                          type="text"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Inception" type="text" readonly disabled></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Broker"
-                          type="text"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Broker" type="text" readonly disabled></v-text-field>
                       </div>
                     </div>
                   </div>
@@ -287,110 +176,51 @@
                   <div class="input-row">
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-text-field
-                          label="Claimant"
-                          type="text"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Claimant" type="text" readonly disabled></v-text-field>
                       </div>
 
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Loss type'"
-                          item-value="lossType"
-                          item-text="lossType"
-                          readonly
-                          disabled
-                        />
+                        <v-autocomplete :label="'Loss type'" item-value="lossType" item-text="lossType" readonly disabled />
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-menu
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                          readonly
-                          disabled
-                        >
+                        <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto" readonly disabled>
                           <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              label="Loss ocurrence date"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
+                            <v-text-field label="Loss ocurrence date" readonly v-bind="attrs" v-on="on"></v-text-field>
                           </template>
                           <v-date-picker></v-date-picker>
                         </v-menu>
                       </div>
 
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Loss country'"
-                          item-value="lossCountry"
-                          item-text="lossCountry"
-                          readonly
-                          disabled
-                        />
+                        <v-autocomplete :label="'Loss country'" item-value="lossCountry" item-text="lossCountry" readonly disabled />
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-menu
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                          readonly
-                          disabled
-                        >
+                        <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto" readonly disabled>
                           <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              label="Loss reported date"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
+                            <v-text-field label="Loss reported date" readonly v-bind="attrs" v-on="on"></v-text-field>
                           </template>
                           <v-date-picker></v-date-picker>
                         </v-menu>
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Loss city"
-                          type="text"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Loss city" type="text" readonly disabled></v-text-field>
                       </div>
                     </div>
 
                     <div class="input-col">
                       <div class="input-cont">
-                        <v-autocomplete
-                          :label="'Loss cause'"
-                          item-value="lossCause"
-                          item-text="lossCause"
-                          readonly
-                          disabled
-                        />
+                        <v-autocomplete :label="'Loss cause'" item-value="lossCause" item-text="lossCause" readonly disabled />
                       </div>
 
                       <div class="input-cont">
-                        <v-text-field
-                          label="Loss location"
-                          type="text"
-                          readonly
-                          disabled
-                        ></v-text-field>
+                        <v-text-field label="Loss location" type="text" readonly disabled></v-text-field>
                       </div>
                     </div>
                   </div>
@@ -400,18 +230,7 @@
                 <div class="mt-6">
                   <div class="claim-title">Loss description</div>
                   <div class="textArea-cont">
-                    <v-textarea
-                      background-color="#EDF2F8"
-                      height="180"
-                      solo
-                      flat
-                      rounded
-                      no-resize
-                      class="textArea"
-                      counter="500"
-                      readonly
-                      disabled
-                    />
+                    <v-textarea background-color="#EDF2F8" height="180" solo flat rounded no-resize class="textArea" counter="500" readonly disabled />
                   </div>
                 </div>
               </div>
@@ -419,56 +238,18 @@
           </v-stepper-items>
         </div>
       </div>
-      <EndorsementDocuments
-        @setEndorsementDocuments="setEndorsementDocuments"
-        v-show="e1 == 1"
-      />
-      <div
-        v-if="e1 == 1"
-        class="stepper-btn mt-7 mb-3 d-flex justify-end align-center"
-      >
-        <v-btn
-          v-bind="attrs"
-          v-on="on"
-          rounded
-          large
-          outlined
-          class="clear-btn"
-          color="#003D6D"
-          @click="nextStep()"
-        >
-          Next
-        </v-btn>
+      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1" />
+      <div v-if="e1 == 1" class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
+        <v-btn v-bind="attrs" v-on="on" rounded large outlined class="clear-btn" color="#003D6D" @click="nextStep()"> Next </v-btn>
       </div>
-      <div
-        v-if="e1 == 1"
-        class="stepper-btn mb-7 d-flex justify-end align-center"
-      >
+      <div v-if="e1 == 1" class="stepper-btn mb-7 d-flex justify-end align-center">
         <v-btn rounded large text class="blue-btn"> Return </v-btn>
       </div>
-      <div
-        v-if="e1 == 2"
-        class="stepper-btn mt-7 mb-3 d-flex justify-end align-center"
-      >
-        <v-btn
-          v-bind="attrs"
-          v-on="on"
-          rounded
-          large
-          outlined
-          class="clear-btn"
-          color="#003D6D"
-        >
-          Create claim
-        </v-btn>
+      <div v-if="e1 == 2" class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
+        <v-btn v-bind="attrs" v-on="on" rounded large outlined class="clear-btn" color="#003D6D"> Create claim </v-btn>
       </div>
-      <div
-        v-if="e1 == 2"
-        class="stepper-btn mb-7 d-flex justify-end align-center"
-      >
-        <v-btn rounded large text class="blue-btn" @click="e1 = 1">
-          Return
-        </v-btn>
+      <div v-if="e1 == 2" class="stepper-btn mb-7 d-flex justify-end align-center">
+        <v-btn rounded large text class="blue-btn" @click="e1 = 1"> Return </v-btn>
       </div>
     </v-stepper>
   </div>
@@ -546,9 +327,9 @@ export default {
 .claim-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -572,6 +353,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -625,7 +407,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 14px;
   padding: 0 10px;
@@ -779,11 +561,7 @@ export default {
   }
 }
 
-.theme--light.v-stepper
-  .v-stepper__step:not(.v-stepper__step--active):not(
-    .v-stepper__step--complete
-  ):not(.v-stepper__step--error)
-  .v-stepper__step__step {
+.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 
@@ -838,7 +616,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    font-weight: 700;
+    font-weight: 600;
     font-family: avenir;
     margin-right: 30px;
   }
@@ -847,7 +625,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    font-weight: 700;
+    font-weight: 600;
     font-family: avenir;
   }
 }

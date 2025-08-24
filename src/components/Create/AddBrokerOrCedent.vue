@@ -1,12 +1,7 @@
 <template>
-  <div
-    @click.self="setModalCreateBrokerOrCedent()"
-    v-if="displayModal"
-    class="Modal py-13 d-flex justify-center"
-  >
+  <div @click.self="setModalCreateBrokerOrCedent()" v-if="displayModal" class="Modal py-13 d-flex justify-center">
     <!--FORMULARIO-->
     <div class="Modal__Form">
-
       <!--BOTON CERRAR-->
       <div @click="setModalCreateBrokerOrCedent()" class="CloseModalBtn">
         <v-btn class="closeBtn" icon>
@@ -15,188 +10,98 @@
       </div>
 
       <!--Titulo-->
-      <div class="Modal__Form__Title">
-        Add New Contact
-      </div>
+      <div class="Modal__Form__Title">Add New Contact</div>
 
       <!-- Tipo de nuevo contacto-->
       <v-tabs class="Modal__Form__Header" v-model="tab">
-          <v-tab class="Tab" v-if="selectedBroker">
-            New Contact for {{ selectedBroker.name }}
-          </v-tab>
-          <v-tab class="Tab" v-if="selectedCedent">
-             New Contact for {{ selectedCedent.name }}
-          </v-tab>
+        <v-tab class="Tab" v-if="selectedBroker"> New Contact for {{ selectedBroker.name }} </v-tab>
+        <v-tab class="Tab" v-if="selectedCedent"> New Contact for {{ selectedCedent.name }} </v-tab>
       </v-tabs>
 
       <!-- Inputs  -->
       <v-tabs-items class="Modal__Form__Body" v-model="tab">
-          <v-tab-item class="TabContent" v-if="selectedBroker">
-            <div class="FormContainer d-flex flex-wrap">
-              <!-- <Contacts :fromModal="true" option="1" id="1" /> -->
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.name.$model"
-                  autocomplete="new-password"
-                  @input="$v.contact.name.$touch()"
-                  @blur="$v.contact.name.$touch()"
-                  required
-                  :error-messages="
-                    requiredInputVuelidateParent('name', 'contact')
-                  "
-                  label="Names"
-                >
-                </v-text-field>
-              </div>
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.email.$model"
-                  @input="$v.contact.email.$touch()"
-                  @blur="$v.contact.email.$touch()"
-                  required
-                  :error-messages="
-                    requiredEmailVuelidateParent('email', 'contact')
-                  "
-                  label="E-mail"
-                >
-                </v-text-field>
-              </div>
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.phone.$model"
-                  @input="$v.contact.phone.$touch()"
-                  @blur="$v.contact.phone.$touch()"
-                  required
-                  :error-messages="
-                    requiredInputVuelidateParent('phone', 'contact')
-                  "
-                  label="Cell Phone Number"
-                >
-                </v-text-field>
-              </div>
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.address.$model"
-                  autocomplete="new-password"
-                  @input="$v.contact.address.$touch()"
-                  @blur="$v.contact.address.$touch()"
-                  required
-                  :error-messages="
-                    requiredInputVuelidateParent('address', 'contact')
-                  "
-                  label="Address"
-                >
-                </v-text-field>
-              </div>
-              <div class="finishButtonCont d-flex align-center">
-                <v-btn
-                  class="Button"
-                  color="#003D6D"
-                  rounded
-                  large
-                  depressed
-                  :loading="loading"
-                  @click="submitForm(0)"
-                >
-                  Create Contact
-                </v-btn>
-              </div>
-
+        <v-tab-item class="TabContent" v-if="selectedBroker">
+          <div class="FormContainer d-flex flex-wrap">
+            <!-- <Contacts :fromModal="true" option="1" id="1" /> -->
+            <div class="InputCont">
+              <v-text-field v-model.trim="$v.contact.name.$model" autocomplete="new-password" @input="$v.contact.name.$touch()" @blur="$v.contact.name.$touch()" required :error-messages="requiredInputVuelidateParent('name', 'contact')" label="Names">
+              </v-text-field>
             </div>
-          </v-tab-item>
-
-          <v-tab-item class="TabContent" v-if="selectedCedent">
-            <div class="FormContainer d-flex flex-wrap">
-              <!-- <Contacts :fromModal="true" option="1" id="1" /> -->
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.name.$model"
-                  autocomplete="new-password"
-                  @input="$v.contact.name.$touch()"
-                  @blur="$v.contact.name.$touch()"
-                  required
-                  :error-messages="
-                    requiredInputVuelidateParent('name', 'contact')
-                  "
-                  label="Names"
-                >
-                </v-text-field>
-              </div>
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.email.$model"
-                  @input="$v.contact.email.$touch()"
-                  @blur="$v.contact.email.$touch()"
-                  required
-                  :error-messages="
-                    requiredEmailVuelidateParent('email', 'contact')
-                  "
-                  label="E-mail"
-                >
-                </v-text-field>
-              </div>
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.phone.$model"
-                  @input="$v.contact.phone.$touch()"
-                  @blur="$v.contact.phone.$touch()"
-                  required
-                  :error-messages="
-                    requiredInputVuelidateParent('phone', 'contact')
-                  "
-                  label="Cell Phone Number"
-                >
-                </v-text-field>
-              </div>
-              <div class="InputCont">
-                <v-text-field
-                  v-model.trim="$v.contact.address.$model"
-                  autocomplete="new-password"
-                  @input="$v.contact.address.$touch()"
-                  @blur="$v.contact.address.$touch()"
-                  required
-                  :error-messages="
-                    requiredInputVuelidateParent('address', 'contact')
-                  "
-                  label="Address"
-                >
-                </v-text-field>
-              </div>
-              <div class="finishButtonCont d-flex align-center">
-                <v-btn
-                  class="Button"
-                  rounded
-                  large
-                  depressed
-                  :loading="loading"
-                  color="#003D6D"
-                  @click="submitForm(1)"
-                  >
-                  Create Contact
-                </v-btn>
-              </div>
+            <div class="InputCont">
+              <v-text-field v-model.trim="$v.contact.email.$model" @input="$v.contact.email.$touch()" @blur="$v.contact.email.$touch()" required :error-messages="requiredEmailVuelidateParent('email', 'contact')" label="E-mail"> </v-text-field>
             </div>
-          </v-tab-item>
+            <div class="InputCont">
+              <v-text-field v-model.trim="$v.contact.phone.$model" @input="$v.contact.phone.$touch()" @blur="$v.contact.phone.$touch()" required :error-messages="requiredInputVuelidateParent('phone', 'contact')" label="Cell Phone Number">
+              </v-text-field>
+            </div>
+            <div class="InputCont">
+              <v-text-field
+                v-model.trim="$v.contact.address.$model"
+                autocomplete="new-password"
+                @input="$v.contact.address.$touch()"
+                @blur="$v.contact.address.$touch()"
+                required
+                :error-messages="requiredInputVuelidateParent('address', 'contact')"
+                label="Address"
+              >
+              </v-text-field>
+            </div>
+            <div class="finishButtonCont d-flex align-center">
+              <v-btn class="Button" color="#003D6D" rounded large depressed :loading="loading" @click="submitForm(0)"> Create Contact </v-btn>
+            </div>
+          </div>
+        </v-tab-item>
+
+        <v-tab-item class="TabContent" v-if="selectedCedent">
+          <div class="FormContainer d-flex flex-wrap">
+            <!-- <Contacts :fromModal="true" option="1" id="1" /> -->
+            <div class="InputCont">
+              <v-text-field v-model.trim="$v.contact.name.$model" autocomplete="new-password" @input="$v.contact.name.$touch()" @blur="$v.contact.name.$touch()" required :error-messages="requiredInputVuelidateParent('name', 'contact')" label="Names">
+              </v-text-field>
+            </div>
+            <div class="InputCont">
+              <v-text-field v-model.trim="$v.contact.email.$model" @input="$v.contact.email.$touch()" @blur="$v.contact.email.$touch()" required :error-messages="requiredEmailVuelidateParent('email', 'contact')" label="E-mail"> </v-text-field>
+            </div>
+            <div class="InputCont">
+              <v-text-field v-model.trim="$v.contact.phone.$model" @input="$v.contact.phone.$touch()" @blur="$v.contact.phone.$touch()" required :error-messages="requiredInputVuelidateParent('phone', 'contact')" label="Cell Phone Number">
+              </v-text-field>
+            </div>
+            <div class="InputCont">
+              <v-text-field
+                v-model.trim="$v.contact.address.$model"
+                autocomplete="new-password"
+                @input="$v.contact.address.$touch()"
+                @blur="$v.contact.address.$touch()"
+                required
+                :error-messages="requiredInputVuelidateParent('address', 'contact')"
+                label="Address"
+              >
+              </v-text-field>
+            </div>
+            <div class="finishButtonCont d-flex align-center">
+              <v-btn class="Button" rounded large depressed :loading="loading" color="#003D6D" @click="submitForm(1)"> Create Contact </v-btn>
+            </div>
+          </div>
+        </v-tab-item>
       </v-tabs-items>
-
     </div>
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from "vuex";
 /* vuelidate mixin & validations */
-import { validationMixin } from 'vuelidate';
-import { required, email } from 'vuelidate/lib/validators';
-import { validPhone, OnlyText, ValidChars } from '@/constants/validations';
+import { validationMixin } from "vuelidate";
+import { required, email } from "vuelidate/lib/validators";
+import { validPhone, OnlyText, ValidChars } from "@/constants/validations";
 /* project validations (in some cases depends on vuelidate) */
-import { formValidations } from '@/mixins/formValidations';
+import { formValidations } from "@/mixins/formValidations";
 /* components */
-import BrokerInformation from '@/components/Create/BrokerInformation.vue';
-import CedentInformation from '@/components/Create/CedentInformation.vue';
-import Contacts from '@/components/Contacts.vue';
+import BrokerInformation from "@/components/Create/BrokerInformation.vue";
+import CedentInformation from "@/components/Create/CedentInformation.vue";
+import Contacts from "@/components/Contacts.vue";
 
 export default {
-  name: 'AddCompanyModal',
+  name: "AddCompanyModal",
   mixins: [formValidations, validationMixin],
   components: { BrokerInformation, CedentInformation, Contacts },
   data() {
@@ -205,37 +110,34 @@ export default {
       loading: false,
       loadingCountries: false,
       loadingCompanies: false,
-      viewName: 'Broker',
-      brokerName: 'Dan B',
-      cedentName: 'Dan C',
+      viewName: "Broker",
+      brokerName: "Dan B",
+      cedentName: "Dan C",
       tab: null,
       type: [
-        { id: 1, description: 'type 1' },
-        { id: 2, description: 'type 2' },
-        { id: 3, description: 'type 3' },
+        { id: 1, description: "type 1" },
+        { id: 2, description: "type 2" },
+        { id: 3, description: "type 3" },
       ],
       contact: {
-        name: '',
-        address: '',
-        phone: '',
-        email: '',
+        name: "",
+        address: "",
+        phone: "",
+        email: "",
       },
     };
   },
   beforeMount() {
-    this.$emit('changeViewTitle', this.viewName);
+    this.$emit("changeViewTitle", this.viewName);
   },
   async mounted() {
-    const lcom = 'loadingCountries';
-    const lcou = 'loadingCompanies';
+    const lcom = "loadingCountries";
+    const lcou = "loadingCompanies";
 
     this[lcom] = !this[lcom];
     this[lcou] = !this[lcou];
 
-    await Promise.all([
-      this.getCatalogByName({ name: 'countries' }),
-      this.getCatalogByName({ name: 'companies' }),
-    ]);
+    await Promise.all([this.getCatalogByName({ name: "countries" }), this.getCatalogByName({ name: "companies" })]);
 
     this[lcom] = false;
     this[lcou] = false;
@@ -244,30 +146,18 @@ export default {
     displayModal: Boolean,
   },
   computed: {
-    ...mapGetters([
-      'countries',
-      'companies',
-      'brokerInformation',
-      'cedentData',
-      'accountInformation',
-      'availableBrokers',
-      'availableCedents',
-    ]),
+    ...mapGetters(["countries", "companies", "brokerInformation", "cedentData", "accountInformation", "availableBrokers", "availableCedents"]),
     selectedBroker: {
       get() {
         const id = this.accountInformation.broker;
-        const broker = Array.from(this.availableBrokers).find(
-          (v) => v.id == id
-        );
+        const broker = Array.from(this.availableBrokers).find((v) => v.id == id);
         return broker;
       },
     },
     selectedCedent: {
       get() {
         const id = this.accountInformation.cedent;
-        const cedent = Array.from(this.availableCedents).find(
-          (v) => v.id == id
-        );
+        const cedent = Array.from(this.availableCedents).find((v) => v.id == id);
         return cedent;
       },
     },
@@ -281,31 +171,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions([
-      'resetBrokerInformation',
-      'resetCedentData',
-      'getCatalogByName',
-      'createBroker',
-      'createCedent',
-      'deleteContact',
-      'createContact',
-    ]),
-    ...mapMutations(['setModalCreateBrokerOrCedent']),
+    ...mapActions(["resetBrokerInformation", "resetCedentData", "getCatalogByName", "createBroker", "createCedent", "deleteContact", "createContact"]),
+    ...mapMutations(["setModalCreateBrokerOrCedent"]),
     submitForm(index) {
       const settings = [
         {
-          type: '1',
-          id:
-            this.selectedBroker && this.selectedBroker.id
-              ? this.selectedBroker.id
-              : null,
+          type: "1",
+          id: this.selectedBroker && this.selectedBroker.id ? this.selectedBroker.id : null,
         },
         {
-          type: '2',
-          id:
-            this.selectedCedent && this.selectedCedent.id
-              ? this.selectedCedent.id
-              : null,
+          type: "2",
+          id: this.selectedCedent && this.selectedCedent.id ? this.selectedCedent.id : null,
         },
       ];
 
@@ -339,10 +215,10 @@ export default {
       })
         .then(() => {
           this.contact = {
-            name: '',
-            address: '',
-            phone: '',
-            email: '',
+            name: "",
+            address: "",
+            phone: "",
+            email: "",
           };
           this.$v.$reset();
         })
@@ -352,7 +228,7 @@ export default {
         });
     },
     startLoad() {
-      this.loader = 'loading';
+      this.loader = "loading";
       const l = this.loader;
       this[l] = !this[l];
     },
@@ -373,7 +249,7 @@ export default {
   top: 0;
   left: 0;
 
-  &__Form{
+  &__Form {
     width: 90%;
     height: 350px;
     background: white;
@@ -381,9 +257,8 @@ export default {
     position: relative;
     padding: 15px 16px;
 
-
     //Titulo
-    &__Title{
+    &__Title {
       width: 100%;
       height: 35px;
       padding: 0 16px;
@@ -396,7 +271,7 @@ export default {
     &__Header {
       width: 100%;
       height: 50px;
-      .Tab{
+      .Tab {
         text-align: left;
         text-transform: none;
         font-weight: normal;
@@ -407,47 +282,47 @@ export default {
         text-transform: capitalize;
         position: relative;
       }
-      .v-tab--active{
-        color:black !important;
+      .v-tab--active {
+        color: black !important;
         font-weight: 600;
-        &::after{
+        &::after {
           content: "";
           width: 20px;
           height: 2px;
-          background: #547FA9;
+          background: #547fa9;
           position: absolute;
-          left:16px;bottom: 5px;
+          left: 16px;
+          bottom: 5px;
         }
       }
     }
 
-
     //Inputs
-    &__Body{
+    &__Body {
       width: 100%;
       height: calc(100% - 85px);
       padding: 0 16px;
-      .TabContent{
+      .TabContent {
         padding-top: 15px;
 
-        .FormContainer{
+        .FormContainer {
           width: 100%;
           height: auto;
           align-content: flex-start;
           align-items: flex-start;
 
           //Inputs
-          .InputCont{
+          .InputCont {
             width: 20%;
           }
 
           //Boton crear contacto
-          .finishButtonCont{
+          .finishButtonCont {
             width: 100%;
             height: auto;
             margin-top: 10px;
-
-            .Button{
+            .Button {
+              border-radius: 5px;
               width: 200px;
               height: 40px;
               color: white;
@@ -458,7 +333,6 @@ export default {
         }
       }
     }
-
 
     //CERRAR MODAL
     .CloseModalBtn {
@@ -480,13 +354,14 @@ export default {
         }
       }
     }
-
   }
 }
 
 //Quita el border-bottom de los tabs
-::v-deep .v-tabs-slider-wrapper {display: none;}
-.theme--light.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active){
-  color: #547FA9;
+::v-deep .v-tabs-slider-wrapper {
+  display: none;
+}
+.theme--light.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) {
+  color: #547fa9;
 }
 </style>

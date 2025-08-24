@@ -28,59 +28,39 @@
       </div>
     </div>
 
-    <div
-      class="cards_endorsement"
-      v-if="!endorsementHistory && !onCreatrEndorsement"
-    >
-      <v-card
+    <div class="grid-cards" v-if="!endorsementHistory && !onCreatrEndorsement">
+      <div
+        class="card-item"
         v-for="(endorsement, index) in listEndorsement"
         :key="endorsement.id"
-        width="24%"
-        height="12.5rem"
-        class="margin_cards"
       >
-        <v-list-item three-line>
-          <v-list-item-content>
-            <div class="text-wrap text-h6">
-              <!-- Endorsement [{{ endorsement.EndorsementType.type === "Increase insurable value/ inclusion risk" ? 1 
-										: endorsement.EndorsementType.type === "Reduction of insurable value/ Risk Exclusion" ? 2 
-										: endorsement.EndorsementType.type === "Extension" ? 3
-										: endorsement.EndorsementType.type === "Deductions Change" ? 4
-										: endorsement.EndorsementType.type === "Movement without premium" ? 5
-										: endorsement.EndorsementType.type === "Change of share" ? 6
-										: endorsement.EndorsementType.type === "Rate Change" ? 7
-										: endorsement.EndorsementType.type === "Change of period (Inception or Expiry date)" ? 8
-										: endorsement.EndorsementType.type === "construction work stoppage (aplica solo para ingeniería CAR y EAR)" ? 9
-										: endorsement.EndorsementType.type === "Extension GPW" ? 10
-										: endorsement.EndorsementType.type === "change of technical conditions" ? 11
-										: endorsement.EndorsementType.type === "Canelacion de poliza ( a prorroga y/o corto plazo)" ? 12
-										: endorsement.EndorsementType.type === "PMD Adjustment" ? 13
-										: endorsement.EndorsementType.type === "BI Adjustment" ? 14
-										: endorsement.EndorsementType.type === "Internal Adjustments" ? 15
-										: 0
-									}}]:  -->
-              Endorsement [{{ index + 1 }}]:
-              {{ endorsement.EndorsementType.type }}
-            </div>
-            <v-list-item-subtitle>{{
-              endorsement.effective_date | formattedDate
-            }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-card-actions>
-          <v-btn
-            class="color_endorsement mx-auto"
-            width="12rem"
-            outlined
-            rounded
-            text
-            color="white"
-            @click="backHistoryTableToId(endorsement.id)"
-          >
-            See endorsement
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+        <v-card class="card-content pt-2 borertopcard">
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-wrap text-h7">
+                Endorsement [{{ index + 1 }}]:
+                {{ endorsement.EndorsementType.type }}
+              </div>
+              <v-list-item-subtitle>
+                {{ endorsement.effective_date | formattedDate }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-card-actions>
+            <v-btn
+              class="mx-auto"
+              width="13.7rem"
+              outlined
+              rounded
+              text
+              textbottom
+              @click="backHistoryTableToId(endorsement.id)"
+            >
+              See endorsement
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </div>
     </div>
 
     <div v-if="endorsementHistory">
@@ -151,12 +131,63 @@
         "
       >
         <div class="inner-title">Endorsement Report</div>
-        <div v-if="informationCard && informationCard.report">
+        <div
+          v-if="
+            informationCard &&
+            typeof informationCard === 'object' &&
+            informationCard.report &&
+            informationCard.id_endorsement_type === 8
+          "
+        >
+          <ChangeOfPeriodReadOnly :data="changeOfPeriodReadOnlyData" />
+        </div>
+
+        <!-- Extension GPW -->
+        <div
+          v-else-if="
+            informationCard &&
+            typeof informationCard === 'object' &&
+            informationCard.report &&
+            informationCard.id_endorsement_type === 10
+          "
+        >
+          <ExtensionGPWReadOnly :data="extensionGPWReadOnlyData" />
+        </div>
+        <!-- Change of Technical Conditions -->
+        <div
+          v-else-if="
+            informationCard &&
+            typeof informationCard === 'object' &&
+            informationCard.report &&
+            informationCard.id_endorsement_type === 11
+          "
+        >
+          <ChangeOfTechnicalConditionsReadOnly
+            :data="technicalConditionsReadOnlyData"
+          />
+        </div>
+        <!-- Otros tipos de endorsement -->
+        <div
+          v-else-if="
+            informationCard &&
+            typeof informationCard === 'object' &&
+            informationCard.report &&
+            informationCard.id_endorsement_type !== 8 &&
+            informationCard.id_endorsement_type !== 10 &&
+            informationCard.id_endorsement_type !== 11
+          "
+        >
           <EndorsementReportCompleteTable :report="cleanReport" />
         </div>
         <div
           class="files-submit flex justify-content-start align-items-start align-content-start"
-          v-if="endorsementHistory"
+          v-if="
+            endorsementHistory &&
+            informationCard &&
+            informationCard.id_endorsement_type !== 8 &&
+            informationCard.id_endorsement_type !== 10 &&
+            informationCard.id_endorsement_type !== 11
+          "
         >
           <AppFile
             v-for="(item, clave) in files"
@@ -197,11 +228,11 @@
     </div>
 
     <EndorsementDocuments
+      v-if="endorsementHistory && idEndorsementDinamic"
       :idEndorsement="idEndorsementDinamic"
       :endorsementDocuments="endorsementDocuments"
       :reloadFiles="reloadFiles"
-      v-if="endorsementHistory"
-      :key="endorsementDocuments"
+      :key="idEndorsementDinamic"
     />
 
     <!-- Boton return para la vista de endosos creados -->
@@ -304,6 +335,7 @@
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
         :selectedEndorsementId="selectedEndorsementId"
+        :listEndorsement="listEndorsement"
       />
       <ChangeOfTechnicalConditions
         v-if="endorsementType == 11"
@@ -316,6 +348,15 @@
       />
       <PmdAdjustment
         v-if="endorsementType == 13"
+        :backToCreateEndorsement="backToCreateEndorsement"
+        :accountComplete="accountComplete"
+        :changeDateEndorsement="changeDateEndorsement"
+        :dateSaved="dateSaved"
+        :showInfoEndorsement="showInfoEndorsement"
+        :key="reloadEndorsementData"
+      />
+      <InternalAdjustmentsEngineering
+        v-if="endorsementType == 15"
         :backToCreateEndorsement="backToCreateEndorsement"
         :accountComplete="accountComplete"
         :changeDateEndorsement="changeDateEndorsement"
@@ -348,8 +389,12 @@ import AdmittedPremiumTableEngineering from "../components/AdmittedPremiumTableE
 import AppFile from "../components/AppFile.vue";
 import TableEndorsementMovement from "../components/TableEndorsementMovement.vue";
 import ChangeOfTechnicalConditions from "./components/ChangeOfTechnicalConditions.vue";
+import InternalAdjustmentsEngineering from "./components/InternalAdjustmentsEngineering.vue";
 import TableEndorsementDeductionsEngineeringVue from "../components/TableEndorsementDeductionsEngineering.vue";
 import EndorsementReportCompleteTable from "./components/EndorsementReportCompleteTable.vue";
+import ExtensionGPWReadOnly from "../property-quotator/components/ExtensionGPWReadOnly.vue";
+import ChangeOfPeriodReadOnly from "../property-quotator/components/ChangeOfPeriodReadOnly.vue";
+import ChangeOfTechnicalConditionsReadOnly from "../property-quotator/components/ChangeOfTechnicalConditionsReadOnly.vue";
 // Services
 import { BarNavData } from "./services/mock-bar-nav.service.js";
 import { GetCloseAccount } from "./services/mock-get-close-account.service";
@@ -379,9 +424,13 @@ export default {
     AdmittedPremiumTableEngineering,
     AppFile,
     ChangeOfTechnicalConditions,
+    InternalAdjustmentsEngineering,
     TableEndorsementMovement,
     TableEndorsementDeductionsEngineeringVue,
     EndorsementReportCompleteTable,
+    ExtensionGPWReadOnly,
+    ChangeOfPeriodReadOnly,
+    ChangeOfTechnicalConditionsReadOnly,
   },
   props: {
     type: { type: String, default: "Inclusion Risk" },
@@ -542,9 +591,181 @@ export default {
     cleanReport() {
       return Object.assign({}, this.informationCard.report);
     },
+    extensionGPWReadOnlyData() {
+      const info = this.informationCard;
+      const report = info?.report?.endorsmentReporData || {};
+      const additionalInfo = report?.additionalInfo || {};
+
+      const formatDate = (dateStr) =>
+        dateStr ? new Date(dateStr).toISOString().substr(0, 10) : "";
+
+      const daysDiff = (start, end) => {
+        const s = new Date(start);
+        const e = new Date(end);
+        return Math.floor((e - s) / (1000 * 60 * 60 * 24));
+      };
+
+      return {
+        endorsementEffectiveDate: formatDate(info.effective_date),
+        expiryDate: formatDate(report?.deductibles?.expiryDate),
+        days: daysDiff(info.effective_date, report?.deductibles?.expiryDate),
+
+        // Installments de Extension GPW para ingeniería
+        installments:
+          additionalInfo.paymentsWarranty?.map((item) => ({
+            id: item.id,
+            installment: item.installment,
+            percent: item.percent,
+            date: formatDate(item.date),
+            idClause: item.idClause,
+            days_of_prior_notice: item.days_of_prior_notice,
+            showCalendar: false,
+          })) || [],
+
+        reason: additionalInfo.detailDescription || "",
+        premiumPaymentDate: formatDate(report?.cartera?.premiumPaymentDate),
+        additionalClause: report?.cartera?.clausula || report?.clause,
+      };
+    },
+    changeOfPeriodReadOnlyData() {
+      const info = this.informationCard;
+      const report = info?.report?.endorsmentReporData || {};
+
+      const formatDate = (dateStr) =>
+        dateStr ? new Date(dateStr).toLocaleDateString("en-US") : "";
+
+      const calculateDays = (start, end) => {
+        if (!start || !end) return 0;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+      };
+
+      // Obtener fechas del endorsement
+      const currentDeductibles = this.accountComplete?.deductibles || {};
+      const newDeductibles = report?.deductibles || {};
+
+      return {
+        endorsementEffectiveDate: formatDate(info.effective_date),
+
+        // Current period information
+        currentInceptionDate: formatDate(currentDeductibles.inceptionDate),
+        currentExpiryDate: formatDate(currentDeductibles.expiryDate),
+        currentPolicyDays: calculateDays(
+          currentDeductibles.inceptionDate,
+          currentDeductibles.expiryDate
+        ),
+
+        // New period information
+        newInceptionDate: formatDate(newDeductibles.inceptionDate),
+        newExpiryDate: formatDate(newDeductibles.expiryDate),
+        newPolicyDays: calculateDays(
+          newDeductibles.inceptionDate,
+          newDeductibles.expiryDate
+        ),
+
+        // Additional information
+        clause: report?.cartera?.clausula || "",
+        premiumPaymentDate: formatDate(report?.cartera?.premiumPaymentDate),
+
+        // Premium calculations para ingeniería (AllRisk/ALOP)
+        originalValues: {
+          lastInformation: {
+            totalPremiumMovement:
+              (report?.movementValues?.allRisk || 0) +
+              (report?.movementValues?.alop || 0),
+            PremiumSlu: report?.netPremium?.sluShareTotal || 0,
+            netPremium: report?.netPremium?.netTotal || 0,
+            total: report?.premium?.totalInsured || 0,
+          },
+          newInformation: {
+            totalPremiumMovement:
+              (report?.premium?.allRisk || 0) + (report?.premium?.alop || 0),
+            PremiumSlu: report?.netPremium?.sluShareTotal || 0,
+            netPremium: report?.netPremium?.netTotal || 0,
+            total: report?.premium?.totalInsured || 0,
+          },
+        },
+
+        usdValues: {
+          lastInformation: {
+            totalPremiumMovement:
+              (report?.movementValues?.allRiskUsd || 0) +
+              (report?.movementValues?.alopUsd || 0),
+            PremiumSlu: report?.netPremiumUSD?.sluShareTotal || 0,
+            netPremium: report?.netPremiumUSD?.netTotal || 0,
+            total: report?.premium?.totalUsd || 0,
+          },
+          newInformation: {
+            totalPremiumMovement:
+              (report?.premium?.allRiskUsd || 0) +
+              (report?.premium?.alopUsd || 0),
+            PremiumSlu: report?.netPremiumUSD?.sluShareTotal || 0,
+            netPremium: report?.netPremiumUSD?.netTotal || 0,
+            total: report?.premium?.totalUsd || 0,
+          },
+        },
+      };
+    },
+    technicalConditionsReadOnlyData() {
+      const info = this.informationCard;
+      const report = info?.report?.endorsmentReporData || {};
+
+      const formatDate = (dateStr) =>
+        dateStr ? new Date(dateStr).toLocaleDateString("en-US") : "";
+
+      const calculateDays = (start, end) => {
+        if (!start || !end) return 0;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+      };
+
+      return {
+        endorsementEffectiveDate: formatDate(info.effective_date),
+        expiryDate: formatDate(this.accountComplete?.deductibles?.expiryDate),
+        days: calculateDays(
+          info.effective_date,
+          this.accountComplete?.deductibles?.expiryDate
+        ),
+
+        // Technical conditions changes - ajustado para ingeniería
+        technicalConditionsChanges: {
+          deductibles: report?.technicalConditions?.deductibles || [],
+          sublimits: report?.technicalConditions?.sublime || [],
+        },
+
+        // Additional information
+        clause: report?.cartera?.clausula || "",
+        premiumPaymentDate: formatDate(report?.cartera?.premiumPaymentDate),
+
+        // Premium calculations para ingeniería (AllRisk/ALOP en lugar de Damage/BI/Stocks)
+        originalValues: {
+          totalPremiumMovement:
+            (report?.movementValues?.allRisk || 0) +
+            (report?.movementValues?.alop || 0),
+          premiumSlu: report?.netPremium?.sluShareTotal || 0,
+          netPremium: report?.netPremium?.netTotal || 0,
+          total: report?.premium?.totalInsured || 0,
+        },
+
+        usdValues: {
+          totalPremiumMovement:
+            (report?.movementValues?.allRiskUsd || 0) +
+            (report?.movementValues?.alopUsd || 0),
+          premiumSlu: report?.netPremiumUSD?.sluShareTotal || 0,
+          netPremium: report?.netPremiumUSD?.netTotal || 0,
+          total: report?.premium?.totalUsd || 0,
+        },
+      };
+    },
   },
   methods: {
     ...mapActions(["saveEndorsmentType"]),
+    getClauseName(id) {
+      const clause = this.catalogEndorsements.find((c) => c.id === id);
+      return clause ? clause.clause : "";
+    },
     async reloadFiles() {
       this.informationCard = await EndorsementService.getEndorsementById(
         this.idDinamyc
@@ -646,28 +867,6 @@ export default {
           this.informationCard.report.endorsmentReporData.netPremium.alopSluShare;
         this.totalPremium[0].sluTotal =
           this.informationCard.report.endorsmentReporData.netPremium.sluShareTotal;
-        // } else if(this.listEndorsement.find(element => element.id === this.idDinamyc).EndorsementType.type === 'Deductions Change'){
-        /*	this.detailValues[0].premiumAllRisk = this.informationCard.report.endorsmentReporData.movementValues.allRisk
-				this.detailValues[0].premiumAlop = this.informationCard.report.endorsmentReporData.movementValues.alop
-				this.detailValues[0].premiumTotal = this.informationCard.report.endorsmentReporData.movementValues.total
-				this.detailValues[0].premiumAllRisk2 = this.informationCard.report.endorsmentReporData.movementValues.allRiskUsd
-				this.detailValues[0].premiumAlop2 = this.informationCard.report.endorsmentReporData.movementValues.alopUsd
-				this.detailValues[0].premiumTotal2 = this.informationCard.report.endorsmentReporData.movementValues.totalUsd
-
-				this.premiumSlu[0].premiumAllRisk = this.informationCard.report.endorsmentReporData.premium.allRisk
-				this.premiumSlu[0].premiumAlop = this.informationCard.report.endorsmentReporData.premium.alop
-				this.premiumSlu[0].premiumTotal = this.informationCard.report.endorsmentReporData.premium.totalInsured
-				this.premiumSlu[0].premiumAllRisk2 = this.informationCard.report.endorsmentReporData.premium.allRiskUsd
-				this.premiumSlu[0].premiumAlop2 = this.informationCard.report.endorsmentReporData.premium.alopUsd
-				this.premiumSlu[0].premiumTotal2 = this.informationCard.report.endorsmentReporData.premium.totalUsd
-				
-				this.netPremium[0].premiumAllRisk = this.informationCard.report.endorsmentReporData.netPremium.allRiskNetSLUExcludingSurveyFees
-				this.netPremium[0].premiumAlop = this.informationCard.report.endorsmentReporData.netPremium.alopNetSLUExcludingSurveyFees
-				this.netPremium[0].premiumTotal = this.informationCard.report.endorsmentReporData.netPremium.netSLUExcludingSurveyFeesTotal
-				this.netPremium[0].premiumAllRisk2 = this.informationCard.report.endorsmentReporData.netPremiumUSD.allRiskNetSLUExcludingSurveyFees
-				this.netPremium[0].premiumAlop2 = this.informationCard.report.endorsmentReporData.netPremiumUSD.alopNetSLUExcludingSurveyFees
-				this.netPremium[0].premiumTotal2 = this.informationCard.report.endorsmentReporData.netPremiumUSD.netSLUExcludingSurveyFeesTotal
-			 }*/
       }
 
       // Invoca el  servicio para generar el excel
@@ -749,62 +948,6 @@ export default {
   @media (max-width: 650px) {
     overflow-x: hidden;
   }
-
-  /* .content {
-    width: 100%;
-    height: auto;
-    border-radius: 15px;
-    background: white;
-    box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
-    margin-top: 28px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-content: center;
-    padding: 0 20px;
-    @media (max-width: 650px) {
-      overflow-x: auto !important;
-    }
-    //CABEZA DE LA TABLA
-
-    .body-content {
-      width: 100%;
-      height: auto;
-      padding-top: 10px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-      align-content: flex-start;
-      flex-wrap: wrap;
-      padding-bottom: 10px;
-      .button-cont {
-        width: 100%;
-        height: auto;
-        margin-top: 20;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        .blue-btn {
-          color: white;
-          width: 200px;
-          height: 35px;
-          background: #003d6d;
-          font-size: 15px;
-          font-weight: 500;
-          letter-spacing: normal;
-          text-transform: capitalize;
-        }
-        .clear-btn {
-          width: 200px;
-          height: 35px;
-        }
-      }
-    }
-    .v-btn {
-      justify-content: flex-start !important;
-      color: #003d6d;
-    }
-  } */
 }
 
 .create-endorsement {
@@ -831,6 +974,7 @@ export default {
     align-items: center;
 
     .btn {
+      border-radius: 5px;
       color: white;
       width: 200px;
       height: 35px;
@@ -852,12 +996,23 @@ export default {
 }
 
 .cards_endorsement {
-  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  margin-left: -8px;
+  margin-right: -8px;
 }
 
+.endorsement-card {
+  width: 25%;
+  padding: 0 8px; /* compensa el margin negativo del contenedor */
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.fill-card {
+  height: 12.5rem;
+  width: 100%;
+}
 .margin_cards {
   margin-bottom: 1rem;
 }
@@ -883,9 +1038,9 @@ export default {
 .formatEndorsementHistoryTable {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -917,5 +1072,37 @@ export default {
 }
 .mt {
   margin-top: 30px;
+}
+.v-list--three-line .v-list-item,
+.v-list-item--three-line {
+  min-height: 135px;
+}
+.cards-reinsurer {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; // puedes reducir a 10px para que no se acumulen
+}
+.card-reinsurer {
+  width: calc(25% - 10px); // 4 tarjetas por fila, ajustando el gap
+  height: 12.5rem;
+}
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); // 4 columnas
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-item {
+  width: 100%;
+}
+
+.card-content {
+  height: 12.5rem;
+}
+.text-reinsurerText {
+  font-weight: 600;
 }
 </style>

@@ -30,15 +30,15 @@ function removeItemFromStorage(item) {
   if (localStorage.getItem(item)) localStorage.removeItem(item);
 }
 
-const toSnakeCase = str =>
+const toSnakeCase = (str) =>
   str &&
   str
     .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-    .map(x => x.toLowerCase())
-    .join('_');
+    .map((x) => x.toLowerCase())
+    .join("_");
 
-const isObject = function(o) {
-  return o === Object(o) && !isArray(o) && typeof o !== 'function';
+const isObject = function (o) {
+  return o === Object(o) && !isArray(o) && typeof o !== "function";
 };
 
 const isArray = function (a) {
@@ -46,29 +46,39 @@ const isArray = function (a) {
 };
 
 const toCamel = (s) => {
-  return s.replace(/([-_][a-z])/ig, ($1) => {
-    return $1.toUpperCase()
-      .replace('-', '')
-      .replace('_', '');
+  return s.replace(/([-_][a-z])/gi, ($1) => {
+    return $1.toUpperCase().replace("-", "").replace("_", "");
   });
 };
 
-const keysToCamel = function(o) {
+const keysToCamel = function (o) {
   if (isObject(o)) {
     const n = {};
 
-    Object.keys(o).forEach(k => {
+    Object.keys(o).forEach((k) => {
       n[toCamel(k)] = keysToCamel(o[k]);
     });
 
     return n;
   } else if (isArray(o)) {
-    return o.map(i => {
+    return o.map((i) => {
       return keysToCamel(i);
     });
   }
 
   return o;
+};
+
+const cleanNumericValue = (value) => {
+  if (
+    value === null ||
+    value === undefined ||
+    value === "null" ||
+    value === ""
+  ) {
+    return null;
+  }
+  return String(value); // Convertir a string para GraphQL
 };
 
 module.exports = {
@@ -79,4 +89,5 @@ module.exports = {
   removeKeyFromStorage,
   searchObjectInStorage,
   removeItemFromStorage,
+  cleanNumericValue,
 };

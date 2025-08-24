@@ -41,7 +41,7 @@
               <v-text-field label="Stocks" />
             </div>
             <div class="InputCont">
-              <v-text-field label="Porcent Apply Stocks" />
+              <v-text-field label="Stocks Percentage" />
             </div>
           </div>
 
@@ -336,11 +336,6 @@
               </div>
             </div>
           </div>
-
-          <!--Documents-->
-          <FilesSubmission />
-          <!--Email-->
-          <EmailRichEditor />
 
         </div>
       </v-expansion-panel-content>

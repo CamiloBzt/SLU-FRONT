@@ -43,7 +43,7 @@
 
           <!--Cat Sublimes title-->
           <div class="title-cont d-flex justify-start align-center">
-            <h5>Cat Sublimes</h5>
+            <h5>Cat Sublimits</h5>
           </div>
           <v-row class="mt-4">
             <v-col :cols="12" sm="6">

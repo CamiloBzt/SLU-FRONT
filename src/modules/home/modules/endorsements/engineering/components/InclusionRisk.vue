@@ -272,6 +272,9 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
+              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+                <EndorsementReportCompleteTable :report="cleanReport" />
+              </div>
               <div
                 class="files-submit flex justify-content-start align-items-start align-content-start"
               >
@@ -341,6 +344,7 @@ import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
 import AdmittedPremiumTable from "../../components/AdmittedPremiumTable.vue";
 import AdmittedPremiumTableEngineering from "../../components/AdmittedPremiumTableEngineering.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
 /* services */
 import { getFiles } from "../../services/mock-files.service";
 import netPremiumEng from "../services/netpremium.service";
@@ -365,6 +369,7 @@ export default {
     AdmittedPremiumTable,
     AdmittedPremiumTableEngineering,
     EndorsementDocuments,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "Inclusion Risk" },
@@ -454,8 +459,10 @@ export default {
           name: "USD",
           premiumAllRisk: 0,
           premiumAlop: 0,
+          premiumTotal: 0,
           sluAllRisk: 0,
           sluAlop: 0,
+          sluTotal: 0,
         },
       ],
       currentMovementEndDate: new Date(
@@ -647,47 +654,90 @@ export default {
     },
   },
   methods: {
+    validateNumericValue(value, defaultValue = 0) {
+      if (value === null || value === undefined || isNaN(Number(value))) {
+        return defaultValue;
+      }
+      return Number(value);
+    },
     toUsd(value) {
       const exchangeRate = this.accountComplete.deductibles.exchangeRate;
       return Decimal.div(value, exchangeRate).toNumber();
     },
     setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
-      totalPremium[concept] = value;
 
-      if ((concept !== "premiumTotal") & (concept !== "sluTotal")) {
+      if (!totalPremium) {
+        console.warn(`No se encontró totalPremium con id: ${id}`);
+        return;
+      }
+
+      // Asegurar que value sea un número
+      const numericValue = Number(value) || 0;
+      totalPremium[concept] = numericValue;
+
+      // Recalcular totales automáticamente
+      if (concept === "premiumAllRisk" || concept === "premiumAlop") {
+        totalPremium.premiumTotal =
+          (totalPremium.premiumAllRisk || 0) + (totalPremium.premiumAlop || 0);
+      }
+
+      if (concept === "sluAllRisk" || concept === "sluAlop") {
+        totalPremium.sluTotal =
+          (totalPremium.sluAllRisk || 0) + (totalPremium.sluAlop || 0);
+      }
+
+      if (concept !== "premiumTotal" && concept !== "sluTotal") {
         this.isEdited[concept] = true;
       }
     },
     formatCurrency(amount) {
-      if (isNaN(amount)) {
-        return "Invalid data";
-      }
+      const numericAmount = this.validateNumericValue(amount, 0);
 
       const formatter = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
         minimumFractionDigits: 2,
       });
-      return formatter.format(amount);
+      return formatter.format(numericAmount);
     },
     activarVistaDatos() {
       this.$refs.componente.reciboLllamada();
     },
     onResultados(datasMV) {
       this.movementValues = datasMV;
+
+      // Asegurar que datasMV sea un array válido
+      if (!Array.isArray(datasMV) || datasMV.length === 0) {
+        console.warn("datasMV no es un array válido:", datasMV);
+        return;
+      }
+
       this.detailValues.map((value, index) => {
-        // tivTotal (tiv + tivMovement)
-        value.premiumAllRisk =
-          datasMV[index].totalAllRisk + datasMV[index].allRisk;
-        value.premiumAlop = datasMV[index].totalAlop + datasMV[index].alop;
-        value.premiumTotal = value.premiumAllRisk + value.premiumAlop;
+        // Verificar que el índice existe en datasMV
+        if (datasMV[index]) {
+          // Asegurar que los valores sean números, no objetos
+          const allRisk = Number(datasMV[index].allRisk) || 0;
+          const alop = Number(datasMV[index].alop) || 0;
+          const totalAllRisk = Number(datasMV[index].totalAllRisk) || 0;
+          const totalAlop = Number(datasMV[index].totalAlop) || 0;
+
+          // tivTotal (tiv + tivMovement)
+          value.premiumAllRisk = totalAllRisk + allRisk;
+          value.premiumAlop = totalAlop + alop;
+          value.premiumTotal = value.premiumAllRisk + value.premiumAlop;
+        }
       });
 
-      const tivMovement = {
-        allRisk: this.movementValues[0].allRisk,
-        alop: this.movementValues[0].alop,
+      // Verificar que tenemos datos válidos antes de continuar
+      if (!this.movementValues[0]) {
+        console.warn("No hay datos válidos en movementValues[0]");
+        return;
+      }
 
+      const tivMovement = {
+        allRisk: Number(this.movementValues[0].allRisk) || 0,
+        alop: Number(this.movementValues[0].alop) || 0,
         allRiskRate: this.accountComplete.tiv.premium.allRiskRate,
         alopRate: this.accountComplete.tiv.premium.alopRate,
       };
@@ -703,25 +753,37 @@ export default {
         movementEndDate: this.expiryDateReal,
       };
 
-      this.calcTotalPremium = new netPremiumInclusionRiskEng(
-        tivMovement,
-        this.accountComplete.deductibles,
-        this.accountComplete.tiv?.boundInsurableProp.sluLine,
-        false,
-        dates
-      );
+      try {
+        this.calcTotalPremium = new netPremiumInclusionRiskEng(
+          tivMovement,
+          this.accountComplete.deductibles,
+          this.accountComplete.tiv?.boundInsurableProp.sluLine,
+          false,
+          dates
+        );
 
-      const totalPremiumResult = this.calcTotalPremium.calculateTotalPremium();
+        const totalPremiumResult =
+          this.calcTotalPremium.calculateTotalPremium();
 
-      const totalPremium = this.totalPremium.find((el) => el.id === 1);
+        const totalPremium = this.totalPremium.find((el) => el.id === 1);
 
-      totalPremium.premiumAllRisk = totalPremiumResult.allRiskTotalPremium;
-      totalPremium.premiumAlop = totalPremiumResult.alopTotalPremium;
-      totalPremium.premiumTotal = totalPremiumResult.total;
+        if (totalPremium && totalPremiumResult) {
+          totalPremium.premiumAllRisk =
+            Number(totalPremiumResult.allRiskTotalPremium) || 0;
+          totalPremium.premiumAlop =
+            Number(totalPremiumResult.alopTotalPremium) || 0;
+          totalPremium.premiumTotal = Number(totalPremiumResult.total) || 0;
 
-      totalPremium.sluAllRisk = this.calcTotalPremium.allRiskPremiumSlu();
-      totalPremium.sluAlop = this.calcTotalPremium.alopPremiumSlu();
-      totalPremium.sluTotal = this.calcTotalPremium.totalPremiumSlu();
+          totalPremium.sluAllRisk =
+            Number(this.calcTotalPremium.allRiskPremiumSlu()) || 0;
+          totalPremium.sluAlop =
+            Number(this.calcTotalPremium.alopPremiumSlu()) || 0;
+          totalPremium.sluTotal =
+            Number(this.calcTotalPremium.totalPremiumSlu()) || 0;
+        }
+      } catch (error) {
+        console.error("Error en cálculos de premium:", error);
+      }
     },
     async stepone() {
       this.e1 = 2;
@@ -902,6 +964,15 @@ export default {
 
       return result;
     },
+    cleanReport() {
+      return this.endorsmentReporData &&
+        Object.keys(this.endorsmentReporData).length > 0
+        ? {
+            endorsmentReporData: this.endorsmentReporData,
+            cartera: this.cartera,
+          }
+        : {};
+    },
   },
 };
 </script>
@@ -916,9 +987,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -972,6 +1043,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -996,7 +1068,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;

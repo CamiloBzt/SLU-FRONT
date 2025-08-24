@@ -1,65 +1,23 @@
 <template>
-  <div
-    v-if="!isLoading"
-    class="NewRenewalComponent d-flex justify-center align-center mt-2"
-  >
-    <div
-      v-if="!propEng"
-      class="NewRenewalTextContent LeftButton RightButton active"
-    >
-      <div
-        class="NewRenSn"
-        :class="[currentRouteName == 'Edit Bound' ? 'bottomline' : '']"
-      >
-        <router-link :to="'/subscription/' + this.subscription_id + '/bound'">
-          Engineering
-        </router-link>
+  <div v-if="!isLoading" class="NewRenewalComponent d-flex justify-center align-center mt-2">
+    <div v-if="!propEng" class="NewRenewalTextContent LeftButton RightButton active">
+      <div class="NewRenSn" :class="[currentRouteName == 'Edit Bound' ? 'bottomline' : '']">
+        <router-link :to="'/subscription/' + this.subscription_id + '/bound'"> Engineering </router-link>
       </div>
     </div>
-
-    <div
-      class="NewRenewalTextContent LeftButton RightButton active"
-      v-else-if="currentRouteName == 'Bound Property Quotator Proportional'"
-    >
+    <div class="NewRenewalTextContent LeftButton RightButton active" v-else-if="currentRouteName == 'Bound Property Quotator Proportional'">
       <div class="NewRenSn bottomline">
-        <router-link
-          :to="
-            '/subscription/' +
-            this.subscription_id +
-            '/bound/property-quotator-proportional'
-          "
-        >
-          Property Prop.
-        </router-link>
+        <router-link :to="'/subscription/' + this.subscription_id + '/bound/property-quotator-proportional'"> Property Prop. </router-link>
       </div>
     </div>
-    <div
-      class="NewRenewalTextContent LeftButton RightButton active"
-      v-else-if="currentRouteName == 'Bound Property Quotator Non Proportional'"
-    >
+    <div class="NewRenewalTextContent LeftButton RightButton active" v-else-if="currentRouteName == 'Bound Property Quotator Non Proportional'">
       <div class="NewRenSn bottomline">
-        <router-link
-          :to="
-            '/subscription/' +
-            this.subscription_id +
-            '/bound/property-quotator-non-proportional'
-          "
-        >
-          Property Non Prop.
-        </router-link>
+        <router-link :to="'/subscription/' + this.subscription_id + '/bound/property-quotator-non-proportional'"> Property Non Prop. </router-link>
       </div>
     </div>
     <div class="NewRenewalTextContent LeftButton RightButton active" v-else>
       <div class="NewRenSn">
-        <router-link
-          :to="
-            '/subscription/' +
-            this.subscription_id +
-            '/bound/property-quotator-proportional'
-          "
-        >
-          Property Quotator
-        </router-link>
+        <router-link :to="'/subscription/' + this.subscription_id + '/bound/property-quotator-proportional'"> Property Quotator </router-link>
       </div>
     </div>
 
@@ -100,21 +58,10 @@ export default {
     CloseAccount,
   },
   computed: {
-    ...mapGetters([
-      "subscription_id",
-      "accountInformation",
-      "risk_type",
-      "subscription",
-    ]),
+    ...mapGetters(["subscription_id", "accountInformation", "risk_type", "subscription"]),
     selectedRisk() {
-      if (
-        this.accountInformation.typeOfRisk &&
-        this.risk_type &&
-        this.risk_type.length > 0
-      ) {
-        const typeObj = this.risk_type.find(
-          (v) => v.id === this.accountInformation.typeOfRisk
-        );
+      if (this.accountInformation.typeOfRisk && this.risk_type && this.risk_type.length > 0) {
+        const typeObj = this.risk_type.find((v) => v.id === this.accountInformation.typeOfRisk);
         return typeObj || {};
       }
       return {};

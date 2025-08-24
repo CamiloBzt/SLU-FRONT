@@ -8,7 +8,7 @@
       <!--CONTENEDOR GENERAL-->
       <div class="GeneralContent FullOnMovil pl-10 pr-10">
         <!--TITULO DE LA PÁGINA-->
-        <router-view/>
+        <router-view />
         <!--ESPACIO EN BLANCO-->
         <WhiteSpace></WhiteSpace>
       </div>
@@ -45,8 +45,8 @@ export default {
   },
   watch: {
     modalCreateCompany(value, oldValue) {
-      console.log(value, oldValue)
-    }
+      // console.log(value, oldValue)
+    },
   },
   methods: {
     startLoad() {

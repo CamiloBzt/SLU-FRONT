@@ -28,7 +28,7 @@
       <v-select
         v-model.trim="analysis.underwriter"
         @change="updateByColumn('underwriter', $event)"
-        label="Underwriter"
+        label="Underwriter*"
         :items="catalogUnderwriters"
         item-text="data"
         item-value="id"
@@ -39,7 +39,7 @@
       <v-select
         v-model.trim="analysis.uw_analist_1"
         @change="updateByColumn('uw_analist_1', $event)"
-        label="UW Analist 1"
+        label="UW Analist 1*"
         :items="catalogUnderwriters"
         item-text="data"
         item-value="id"
@@ -144,6 +144,17 @@ export default {
     business() {
       return this.analysis?.Subscription?.type || "N/A"; // Retorna "N/A" si no hay datos
     },
+    requiredFieldsCompleted() {
+      return !!(this.analysis.underwriter && this.analysis.uw_analist_1);
+    },
+  },
+  watch: {
+    requiredFieldsCompleted: {
+      handler(newValue) {
+        this.$emit("required-fields-change", newValue);
+      },
+      immediate: true,
+    },
   },
   methods: {
     ...mapActions(["getAnalysisById"]),
@@ -153,6 +164,10 @@ export default {
         column,
         data: data.toString(),
       });
+
+      this.analysis[column] = data;
+
+      this.$forceUpdate();
     },
   },
   async beforeMount() {

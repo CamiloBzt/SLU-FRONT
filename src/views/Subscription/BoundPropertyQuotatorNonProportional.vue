@@ -44,6 +44,7 @@
           changeTotalInsurableValueStocksRate
         "
         :loadingPanel="loadingPanel"
+        @all-required-fields-complete="onAllRequiredFieldsComplete"
       />
 
       <FilesSubmission @panel-event="disabledInteracton" />
@@ -52,7 +53,13 @@
 
       <NotesComponent @panel-event="disabledInteracton" />
 
-      <GeneralReport />
+      <GeneralReport :disabled="!requiredFieldsCompleted" />
+
+      <div v-if="!requiredFieldsCompleted" class="mt-4 text-center">
+        <v-alert type="info" dense>
+          Please complete the required fields to enable the action buttons.
+        </v-alert>
+      </div>
 
       <!-- <ExtensionAndEndorsements /> -->
 
@@ -65,6 +72,7 @@
           text
           class="finish-btn"
           @click="sendToFacultative"
+          :disabled="!buttonsEnabled"
         >
           Send To Facultative
         </v-btn>
@@ -130,6 +138,7 @@ export default {
       totalInsurableValue: {
         stocksRate: 0,
       },
+      requiredFieldsCompleted: false,
     };
   },
   provide() {
@@ -144,6 +153,9 @@ export default {
       "facultativeReference",
       "subscriptionStatus",
     ]),
+    buttonsEnabled() {
+      return this.requiredFieldsCompleted && !this.loadingPanel;
+    },
   },
   async beforeMount() {
     /**se agrego esta parte para generar un respiro previo para guardar la actualizaciones del net premium*/
@@ -185,6 +197,9 @@ export default {
     },
     changeTotalInsurableValueStocksRate(value) {
       this.totalInsurableValue.stocksRate = value;
+    },
+    onAllRequiredFieldsComplete(isComplete) {
+      this.requiredFieldsCompleted = isComplete;
     },
   },
 };

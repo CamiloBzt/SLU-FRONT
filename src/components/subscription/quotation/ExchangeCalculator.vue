@@ -124,7 +124,7 @@
       <div
         class="TitleCont d-flex justify-start align-content-center align-center"
       >
-        <h5>Total Insurable value - USD</h5>
+        <h5>Total insurable value - USD</h5>
       </div>
 
       <!--INPUTS-->
@@ -443,6 +443,13 @@ export default {
   methods: {
     ...mapMutations(["setStateTIVNON", "setStatePremiumNON"]),
     ...mapActions(["saveQuotationColumn"]),
+    // Convierte cualquier valor a número, eliminando comas y símbolos
+    toNumber(val) {
+      if (typeof val === 'number') return val;
+      if (!val) return 0;
+      // Elimina todo excepto dígitos y punto decimal
+      return parseFloat(String(val).replace(/[^\d.\-]/g, '')) || 0;
+    },
     calculeOnWatch() {
       this.calculeUSD();
       if (this.premiumNon.rate || this.premiumNon.rateUsd) {
@@ -455,10 +462,10 @@ export default {
     calculeUSD() {
       if (this.quotation.exchangeRate) {
         this.tivNon.propertyDamageUsd =
-          this.tivNon.propertyDamage / this.quotation.exchangeRate;
+          this.toNumber(this.tivNon.propertyDamage) / this.toNumber(this.quotation.exchangeRate);
         this.tivNon.businessInterruptionUsd =
-          this.tivNon.businessInterruption / this.quotation.exchangeRate;
-        this.tivNon.stockUsd = this.tivNon.stock / this.quotation.exchangeRate;
+          this.toNumber(this.tivNon.businessInterruption) / this.toNumber(this.quotation.exchangeRate);
+        this.tivNon.stockUsd = this.toNumber(this.tivNon.stock) / this.toNumber(this.quotation.exchangeRate);
         this.sumData();
         this.calculeUSDpml();
       }
@@ -466,7 +473,7 @@ export default {
     calculeUSDpml() {
       if (this.quotation.exchangeRate)
         this.premiumNon.pmlUsd =
-          this.premiumNon.pml / this.quotation.exchangeRate;
+          this.toNumber(this.premiumNon.pml) / this.toNumber(this.quotation.exchangeRate);
     },
     sumDatapremiumOriginal() {
       this.premiumNon.rateUsd = this.premiumNon.rate;
@@ -476,10 +483,15 @@ export default {
         currency: "USD",
       });
 
+      const propertyDamage = this.toNumber(this.tivNon.propertyDamage);
+      const businessInterruption = this.toNumber(this.tivNon.businessInterruption);
+      const stock = this.toNumber(this.tivNon.stock);
+      const rate = this.toNumber(this.premiumNon.rate);
+
       this.premiumNon.totalPremium =
-        (this.tivNon.propertyDamage * this.premiumNon.rate) / 1000 +
-        (this.tivNon.businessInterruption * this.premiumNon.rate) / 1000 +
-        (this.tivNon.stock * this.premiumNon.rate) / 1000;
+        (propertyDamage * rate) / 1000 +
+        (businessInterruption * rate) / 1000 +
+        (stock * rate) / 1000;
 
       this.premiumNon.totalPremium = formatter.format(
         this.premiumNon.totalPremium
@@ -492,11 +504,15 @@ export default {
           currency: "USD",
         });
 
+        const propertyDamageUsd = this.toNumber(this.tivNon.propertyDamageUsd);
+        const businessInterruptionUsd = this.toNumber(this.tivNon.businessInterruptionUsd);
+        const stockUsd = this.toNumber(this.tivNon.stockUsd);
+        const rateUsd = this.toNumber(this.premiumNon.rateUsd);
+
         this.premiumNon.totalPremiumUsd =
-          (this.tivNon.propertyDamageUsd * this.premiumNon.rateUsd) / 1000 +
-          (this.tivNon.businessInterruptionUsd * this.premiumNon.rateUsd) /
-            1000 +
-          (this.tivNon.stockUsd * this.premiumNon.rateUsd) / 1000;
+          (propertyDamageUsd * rateUsd) / 1000 +
+          (businessInterruptionUsd * rateUsd) / 1000 +
+          (stockUsd * rateUsd) / 1000;
 
         this.premiumNon.totalPremiumUsd = formatter.format(
           this.premiumNon.totalPremiumUsd
@@ -509,22 +525,15 @@ export default {
         currency: "USD",
       });
 
-      this.tivNon.total =
-        (!this.tivNon.propertyDamage
-          ? 0
-          : parseFloat(this.tivNon.propertyDamage)) +
-        (!this.tivNon.businessInterruption
-          ? 0
-          : parseFloat(this.tivNon.businessInterruption)) +
-        (!this.tivNon.stock ? 0 : parseFloat(this.tivNon.stock));
-      this.tivNon.totalUsd =
-        (!this.tivNon.propertyDamageUsd
-          ? 0
-          : parseFloat(this.tivNon.propertyDamageUsd)) +
-        (!this.tivNon.businessInterruptionUsd
-          ? 0
-          : parseFloat(this.tivNon.businessInterruptionUsd)) +
-        (!this.tivNon.stockUsd ? 0 : parseFloat(this.tivNon.stockUsd));
+      const propertyDamage = this.toNumber(this.tivNon.propertyDamage);
+      const businessInterruption = this.toNumber(this.tivNon.businessInterruption);
+      const stock = this.toNumber(this.tivNon.stock);
+      const propertyDamageUsd = this.toNumber(this.tivNon.propertyDamageUsd);
+      const businessInterruptionUsd = this.toNumber(this.tivNon.businessInterruptionUsd);
+      const stockUsd = this.toNumber(this.tivNon.stockUsd);
+
+      this.tivNon.total = propertyDamage + businessInterruption + stock;
+      this.tivNon.totalUsd = propertyDamageUsd + businessInterruptionUsd + stockUsd;
 
       this.tivNon.total = formatter.format(this.tivNon.total);
       this.tivNon.totalUsd = formatter.format(this.tivNon.totalUsd);

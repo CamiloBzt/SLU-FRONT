@@ -25,9 +25,14 @@
           <!-- <EmailButtons /> -->
           <!-- <EmailEndorsments /> -->
           <!-- <EmailRichEditor /> -->
-          <!-- <FilesEndorsements v-if="enableFileComponent" :movementsValue="movementsValue"
-            :endorsementData="endorsementData" :currentDocs="currentDocs" :movementId="movementId"
-            @updateDocs="updateDocs" /> -->
+          <FilesEndorsements
+            v-if="enableFileComponent"
+            :movementsValue="movementsValue"
+            :currentDocs="currentDocs"
+            :movementId="movementId"
+            @updateDocs="updateDocs"
+            @deleteImage="refreshEndorsementDocs"
+          />
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -44,10 +49,10 @@ import MovementWithoutPremium from '@/components/subscription/endorsements/carEa
 import ChangeOfShare from '@/components/subscription/endorsements/carEar/ChangeOfShare';
 import InternalAdjustment from '@/components/subscription/endorsements/carEar/InternalAdjustment';
 import EmailEndorsments from '@/components/subscription/endorsements/carEar/EmailEndorsments';
-import FilesEndorsements from '@/components/subscription/endorsements/carEar/FilesEndorsements.vue';
 import EmailRichEditor from '@/components/Email/EmailRichEditor';
 import Summary from '@/components/subscription/endorsements/carEar/Summary';
 import EmailButtons from '@/components/subscription/endorsements/carEar/EmailButtons.vue';
+import EndorsementDocuments from '@/modules/home/modules/endorsements/components/EndorsementDocuments.vue';
 import { mapActions, mapGetters } from 'vuex';
 /* services */
 import { updateEndorsementMovement, getCatalog } from './services/endorsement.service'
@@ -67,7 +72,7 @@ export default {
     InternalAdjustment,
     Summary,
     EmailEndorsments,
-    FilesEndorsements,
+    EndorsementDocuments,
     EmailRichEditor,
     EmailButtons,
   },
@@ -98,19 +103,31 @@ export default {
     currentMovementId: 0,
     subscriptionId: false,
     catalogEndorsements: [],
-    movementsValue: ''
+    movementsValue: '',
+    endorsementsCatalog: [],
   }),
   async mounted () {
-    this.subscriptionId = this.$route.params?.subscriptionId
+    // Try both params names to be robust across routes
+    this.subscriptionId = Number(this.$route.params?.subscriptionId || this.$route.params?.id)
     this.catalogEndorsements = await getCatalog('endorsement')
     if (this.movementType) this.movementsValue = this.movementType
     // if (this.movementId) {
     //   const data = await getInclusionRisk(this.movementId);
     //   this.$emit('changeMovementId', data?.EndorsementsIncreaseInsurableValue?.id || false)
     // }
-    this.LoadDocumentsCatalogForEndorsements({
+    // Load catalog definitions for endorsement documents
+    await this.LoadDocumentsCatalogForEndorsements({
       catalog_document_id: [22, 23, 24, 25, 26, 27, 28, 29],
     });
+    // Keep a local copy of catalog items before hydrating with saved docs
+    this.endorsementsCatalog = Array.isArray(this.endorsementsDocuments) ? [...this.endorsementsDocuments] : []
+    // Also hydrate with existing documents for this subscription (if any)
+    if (this.subscriptionId) {
+      await this.LoadDocumentsByCatalog({
+        subscription_id: this.subscriptionId,
+        catalog_document_id: [22, 23, 24, 25, 26, 27, 28, 29],
+      })
+    }
   },
   computed: {
     ...mapGetters(['endorsementsDocuments']),
@@ -134,19 +151,19 @@ export default {
     },
     currentDocs: {
       get () {
-        const data = this.endorsementsDocuments.filter((v) => v.key.startsWith(this.docsSettings[this.movementsValue]));
-        console.log('curr', data);
-        const docs = [];
-        const newDocs = [];
-        data.forEach((item) => {
-          let newItem = {};
-          Object.assign(newItem, item);
-          newItem.text = 'Upload the next document';
-          newDocs.push(newItem);
-          docs.push(item.id);
-        });
-        console.log(newDocs);
-        return newDocs;
+        const prefix = this.docsSettings[this.movementsValue]
+        if (!prefix) return []
+        const catalogItems = (this.endorsementsCatalog || []).filter((v) => (v?.key || '').startsWith(prefix))
+        const existing = (this.endorsementsDocuments || []).filter((v) => (v?.key || '').startsWith(prefix))
+        const existingByKey = new Map(existing.map((it) => [it.key, it]))
+        const merged = catalogItems.map((base) => {
+          const over = existingByKey.get(base.key) || {}
+          const item = { ...base, ...over }
+          const hasDoc = Boolean(item.uri || item.document || item.doc_s3 || item.document_url)
+          if (!item.text) item.text = hasDoc ? (item.name || item.description || 'Document') : 'Upload the next document'
+          return item
+        })
+        return merged
       },
     },
   },
@@ -155,11 +172,18 @@ export default {
       console.log(value)
       this.disabledPanel = true;
       await this.saveMovement(value);
+      // Refresh documents for the current subscription after movement change
+      if (this.subscriptionId) {
+        await this.LoadDocumentsByCatalog({
+          subscription_id: this.subscriptionId,
+          catalog_document_id: [22, 23, 24, 25, 26, 27, 28, 29],
+        })
+      }
       this.disabledPanel = false;
     },
   },
   methods: {
-    ...mapActions(['LoadDocumentsCatalogForEndorsements']),
+    ...mapActions(['LoadDocumentsCatalogForEndorsements', 'LoadDocumentsByCatalog']),
     async saveMovement (value) {
       this.showComponent = false;
       const data = await updateEndorsementMovement(this.endorsementId, value)
@@ -168,6 +192,13 @@ export default {
       if (data?.[0]?.movement_id)
         this.$emit('changeMovementId', data?.[0]?.movement_id)
       this.showComponent = true;
+    },
+    async refreshEndorsementDocs () {
+      if (!this.subscriptionId) return
+      await this.LoadDocumentsByCatalog({
+        subscription_id: this.subscriptionId,
+        catalog_document_id: [22, 23, 24, 25, 26, 27, 28, 29],
+      })
     },
     async defineQuotation (event, id) {
       //alert(event)

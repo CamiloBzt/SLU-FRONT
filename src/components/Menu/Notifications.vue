@@ -5,9 +5,7 @@
         <div class="CounterContainer">
           <!-- CONTADOR DE NOTIFICACIONES 	-->
           <div v-if="numNotifications > 0" class="CounterContainer__Counter">
-            <span class="CounterContainer__Counter--Number">{{
-              numNotifications
-            }}</span>
+            <span class="CounterContainer__Counter--Number">{{ numNotifications }}</span>
           </div>
 
           <v-btn v-bind="attrs" v-on="on" icon>
@@ -18,17 +16,10 @@
 
       <!--LISTA DE NOTIFICACIONES-->
       <v-list v-if="numNotifications > 0" class="NotificationsList">
-        <v-list-item
-          v-for="(item, index) in notificationsToShow"
-          :key="index"
-          @click="$router.push({ name: 'Dashboard' })"
-        >
+        <v-list-item v-for="(item, index) in notificationsToShow" :key="index" @click="$router.push({ name: 'Dashboard' })">
           <div class="NotificationsList__Notification">
             <div class="NotificationsList__Content">
-              <div class="NotificationsList__Item">
-                <strong>id:</strong> {{ item.id }} <strong>reference:</strong>
-                {{ item.reference }} <strong>status:</strong> {{ item.status }}
-              </div>
+              <div class="NotificationsList__Item"><strong>id:</strong> {{ item.id }} <strong>reference:</strong> {{ item.reference }} <strong>status:</strong> {{ item.status }}</div>
             </div>
           </div>
         </v-list-item>
@@ -67,9 +58,7 @@ export default {
     notificationsToShow() {
       const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
       // Filtrar notificaciones no archivadas y cuya creation_date sea mayor a hace 5 días
-      const filtered = this.socketNotificationList.filter(
-        (item) => Number(item.creation_date) > fiveDaysAgo
-      );
+      const filtered = this.socketNotificationList.filter((item) => Number(item.creation_date) > fiveDaysAgo);
 
       const getPriority = (status) => {
         const s = status.toLowerCase();
@@ -91,9 +80,7 @@ export default {
           if (newPriority > currentPriority) {
             groups[subId] = item;
           } else if (newPriority === currentPriority) {
-            if (
-              Number(item.creation_date) > Number(groups[subId].creation_date)
-            ) {
+            if (Number(item.creation_date) > Number(groups[subId].creation_date)) {
               groups[subId] = item;
             }
           }
@@ -108,7 +95,7 @@ export default {
 };
 </script>
 <style scoped lang="less">
-/* 
+/*
 ---------------------------------------------------------
 Estilos del contador de notificaciones
 ---------------------------------------------------------
@@ -126,7 +113,7 @@ Estilos del contador de notificaciones
   &__Counter {
     width: 15px;
     height: 15px;
-    border-radius: 15px;
+    border-radius: 50%;
     background: #e26b5b;
     position: absolute;
     top: -3px;
@@ -146,9 +133,9 @@ Estilos del contador de notificaciones
   }
 }
 
-/* 
+/*
 ---------------------------------------------------------
-Estilos de las notificaciones 
+Estilos de las notificaciones
 ---------------------------------------------------------
 */
 .NotificationsList {

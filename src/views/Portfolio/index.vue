@@ -22,11 +22,7 @@
     </div>
 
     <!--MODAL NOTAS-->
-    <ModalNotes
-      @HideModal="ToggleModal"
-      :ShowModal="ShowNotesModal"
-      :idSubsNotes="idSubsNotes"
-    />
+    <ModalNotes @HideModal="ToggleModal" :ShowModal="ShowNotesModal" :idSubsNotes="idSubsNotes" />
   </div>
 </template>
 <script>
@@ -50,7 +46,7 @@ export default {
     WhiteSpace,
     ModalNotes,
     ShowMoreButton,
-    SaveModal,
+    //SaveModal,
     BarNavPortfolio: () => import("@/components/Portfolio/BarNavPortfolio"),
   },
   data() {
@@ -71,7 +67,7 @@ export default {
     },
     async ShowNotesHistory(idSubscription) {
       this.setLoading();
-      console.log(idSubscription);
+      // console.log(idSubscription);
       this.idSubsNotes = idSubscription;
       await this.loadNotes(idSubscription);
       this.setLoading();

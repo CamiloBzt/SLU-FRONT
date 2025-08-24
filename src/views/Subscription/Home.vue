@@ -24,11 +24,7 @@
     </div>
 
     <!--MODAL NOTAS-->
-    <ModalNotes
-      @HideModal="ToggleModal"
-      :ShowModal="ShowNotesModal"
-      :idSubsNotes="idSubsNotes"
-    />
+    <ModalNotes @HideModal="ToggleModal" :ShowModal="ShowNotesModal" :idSubsNotes="idSubsNotes" />
   </div>
 </template>
 <script>
@@ -60,8 +56,7 @@ export default {
       idSubsNotes: null, //referencia de la nota a mostrar en el modal
     };
   },
-  async created() {
-  },
+  async created() {},
   computed: {
     ...mapState({
       isSingingSuccesOutlook: (state) => state.auth.isSingingSuccesOutlook,
@@ -81,12 +76,12 @@ export default {
     },
     /*
     ShowNotesHistory
-    Muestra el historial de notas al 
+    Muestra el historial de notas al
     hacer click en una nota de la tabla
     */
     async ShowNotesHistory(idSubscription) {
       this.setLoading();
-      console.log(idSubscription)
+      // console.log(idSubscription)
       this.idSubsNotes = idSubscription;
       await this.loadNotes(idSubscription);
       this.setLoading();

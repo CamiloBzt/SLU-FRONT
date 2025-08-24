@@ -159,18 +159,18 @@
 </template>
 <script>
 /* validations */
-import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
-import { formValidations } from '@/mixins/formValidations';
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 /* constantes */
-import { proportionalCategories } from '../../constants/proportionalCategories';
-import { mapActions, mapGetters } from 'vuex';
+import { proportionalCategories } from "../../constants/proportionalCategories";
+import { mapActions, mapGetters } from "vuex";
 /* components */
-import Modal from '@/components/Rate/Modal.vue';
-import Decimal from 'decimal.js';
+import Modal from "@/components/Rate/Modal.vue";
+import Decimal from "decimal.js";
 
 export default {
-  name: 'CatTableProp',
+  name: "CatTableProp",
   mixins: [validationMixin, formValidations],
   components: { Modal },
   data() {
@@ -180,10 +180,10 @@ export default {
     };
   },
   async mounted() {
-    await this.loadMultipleSectionRatesModal({ table: 'catTable' });
+    await this.loadMultipleSectionRatesModal({ table: "catTable" });
   },
   computed: {
-    ...mapGetters(['deductions', 'catRatesGroup', 'quotation']),
+    ...mapGetters(["deductions", "catRatesGroup", "quotation"]),
     sumDeductions: {
       get() {
         const op =
@@ -218,7 +218,6 @@ export default {
           const hyOp = Decimal.div(hy.hydro, calcDeductions);
           const flOp = Decimal.div(fl.flood, calcDeductions);
           const otOp = Decimal.div(ot.other, calcDeductions);
-          console.log(eqOp.valueOf());
           row.earthquakeRate = eqOp.toFixed(3);
           row.windRate = hyOp.toFixed(3);
           row.floodRate = flOp.toFixed(3);
@@ -246,16 +245,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['saveRatesModalColumn', 'loadMultipleSectionRatesModal', 'addNewFieldModal']),
+    ...mapActions(["saveRatesModalColumn", "loadMultipleSectionRatesModal", "addNewFieldModal"]),
     addFields() {
-      this.addNewFieldModal('catTable');
+      this.addNewFieldModal("catTable");
     },
     removeField(index) {
       const id = this.$v.computedGroup.$each[index].$model.id;
       this.catRatesGroup.splice(index, 1);
       this.saveRatesModalColumn({
-        table: 'catTable',
-        key: 'active',
+        table: "catTable",
+        key: "active",
         value: false,
         id,
       });
@@ -265,7 +264,7 @@ export default {
       const value = this.$v.computedGroup.$each[index][column].$model;
       const id = this.$v.computedGroup.$each[index].$model.id;
       await this.saveRatesModalColumn({
-        table: 'catTable',
+        table: "catTable",
         key: column,
         value,
         id,
@@ -281,7 +280,7 @@ del tarifador, controlan:
 	- Clase .flex()
 	- Contenedor general
 */
-@import '~@/assets/style/Subscription/Rate.less';
+@import "~@/assets/style/Subscription/Rate.less";
 
 .Table {
   .flex();

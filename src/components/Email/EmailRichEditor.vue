@@ -1,75 +1,54 @@
 <template>
-<v-expansion-panels class="ExpansionBordered mt-6 ExpansionComponent">
-  <v-expansion-panel>
-    <!--TITULO DEL ACORDEON-->
-    <v-expansion-panel-header 
-    @click="changeStateExpansive()" 
-    class="ExpansionTitle" 
-    expand-icon="">
-      E-mail
-      <div class="ExpansionState HideOnMovil">
-        {{ stateExpansiveMessage }}
-      </div>
-      <template  v-slot:actions>
-        <v-icon class="iconExpand">
-          {{iconExpansive}}
-        </v-icon>
-      </template>
-    </v-expansion-panel-header>
-    <!--CUERPO-->
-    <v-expansion-panel-content>
-      <div class="ExpandContent d-flex justify-center">
-        <div class="ExpandEmailCont pa-5">
-          
-          <div class="emailContainer">
-            <div class="emailCont">
-              <EmailHeader
-                :header="headerEmail"
-                :account="nameReference"
-                :reference="nameReference"
-              />
-              <CcParticipants ref="ccClose" :ccParticipants="ccParticipants" />
-              <CcoParticipants
-                ref="ccoClose"
-                :ccoParticipants="ccoParticipants"
-              />
-              <div class="ExpansionLineTop mt-4"></div>
-              <!--EDITOR DE TEXTO DEL EMAIL-->
-              <EmailEditor ref="emailEditor" :htmlEmail="htmlEmail" />
-            </div>
-
-            <div class="sendCont">
-              <v-btn
-                rounded
-                depressed
-                color="#003D6D"
-                class="button"
-                @click="closeAccountAndSendEmail()"
-              >
-                Send
-              </v-btn>
-            </div>
-
-          </div>
-
+  <v-expansion-panels class="ExpansionBordered mt-6 ExpansionComponent">
+    <v-expansion-panel>
+      <!--TITULO DEL ACORDEON-->
+      <v-expansion-panel-header @click="changeStateExpansive()" class="ExpansionTitle" expand-icon="">
+        E-mail
+        <div class="ExpansionState HideOnMovil">
+          {{ stateExpansiveMessage }}
         </div>
-      </div>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
-</v-expansion-panels>
+        <template v-slot:actions>
+          <v-icon class="iconExpand">
+            {{ iconExpansive }}
+          </v-icon>
+        </template>
+      </v-expansion-panel-header>
+      <!--CUERPO-->
+      <v-expansion-panel-content>
+        <div class="ExpandContent d-flex justify-center">
+          <div class="ExpandEmailCont pa-5">
+            <div class="emailContainer">
+              <div class="emailCont">
+                <EmailHeader :header="headerEmail" :account="nameReference" :reference="nameReference" />
+                <CcParticipants ref="ccClose" :ccParticipants="ccParticipants" />
+                <CcoParticipants ref="ccoClose" :ccoParticipants="ccoParticipants" />
+                <div class="ExpansionLineTop mt-4"></div>
+                <!--EDITOR DE TEXTO DEL EMAIL-->
+                <EmailEditor ref="emailEditor" :htmlEmail="htmlEmail" />
+              </div>
+
+              <div class="sendCont">
+                <v-btn rounded depressed color="#003D6D" class="button" @click="closeAccountAndSendEmail()"> Send </v-btn>
+              </div>
+            </div>
+          </div>
+        </div>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import EmailEditor from '@/components/Email/EmailEditor.vue';
-import CcParticipants from '@/components/Email/CcParticipants.vue';
-import CcoParticipants from '@/components/Email/CcoParticipants.vue';
-import EmailHeader from '@/components/Email/EmailHeader.vue';
-import {stateExpansiveManager} from '@/mixins/subscription.js'; 
+import { mapActions, mapGetters } from "vuex";
+import EmailEditor from "@/components/Email/EmailEditor.vue";
+import CcParticipants from "@/components/Email/CcParticipants.vue";
+import CcoParticipants from "@/components/Email/CcoParticipants.vue";
+import EmailHeader from "@/components/Email/EmailHeader.vue";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 
-export default{
-  name:'EmailRichEditor',
-  mixins:[stateExpansiveManager],
+export default {
+  name: "EmailRichEditor",
+  mixins: [stateExpansiveManager],
   components: {
     EmailEditor,
     CcParticipants,
@@ -98,25 +77,17 @@ export default{
   },
   async mounted() {
     /* set loadings (data) */
-    const lla = 'loadingLanguages';
+    const lla = "loadingLanguages";
     /* loaders to true */
     this[lla] = !this[lla];
 
-    await this.getCatalogByName({ name: 'lang' });
+    await this.getCatalogByName({ name: "lang" });
     await this.getCurrentTemplateLanguage();
 
     this[lla] = false;
   },
   computed: {
-    ...mapGetters([
-      'nameReference',
-      'currentEmailTemplate',
-      'close_account',
-      'currentTemplateRiskID',
-      'subscription_id',
-      'selectedLang',
-      'lang',
-    ]),
+    ...mapGetters(["nameReference", "currentEmailTemplate", "close_account", "currentTemplateRiskID", "subscription_id", "selectedLang", "lang"]),
     /* html template */
     htmlEmail: {
       get() {
@@ -138,27 +109,19 @@ export default{
     },
   },
   methods: {
-    ...mapActions([
-      'setEmailTemplate',
-      'getEmailTemplate',
-      'sendEmailAction',
-      'getCatalogByName',
-      'setCurrentTemplateLanguage',
-      'getCurrentTemplateLanguage',
-      'resetTemplateLang',
-    ]),
+    ...mapActions(["setEmailTemplate", "getEmailTemplate", "sendEmailAction", "getCatalogByName", "setCurrentTemplateLanguage", "getCurrentTemplateLanguage", "resetTemplateLang"]),
     /* EL METODO updateData OBTIENE  LOS DATOS DE LOS SUB COMPONENTES CUANDO EL USUARIO VA MODIFICANDO LA INFORMACIÓN */
     updateData(event) {
       const eventType = event.type;
       const eventContent = event.name;
       switch (eventType) {
         // CC SELECCIONADOS
-        case 'ccValue':
+        case "ccValue":
           this.ccValue = eventContent;
           break;
 
         // CCO SELECCIONADOS
-        case 'ccoValue':
+        case "ccoValue":
           this.ccoValue = eventContent;
           break;
       }
@@ -169,10 +132,7 @@ export default{
         lang: this.selectedLang,
       });
       if (!this.$refs.emailEditor) return;
-      this.$refs.emailEditor.editor.commands.setContent(
-        this.currentEmailTemplate,
-        true
-      );
+      this.$refs.emailEditor.editor.commands.setContent(this.currentEmailTemplate, true);
     },
     async closeAccountAndSendEmail() {
       const ccClose = this.$refs.ccClose;
@@ -183,12 +143,8 @@ export default{
       ccClose.$v.ccValue.$touch();
       ccoClose.$v.ccoValue.$touch();
 
-      const cc = Array.isArray(ccClose.$v.ccValue.$model)
-        ? Array.from(ccClose.$v.ccValue.$model)
-        : null;
-      const cco = Array.isArray(ccoClose.$v.ccoValue.$model)
-        ? Array.from(ccoClose.$v.ccoValue.$model)
-        : null;
+      const cc = Array.isArray(ccClose.$v.ccValue.$model) ? Array.from(ccClose.$v.ccValue.$model) : null;
+      const cco = Array.isArray(ccoClose.$v.ccoValue.$model) ? Array.from(ccoClose.$v.ccoValue.$model) : null;
 
       const emailData = {
         subject: `Reference Number: ${this.nameReference}`,
@@ -196,9 +152,7 @@ export default{
         cc,
         cco,
         closeAccount: true,
-        attachedFiles: attachRef.filesUpload
-          .map(({ currentName }) => currentName)
-          .join(','),
+        attachedFiles: attachRef.filesUpload.map(({ currentName }) => currentName).join(","),
       };
 
       await this.sendEmailAction({ emailData });
@@ -210,12 +164,12 @@ export default{
       this.ccoValue = null;
     },
   },
-}
+};
 </script>
 <style lang="less" scoped>
 //CONTENEDOR DE QUOTATION
-@import '~@/assets/style/AccordionStyle.less';
-.ExpandEmailCont{
+@import "~@/assets/style/AccordionStyle.less";
+.ExpandEmailCont {
   width: 65%;
   height: auto;
   .emailContainer {
@@ -266,7 +220,7 @@ export default{
     .emailCont {
       width: 100%;
       height: auto;
-      border-radius: 15px;
+      border-radius: 5px;
       overflow: auto;
       position: relative;
       margin-top: 15px;

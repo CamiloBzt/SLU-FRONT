@@ -19,15 +19,14 @@
         <div class="content">
           <v-stepper-items>
             <v-stepper-content step="1" class="step-one">
+              <!-- Selecciones iniciales -->
               <div class="input-row w-50 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
                     <v-autocomplete
-                      :label="'Type of internal adjustment'"
+                      label="Type of internal adjustment"
                       v-model="selectedInternalAdjustment"
                       :items="typeOfInternalAdjustment"
-                      item-value="typeOfInternalAdjustment"
-                      item-text="typeOfInternalAdjustment"
                     />
                   </div>
                 </div>
@@ -35,7 +34,7 @@
                 <div class="input-col">
                   <div class="input-cont">
                     <v-autocomplete
-                      :label="'Apply to'"
+                      label="Apply to"
                       v-model="endorsementToModify"
                       :items="listEndorsement"
                       item-value="EndorsementType.id"
@@ -43,7 +42,37 @@
                     />
                   </div>
                 </div>
-                <div class="inner-title">Endorsement date</div>
+              </div>
+
+              <!-- Fechas (como la hoja) -->
+              <div class="inner-title">Endorsement</div>
+
+              <!-- Fila 1: Inception / Expiry (solo lectura) -->
+              <div class="input-row w-50 d-flex flex-wrap">
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-text-field
+                      v-model="inceptionDate"
+                      label="Inception date"
+                      readonly
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-text-field
+                      v-model="expiryDate"
+                      label="Expiry date"
+                      readonly
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 2: Endorsement effective (editable) / Movement end date (readonly) + Days -->
+              <div class="input-row w-50 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
                     <v-menu
@@ -61,7 +90,7 @@
                           readonly
                           v-bind="attrs"
                           v-on="on"
-                        ></v-text-field>
+                        />
                       </template>
                       <v-date-picker
                         v-model="effectiveDate"
@@ -71,19 +100,283 @@
                         @change="
                           endorsementDateValidation($event, effectiveDate)
                         "
-                      ></v-date-picker>
+                      />
                     </v-menu>
-                    <div v-if="this.endorsementDateError" class="error-message">
-                      The new Endorsement effective date must be lower than
-                      expiry date.
+                    <div v-if="endorsementDateError" class="error-message">
+                      The Endorsement effective date must be earlier than the
+                      Movement end date.
                     </div>
                   </div>
                 </div>
 
                 <div class="input-col">
                   <div class="input-cont">
+                    <v-text-field
+                      v-model="movementEndDate"
+                      label="Movement end date"
+                      readonly
+                      disabled
+                    />
+                  </div>
+                </div>
+
+                <InputDaysDiference
+                  :endorsementDate="effectiveDate"
+                  :expiryDate="expiryDate"
+                  :key="effectiveDate"
+                />
+              </div>
+
+              <!-- Description -->
+              <div class="input-row w-50 d-flex flex-wrap mt-4">
+                <v-text-field
+                  ref="desc"
+                  v-model="description"
+                  label="Description"
+                  :rules="descriptionRules"
+                  hide-details="auto"
+                  clearable
+                  required
+                  counter="200"
+                  :maxlength="200"
+                />
+              </div>
+
+              <!-- Percentage -->
+              <div class="input-row w-50 d-flex flex-wrap mt-6 block-as-table">
+                <div class="endorsement-title">Percentage</div>
+
+                <div class="input-row">
+                  <!-- Columna 1 (Share, Brokerage, tax, Fronting) -->
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="internalAdjustments.newShare"
+                        label="Share"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="
+                          internalAdjustments.deductibles.brokerage
+                        "
+                        label="Brokerage"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="internalAdjustments.deductibles.taxes"
+                        label="tax"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="
+                          internalAdjustments.deductibles.fronting
+                        "
+                        label="Fronting"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Columna 2 (ENG fee, Reserve, LTA, Others) -->
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="internalAdjustments.deductibles.eng"
+                        label="ENG fee"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="
+                          internalAdjustments.deductibles.premiumReserve
+                        "
+                        label="Reserve"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="internalAdjustments.deductibles.lta"
+                        label="LTA"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="internalAdjustments.deductibles.others"
+                        label="Others"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Exchange Rate (si lo manejas como %) -->
+                <div class="input-row">
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field
+                        v-model.number="
+                          internalAdjustments.deductibles.exchangeRate
+                        "
+                        label="Exchange Rate"
+                        type="number"
+                        suffix="%"
+                        :rules="[(v) => (v >= 0 && v <= 100) || '0–100%']"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Original currency -->
+              <div class="input-row w-50 d-flex flex-wrap mt-6 block-as-table">
+                <div class="endorsement-title">Original currency</div>
+
+                <div class="input-row">
+                  <!-- Col 1 -->
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.totalPremium"
+                        label="Total premium"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.fronting"
+                        label="Fronting"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.others"
+                        label="Others"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Col 2 -->
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.premiumSlu"
+                        label="Premium SLU"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.eng"
+                        label="ENG fee"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Col 3 -->
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.brokerage"
+                        label="Brokerage"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.colombiaReserve"
+                        label="Reserve"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Col 4 -->
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.tax"
+                        label="tax"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.lta"
+                        label="LTA"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TIVs (si quieres dejarlos en Step 1) -->
+                <div class="input-row">
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.tivMovementDamage"
+                        label="TIV movement damage"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                  </div>
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.tivMovementBi"
+                        label="TIV movement BI"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                  </div>
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <currency-input
+                        v-model="internalAdjustments.tivMovementStocks"
+                        label="TIV movement stocks"
+                        :options="currencyOptions"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional -->
+              <div class="input-row w-50 d-flex flex-wrap mt-6">
+                <div class="inner-title">Additional</div>
+
+                <div class="input-col">
+                  <div class="input-cont">
                     <v-menu
-                      v-model="menuControllStepOne.movementEndDate"
+                      v-model="menuControllStepOne.premiumPaymentDate"
                       :close-on-content-click="false"
                       :nudge-right="40"
                       transition="scale-transition"
@@ -92,372 +385,30 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="movementEndDate"
-                          label="Expiry date"
+                          v-model="premiumPaymentDate"
+                          label="Premium payment date"
                           readonly
                           v-bind="attrs"
                           v-on="on"
-                          disabled
-                        ></v-text-field>
+                        />
                       </template>
                       <v-date-picker
-                        v-model="movementEndDate"
-                        @input="menuControllStepOne.movementEndDate = false"
-                      ></v-date-picker>
-                    </v-menu>
-                    <div
-                      v-if="this.errorsDates['movementEndDate'] && sent"
-                      class="error-message"
-                    >
-                      The new Movement end date must be later than Endorsement
-                      effective date.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div v-if="showInfoEndorsement">
-                <div class="input-row w-50 d-flex flex-wrap">
-                  <div class="input-col">
-                    <div class="input-cont">
-                      <v-menu
-                        v-model="menuControllStepOne.InceptionDate"
-                        :close-on-content-click="false"
-                        :nudge-right="40"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            v-model="inceptionDate"
-                            label="Inception date"
-                            readonly
-                            disabled
-                            v-bind="attrs"
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="inceptionDate"
-                          @input="menuControllStepOne.InceptionDate = false"
-                          @change="
-                            endorsementDateValidation($event, inceptionDate)
-                          "
-                        ></v-date-picker>
-                      </v-menu>
-                    </div>
-                  </div>
-
-                  <div class="input-col">
-                    <div class="input-cont">
-                      <v-menu
-                        v-model="menuControllStepOne.movementEndDate"
-                        :close-on-content-click="false"
-                        :nudge-right="40"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            v-model="movementEndDate"
-                            label="Movement end date"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                            disabled
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="movementEndDate"
-                          @input="menuControllStepOne.movementEndDate = false"
-                        ></v-date-picker>
-                      </v-menu>
-                      <div
-                        v-if="this.errorsDates['movementEndDate'] && sent"
-                        class="error-message"
-                      >
-                        The new Movement end date must be later than Endorsement
-                        effective date.
-                      </div>
-                    </div>
-                  </div>
-                  <InputDaysDiference
-                    :endorsementDate="effectiveDate"
-                    :expiryDate="expiryDatetoCalc"
-                    :key="effectiveDate"
-                  />
-                </div>
-
-                <!-- Percentage -->
-                <div class="input-row w-50 d-flex flex-wrap mt-6">
-                  <div class="endorsement-title">Percentage</div>
-
-                  <div class="input-row">
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.newShare"
-                          label="Share"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.deductibles.eng"
-                          label="Eng Fee"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.deductibles.exchangeRate"
-                          label="Rate"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.deductibles.brokerage"
-                          label="Brokerage"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="
-                            internalAdjustments.deductibles.premiumReserve
-                          "
-                          label="Colombia reserve"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.deductibles.taxes"
-                          label="TAX"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.deductibles.lta"
-                          label="LTA"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.deductibles.fronting"
-                          label="Fronting"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-
-                      <div class="input-cont">
-                        <v-text-field
-                          v-model="internalAdjustments.deductibles.others"
-                          label="Others"
-                          type="number"
-                          suffix="%"
-                        ></v-text-field>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Original currency -->
-                <div class="input-row w-50 d-flex flex-wrap mt-6">
-                  <div class="endorsement-title">Original currency</div>
-
-                  <div class="input-row">
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.totalPremium"
-                          label="Total premium"
-                          :options="currencyOptions"
-                        />
-                      </div>
-
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.fronting"
-                          label="Fronting"
-                          :options="currencyOptions"
-                        />
-                      </div>
-
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.others"
-                          label="Others"
-                          :options="currencyOptions"
-                        />
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.premiumSlu"
-                          label="Premium SLU"
-                          :options="currencyOptions"
-                        />
-                      </div>
-
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.eng"
-                          label="Eng Fee"
-                          :options="currencyOptions"
-                        />
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.brokerage"
-                          label="Brokerage"
-                          :options="currencyOptions"
-                        />
-                      </div>
-
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.colombiaReserve"
-                          label="Colombia reserve"
-                          :options="currencyOptions"
-                        />
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.tax"
-                          label="TAX"
-                          :options="currencyOptions"
-                        />
-                      </div>
-
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.lta"
-                          label="LTA"
-                          :options="currencyOptions"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="input-row">
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.tivMovementDamage"
-                          label="TIV movement damage"
-                          :options="currencyOptions"
-                        />
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.tivMovementBi"
-                          label="TIV movement BI"
-                          :options="currencyOptions"
-                        />
-                      </div>
-                    </div>
-
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <currency-input
-                          v-model="internalAdjustments.tivMovementStocks"
-                          label="TIV movement stocks"
-                          :options="currencyOptions"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Additional -->
-                <div class="input-row w-50 d-flex flex-wrap mt-6">
-                  <div class="inner-title">Additional</div>
-                  <div class="input-col">
-                    <div class="input-cont">
-                      <v-menu
-                        v-model="menuControllStepOne.premiumPaymentDate"
-                        :close-on-content-click="false"
-                        :nudge-right="40"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            v-model="premiumPaymentDate"
-                            label="Premium payment date"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="premiumPaymentDate"
-                          @input="
-                            menuControllStepOne.premiumPaymentDate = false
-                          "
-                        ></v-date-picker>
-                      </v-menu>
-                      <div
-                        v-if="
-                          this.errorsDates['endorsementEffectiveDate'] && sent
-                        "
-                        class="error-message"
-                      >
-                        The new Endorment effective date must be lower than
-                        Inception date date .
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="input-col">
-                    <div class="input-cont">
-                      <v-autocomplete
-                        :label="'Clause'"
-                        v-model="clause"
-                        :items="clauseList"
-                        item-value="clause"
-                        item-text="clause"
+                        v-model="premiumPaymentDate"
+                        @input="menuControllStepOne.premiumPaymentDate = false"
                       />
-                    </div>
+                    </v-menu>
+                  </div>
+                </div>
+
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-autocomplete
+                      label="Clause"
+                      v-model="clause"
+                      :items="clauseList"
+                      item-value="clause"
+                      item-text="clause"
+                    />
                   </div>
                 </div>
               </div>
@@ -467,50 +418,6 @@
               <!--Details -->
               <div class="details-container">
                 <h3 class="inner-title">Detail</h3>
-
-                <div class="details-input-container d-flex flex-wrap">
-                  <div class="input-col-details">
-                    <div class="input-cont">
-                      <v-menu
-                        v-model="menuControllStepTwo.premiumPaymentDate"
-                        :close-on-content-click="false"
-                        :nudge-right="40"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            v-model="premiumPaymentDate"
-                            label="Premium payment Date"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                            disabled
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="premiumPaymentDate"
-                          @input="
-                            menuControllStepTwo.premiumPaymentDate = false
-                          "
-                        ></v-date-picker>
-                      </v-menu>
-                    </div>
-                  </div>
-                  <div class="input-col-details">
-                    <div class="input-cont">
-                      <v-autocomplete
-                        :label="'Clause'"
-                        v-model="clause"
-                        :items="clauseList"
-                        item-value="clause"
-                        item-text="clause"
-                        disabled
-                      />
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <div class="container-modify-general">
@@ -639,7 +546,18 @@
             <v-stepper-content step="3">
               <div v-if="loadingDocument">cargando documento ..</div>
               <div v-if="!loadingDocument" class="inner-title">
-                Admitted premium
+                Endorsement Report
+              </div>
+
+              <div
+                v-if="
+                  !loadingDocument &&
+                  cleanReport &&
+                  cleanReport.endorsmentReporData
+                "
+                class="report-complete"
+              >
+                <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
                 v-if="!loadingDocument"
@@ -674,8 +592,15 @@
       />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
+        <v-btn
+          :outlined="e1 == 3 ? false : true"
+          rounded
+          large
+          :text="e1 == 3 ? true : false"
+          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 3 ? 'none' : '#003D6D'"
+          @click="goNext(e1)"
+        >
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -689,22 +614,34 @@
 
     <v-dialog v-model="dialog" persistent width="auto">
       <v-card id="card-eye" class="pb-3">
-        <v-card-title class="font-weight-bold text-h5">Changes admitted premium</v-card-title>
+        <v-card-title class="font-weight-bold text-h5"
+          >Changes admitted premium</v-card-title
+        >
 
         <v-divider id="divisor"></v-divider>
 
         <div id="border-blue" class="mb-8">
           <v-card-text class="font-weight-bold text-h6 blue-text">
-            If you continue, the data entered in the admitted premium table will be taken.
+            If you continue, the data entered in the admitted premium table will
+            be taken.
           </v-card-text>
         </div>
 
-        <div class="stepper-btn mt-7 mb-3 d-flex justify-space-around align-center">
+        <div
+          class="stepper-btn mt-7 mb-3 d-flex justify-space-around align-center"
+        >
           <v-btn text rounded large class="blue-btn" @click="dialog = false">
             Accept
           </v-btn>
 
-          <v-btn outlined rounded large class="clear-btn" color="#003D6D" @click="cancelModifyTable">
+          <v-btn
+            outlined
+            rounded
+            large
+            class="clear-btn"
+            color="#003D6D"
+            @click="cancelModifyTable"
+          >
             Cancel
           </v-btn>
         </div>
@@ -718,6 +655,8 @@ import AppFile from "../../components/AppFile.vue";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
+
 /* services */
 import { getFiles } from "../../services/mock-files.service";
 import PaymentService from "@/modules/home/services/payments.service";
@@ -738,6 +677,7 @@ export default {
     DocumentsEndorsement,
     InputDaysDiference,
     EndorsementDocuments,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "Inclusion Risk" },
@@ -753,6 +693,11 @@ export default {
   },
   data() {
     return {
+      description: "Adjustment by error in fronting",
+      descriptionRules: [
+        (v) => !!(v && v.trim()) || "Description is required",
+        (v) => (v ? v.length <= 200 : true) || "Max 200 characters",
+      ],
       endorsementDateError: false,
       loadingDocument: false,
       expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
@@ -805,8 +750,8 @@ export default {
       endorsementToModify: 0,
       typeOfInternalAdjustment: [
         "Premium adjustment",
-        "Rate adjusment",
-        "Insureable/Insured value adjustment",
+        "Rate adjustment",
+        "Insurable/Insured value adjustment",
       ],
       selectedInternalAdjustment: "",
       applyTo: [],
@@ -814,7 +759,7 @@ export default {
       currentMonth: [],
       currentMonthUSD: [],
       currencyOptions: {
-        currency: "MXN",
+        currency: this.accountComplete?.deductibles?.currency || "MXN",
         currencyDisplay: "narrowSymbol",
         locale: "en-US",
       },
@@ -862,6 +807,7 @@ export default {
         },
       ],
       endorsementDocuments: [],
+      cartera: {},
       endorsmentReporData: {},
       endDateError: false,
       effectiveDateError: false,
@@ -876,8 +822,8 @@ export default {
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       lastAccountInformacion: {},
       dialog: false,
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
     };
   },
   async beforeMount() {
@@ -978,24 +924,37 @@ export default {
     };
   },
   mounted() {
-    console.log("esto es account complete", this.accountComplete);
-    const effective = new Date(this.accountComplete.deductibles.expiryDate)
+    console.log("accountComplete =>", this.accountComplete);
+    const inception = new Date(this.accountComplete.deductibles.inceptionDate)
       .toISOString()
       .substring(0, 10);
     const expiry = new Date(this.accountComplete.deductibles.expiryDate)
       .toISOString()
       .substring(0, 10);
+
+    this.inceptionDate = inception;
     this.expiryDate = expiry;
-    this.inceptionDate = effective;
-    this.movementEndDate = expiry;
+    this.movementEndDate = expiry; // readonly
+    this.expiryDateReal = expiry; // cálculos/reporte
   },
+  computed: {
+    cleanReport() {
+      return this.endorsmentReporData &&
+        Object.keys(this.endorsmentReporData).length > 0
+        ? {
+            endorsmentReporData: this.endorsmentReporData,
+            cartera: this.cartera,
+          }
+        : {};
+    },
+  },
+
   methods: {
-    async endorsementDateValidation(event, incomingDate) {
-      if (Date.parse(incomingDate) >= Date.parse(this.expiryDate)) {
-        this.endorsementDateError = true;
-      } else {
+    async endorsementDateValidation(_, incomingDate) {
+      this.endorsementDateError =
+        Date.parse(incomingDate) >= Date.parse(this.expiryDate);
+      if (!this.endorsementDateError) {
         await this.changeDateEndorsement(incomingDate);
-        this.endorsementDateError = false;
       }
     },
     initialDateValue() {
@@ -1010,14 +969,11 @@ export default {
 
     nextStep() {
       if (this.e1 === 1) {
-        this.sent = true;
-        let changeStep = true;
-
-        if (changeStep === true) {
-          this.e1 = 2;
-          this.sent = false;
-        }
-        return;
+        const ok = this.$refs.desc?.validate
+          ? this.$refs.desc.validate(true)
+          : !!(this.description && this.description.trim());
+        if (!ok) return;
+        this.e1 = 2;
       }
     },
 
@@ -1112,15 +1068,15 @@ export default {
       return 0;
     },
     showDialog() {
-      this.dialog = this.checkedModifyTable
+      this.dialog = this.checkedModifyTable;
     },
     cancelModifyTable() {
-      this.dialog = false
-      this.checkedModifyTable = false
+      this.dialog = false;
+      this.checkedModifyTable = false;
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.nextStep();
       } else if (e1 == 2) {
@@ -1131,7 +1087,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -1144,14 +1100,14 @@ export default {
   watch: {
     e1: async function () {
       if (this.e1 === 1) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Cancel';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Cancel";
         this.accountComplete = this.tempAccountComplete;
       }
 
       if (this.e1 === 2) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Return";
         //INICIO CALCULOS 2
 
         const options = {
@@ -1230,13 +1186,13 @@ export default {
         this.cartera = {
           ...this.accountComplete.cartera,
           premiumPaymentDate: this.premiumPaymentDate,
-          clause: this.clause,
+          clausula: this.clause,
         };
       }
 
       if (this.e1 === 3) {
-        this.buttonTitle = 'Finalize'
-        this.buttonTitleBack = 'Return';
+        this.buttonTitle = "Finalize";
+        this.buttonTitleBack = "Return";
         //INICIO CALCULOS 3
         this.loadingDocument = true;
 
@@ -1297,24 +1253,26 @@ export default {
 
         // FIN CALCULOS 3
 
+        const mapForReport = (d) => ({
+          ...d,
+          biSluShare: d.biPremiumSlu,
+          damageSluShare: d.damagePremiumSlu,
+          stocksSluShare: d.stocksPremiumSlu,
+          sluShareTotal: d.totalPremiumSlu,
+        });
+
         this.endorsmentReporData = {
           cartera: {
             ...this.accountComplete.cartera,
             premiumPaymentDate: this.premiumPaymentDate,
-            clausula: this.clause,
+            clausula: this.clause, // ver punto 2
           },
           boundInsurableProp: {
             ...this.accountComplete.tiv.boundInsurableProp,
           },
-          deductibles: {
-            ...this.internalAdjustments.deductibles,
-          },
-          netPremium: {
-            ...results.data,
-          },
-          netPremiumUSD: {
-            ...resultsUSD.data,
-          },
+          deductibles: { ...this.internalAdjustments.deductibles },
+          netPremium: mapForReport(results.data),
+          netPremiumUSD: mapForReport(resultsUSD.data),
           premium: {
             ...results.premium,
             businessInterruptionMovementUsd: this.toUsd(
@@ -1325,10 +1283,7 @@ export default {
             ),
             stockMovementUsd: this.toUsd(results.premium.stockMovement),
           },
-          totalValues: {
-            ...results.totalPremiumResult,
-          },
-
+          totalValues: { ...results.totalPremiumResult },
           movementValues: {
             bi: 0,
             biUsd: 0,
@@ -1359,9 +1314,9 @@ export default {
         this.loadingDocument = false;
       }
     },
-    checkedModifyTable: function () {
-      this.showDialog()
-    }
+    checkedModifyTable(val) {
+      this.dialog = !!val;
+    },
   },
 };
 </script>
@@ -1374,9 +1329,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1400,6 +1355,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -1666,7 +1622,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    font-weight: 700;
+    font-weight: 600;
     font-family: avenir;
     margin-right: 30px;
   }
@@ -1675,8 +1631,18 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    font-weight: 700;
+    font-weight: 600;
     font-family: avenir;
   }
+}
+.block-as-table {
+  border: 1px solid #cfd8ea;
+  border-radius: 6px;
+  padding: 12px;
+  background: #f7f9fe;
+  margin-top: 12px;
+}
+.report-complete {
+  overflow: auto;
 }
 </style>

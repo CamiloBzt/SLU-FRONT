@@ -26,10 +26,7 @@
                   type="file"
                 /> -->
 
-                <div
-                  v-if="item.text == 'Upload the next document'"
-                  class="emptyFileInfo d-flex justify-center align-center flex-column"
-                >
+                <div v-if="item.text == 'Upload the next document'" class="emptyFileInfo d-flex justify-center align-center flex-column">
                   <p>Upload the <b>test</b> document</p>
                 </div>
                 <div v-else class="NameFileCont">
@@ -40,17 +37,11 @@
                 </div>
               </label>
               <!--BORRAR-->
-              <div
-                @click="DeleteFile('input1', item)"
-                class="InputDeletContBtn d-flex justify-center align-center"
-              >
+              <div @click="DeleteFile('input1', item)" class="InputDeletContBtn d-flex justify-center align-center">
                 <v-icon> mdi-trash-can-outline </v-icon>
               </div>
               <!--DESCARGAR-->
-              <div
-                class="DownloadCont d-flex justify-center align-center"
-                @click="download(item)"
-              >
+              <div class="DownloadCont d-flex justify-center align-center" @click="download(item)">
                 <v-icon> mdi-download </v-icon>
               </div>
             </div>
@@ -70,10 +61,7 @@
                       Document size must be
                       <span class="FileImageSpan">less than 2MB</span>
                     </div>
-                    <img
-                      class="image"
-                      src="@/assets/img/icons/hexagonalwarning.svg"
-                    />
+                    <img class="image" src="@/assets/img/icons/hexagonalwarning.svg" />
                     <button class="buttonFileUpload">Upload File</button>
                   </div>
                 </div>
@@ -84,12 +72,7 @@
 
         <!-- SI ES MENOR QUE EL LIMITE DE ARCHIVOS PERMITIMOS AGREGAR MAS -->
         <div v-if="!limit" class="button">
-          <input
-            @change="uploadFile($event, arrayFilesNatcat.length + 1)"
-            id="fileUpload"
-            type="file"
-            hidden
-          />
+          <input @change="uploadFile($event, arrayFilesNatcat.length + 1)" id="fileUpload" type="file" hidden />
           <v-btn @click="chooseFiles()" class="button__btn" depressed>
             <v-icon> mdi-plus-circle </v-icon>
             Add New Document
@@ -220,19 +203,10 @@ export default {
           }).finally(() => {
             this.upload({
               file: file,
-              path:
-                "COT_" +
-                this.subscription_id +
-                "/" +
-                this.type +
-                "/" +
-                this.document,
+              path: "COT_" + this.subscription_id + "/" + this.type + "/" + this.document,
             })
               .then((res) => {
-                res.error
-                  ? this.DeleteFile(inputName, item)
-                  : (item.uri = res.singleUpload.uri),
-                  (item.document = this.document);
+                res.error ? this.DeleteFile(inputName, item) : (item.uri = res.singleUpload.uri), (item.document = this.document);
                 this.setLoading();
               })
               .catch((e) => {
@@ -265,19 +239,10 @@ export default {
             }).finally(() => {
               this.upload({
                 file: file,
-                path:
-                  "COT_" +
-                  this.subscription_id +
-                  "/" +
-                  this.type +
-                  "/" +
-                  this.document,
+                path: "COT_" + this.subscription_id + "/" + this.type + "/" + this.document,
               })
                 .then((res) => {
-                  res.error
-                    ? this.DeleteFile(inputName, item)
-                    : (item.uri = res.singleUpload.uri),
-                    (item.document = this.document);
+                  res.error ? this.DeleteFile(inputName, item) : (item.uri = res.singleUpload.uri), (item.document = this.document);
                   this.setLoading();
                 })
                 .catch((e) => {
@@ -334,9 +299,7 @@ export default {
             })
             .finally(async () => {
               if (this.subscription_id) {
-                const ind = this.arrayFilesEndorsement
-                  .map((e) => e.id)
-                  .indexOf(item.id);
+                const ind = this.arrayFilesEndorsement.map((e) => e.id).indexOf(item.id);
                 this.arrayFilesEndorsement.splice(ind, 1);
               }
               if (this.arrayFilesEndorsement.length >= 25) {
@@ -355,8 +318,7 @@ export default {
         this.downloadDocument(item.uri, item.text);
       } else if (item.doc_s3) {
         await this.DownloadDoc({
-          path:
-            "COT_" + this.subscription_id + "/" + this.type + "/" + item.doc_s3,
+          path: "COT_" + this.subscription_id + "/" + this.type + "/" + item.doc_s3,
         });
         this.downloadDocument(this.downloadDocUrl);
       }
@@ -384,28 +346,18 @@ export default {
     closeConfirmationModal(...args) {
       const doc_s3 = args[2].doc_s3 ? args[2].doc_s3 : args[2].document;
       this.selectedItemData = args;
-      const file = this.selectedItemData[0].target.files
-        ? this.selectedItemData[0].target.files[0]
-        : this.selectedItemData[0].dataTransfer.files[0];
+      const file = this.selectedItemData[0].target.files ? this.selectedItemData[0].target.files[0] : this.selectedItemData[0].dataTransfer.files[0];
       this.selectedItemData[0] = file;
 
       if (doc_s3) {
         this.showConfirmationModal = !this.showConfirmationModal;
       } else {
-        this.loadImage(
-          file,
-          this.selectedItemData[1],
-          this.selectedItemData[2]
-        );
+        this.loadImage(file, this.selectedItemData[1], this.selectedItemData[2]);
         this.selectedItemData = [];
       }
     },
     confirmLoadImage() {
-      this.loadImage(
-        this.selectedItemData[0],
-        this.selectedItemData[1],
-        this.selectedItemData[2]
-      );
+      this.loadImage(this.selectedItemData[0], this.selectedItemData[1], this.selectedItemData[2]);
       this.selectedItemData = [];
     },
     dragIn(dragBorderId) {
@@ -697,7 +649,7 @@ export default {
   .InputFileContent {
     width: 18%;
     height: 180px;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
     margin-right: 2%;
     background: #d2deed;
@@ -708,7 +660,7 @@ export default {
       height: 100%;
       z-index: 0;
       position: absolute;
-      border-radius: 15px;
+      border-radius: 5px;
       overflow: hidden;
       left: 0;
       top: 0;
@@ -818,7 +770,7 @@ export default {
   .InputFileContentUpload {
     width: 18%;
     height: 180px;
-    border-radius: 15px;
+    border-radius: 5px;
     border: 2px dashed #ff4f56;
     position: relative;
     margin-right: 2%;
@@ -830,7 +782,7 @@ export default {
       height: 100%;
       z-index: 0;
       position: absolute;
-      border-radius: 15px;
+      border-radius: 5px;
       overflow: hidden;
       left: 0;
       top: 0;
@@ -872,7 +824,7 @@ export default {
           }
           .FileImageSpan {
             color: #ff4f56;
-            font-weight: 700;
+            font-weight: 600;
           }
           .image {
             height: 100%;
@@ -880,7 +832,7 @@ export default {
           .buttonFileUpload {
             margin-top: 10px;
             border: 1px solid #ff4f56;
-            border-radius: 24px;
+            border-radius: 5px;
             padding: 5px 15px;
             color: #ff4f56;
             font-weight: 800;
@@ -982,9 +934,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1008,6 +960,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -1033,7 +986,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1153,11 +1106,7 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper
-  .v-stepper__step:not(.v-stepper__step--active):not(
-    .v-stepper__step--complete
-  ):not(.v-stepper__step--error)
-  .v-stepper__step__step {
+.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 

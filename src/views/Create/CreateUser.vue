@@ -15,25 +15,11 @@
 
         <NavBar />
         <TypeCreate :viewTitle="title" />
-        <router-view
-          ref="createUserForm"
-          v-on:startLoading="startLoad()"
-          v-on:finishLoading="endLoad"
-          @changeViewTitle="setViewTitle"
-        ></router-view>
+        <router-view ref="createUserForm" v-on:startLoading="startLoad()" v-on:finishLoading="endLoad" @changeViewTitle="setViewTitle"></router-view>
 
         <!--BOTON PARA FINALIZAR-->
         <div class="finishButtonCont mt-8 d-flex justify-end align-center">
-          <v-btn
-            rounded
-            outlined
-            large
-            class="finishBtn"
-            :loading="loading"
-            @click="$refs.createUserForm.submitForm()"
-          >
-            Create {{ title }}
-          </v-btn>
+          <v-btn rounded outlined large class="finishBtn" :loading="loading" @click="$refs.createUserForm.submitForm()"> Create {{ title }} </v-btn>
         </div>
 
         <!--ESPACIO EN BLANCO-->
@@ -59,7 +45,7 @@ export default {
     return {
       loader: null,
       loading: false,
-      title: "Contact"
+      title: "Contact",
     };
   },
   components: {
@@ -78,8 +64,8 @@ export default {
   },
   watch: {
     modalCreateCompany(value, oldValue) {
-      console.log(value, oldValue)
-    }
+      // console.log(value, oldValue)
+    },
   },
   methods: {
     startLoad() {

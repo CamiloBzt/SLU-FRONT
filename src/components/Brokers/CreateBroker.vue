@@ -2,17 +2,10 @@
   <div>
     <!-- <AddCompanyModal :showModal="modalCreateCompany" /> -->
 
-    <v-expansion-panels
-      class="ExpansionComponent ExpansionBordered mt-6 MarginTopMovil"
-      v-model="userPanel"
-    >
+    <v-expansion-panels class="ExpansionComponent ExpansionBordered mt-6 MarginTopMovil" v-model="userPanel">
       <v-expansion-panel>
         <!--TITULO DEL ACORDEON-->
-        <v-expansion-panel-header
-          @click="changeStateExpansive()"
-          class="ExpansionTitle"
-          expand-icon=""
-        >
+        <v-expansion-panel-header @click="changeStateExpansive()" class="ExpansionTitle" expand-icon="">
           Broker Information
 
           <div class="ExpansionState HideOnMovil">
@@ -38,9 +31,7 @@
                 @input="$v.createUserData.name.$touch()"
                 @blur="$v.createUserData.name.$touch()"
                 required
-                :error-messages="
-                  requiredInputVuelidateParent('name', 'createUserData')
-                "
+                :error-messages="requiredInputVuelidateParent('name', 'createUserData')"
                 label="Names"
               >
               </v-text-field>
@@ -80,9 +71,7 @@
                 @input="$v.createUserData.country.$touch()"
                 @blur="$v.createUserData.country.$touch()"
                 required
-                :error-messages="
-                  requiredInputVuelidateParent('country', 'createUserData')
-                "
+                :error-messages="requiredInputVuelidateParent('country', 'createUserData')"
                 label="Country"
                 :items="countries"
                 :loading="loadingCountries"
@@ -143,9 +132,7 @@
                 @input="$v.createUserData.address.$touch()"
                 @blur="$v.createUserData.address.$touch()"
                 required
-                :error-messages="
-                  requiredInputVuelidateParent('address', 'createUserData')
-                "
+                :error-messages="requiredInputVuelidateParent('address', 'createUserData')"
                 label="Address"
               >
               </v-text-field>
@@ -154,34 +141,12 @@
             <div class="ExpansionInputContent HideOnMovil"></div>
 
             <div class="WhiteSpace HideOnMovil" />
-            <Contacts
-              option="1"
-              :id="brokerId"
-              v-if="!isNew"
-            />
+            <Contacts option="1" :id="brokerId" v-if="!isNew" />
             <div class="finishButtonCont mt-8 d-flex justify-end align-center">
-              <v-btn
-                rounded
-                large
-                class="finishBtn"
-                :loading="loading"
-                depressed
-                @click="cancel()"
-                color="#003D6D"
-                style="margin:10px"
-              >
-                Cancel
-              </v-btn>
+              <v-btn rounded large class="finishBtn" :loading="loading" depressed @click="cancel()" color="#003D6D" style="margin: 10px"> Cancel </v-btn>
 
-              <v-btn
-                rounded
-                outlined
-                large
-                class="finishBtn"
-                :loading="loading"
-                @click="submitForm()"
-              >
-                {{labelButton}}
+              <v-btn rounded outlined large class="finishBtn" :loading="loading" @click="submitForm()">
+                {{ labelButton }}
               </v-btn>
             </div>
           </div>
@@ -200,7 +165,7 @@ import { validPhone, OnlyText, ValidChars } from "@/constants/validations";
 import { formValidations } from "@/mixins/formValidations";
 import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* services */
-import { createBroker } from './services/broker.service'
+import { createBroker } from "./services/broker.service";
 
 // Componentes
 // import AddCompanyModal from "@/components/Create/AddCompanyModal.vue";
@@ -218,58 +183,57 @@ export default {
       required: true,
     },
   },
-  data () {
+  data() {
     return {
       loading: false,
       userPanel: 0,
       // loadingCompanies: false,
       loadingCountries: false,
       isNew: true,
-      labelButton: 'Create Broker',
+      labelButton: "Create Broker",
       createUserData: {
-        name: '',
+        name: "",
         // company: 0,
-        address: '',
-        country: '',
+        address: "",
+        country: "",
         // phone: '',
         // celular: '',
         // email: '',
         // roleCompany: ''
-      }
+      },
     };
   },
-  beforeMount () {
-    console.log(this.brokerId)
+  beforeMount() {
+    //console.log(this.brokerId)
     if (parseFloat(this.brokerId) === 0) {
       Promise.all([
         this.getCatalogByName({ name: "countries" }),
         // this.getCatalogByName({ name: "companies" })
-      ])
+      ]);
     } else {
       this.isNew = false;
-      this.labelButton = 'Save';
+      this.labelButton = "Save";
       Promise.all([
         this.getBrokerId(this.brokerId),
         this.getContactsById({ id: this.brokerId, type: 1 }),
         this.getCatalogByName({ name: "countries" }),
         // this.getCatalogByName({ name: "companies" })
       ]).then(() => {
-        this.createUserData = this.info
+        this.createUserData = this.info;
         // this.createUserData.company = this.companies.find(x => x.id == this.info.catalogCompanyId)
-        this.createUserData.country = this.countries.find(x => x.id == this.info.catalogCountryId)
-      })
+        this.createUserData.country = this.countries.find((x) => x.id == this.info.catalogCountryId);
+      });
     }
   },
   computed: {
     ...mapGetters([
-      'countries',
+      "countries",
       // 'companies',
       // 'modalCreateCompany'
     ]),
     ...mapState({
       contacts: (state) => state.contacts,
-      info: (state) => state.brokers.selected
-
+      info: (state) => state.brokers.selected,
     }),
   },
   validations: {
@@ -286,21 +250,27 @@ export default {
   methods: {
     ...mapActions(["getCatalogByName", "getBrokerId", "getContactsById"]),
     ...mapMutations(["setModalCreateCompany"]),
-    cancel () {
-      this.$router.push({ name: 'list-brokers' })
+    cancel() {
+      this.$router.push({ name: "list-brokers" });
     },
-    async submitForm () {
+    async submitForm() {
       this.$v.createUserData.$touch(); // valida el formulario
       const errorExists = this.$v.createUserData.$invalid;
       if (errorExists) this.userPanel = 0;
       if (errorExists) return;
 
-      const { name: { $model: name } } = this.$v.createUserData;
+      const {
+        name: { $model: name },
+      } = this.$v.createUserData;
       // const { email: { $model: email } } = this.$v.createUserData;
       // const { phone: { $model: phone } } = this.$v.createUserData;
-      const { address: { $model: address } } = this.$v.createUserData;
+      const {
+        address: { $model: address },
+      } = this.$v.createUserData;
       // const { company: { $model: company } } = this.$v.createUserData;
-      const { country: { $model: country } } = this.$v.createUserData;
+      const {
+        country: { $model: country },
+      } = this.$v.createUserData;
       // const { roleCompany: { $model: roleCompany } } = this.$v.createUserData;
 
       this.loading = true;
@@ -313,22 +283,22 @@ export default {
         catalogCountryId: country.id,
         catalogCompanyId: null,
         address,
-        roleCompany: null
-      }
+        roleCompany: null,
+      };
 
-      if (parseInt(this.brokerId) === 0) delete brokerInformation.id
-      await createBroker({ brokerInformation })
+      if (parseInt(this.brokerId) === 0) delete brokerInformation.id;
+      await createBroker({ brokerInformation });
 
       this.loading = false;
-      this.createUserData = {}
+      this.createUserData = {};
       this.$v.createUserData.$reset();
-      this.$router.push({ name: 'list-brokers' })
+      this.$router.push({ name: "list-brokers" });
     },
   },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
 
 .AddCompanyCont {
   height: 50px;

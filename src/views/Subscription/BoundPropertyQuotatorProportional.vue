@@ -4,14 +4,11 @@
     <div class="LateralMenuContent">
       <MenuGeneral />
     </div>
-
-    <!--CONTENEDOR GENERAL-->
     <div class="GeneralContent FullOnMovil pl-10 pr-10">
       <!--TITULO DE LA PÁGINA-->
       <TitlePage title="Underwriting" />
       <!--BARRA DE NAVEGACIÓN DE Underwriting-->
       <BarNav link1="" link2="lnkActive" />
-
       <TypeBound />
       <!--PASOS DE REGISTRO-->
       <Stepper
@@ -20,7 +17,6 @@
         stepMovil2=""
         stepMovil3=""
       />
-
       <!--COPY ACCOUNT-->
       <div class="CopyAndDetailscont">
         <EditAccount
@@ -35,19 +31,23 @@
         />
         <CopyAccount />
       </div>
-
       <RiskAnalysisQuotator
         ref="riskAnalysisQuotator"
         :loadingPanel="loadingPanel"
         @panel-event="disabledInteracton"
+        @all-required-fields-complete="onAllRequiredFieldsComplete"
       />
       <FilesSubmission @panel-event="disabledInteracton" />
       <SlipDocuments @panel-event="disabledInteracton" />
       <NotesComponent @panel-event="disabledInteracton" />
-      <GeneralReport />
+      <GeneralReport :disabled="!requiredFieldsCompleted" />
 
+      <div v-if="!requiredFieldsCompleted" class="mt-4 text-center">
+        <v-alert type="info" dense>
+          Please complete the required fields to enable the action buttons.
+        </v-alert>
+      </div>
       <!-- <ExtensionAndEndorsements /> -->
-      <!--BOTON PARA FINALIZAR-->
       <div class="finishButtonCont mt-7 d-flex justify-end align-center">
         <v-btn
           v-if="showFacultativeButton"
@@ -55,17 +55,25 @@
           large
           text
           class="finishBtn"
+          :disabled="!buttonsEnabled"
           @click="sendToFacultative"
-          >Send To Facultative</v-btn
         >
+          Send To Facultative
+        </v-btn>
       </div>
       <!--Botón crear wallet-->
       <div class="finishButtonCont mt-2 d-flex justify-end align-center">
-        <v-btn rounded large text class="finishBtn" @click="createWallet"
-          >Create Wallet</v-btn
+        <v-btn
+          rounded
+          large
+          text
+          class="finishBtn"
+          :disabled="!buttonsEnabled"
+          @click="createWallet"
         >
+          Create Wallet
+        </v-btn>
       </div>
-
       <!--ESPACIO EN BLANCO-->
       <WhiteSpace />
     </div>
@@ -126,6 +134,7 @@ export default {
       editable: false,
       subscriptionId: this.$route.params.subscriptionId,
       showFacultativeButton: false,
+      requiredFieldsCompleted: false,
     };
   },
   provide() {
@@ -141,6 +150,9 @@ export default {
       "facultativeReference",
       "subscriptionStatus",
     ]),
+    buttonsEnabled() {
+      return this.requiredFieldsCompleted && !this.loadingPanel;
+    },
   },
   watch: {
     "$route.params.subscriptionId": async function (id) {
@@ -207,7 +219,7 @@ export default {
       this.getSublimesProperty(),
     ]);
 
-    console.log(this.layersArray);
+    // console.log(this.layersArray);
     /* load finished */
     this[lpa] = false;
 
@@ -283,6 +295,19 @@ export default {
         throw new Error(message);
       }
     },
+    onAllRequiredFieldsComplete(isComplete) {
+      this.requiredFieldsCompleted = isComplete;
+    },
   },
 };
 </script>
+<style lang="less" scoped>
+.finishBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.finishBtn:disabled:hover {
+  background-color: transparent !important;
+}
+</style>

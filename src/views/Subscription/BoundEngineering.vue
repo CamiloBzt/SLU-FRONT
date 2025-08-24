@@ -40,6 +40,7 @@
         :ActionIcons="true"
         ref="riskAnalysis"
         :loadingPanel="loadingPanel"
+        @all-required-fields-complete="onAllRequiredFieldsComplete"
       />
       <!--Endorsements-->
       <!-- <ExtensionAndEndorsements /> -->
@@ -48,8 +49,12 @@
       <SlipDocuments />
       <AccountRisks />
       <NotesComponent />
-      <GeneralReport />
-
+      <GeneralReport :disabled="!requiredFieldsCompleted" />
+      <div v-if="!requiredFieldsCompleted" class="mt-4 text-center">
+        <v-alert type="info" dense>
+          Please complete the required fields to enable the action buttons.
+        </v-alert>
+      </div>
       <!--BOTON PARA FINALIZAR-->
       <div class="finishButtonCont mt-7 d-flex justify-end align-center">
         <v-btn
@@ -59,6 +64,7 @@
           text
           class="finishBtn"
           @click="sendToFacultative"
+          :disabled="!buttonsEnabled"
         >
           Send To Facultative
         </v-btn>
@@ -120,6 +126,7 @@ export default {
       showFacultativeButton: true,
       loadingPanel: false,
       editable: false,
+      requiredFieldsCompleted: false,
     };
   },
   provide() {
@@ -129,6 +136,9 @@ export default {
   },
   computed: {
     ...mapGetters(["nameReference", "facultativeReference"]),
+    buttonsEnabled() {
+      return this.requiredFieldsCompleted && !this.loadingPanel;
+    },
   },
   watch: {
     "$route.params.subscriptionId": async function (id) {
@@ -211,6 +221,9 @@ export default {
       "updateReference",
     ]),
     ...mapMutations(["RESET_SUBSCRIPTION_REFERENCE"]),
+    onAllRequiredFieldsComplete(isComplete) {
+      this.requiredFieldsCompleted = isComplete;
+    },
     async disabledSubAccordion() {
       const subscriptionId = Number(this.$route.params.subscriptionId);
       const isBoundComplete = await SubscriptionService.isAccountComplete(

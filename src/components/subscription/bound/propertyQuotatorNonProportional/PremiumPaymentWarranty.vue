@@ -21,7 +21,7 @@
               })
             "
             v-model="payment.installment"
-            :label="'Installment ' + (index + 1)"
+            :label="'Installment ' + (index + 1) + '*'"
             type="number"
           />
         </div>
@@ -36,7 +36,7 @@
               })
             "
             v-model="payment.percent"
-            label="Percentage"
+            label="Percentage*"
             type="number"
           />
         </div>
@@ -52,7 +52,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="payment.date"
-                label="PPW Due Date"
+                label="PPW Due Date*"
                 v-bind="attrs"
                 v-on="on"
               />
@@ -84,7 +84,7 @@
               })
             "
             v-model="payment.idClause"
-            label="Clause"
+            label="Clause*"
             item-value="id"
             item-text="clause"
             :items="clauseList"
@@ -102,7 +102,7 @@
               })
             "
             v-model="payment.days_of_prior_notice"
-            label="Days of prior notice"
+            label="Days of prior notice*"
             type="number"
           />
         </div>
@@ -148,9 +148,16 @@ export default {
       addPaymentDisabled: false,
       menu: false,
       exampleCalendar: "",
+      quotation: {
+        inceptionDate: null,
+      },
     };
   },
-
+  mounted() {
+    if (this.deepDisabled) {
+      this.deepDisabled();
+    }
+  },
   async beforeMount() {
     this.clauseList = await PaymentService.getClauses();
     this.paymentsWarranty = await PaymentService.getPayments(
@@ -159,16 +166,67 @@ export default {
     const analysisServices = await getAnalysisById({
       id_subscription: this.subscriptionId,
     });
+
     this.quotation = {
       inceptionDate: analysisServices.Quotation.inception_date,
     };
+
     if (this.paymentsWarranty.length === 3) this.addPaymentDisabled = true;
   },
 
   computed: {
     ...mapGetters(["quotation"]),
-  },
+    paymentsWarrantyCompleted() {
+      if (this.paymentsWarranty.length === 0) return true;
 
+      return this.paymentsWarranty.every((payment) => {
+        const installmentComplete = !!(
+          payment.installment && Number(payment.installment) > 0
+        );
+        const percentComplete = !!(
+          payment.percent && Number(payment.percent) > 0
+        );
+        const dateComplete = !!payment.date;
+        const clauseComplete = !!payment.idClause;
+
+        const isLSW = this.isLSWClause(payment.idClause);
+        const daysComplete =
+          !isLSW ||
+          !!(
+            payment.days_of_prior_notice &&
+            Number(payment.days_of_prior_notice) > 0
+          );
+
+        return (
+          installmentComplete &&
+          percentComplete &&
+          dateComplete &&
+          clauseComplete &&
+          daysComplete
+        );
+      });
+    },
+  },
+  watch: {
+    paymentsWarrantyCompleted: {
+      handler(newValue) {
+        this.$emit("payments-warranty-change", newValue);
+      },
+      immediate: true,
+    },
+
+    paymentsWarranty: {
+      handler() {
+        this.$nextTick(() => {
+          this.$emit(
+            "payments-warranty-change",
+            this.paymentsWarrantyCompleted
+          );
+        });
+      },
+      deep: true,
+    },
+  },
   methods: {
     sumarDias(id, index) {
       // Obtener el objeto de pago correspondiente
@@ -225,6 +283,9 @@ export default {
         const paymentId = id || paymentResponse.id;
         this.sumarDias(paymentId, index);
       }
+
+      // Forzar re-evaluación de la validación
+      this.$forceUpdate();
     },
 
     async deletePayment(id) {

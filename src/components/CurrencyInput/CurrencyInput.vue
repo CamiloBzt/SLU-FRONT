@@ -3,7 +3,7 @@
     ref="inputRef"
     :prefix="prefix"
     :suffix="suffix"
-    :error-messages="errorMessages"
+    :error-messages="normalizedErrorMessages"
     :placeholder="placeholder"
     :class="css"
     :readonly="readonly"
@@ -14,19 +14,23 @@
 </template>
 
 <script>
-import { watch } from '@vue/composition-api';
-import { useCurrencyInput } from 'vue-currency-input';
+import { watch, computed } from "@vue/composition-api";
+import { useCurrencyInput } from "vue-currency-input";
 
 export default {
-  name: 'CurrencyInput',
+  name: "CurrencyInput",
   props: {
     value: {
-      type: Number | String,
+      type: [Number, String],
       default: null,
     },
     options: {
       type: Object,
-      default: () => {},
+      default: () => ({
+        currency: "USD",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
+      }),
     },
     prefix: {
       type: String,
@@ -41,8 +45,8 @@ export default {
       default: null,
     },
     errorMessages: {
-      type: Function | Array,
-      default: () => {},
+      type: [Function, Array],
+      default: () => [],
     },
     readonly: {
       type: Boolean,
@@ -58,13 +62,17 @@ export default {
     },
     label: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   setup(props) {
-    const { inputRef, setOptions, setValue } = useCurrencyInput(
-      props.options
-    );
+    const safeOptions = {
+      currency: props.options?.currency || "USD",
+      currencyDisplay: props.options?.currencyDisplay || "narrowSymbol",
+      locale: props.options?.locale || "en-US",
+    };
+
+    const { inputRef, setOptions, setValue } = useCurrencyInput(safeOptions);
 
     watch(
       () => props.value,
@@ -80,14 +88,28 @@ export default {
       }
     );
 
-    return { inputRef };
+    //Protección contra funciones o valores inesperados
+    const normalizedErrorMessages = computed(() => {
+      if (Array.isArray(props.errorMessages)) {
+        return props.errorMessages;
+      } else if (typeof props.errorMessages === "function") {
+        const result = props.errorMessages();
+        return Array.isArray(result) ? result : [];
+      }
+      return [];
+    });
+
+    return {
+      inputRef,
+      normalizedErrorMessages,
+    };
   },
   methods: {
     onBlur() {
-      this.$emit('blur');
+      this.$emit("blur");
     },
     onChange() {
-      this.$emit('change');
+      this.$emit("change");
     },
   },
 };

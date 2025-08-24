@@ -1,15 +1,8 @@
 <template>
-  <v-expansion-panels
-    class="ExpansionBordered mt-6 MarginTopMovil"
-    v-model="userPanel"
-  >
+  <v-expansion-panels class="ExpansionBordered mt-6 MarginTopMovil" v-model="userPanel">
     <v-expansion-panel>
       <!--TITULO DEL ACORDEON-->
-      <v-expansion-panel-header
-        @click="changeStateExpansive()"
-        class="ExpansionTitle header"
-        expand-icon=""
-      >
+      <v-expansion-panel-header @click="changeStateExpansive()" class="ExpansionTitle header" expand-icon="">
         Contacts
 
         <div class="ExpansionState HideOnMovil">
@@ -27,37 +20,14 @@
           <!--LINEA DIVISORIA-->
           <div class="ExpansionLineTop"></div>
           <div class="ExpansionInputContent mb-2">
-            <v-text-field
-              v-model.trim="$v.contact.name.$model"
-              autocomplete="new-password"
-              @input="$v.contact.name.$touch()"
-              @blur="$v.contact.name.$touch()"
-              required
-              :error-messages="requiredInputVuelidateParent('name', 'contact')"
-              label="Names"
-            >
+            <v-text-field v-model.trim="$v.contact.name.$model" autocomplete="new-password" @input="$v.contact.name.$touch()" @blur="$v.contact.name.$touch()" required :error-messages="requiredInputVuelidateParent('name', 'contact')" label="Names">
             </v-text-field>
           </div>
           <div class="ExpansionInputContent mb-2">
-            <v-text-field
-              v-model.trim="$v.contact.email.$model"
-              @input="$v.contact.email.$touch()"
-              @blur="$v.contact.email.$touch()"
-              required
-              :error-messages="requiredEmailVuelidateParent('email', 'contact')"
-              label="E-mail"
-            >
-            </v-text-field>
+            <v-text-field v-model.trim="$v.contact.email.$model" @input="$v.contact.email.$touch()" @blur="$v.contact.email.$touch()" required :error-messages="requiredEmailVuelidateParent('email', 'contact')" label="E-mail"> </v-text-field>
           </div>
           <div class="ExpansionInputContent mb-2">
-            <v-text-field
-              v-model.trim="$v.contact.phone.$model"
-              @input="$v.contact.phone.$touch()"
-              @blur="$v.contact.phone.$touch()"
-              required
-              :error-messages="requiredInputVuelidateParent('phone', 'contact')"
-              label="Cell Phone Number"
-            >
+            <v-text-field v-model.trim="$v.contact.phone.$model" @input="$v.contact.phone.$touch()" @blur="$v.contact.phone.$touch()" required :error-messages="requiredInputVuelidateParent('phone', 'contact')" label="Cell Phone Number">
             </v-text-field>
           </div>
           <div class="ExpansionInputContent mb-2">
@@ -67,9 +37,7 @@
               @input="$v.contact.address.$touch()"
               @blur="$v.contact.address.$touch()"
               required
-              :error-messages="
-                requiredInputVuelidateParent('address', 'contact')
-              "
+              :error-messages="requiredInputVuelidateParent('address', 'contact')"
               label="Address"
             >
             </v-text-field>
@@ -79,123 +47,43 @@
 
           <!-- <div class="WhiteSpace HideOnMovil" /> -->
 
-          <div
-            class="finishButtonCont mt-1 mb-4 d-flex justify-end align-center"
-          >
-            <v-btn
-              rounded
-              outlined
-              large
-              class="secondaryBtn"
-              :loading="loading"
-              @click="submitForm()"
-            >
-              Create Contact
-            </v-btn>
+          <div class="finishButtonCont mt-1 mb-4 d-flex justify-end align-center">
+            <v-btn rounded outlined large class="secondaryBtn" :loading="loading" @click="submitForm()"> Create Contact </v-btn>
           </div>
           <div v-if="list.length > 0" class="SubscriptionTable mt-1">
             <div class="TableContent">
               <!--CABEZA DE LA TABLA-->
-              <div
-                class="
-                  TableHeadContent
-                  mt-5
-                  pl-7
-                  d-flex
-                  justify-start
-                  align-start
-                "
-              >
+              <div class="TableHeadContent mt-5 pl-7 d-flex justify-start align-start">
                 <!--NOMBRES DE LAS COLUMNAS-->
-                <div
-                  class="TableHeadName row2 d-flex justify-start align-center"
-                >
-                  Name
-                </div>
-                <div
-                  class="TableHeadName row4 d-flex justify-start align-center"
-                >
-                  Email
-                </div>
-                <div
-                  class="TableHeadName row5 d-flex justify-start align-center"
-                >
-                  Phone
-                </div>
-                <div
-                  class="TableHeadName row6 d-flex justify-start align-center"
-                >
-                  Address
-                </div>
+                <div class="TableHeadName row2 d-flex justify-start align-center">Name</div>
+                <div class="TableHeadName row4 d-flex justify-start align-center">Email</div>
+                <div class="TableHeadName row5 d-flex justify-start align-center">Phone</div>
+                <div class="TableHeadName row6 d-flex justify-start align-center">Address</div>
                 <div class="TableHeadName row8" />
               </div>
 
               <!--CUERPO DE LA TABLA-->
               <div class="TableBodyContent pl-7 mt-4">
                 <!--
-              AQUI EMPIEZA EL CICLO A ITERAR 
+              AQUI EMPIEZA EL CICLO A ITERAR
               PARA MOSTRAR LAS FILAS DE LA TABLA
             -->
                 <div class="TableContentInner scrollable">
-                  <div
-                    v-for="(item, i) in list"
-                    :key="i"
-                    class="TableBodyContSn d-flex justify-start align-start"
-                  >
+                  <div v-for="(item, i) in list" :key="i" class="TableBodyContSn d-flex justify-start align-start">
                     <!--INFORMACIÓN DE LA TABLA-->
-                    <div
-                      class="
-                        TableBodyText
-                        d-flex
-                        row2
-                        justify-start
-                        align-center
-                      "
-                    >
-                      {{ item.name != undefined ? item.name : 'N/D' }}
+                    <div class="TableBodyText d-flex row2 justify-start align-center">
+                      {{ item.name != undefined ? item.name : "N/D" }}
                     </div>
-                    <div
-                      class="
-                        TableBodyText
-                        d-flex
-                        row4
-                        justify-start
-                        align-center
-                      "
-                    >
-                      {{ item.email != undefined ? item.email : 'N/D' }}
+                    <div class="TableBodyText d-flex row4 justify-start align-center">
+                      {{ item.email != undefined ? item.email : "N/D" }}
                     </div>
-                    <div
-                      class="
-                        TableBodyText
-                        d-flex
-                        row5
-                        justify-start
-                        align-center
-                      "
-                    >
-                      {{ item.phone != undefined ? item.phone : 'N/D' }}
+                    <div class="TableBodyText d-flex row5 justify-start align-center">
+                      {{ item.phone != undefined ? item.phone : "N/D" }}
                     </div>
-                    <div
-                      class="
-                        TableBodyText
-                        d-flex
-                        row6
-                        justify-start
-                        align-center
-                      "
-                    >
-                      {{ item.address != undefined ? item.address : 'N/D' }}
+                    <div class="TableBodyText d-flex row6 justify-start align-center">
+                      {{ item.address != undefined ? item.address : "N/D" }}
                     </div>
-                    <div
-                      class="
-                        TableBodyText
-                        d-flex
-                        row8
-                        justify-start
-                        align-center
-                      "
-                    >
+                    <div class="TableBodyText d-flex row8 justify-start align-center">
                       <v-btn @click="deleteContact(item)" icon>
                         <v-icon> mdi-delete-outline </v-icon>
                       </v-btn>
@@ -211,17 +99,17 @@
   </v-expansion-panels>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 /* vuelidate mixin & validations */
-import { validationMixin } from 'vuelidate';
-import { required, email } from 'vuelidate/lib/validators';
-import { validPhone, OnlyText, ValidChars, OnlyDigits } from '@/constants/validations';
+import { validationMixin } from "vuelidate";
+import { required, email } from "vuelidate/lib/validators";
+import { validPhone, OnlyText, ValidChars, OnlyDigits } from "@/constants/validations";
 /* project validations (in some cases depends on vuelidate) */
-import { formValidations } from '@/mixins/formValidations';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { formValidations } from "@/mixins/formValidations";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 
 export default {
-  name: 'ContactInformation',
+  name: "ContactInformation",
   mixins: [stateExpansiveManager, formValidations, validationMixin],
   data() {
     return {
@@ -230,10 +118,10 @@ export default {
       loadingCompanies: false,
       loadingCountries: false,
       contact: {
-        name: '',
-        address: '',
-        phone: '',
-        email: '',
+        name: "",
+        address: "",
+        phone: "",
+        email: "",
       },
     };
   },
@@ -259,7 +147,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['deleteContact', 'createContact']),
+    ...mapActions(["deleteContact", "createContact"]),
     delete(item) {},
     submitForm() {
       this.$v.contact.$touch(); // valida el formulario
@@ -297,12 +185,12 @@ export default {
     },
   },
   mounted() {
-    document.querySelector('.content .v-expansion-panel-content__wrap').style.padding = '0px'
-  }
+    document.querySelector(".content .v-expansion-panel-content__wrap").style.padding = "0px";
+  },
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
 
 .AddCompanyCont {
   height: 50px;
@@ -338,8 +226,8 @@ export default {
     width: 100%;
     height: 50px;
     .title {
-      width: 200px;
-      font-weight: bold;
+      width: 250px;
+      font-weight: 600;
       font-size: 1.5rem;
     }
   }
@@ -368,6 +256,7 @@ export default {
     .TableBodyContent {
       width: 100%;
       height: 370px;
+      //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
       border-radius: 40px;
       border: @BorderTable;
       display: flex;
@@ -451,7 +340,7 @@ export default {
       width: 65px;
       height: 30px;
       border: solid 1px black;
-      border-radius: 15px;
+      border-radius: 5px;
 
       .ControlBtn {
         width: 45%;

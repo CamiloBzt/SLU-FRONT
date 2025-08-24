@@ -1,25 +1,12 @@
 <template>
-  <div
-    v-if="subscription_id"
-    class="StepperHeadComponent d-flex justify-center align-center mt-1"
-  >
+  <div v-if="subscription_id" class="StepperHeadComponent d-flex justify-center align-center mt-1">
     <!--PASOS SIGUIENTES-->
-    <button
-      class="StepContent d-flex justify-center align-center"
-      :class="step1"
-      @click="changueView(2)"
-    >
-      <!--NUMERO DEL PASO-->
+    <button class="StepContent d-flex justify-center align-center" :class="step1" @click="changueView(2)">
       <div class="StepNumber d-flex justify-center align-center">1</div>
-      <!--NOMBRE DEL PASO-->
       <div class="StepText ml-2">Submission</div>
     </button>
 
-    <button
-      class="StepContent d-flex justify-center align-center ml-10 mr-10"
-      :class="step2"
-      @click="changueView(6)"
-    >
+    <button class="StepContent d-flex justify-center align-center ml-10 mr-10" :class="step2" @click="changueView(6)">
       <!--NUMERO DEL PASO-->
       <div class="StepNumber d-flex justify-center align-center">2</div>
 
@@ -27,11 +14,7 @@
       <div class="StepText ml-2">Authorized</div>
     </button>
 
-    <button
-      class="StepContent d-flex justify-center align-center"
-      :class="step3"
-      @click="changueView(7)"
-    >
+    <button class="StepContent d-flex justify-center align-center" :class="step3" @click="changueView(7)">
       <!--NUMERO DEL PASO-->
       <div class="StepNumber d-flex justify-center align-center">3</div>
 
@@ -39,27 +22,16 @@
       <div class="StepText ml-2">Bound</div>
     </button>
   </div>
-  <div
-    v-else
-    class="StepperHeadComponent d-flex justify-center align-center mt-1"
-  >
+  <div v-else class="StepperHeadComponent d-flex justify-center align-center mt-1">
     <!--PASOS SIGUIENTES-->
-    <button
-      class="StepContent d-flex justify-center align-center"
-      :class="step1"
-      @click="changueView(1)"
-    >
+    <button class="StepContent d-flex justify-center align-center" :class="step1" @click="changueView(1)">
       <!--NUMERO DEL PASO-->
       <div class="StepNumber d-flex justify-center align-center">1</div>
       <!--NOMBRE DEL PASO-->
       <div class="StepText ml-2">Submission</div>
     </button>
 
-    <button
-      class="StepContent d-flex justify-center align-center ml-10 mr-10"
-      :class="step2"
-      @click="changueView(3)"
-    >
+    <button class="StepContent d-flex justify-center align-center ml-10 mr-10" :class="step2" @click="changueView(3)">
       <!--NUMERO DEL PASO-->
       <div class="StepNumber d-flex justify-center align-center">2</div>
 
@@ -67,11 +39,7 @@
       <div class="StepText ml-2">Authorized</div>
     </button>
 
-    <button
-      class="StepContent d-flex justify-center align-center"
-      :class="step3"
-      @click="changueView(5)"
-    >
+    <button class="StepContent d-flex justify-center align-center" :class="step3" @click="changueView(5)">
       <!--NUMERO DEL PASO-->
       <div class="StepNumber d-flex justify-center align-center">3</div>
 
@@ -104,14 +72,9 @@ export default {
       return;
     }
     this.showBoundButton = this.facultativeReference !== null ? true : false;
-    this.quotationType =
-      await SubscriptionService.getTypeQuotationBySubscription(
-        this.$route.params.subscriptionId
-      );
+    this.quotationType = await SubscriptionService.getTypeQuotationBySubscription(this.$route.params.subscriptionId);
     try {
-      this.underwritersTable = await this.getNotificationsFourEyeSuscriptor(
-        this.$route.params.subscriptionId
-      );
+      this.underwritersTable = await this.getNotificationsFourEyeSuscriptor(this.$route.params.subscriptionId);
     } catch (error) {
       this.underwritersTable = [];
     }
@@ -122,27 +85,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      "subscription_id",
-      "subscription_type",
-      "boundEngCatDeductibles",
-      "accountInformation",
-      "boundSublimesProp",
-      "risk_type",
-      "quotation",
-      "facultativeReference",
-      "quotation",
-    ]),
+    ...mapGetters(["subscription_id", "subscription_type", "boundEngCatDeductibles", "accountInformation", "boundSublimesProp", "risk_type", "quotation", "facultativeReference", "quotation"]),
     selectedRisk: {
       get() {
-        if (
-          this.accountInformation.typeOfRisk &&
-          this.risk_type &&
-          this.risk_type.length > 0
-        ) {
-          const typeObj = this.risk_type.find(
-            (v) => v.id === this.accountInformation.typeOfRisk
-          );
+        if (this.accountInformation.typeOfRisk && this.risk_type && this.risk_type.length > 0) {
+          const typeObj = this.risk_type.find((v) => v.id === this.accountInformation.typeOfRisk);
           return typeObj;
         }
         return 0;
@@ -167,25 +114,21 @@ export default {
         "/subscription/bound",
         "/subscription/" + this.subscription_id + "/quotation/proportional",
         "/subscription/" + this.subscription_id + "/bound",
-        "/subscription/" +
-          this.subscription_id +
-          "/bound/property-quotator-proportional",
-        "/subscription/" +
-          this.subscription_id +
-          "/bound/property-quotator-non-proportional",
+        "/subscription/" + this.subscription_id + "/bound/property-quotator-proportional",
+        "/subscription/" + this.subscription_id + "/bound/property-quotator-non-proportional",
         "/subscription/" + this.subscription_id + "/quotation/non-proportional",
       ];
-      const validaRejected = this.underwritersTable.find(
+      /*const validaRejected = this.underwritersTable.find(
         (e) => e.status === "ACCEPTED"
-      );
+      );*/
+      let validaRejected = null;
+      if (Array.isArray(this.underwritersTable)) {
+        validaRejected = this.underwritersTable.find((e) => e.status === "ACCEPTED");
+      }
       const isNotBound = !(!validaRejected === false || this.showBoundButton);
 
       //TODO: Agregar un switch para controlar los casos
-      if (
-        (this.subscription_type === "RENEWAL" && path === 7) ||
-        (isNotBound && path === 7)
-      )
-        return;
+      if ((this.subscription_type === "RENEWAL" && path === 7) || (isNotBound && path === 7)) return;
       if (!this.subscription_id && (path === 2 || path === 6 || path === 7)) {
         return;
       }

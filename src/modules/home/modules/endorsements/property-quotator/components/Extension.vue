@@ -318,6 +318,9 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
+              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+                <EndorsementReportCompleteTable :report="cleanReport" />
+              </div>
               <div
                 class="files-submit flex justify-content-start align-items-start align-content-start"
               >
@@ -385,6 +388,7 @@ import MovementValues from "./MovementValues.vue";
 import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
 import AdmittedPremiumTable from "../../components/AdmittedPremiumTable.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
 /* services */
 import EndorsementService from "../../services/endorsement.service";
 import netPremiumPRO from "../../property-quotator/services/netpremium.service";
@@ -410,6 +414,7 @@ export default {
     InputDaysDiference,
     AdmittedPremiumTable,
     EndorsementDocuments,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "Inclusion Risk" },
@@ -568,6 +573,15 @@ export default {
         this.originalMovementEndDate !== ""
         ? false
         : true;
+    },
+    cleanReport() {
+      return this.endorsmentReporData &&
+        Object.keys(this.endorsmentReporData).length > 0
+        ? {
+            endorsmentReporData: this.endorsmentReporData,
+            cartera: this.cartera,
+          }
+        : {};
     },
   },
   watch: {
@@ -1043,9 +1057,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1091,6 +1105,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -1110,7 +1125,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;

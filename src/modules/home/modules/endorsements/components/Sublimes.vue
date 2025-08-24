@@ -5,21 +5,17 @@
       <div class="content justify-center">
         <!--Cat Sublimes-->
         <div class="TitleCont d-flex justify-start align-center">
-          <h5>Cat Sublimes</h5>
+          <h5>Cat Sublimits</h5>
         </div>
 
         <div class="CatCont d-flex justify-start align-center">
           <div class="InputRow">
             <!--Label-->
-            <div class="Label">
-              Coverage B Earthquake, Tremor or volcanic Eruption
-            </div>
+            <div class="Label">Coverage B Earthquake, Tremor or volcanic Eruption</div>
 
             <!--Input-->
             <div class="InputCont">
-              <v-select v-model.trim="boundSublimes.sublimits1" @blur="" :items="sublimits" item-text="data"
-                item-value="id" clearable :disabled="sublimits.length === 0">
-              </v-select>
+              <v-select v-model.trim="boundSublimes.sublimits1" @blur="" :items="sublimits" item-text="data" item-value="id" clearable :disabled="sublimits.length === 0"> </v-select>
             </div>
           </div>
 
@@ -29,9 +25,7 @@
 
             <!--Input-->
             <div class="InputCont">
-              <v-select v-model.trim="boundSublimes.sublimits2" @blur="" :items="sublimits" item-text="data"
-                item-value="id" clearable :disabled="sublimits.length === 0">
-              </v-select>
+              <v-select v-model.trim="boundSublimes.sublimits2" @blur="" :items="sublimits" item-text="data" item-value="id" clearable :disabled="sublimits.length === 0"> </v-select>
             </div>
           </div>
         </div>
@@ -44,26 +38,20 @@
         <div class="SublimitsCont d-flex align-start flex-wrap">
           <div class="Line" v-for="(item, index) in boundSublimitsEng" :key="index">
             <div class="RowLarge">
-              <v-select  v-model.trim="item.endosoSelect"
-                :items="endoso" item-text="data" item-value="id" clearable :disabled="endoso.length === 0">
-              </v-select>
+              <v-select v-model.trim="item.endosoSelect" :items="endoso" item-text="data" item-value="id" clearable :disabled="endoso.length === 0"> </v-select>
             </div>
 
             <div class="Row">
-              <currency-input v-model.trim="item.endosoText" label="Original Currency" @blur="" @change=""
-                :options="currencyOptions" />
+              <currency-input v-model.trim="item.endosoText" label="Original Currency" @blur="" @change="" :options="currencyOptions" />
             </div>
 
             <div class="Row">
               <!-- v-model.trim="item.endosoUSD.$model" -->
-              <currency-input v-model.trim="computedUsd[index]" label="USD" disabled @input=""
-                @blur="" :options="currencyOptions" />
+              <currency-input v-model.trim="computedUsd[index]" label="USD" disabled @input="" @blur="" :options="currencyOptions" />
             </div>
 
             <!-- botón de eliminado (debug only) -->
-            <v-icon small @click="removeField(index)" class="mt-4">
-              mdi-minus-circle
-            </v-icon>
+            <v-icon small @click="removeField(index)" class="mt-4"> mdi-minus-circle </v-icon>
           </div>
         </div>
 
@@ -79,19 +67,19 @@
   </div>
 </template>
 <script>
-import { stateExpansiveManager } from '@/mixins/subscription.js';
- /* service */
- import catalogService from '../services/catalog.service';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
+/* service */
+import catalogService from "../services/catalog.service";
 /* components */
-import CurrencyInput from '@/components/CurrencyInput/CurrencyInput.vue';
+import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* validations */
-import { required } from 'vuelidate/lib/validators';
+import { required } from "vuelidate/lib/validators";
 /* numbers */
-import Decimal from 'decimal.js';
-import numeral from 'numeral';
+import Decimal from "decimal.js";
+import numeral from "numeral";
 
 export default {
-  name: 'Sublimes',
+  name: "Sublimes",
   mixins: [stateExpansiveManager],
   components: { CurrencyInput },
   props: {
@@ -102,14 +90,13 @@ export default {
   data() {
     return {
       currencyOptions: {
-        currency: 'MXN',
-        currencyDisplay: 'narrowSymbol',
-        locale: 'en-US',
+        currency: "MXN",
+        currencyDisplay: "narrowSymbol",
+        locale: "en-US",
       },
 
       sublimits: [],
-      endoso:[]
-
+      endoso: [],
     };
   },
   async beforeMount() {
@@ -121,7 +108,7 @@ export default {
       get() {
         //console.log('entoro');
         const arr = this.boundSublimitsEng.map((i) => {
-          const mynumber = new Decimal(numeral((`${i.endosoText}` || '$0').replace(/[^0-9.]/g, '')).value() || 0);
+          const mynumber = new Decimal(numeral((`${i.endosoText}` || "$0").replace(/[^0-9.]/g, "")).value() || 0);
           const op = mynumber.div(numeral(this.quotation.exchangeRate || 0).value() || 0);
           return op.toNumber();
         });
@@ -132,27 +119,22 @@ export default {
   async mounted() {},
   methods: {
     addSublimits() {
-      
       const id = this.boundSublimitsEng[this.boundSublimitsEng.length - 1].id + 1;
-      this.boundSublimitsEng.push(
-        {
-          id,
-          endosoSelect: '',
-          endosoText: '',
-          endosoUsd: '',
-        })
-        
+      this.boundSublimitsEng.push({
+        id,
+        endosoSelect: "",
+        endosoText: "",
+        endosoUsd: "",
+      });
     },
     removeField(index) {
-      
       const id = this.boundSublimitsEng[index].id;
       this.boundSublimitsEng.splice(index, 1);
-      
     },
     numberWithDotsElement(e) {
       let val = e.target.value;
-      let onlyNumbers = val.toString().replace(/[^0-9]+/g, '');
-      let newVal = /^\d+$/.test(onlyNumbers) ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+      let onlyNumbers = val.toString().replace(/[^0-9]+/g, "");
+      let newVal = /^\d+$/.test(onlyNumbers) ? onlyNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "";
       e.target.value = newVal;
     },
   },
@@ -172,8 +154,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 
 .outter-wrapper {
   width: 100%;
@@ -183,9 +165,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -238,6 +220,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 

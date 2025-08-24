@@ -1,34 +1,13 @@
 <template>
-  <div
-    class="ContactInformation d-flex justify-center align-start align-content-start flex-wrap"
-  >
-    <!--TITULO-->
-    <div class="TitleSection d-flex justify-start align-center">
-      <h4>Contact Information</h4>
-    </div>
-
-    <!--CONTENIDO-->
-
-    <div
-      class="ContentDashboard d-flex justify-space-between align-center pa-5"
-    >
-      <!--IMAGEN-->
-      <!-- <div class="ImageCont d-flex justify-center align-center">
-			<v-avatar size="65" class="AvatarCnt">
-		    <img
-		      src="https://cdn.vuetifyjs.com/images/john.jpg"
-		      alt="John"
-		    >
-    	</v-avatar>
-		</div> -->
-
-      <!--INFO-->
+  <div class="ContactInformation d-flex justify-center align-start align-content-start flex-wrap">
+    <div class="ContentDashboard d-flex justify-space-between align-center">
       <div class="InfoCont flex-wrap">
+        <div class="TitleSection d-flex justify-start align-center">
+          <h4>Contact Information</h4>
+        </div>
         <div class="InfoLine">
           Name:
-          <b
-            >{{ this.$store.state.auth.user.name }}
-            {{ this.$store.state.auth.user.lastName }}</b
+          <b>{{ this.$store.state.auth.user.name }} {{ this.$store.state.auth.user.lastName }}</b
           ><br />
           Contact Number: <b>{{ this.$store.state.auth.user.number }}</b
           ><br />
@@ -40,6 +19,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "ContactInformation",
@@ -49,7 +29,6 @@ export default {
 <style lang="less" scoped>
 @import "~@/assets/style/Dashboard/General.less";
 .ContentDashboard {
-  height: 150px;
   background-color: #fff;
 
   .ImageCont {
@@ -57,9 +36,8 @@ export default {
     height: 100%;
   }
   .InfoCont {
-    width: 68%;
+    width: 100%;
     height: 100%;
-    margin-left: 2%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -68,7 +46,12 @@ export default {
     //DATOS
     .InfoLine {
       font-size: 14px;
+      padding: 20px;
     }
+  }
+  .TitleSection {
+    background-color: #c6e2ff;
+    padding-left: 20px;
   }
 }
 </style>

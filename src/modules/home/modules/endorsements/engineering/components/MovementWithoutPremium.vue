@@ -6,9 +6,7 @@
     </div>
     <v-stepper v-model="e1">
       <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607">
-          Endorsement
-        </v-stepper-step>
+        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607"> Endorsement </v-stepper-step>
       </v-stepper-header>
       <div class="endorsement-wrapper">
         <div class="content">
@@ -17,54 +15,20 @@
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menu2"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="effectiveDate"
-                          label="Endorsement effective date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs" v-on="on"></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="effectiveDate"
-                        @input="menu2 = false"
-                        @change="endorsementDateValidation($event, effectiveDate)"
-                      ></v-date-picker>
+                      <v-date-picker v-model="effectiveDate" @input="menu2 = false" @change="endorsementDateValidation($event, effectiveDate)"></v-date-picker>
                     </v-menu>
-                    <div v-if="this.endorsementDateError" class="error-message">
-                      The new Endorsement effective date must be lower than
-                      expiry date.
-                    </div>
+                    <div v-if="this.endorsementDateError" class="error-message">The new Endorsement effective date must be lower than expiry date.</div>
                   </div>
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="expiryDate"
-                          label="Expiry date"
-                          v-bind="attrs"
-                          readonly
-                          disabled
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="expiryDate" label="Expiry date" v-bind="attrs" readonly disabled v-on="on"></v-text-field>
                       </template>
                       <!-- <v-date-picker
                         v-model="expiryDate"
@@ -77,79 +41,43 @@
                     </div> -->
                   </div>
                 </div>
-                <InputDaysDiference
-                  :endorsementDate="effectiveDate"
-                  :expiryDate="expiryDatetoCalc"
-                  :key="effectiveDate"
-                />
+                <InputDaysDiference :endorsementDate="effectiveDate" :expiryDate="expiryDatetoCalc" :key="effectiveDate" />
               </div>
               <div v-if="showInfoEndorsement">
-              <div class="endorsement-title">Description</div>
+                <div class="endorsement-title">Description</div>
 
-              <div class="textArea-cont">
-                <v-textarea
-                  v-model="description"
-                  background-color="#EDF2F8"
-                  height="180"
-                  solo
-                  flat
-                  rounded
-                  no-resize
-                  class="textArea"
-                  counter="500"
-                />
-              </div>
-              <div class="input-row w-100 d-flex flex-wrap">
-                <div class="input-col">
-                  <div class="inner-title">Additional</div>
-                  <div class="input-cont">
-                    <v-autocomplete
-                      label="Clause"
-                      v-model="clause"
-                      :items="clauseList"
-                      item-value="clause"
-                      item-text="clause"
-                    />
+                <div class="textArea-cont">
+                  <v-textarea v-model="description" background-color="#EDF2F8" height="180" solo flat rounded no-resize class="textArea" counter="500" />
+                </div>
+                <div class="input-row w-100 d-flex flex-wrap">
+                  <div class="input-col">
+                    <div class="inner-title">Additional</div>
+                    <div class="input-cont">
+                      <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" />
+                    </div>
+                  </div>
+                  <div class="input-col">
+                    <div class="inner-title" style="opacity: 0">|</div>
+                    <div class="input-cont">
+                      <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field v-model="premiumPaymentDate" label="Premium payment date" v-bind="attrs" v-on="on"></v-text-field>
+                        </template>
+                        <v-date-picker v-model="premiumPaymentDate" @input="menu3 = false"></v-date-picker>
+                      </v-menu>
+                    </div>
                   </div>
                 </div>
-                <div class="input-col">
-                  <div class="inner-title" style="opacity: 0">|</div>
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menu3"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                        @input="menu3 = false"
-                      ></v-date-picker>
-                    </v-menu>
-                  </div>
-                </div>
-              </div>
               </div>
             </v-stepper-content>
           </v-stepper-items>
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments"  v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
+        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false" :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -194,7 +122,7 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: {type: Boolean}
+    showInfoEndorsement: { type: Boolean },
   },
   data() {
     return {
@@ -206,19 +134,9 @@ export default {
       clause: "",
       clauseList: [],
       effectiveDate: this.dateSaved,
-      expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-        .toISOString()
-        .substr(0, 10),
-      premiumPaymentDate: new Date(
-        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
-      currentMovementEndDate: new Date(
-        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
+      expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
+      premiumPaymentDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
+      currentMovementEndDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       effectiveDateError: false,
       endDateError: false,
       description: " ",
@@ -229,8 +147,8 @@ export default {
       clauseList: [],
       clause: this.accountComplete.cartera.clausula,
       endorsementDocuments: [],
-      buttonTitle: 'Finalize',
-      buttonTitleBack: 'Cancel',
+      buttonTitle: "Finalize",
+      buttonTitleBack: "Cancel",
     };
   },
   async beforeMount() {
@@ -271,20 +189,18 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
     async submit() {
       // Obteniendo premium payment date
-      const premiumPaymentDate = new Date(
-        this.premiumPaymentDate
-      ).toISOString();
+      const premiumPaymentDate = new Date(this.premiumPaymentDate).toISOString();
       this.cartera = {
         premiumPaymentDate,
         clausula: this.clause,
         description: this.description,
         effectiveDate: this.effectiveDate,
-        endDate: this.expiryDatetoCalc
+        endDate: this.expiryDatetoCalc,
       };
 
       this.e1 = 1;
@@ -295,17 +211,16 @@ export default {
       };
 
       // guardar la cuenta actualizada en BD
-      const accountCompleteResponse =
-        await AccountCompleteService.addAccountComplete(this.subscriptionId, {
-          deductibles: this.accountComplete.deductibles,
-          tiv: this.accountComplete.tiv,
-          netPremium: this.accountComplete.net_premium,
-          additionalInfo: this.accountComplete.additional_info,
-          cartera: {
-            ...this.accountComplete.cartera,
-            ...this.cartera,
-          },
-        });
+      const accountCompleteResponse = await AccountCompleteService.addAccountComplete(this.subscriptionId, {
+        deductibles: this.accountComplete.deductibles,
+        tiv: this.accountComplete.tiv,
+        netPremium: this.accountComplete.net_premium,
+        additionalInfo: this.accountComplete.additional_info,
+        cartera: {
+          ...this.accountComplete.cartera,
+          ...this.cartera,
+        },
+      });
 
       //guardar registro del endoso
       await EndorsementService.addEndorsment({
@@ -322,7 +237,7 @@ export default {
         },
         files: this.endorsementDocuments,
       });
-      await this.backToCreateEndorsement()
+      await this.backToCreateEndorsement();
     },
 
     endDateValidation(event, incomingDate) {
@@ -333,14 +248,10 @@ export default {
       }
     },
     async endorsementDateValidation(event, incomingDate) {
-      
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.expiryDate)
-      ) {
+      if (Date.parse(incomingDate) >= Date.parse(this.expiryDate)) {
         this.endorsementDateError = true;
       } else {
-        await this.changeDateEndorsement(incomingDate)
+        await this.changeDateEndorsement(incomingDate);
         this.endorsementDateError = false;
       }
     },
@@ -350,14 +261,14 @@ export default {
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.submit();
       }
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       }
@@ -376,9 +287,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -430,6 +341,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -453,7 +365,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -567,11 +479,7 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper
-  .v-stepper__step:not(.v-stepper__step--active):not(
-    .v-stepper__step--complete
-  ):not(.v-stepper__step--error)
-  .v-stepper__step__step {
+.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 

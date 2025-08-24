@@ -19,18 +19,10 @@
         <div class="input input--title">SLU Share</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskSluShare()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskSluShare()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopSluShare()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopSluShare()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.sluShareTotal() }}</div>
       </div>
@@ -40,18 +32,10 @@
         <div class="input input--title">Brokerage</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskBrokerage()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskBrokerage()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopBrokerage()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopBrokerage()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.brokerageTotal() }}</div>
       </div>
@@ -61,18 +45,10 @@
         <div class="input input--title">Taxes</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskTaxes()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskTaxes()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopTaxes()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopTaxes()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.taxesTotal() }}</div>
       </div>
@@ -82,18 +58,10 @@
         <div class="input input--title">Engineering Fees</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskEng()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskEng()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopEng()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopEng()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.engTotal() }}</div>
       </div>
@@ -103,18 +71,10 @@
         <div class="input input--title">Fronting Fee</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskFronting()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskFronting()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopFronting()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopFronting()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.frontingTotal() }}</div>
       </div>
@@ -124,39 +84,49 @@
         <div class="input input--title">Premium Reserve</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskColombia()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskColombia()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopColombia()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopColombia()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">{{ calculates.colombiaTotal() }}</div>
       </div>
 
-      <!-- Net premium -->
+      <!-- LTA -->
       <div class="table__column">
-        <div class="input input--title">Net premium</div>
+        <div class="input input--title">LTA</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskNetSLU()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskLta()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopNetSLU()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopLta()" :options="currencyOptions" disabled />
+        </div>
+        <div class="input input--total">{{ calculates.ltaTotal() }}</div>
+      </div>
+
+      <!-- Others -->
+      <div class="table__column">
+        <div class="input input--title">Others</div>
+        <div class="divider" />
+        <div class="input">
+          <currency-input :value="calculates.allRiskOthers()" :options="currencyOptions" disabled />
+        </div>
+        <div class="input">
+          <currency-input :value="calculates.alopOthers()" :options="currencyOptions" disabled />
+        </div>
+        <div class="input input--total">{{ calculates.OthersTotal() }}</div>
+      </div>
+
+      <!-- Net premium -->
+      <div class="table__column">
+        <div class="input input--title">Net Premium</div>
+        <div class="divider" />
+        <div class="input">
+          <currency-input :value="calculates.allRiskNetSLU()" :options="currencyOptions" disabled />
+        </div>
+        <div class="input">
+          <currency-input :value="calculates.alopNetSLU()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">
           {{ calculates.netSLUTotal() }}
@@ -164,21 +134,13 @@
       </div>
       <!-- Net premium excluding fronting -->
       <div class="table__column">
-        <div class="input input--title">Net premium excluding fronting</div>
+        <div class="input input--title">Net Premium excluding fronting</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskNetSLUExcludingFronting()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskNetSLUExcludingFronting()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopNetSLUExcludingFronting()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopNetSLUExcludingFronting()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">
           {{ calculates.netSLUExcludingFrontingTotal() }}
@@ -186,24 +148,16 @@
       </div>
       <!-- Net to SLU excluding survey fees -->
       <div class="table__column">
-        <div class="input input--title">Net to SLU excluding survey fees</div>
+        <div class="input input--title">SLU Premium to be invoiced</div>
         <div class="divider" />
         <div class="input">
-          <currency-input
-            :value="calculates.allRiskNetSLUExcludingSurveyFees()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.allRiskToBeInvoiced()" :options="currencyOptions" disabled />
         </div>
         <div class="input">
-          <currency-input
-            :value="calculates.alopNetSLUExcludingSurveyFees()"
-            :options="currencyOptions"
-            disabled
-          />
+          <currency-input :value="calculates.alopToBeInvoiced()" :options="currencyOptions" disabled />
         </div>
         <div class="input input--total">
-          {{ calculates.netSLUExcludingSurveyFeesTotal() }}
+          {{ calculates.SluPremiumToBeInvoicedTotal() }}
         </div>
       </div>
     </div>
@@ -211,16 +165,17 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-
-/* components */
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
-
-//classes
 import NetPremiumEng from "@/application/class/NetPremiumEng";
-
-//servicios
 import NetPremiumService from "@/modules/home/services/net-premium.service";
-
+import Decimal from "decimal.js";
+function safeDecimal(val) {
+  try {
+    return new Decimal(val ?? 0);
+  } catch {
+    return new Decimal(0);
+  }
+}
 export default {
   name: "NetPremiumProperty",
   components: { CurrencyInput },
@@ -243,14 +198,7 @@ export default {
     await this.getCatalogByName({ name: "apply_sir" });
   },
   computed: {
-    ...mapGetters([
-      "deductions",
-      "premium",
-      "accountInformation",
-      "risk_type",
-      "toBeDefined",
-      "quotation",
-    ]),
+    ...mapGetters(["deductions", "premium", "accountInformation", "risk_type", "toBeDefined", "quotation"]),
     ...mapState({
       boundInsurableProp(state) {
         if (this.propEng) return state.boundInsurableProp;
@@ -271,14 +219,8 @@ export default {
     // tipo de riesgo
     selectedRisk: {
       get() {
-        if (
-          this.accountInformation.typeOfRisk &&
-          this.risk_type &&
-          this.risk_type.length > 0
-        ) {
-          const typeObj = this.risk_type.find(
-            (v) => v.id === this.accountInformation.typeOfRisk
-          );
+        if (this.accountInformation.typeOfRisk && this.risk_type && this.risk_type.length > 0) {
+          const typeObj = this.risk_type.find((v) => v.id === this.accountInformation.typeOfRisk);
           return typeObj;
         }
         return 0;
@@ -305,16 +247,21 @@ export default {
       return false;
     },
     calculates() {
-      const allRisk = this.premium.propertyDamage;
-      const allRiskUsd = this.premium.propertyDamageUsd;
-      const alop = this.premium.businessInterruption;
-      const alopUsd = this.premium.businessInterruptionUsd;
-      const sluLine = this.boundInsurableProp.sluLine;
+      const allRisk = safeDecimal(this.premium.propertyDamage);
+      const allRiskUsd = safeDecimal(this.premium.propertyDamageUsd);
+      const alop = safeDecimal(this.premium.businessInterruption);
+      const alopUsd = safeDecimal(this.premium.businessInterruptionUsd);
+      const sluLine = safeDecimal(this.boundInsurableProp.sluLine);
 
       return new NetPremiumEng(
-        { allRisk, allRiskUsd, alop, alopUsd },
-        this.deductions,
-        sluLine,
+        {
+          allRisk: allRisk ?? 0,
+          allRiskUsd: allRiskUsd ?? 0,
+          alop: alop ?? 0,
+          alopUsd: alopUsd ?? 0,
+        },
+        this.deductions ?? {},
+        sluLine ?? 0,
         false
       );
     },
@@ -340,11 +287,7 @@ export default {
   },
   async updated() {
     const data = this.calculates.getData();
-    await NetPremiumService.addOrUpdateNetPremium(
-      this.subscriptionId,
-      data,
-      false
-    );
+    await NetPremiumService.addOrUpdateNetPremium(this.subscriptionId, data, false);
   },
 };
 </script>
@@ -393,13 +336,12 @@ export default {
         width: 100%;
         height: 60px;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: left;
         padding: 0px 15px;
         margin-bottom: 5px;
         margin-top: 5px;
         &--title {
-          font-weight: 700;
+          font-weight: 600;
         }
         &--label {
           justify-content: flex-end;

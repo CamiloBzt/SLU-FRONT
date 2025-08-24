@@ -3,73 +3,130 @@
     <div class="content">
       <div class="input-row">
         <div class="inner-title">Movement Values</div>
-        <div v-for="(item, clave) in movementValuesComputed" :key="clave" class="input-col">
+        <div
+          v-for="(item, clave) in movementValuesComputed"
+          :key="clave"
+          class="input-col"
+        >
           <div class="column-title">
             {{ item.name }}
           </div>
 
           <div class="input-cont" v-if="type !== 'Bi Adjustment'">
-            <currency-input v-model="item.damage" label="Damage" :options="currencyOptions" @blur="
-              ($event) => {
-                item.damage = changeHandler(item.id, item.damage, 'damage');
-              }
-            " :disabled="item.name == 'USD'" />
+            <currency-input
+              v-model="item.damage"
+              label="Damage"
+              :options="currencyOptions"
+              @blur="
+                ($event) => {
+                  item.damage = changeHandler(item.id, item.damage, 'damage');
+                }
+              "
+              :disabled="item.name == 'USD'"
+            />
           </div>
           <div class="input-cont">
-            <currency-input v-model="item.bi" label="Bi" @blur="
-              ($event) => {
-                item.bi = changeHandler(item.id, item.bi, 'bi');
-              }
-            " :options="currencyOptions" :disabled="item.name == 'USD'" />
+            <currency-input
+              v-model="item.bi"
+              label="Bi"
+              @blur="
+                ($event) => {
+                  item.bi = changeHandler(item.id, item.bi, 'bi');
+                }
+              "
+              :options="currencyOptions"
+              :disabled="item.name == 'USD'"
+            />
           </div>
           <div class="input-cont" v-if="type !== 'Bi Adjustment'">
-            <currency-input v-model="item.stocks" label="Stocks" @blur="
-              ($event) => {
-                item.stocks = changeHandler(item.id, item.stocks, 'stocks');
-              }
-            " :options="currencyOptions" type="number" :disabled="item.name == 'USD'" />
+            <currency-input
+              v-model="item.stocks"
+              label="Stocks"
+              @blur="
+                ($event) => {
+                  item.stocks = changeHandler(item.id, item.stocks, 'stocks');
+                }
+              "
+              :options="currencyOptions"
+              type="number"
+              :disabled="item.name == 'USD'"
+            />
           </div>
         </div>
       </div>
       <div v-if="showTotalValues" class="input-row">
         <div class="inner-title">Total Values</div>
-        <div v-for="(item, id) in movementValuesComputed" :key="id" class="input-col">
+        <div
+          v-for="(item, id) in movementValuesComputed"
+          :key="id"
+          class="input-col"
+        >
           <div class="column-title">
             {{ item.name }}
           </div>
 
           <div class="input-cont" v-if="type !== 'Bi Adjustment'">
-            <currency-input v-model="item.totalDamage" label="Damage" :options="currencyOptions" disabled />
+            <currency-input
+              v-model="item.totalDamage"
+              label="Damage"
+              :options="currencyOptions"
+              disabled
+            />
           </div>
           <div class="input-cont">
-            <currency-input v-model="item.totalBi" label="Bi" :options="currencyOptions" disabled />
+            <currency-input
+              v-model="item.totalBi"
+              label="Bi"
+              :options="currencyOptions"
+              disabled
+            />
           </div>
           <div class="input-cont" v-if="type !== 'Bi Adjustment'">
-            <currency-input v-model="item.totalStocks" label="Stocks" :options="currencyOptions" disabled />
+            <currency-input
+              v-model="item.totalStocks"
+              label="Stocks"
+              :options="currencyOptions"
+              disabled
+            />
           </div>
         </div>
 
         <div class="input-col" v-if="type !== 'Bi Adjustment'">
-          <div class="column-title">Porcent apply stock</div>
+          <div class="column-title">Stocks percentage</div>
           <div class="input-cont">
-            <v-text-field v-model="porcentComputed" type="number" label="Porcent" prefix="%" suffix="%" disabled />
+            <v-text-field
+              v-model="porcentComputed"
+              type="number"
+              label="Percentage"
+              prefix="%"
+              suffix="%"
+              disabled
+            />
           </div>
         </div>
 
         <div class="input-row" v-if="type === 'Inclusion Risk'">
           <div class="input-col">
             <div class="input-cont">
-              <v-text-field v-model="this.accountComplete.tiv.boundInsurableProp.sluLine" label="SLU share" suffix="%"
-                disabled />
+              <v-text-field
+                v-model="this.accountComplete.tiv.boundInsurableProp.sluLine"
+                label="SLU share"
+                suffix="%"
+                disabled
+              />
             </div>
           </div>
           <div class="input-col">
             <div class="input-cont">
-              <v-text-field v-model="this.exchangeRate" label="Exchange rate" suffix="%" disabled />
+              <v-text-field
+                v-model="this.exchangeRate"
+                label="Rate of Exchange"
+                suffix="%"
+                disabled
+              />
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -170,12 +227,13 @@ export default {
   computed: {
     porcentComputed: {
       get() {
-        this.porcent = this.insurableRisk.porcentaje || this.accountComplete.tiv.premium.stockPercentaje || 0
-        return (
-          this.porcent
-        );
+        this.porcent =
+          this.insurableRisk.porcentaje ||
+          this.accountComplete.tiv.premium.stockPercentaje ||
+          0;
+        return this.porcent;
       },
-      set() { },
+      set() {},
     },
     movementValuesComputed: {
       get() {
@@ -324,7 +382,7 @@ export default {
           ]);
         }
       },
-      set() { },
+      set() {},
     },
   },
   async beforeMount() {
@@ -364,7 +422,7 @@ export default {
   },
 
   methods: {
-    calculateUSD() { },
+    calculateUSD() {},
     reciboLllamada() {
       this.$emit("onResultados", this.movementValuesComputed);
     },
@@ -474,7 +532,11 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
+.theme--light.v-stepper
+  .v-stepper__step:not(.v-stepper__step--active):not(
+    .v-stepper__step--complete
+  ):not(.v-stepper__step--error)
+  .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 

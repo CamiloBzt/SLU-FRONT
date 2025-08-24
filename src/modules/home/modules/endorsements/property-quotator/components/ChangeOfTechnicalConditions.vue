@@ -28,15 +28,29 @@
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
-                      transition="scale-transition" offset-y min-width="auto">
+                    <v-menu
+                      v-model="menu2"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" v-bind="attrs" v-on="on">
+                        <v-text-field
+                          v-model="effectiveDate"
+                          label="Endorsement effective date"
+                          v-bind="attrs"
+                          v-on="on"
+                        >
                         </v-text-field>
                       </template>
 
-                      <v-date-picker v-model="effectiveDate" @input="menu2 = false"
-                        @change="endDateValidation($event, effectiveDate)">
+                      <v-date-picker
+                        v-model="effectiveDate"
+                        @input="menu2 = false"
+                        @change="endDateValidation($event, effectiveDate)"
+                      >
                       </v-date-picker>
                     </v-menu>
 
@@ -53,86 +67,169 @@
 
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-                      offset-y min-width="auto">
+                    <v-menu
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="expiryDateReal" label="Expiry date" disabled v-bind="attrs" v-on="on">
+                        <v-text-field
+                          v-model="expiryDateReal"
+                          label="Expiry date"
+                          disabled
+                          v-bind="attrs"
+                          v-on="on"
+                        >
                         </v-text-field>
                       </template>
                     </v-menu>
                   </div>
                 </div>
 
-                <InputDaysDiference :endorsementDate="effectiveDate" :expiryDate="expiryDatetoCalc"
-                  :key="effectiveDate" />
+                <InputDaysDiference
+                  :endorsementDate="effectiveDate"
+                  :expiryDate="expiryDatetoCalc"
+                  :key="effectiveDate"
+                />
               </div>
 
               <div v-if="showInfoEndorsement">
-                <div v-if="quotationType == 1">
-
-                  <div v-for="(deductibles, index) in technicalConditions.deductibles" :key="deductibles.UnderlyingCatDeductibles.id">
-                    <DeductiblesQuotatorProportional 
-                      :deductibles="deductibles" 
-                      @setTechnicalConditionsUpdate="setTechnicalConditionsUpdate" 
-                      @deleteThisDeductibleLocation="deleteThisDeductibleLocation"
-                      :deductibleIndex="index"
-                    />
+                <!-- Sección de Deducibles -->
+                <div class="technical-conditions-section">
+                  <div class="section-title">
+                    <v-icon class="mr-2">mdi-shield-outline</v-icon>
+                    Current Deductibles
+                    <span class="highlight-info"
+                      >(Changes will be highlighted)</span
+                    >
                   </div>
 
-                  <div class="ButtonCont" >
-                    <v-btn class="Btn" text rounded @click="addNewDeductible">
-                      <v-icon class="mr-2"> mdi-plus-circle </v-icon>
-                      Add New Location
-                    </v-btn>
+                  <div v-if="quotationType == 1">
+                    <div
+                      v-for="(
+                        deductibles, index
+                      ) in technicalConditions.deductibles"
+                      :key="deductibles.UnderlyingCatDeductibles.id"
+                      :class="{
+                        'highlighted-item': isDeductibleModified(
+                          deductibles.UnderlyingCatDeductibles.id
+                        ),
+                      }"
+                    >
+                      <DeductiblesQuotatorProportional
+                        :deductibles="deductibles"
+                        @setTechnicalConditionsUpdate="
+                          setTechnicalConditionsUpdate
+                        "
+                        @deleteThisDeductibleLocation="
+                          deleteThisDeductibleLocation
+                        "
+                        :deductibleIndex="index"
+                        :isHighlighted="
+                          isDeductibleModified(
+                            deductibles.UnderlyingCatDeductibles.id
+                          )
+                        "
+                      />
+                    </div>
+
+                    <div class="ButtonCont">
+                      <v-btn class="Btn" text rounded @click="addNewDeductible">
+                        <v-icon class="mr-2"> mdi-plus-circle </v-icon>
+                        Add New Location
+                      </v-btn>
+                    </div>
                   </div>
 
-                  <div v-for="(sublime, index) in technicalConditions.sublime" :key="index">
-                    <SublimesQuotatorProportional 
-                      :exchangeRate="accountComplete.deductibles.exchangeRate" 
-                      :sublime="sublime" 
-                      @setTechnicalConditionsUpdate="setTechnicalConditionsUpdate"
-                      @deleteThisSublimeLocation="deleteThisSublimeLocation"
-                    />
-                  </div>
+                  <div v-if="quotationType == 2">
+                    <div
+                      v-for="(
+                        deductibles, index
+                      ) in technicalConditions.deductibles"
+                      :key="deductibles.underlyingCatDeductibles.id"
+                      :class="{
+                        'highlighted-item': isDeductibleModified(
+                          deductibles.underlyingCatDeductibles.id
+                        ),
+                      }"
+                    >
+                      <DeductiblesQuotatorNonProportional
+                        :deductibles="deductibles"
+                        @setTechnicalConditionsUpdate="
+                          setTechnicalConditionsUpdate
+                        "
+                        @deleteThisDeductibleLocationNonProp="
+                          deleteThisDeductibleLocationNonProp
+                        "
+                        :deductibleIndex="index"
+                        :isHighlighted="
+                          isDeductibleModified(
+                            deductibles.underlyingCatDeductibles.id
+                          )
+                        "
+                      />
+                    </div>
 
-                  <div class="ButtonCont" >
-                    <v-btn class="Btn" text rounded @click="addNewSublime">
-                      <v-icon class="mr-2"> mdi-plus-circle </v-icon>
-                      Add New Location
-                    </v-btn>
+                    <div class="ButtonCont">
+                      <v-btn
+                        class="Btn"
+                        text
+                        rounded
+                        @click="addNewDeductibleNonProp"
+                      >
+                        <v-icon class="mr-2"> mdi-plus-circle </v-icon>
+                        Add New Location
+                      </v-btn>
+                    </div>
                   </div>
                 </div>
-                
-                <div v-if="quotationType == 2">
-                 
-                  <div v-for="(deductibles, index) in technicalConditions.deductibles" :key="deductibles.underlyingCatDeductibles.id">
-                    <DeductiblesQuotatorNonProportional
-                      :deductibles="deductibles"
-                      @setTechnicalConditionsUpdate="setTechnicalConditionsUpdate"
-                      @deleteThisDeductibleLocationNonProp="deleteThisDeductibleLocationNonProp"
-                      :deductibleIndex="index"
+
+                <!-- Sección de Sublímites -->
+                <div class="technical-conditions-section">
+                  <div class="section-title">
+                    <v-icon class="mr-2">mdi-format-list-numbered</v-icon>
+                    Current Sublimits
+                    <span class="highlight-info"
+                      >(Changes will be highlighted)</span
+                    >
+                  </div>
+
+                  <div
+                    v-for="(sublime, index) in technicalConditions.sublime"
+                    :key="index"
+                    :class="{
+                      'highlighted-item': isSublimeModified(
+                        sublime.catSublimes.id
+                      ),
+                    }"
+                  >
+                    <SublimesQuotatorProportional
+                      v-if="quotationType == 1"
+                      :exchangeRate="accountComplete.deductibles.exchangeRate"
+                      :sublime="sublime"
+                      @setTechnicalConditionsUpdate="
+                        setTechnicalConditionsUpdate
+                      "
+                      @deleteThisSublimeLocation="deleteThisSublimeLocation"
+                      :isHighlighted="isSublimeModified(sublime.catSublimes.id)"
                     />
-                  </div>
-
-                  <div class="ButtonCont" >
-                    <v-btn class="Btn" text rounded @click="addNewDeductibleNonProp">
-                      <v-icon class="mr-2"> mdi-plus-circle </v-icon>
-                      Add New Location
-                    </v-btn>
-                  </div>
-
-                  <div v-for="(sublime, index) in technicalConditions.sublime" :key="index">
                     <SublimesQuotatorNonProportional
-                      :exchangeRate="accountComplete.deductibles.exchangeRate" 
-                      :sublime="sublime" 
-                      @setTechnicalConditionsUpdate="setTechnicalConditionsUpdate"
+                      v-if="quotationType == 2"
+                      :exchangeRate="accountComplete.deductibles.exchangeRate"
+                      :sublime="sublime"
+                      @setTechnicalConditionsUpdate="
+                        setTechnicalConditionsUpdate
+                      "
                       @deleteThisSublimeLocation="deleteThisSublimeLocation"
                       :sublimeIndex="index"
+                      :isHighlighted="isSublimeModified(sublime.catSublimes.id)"
                     />
                   </div>
 
-
-                  <div class="ButtonCont" >
+                  <div class="ButtonCont">
                     <v-btn class="Btn" text rounded @click="addNewSublime">
                       <v-icon class="mr-2"> mdi-plus-circle </v-icon>
                       Add New Location
@@ -140,7 +237,6 @@
                   </div>
                 </div>
               </div>
-
 
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
@@ -185,132 +281,150 @@
                   </div>
                 </div>
               </div>
-
-
             </v-stepper-content>
 
             <v-stepper-content step="2">
               <div class="detail-date">
                 <div class="table-title-detail table-title-detail--large">
-                  Detail
+                  Admitted Premium Details
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu v-model="menu4" :close-on-content-click="false" :nudge-right="40"
-                      transition="scale-transition" offset-y min-width="auto">
+                    <v-menu
+                      v-model="menu4"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly disabled
-                          v-bind="attrs" v-on="on"></v-text-field>
+                        <v-text-field
+                          v-model="premiumPaymentDate"
+                          label="Premium payment date"
+                          readonly
+                          disabled
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
                       </template>
                     </v-menu>
                   </div>
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause"
-                      item-text="clause" disabled />
+                    <v-autocomplete
+                      label="Clause"
+                      v-model="clause"
+                      :items="clauseList"
+                      item-value="clause"
+                      item-text="clause"
+                      disabled
+                    />
                   </div>
                 </div>
               </div>
 
-              <div class="table-container input-row justify-center">
-                <div class="title-col">
-                  <div class="table-title-space"></div>
-                  <div class="col-subtitle">Damage</div>
-                  <div class="col-subtitle">Bi</div>
-                  <div class="col-subtitle">Stocks</div>
-                  <div class="col-subtitle">Total</div>
-                </div>
-
-                <template v-for="item in detailValues">
-                  <div v-if="item.id === 1" class="table-col" :key="item.id">
-                    <div>
-                      <div class="table-title">{{ item.name }}</div>
-                      <div class="input-row">
-                        <div class="inner-col wide-col">
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumDamage) }}
-                          </div>
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumBi) }}
-                          </div>
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumStocks) }}
-                          </div>
-                          <div class="table-input">
-                            {{ formatCurrency(item.premiumTotal) }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-
-                <template v-for="item in detailValues">
-                  <div v-if="item.id === 2" :key="item.id" class="table-col">
-                    <div>
-                      <div class="table-title">{{ item.name }}</div>
-                      <div class="input-row">
-                        <div class="inner-col wide-col">
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumDamage) }}
-                          </div>
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumBi) }}
-                          </div>
-                          <div class="table-input blue-input">
-                            {{ formatCurrency(item.premiumStocks) }}
-                          </div>
-                          <div class="table-input">
-                            {{ formatCurrency(item.premiumTotal) }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </div>
+              <!-- Solo mostrar tabla de prima admitida -->
+              <AdmittedPremiumTable
+                @setTotalPremium="setTotalPremium"
+                :detailValues="totalPremium"
+              />
             </v-stepper-content>
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div class="files-submit flex justify-content-start align-items-start align-content-start">
-                <AppFile v-for="(item, clave) in files" :key="clave" :fileId="item.fileId" :fileName="item.fileName"
-                  :fileDownloadLink="item.fileDownloadLink" :loaded="item.loaded" :error="item.error"
-                  :errorMessage="item.errorMessage" :loading="item.loading" :fileType="item.fileType"
-                  :fileTypeMessage="item.fileTypeMessage" @removeFileById="removeFileById($event)"
-                  @errors="errors($event)" @loading="loadingFile($event)" @loadFile="updateFile($event)" />
+              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+                <EndorsementReportCompleteTable :report="cleanReport" />
+              </div>
+              <div
+                class="files-submit flex justify-content-start align-items-start align-content-start"
+              >
+                <AppFile
+                  v-for="(item, clave) in files"
+                  :key="clave"
+                  :fileId="item.fileId"
+                  :fileName="item.fileName"
+                  :fileDownloadLink="item.fileDownloadLink"
+                  :loaded="item.loaded"
+                  :error="item.error"
+                  :errorMessage="item.errorMessage"
+                  :loading="item.loading"
+                  :fileType="item.fileType"
+                  :fileTypeMessage="item.fileTypeMessage"
+                  @removeFileById="removeFileById($event)"
+                  @errors="errors($event)"
+                  @loading="loadingFile($event)"
+                  @loadFile="updateFile($event)"
+                />
               </div>
             </v-stepper-content>
           </v-stepper-items>
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
-      <AdmittedPremiumTable v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" />
+      <EndorsementDocuments
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
 
-      <div v-if="e1 == 1" class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn outlined rounded large class="clear-btn" color="#003D6D" @click="activarVistaDatos()"
-          :disabled="validationFirstStep">
+      <div
+        v-if="e1 == 1"
+        class="stepper-btn mt-7 mb-3 d-flex justify-end align-center"
+      >
+        <v-btn
+          outlined
+          rounded
+          large
+          class="clear-btn"
+          color="#003D6D"
+          @click="activarVistaDatos()"
+          :disabled="validationFirstStep"
+        >
           Next
         </v-btn>
       </div>
-      <div v-if="e1 == 2" class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn rounded large outlined class="clear-btn" color="#003D6D" @click="goStep3">
+      <div
+        v-if="e1 == 2"
+        class="stepper-btn mt-7 mb-3 d-flex justify-end align-center"
+      >
+        <v-btn
+          rounded
+          large
+          outlined
+          class="clear-btn"
+          color="#003D6D"
+          @click="goStep3"
+        >
           Next
         </v-btn>
       </div>
-      <div v-if="e1 == 1" class="stepper-btn mb-7 d-flex justify-end align-center">
-        <v-btn rounded large text class="blue-btn" @click="backToCreateEndorsement">
+      <div
+        v-if="e1 == 1"
+        class="stepper-btn mb-7 d-flex justify-end align-center"
+      >
+        <v-btn
+          rounded
+          large
+          text
+          class="blue-btn"
+          @click="backToCreateEndorsement"
+        >
           Cancel
         </v-btn>
       </div>
-      <div v-if="e1 == 2" class="stepper-btn mb-7 d-flex justify-end align-center">
+      <div
+        v-if="e1 == 2"
+        class="stepper-btn mb-7 d-flex justify-end align-center"
+      >
         <v-btn rounded large text class="blue-btn" @click="e1 = 1">
           Return
         </v-btn>
       </div>
-      <div v-if="e1 == 3" class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
+      <div
+        v-if="e1 == 3"
+        class="stepper-btn mt-7 mb-3 d-flex justify-end align-center"
+      >
         <v-btn rounded large text class="blue-btn" @click="submit()">
           Finalize
         </v-btn>
@@ -332,10 +446,11 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
 import AdmittedPremiumTable from "../../components/AdmittedPremiumTable.vue";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
-import DeductiblesQuotatorProportional from "../../components/DeductiblesQuotatorProportional.vue"
-import SublimesQuotatorProportional from "../../components/SublimesQuotatorProportional.vue"
-import DeductiblesQuotatorNonProportional from "../../components/DeductiblesQuotatorNonProportional.vue"
-import SublimesQuotatorNonProportional from "../../components/SublimesQuotatorNonProportional.vue"
+import DeductiblesQuotatorProportional from "../../components/DeductiblesQuotatorProportional.vue";
+import SublimesQuotatorProportional from "../../components/SublimesQuotatorProportional.vue";
+import DeductiblesQuotatorNonProportional from "../../components/DeductiblesQuotatorNonProportional.vue";
+import SublimesQuotatorNonProportional from "../../components/SublimesQuotatorNonProportional.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
 /* services */
 import { getFiles } from "../../services/mock-files.service";
 import netPremiumPRO from "../services/netpremium.service";
@@ -350,7 +465,7 @@ import SubscriptionService from "@/modules/home/services/subscription.service";
 
 /* libs */
 import Decimal from "@/lib/decimal";
-import _ from 'lodash';
+import _ from "lodash";
 /* utils */
 import { removeDollarSign } from "../utils";
 import { formatCurrency } from "../../utils";
@@ -369,6 +484,7 @@ export default {
     SublimesQuotatorProportional,
     DeductiblesQuotatorNonProportional,
     SublimesQuotatorNonProportional,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "Change of Technical Conditions" },
@@ -380,7 +496,7 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: { type: Boolean }
+    showInfoEndorsement: { type: Boolean },
   },
   data() {
     return {
@@ -488,25 +604,30 @@ export default {
       isEdited: {},
       quotationType: 0,
       item: {
-        location: '',
-        volcanic_eruption: '',
-        total_volcanic: '',
+        location: "",
+        volcanic_eruption: "",
+        total_volcanic: "",
         minimum_volcanic: 0,
         maximum_volcanic: 0,
-        hidrometeorological: '',
-        total_hidrometeorological: '',
+        hidrometeorological: "",
+        total_hidrometeorological: "",
         minimum_hidrometeorological: 0,
         maximum_hidrometeorological: 0,
-        sublimits1: '',
+        sublimits1: "",
         sublimits_value1: 0,
-        sublimits2: '',
+        sublimits2: "",
         sublimits_value2: 0,
       },
       deductibleIndex: 0,
       deductibleId: 1,
       sublimeIndex: 1,
       technicalConditions: this.accountComplete.technical_conditions,
-      technicalConditionsUpdate: _.cloneDeep(this.accountComplete.technical_conditions),
+      technicalConditionsUpdate: _.cloneDeep(
+        this.accountComplete.technical_conditions
+      ),
+      originalTechnicalConditions: {},
+      modifiedDeductibles: new Set(),
+      modifiedSublimes: new Set(),
     };
   },
   async beforeMount() {
@@ -514,32 +635,33 @@ export default {
     this.quotationType =
       await SubscriptionService.getTypeQuotationBySubscription(
         this.accountComplete.id_subscription
-    );
+      );
   },
   created() {
     // console.log('this.technicalConditions --->', this.technicalConditions);
 
     // llenamos los valores del segundo paso del endoso
     const tiv = this.accountComplete.tiv;
-    this.detailValues[0]['premiumDamage'] = tiv.insurable.propertyDamage;
-    this.detailValues[0]['premiumBi'] = tiv.insurable.businessInterruption;
-    this.detailValues[0]['premiumStocks'] = tiv.insurable.stock;
-    this.detailValues[0]['premiumTotal'] = tiv.insurable.total;
+    this.detailValues[0]["premiumDamage"] = tiv.insurable.propertyDamage;
+    this.detailValues[0]["premiumBi"] = tiv.insurable.businessInterruption;
+    this.detailValues[0]["premiumStocks"] = tiv.insurable.stock;
+    this.detailValues[0]["premiumTotal"] = tiv.insurable.total;
 
-    this.detailValues[1]['premiumDamage'] = tiv.insurable.propertyDamageUsd;
-    this.detailValues[1]['premiumBi'] = tiv.insurable.businessInterruptionUsd;
-    this.detailValues[1]['premiumStocks'] = tiv.insurable.stockUsd;
-    this.detailValues[1]['premiumTotal'] = tiv.insurable.totalUsd;
-    
-    console.log('this.accountComplete --->', this.accountComplete);
-    
-    this.deductibleIndex = this.accountComplete.technical_conditions.deductibles.length
+    this.detailValues[1]["premiumDamage"] = tiv.insurable.propertyDamageUsd;
+    this.detailValues[1]["premiumBi"] = tiv.insurable.businessInterruptionUsd;
+    this.detailValues[1]["premiumStocks"] = tiv.insurable.stockUsd;
+    this.detailValues[1]["premiumTotal"] = tiv.insurable.totalUsd;
 
+    console.log("this.accountComplete --->", this.accountComplete);
+
+    this.deductibleIndex =
+      this.accountComplete.technical_conditions.deductibles.length;
+    this.initializeChangeTracking();
   },
   watch: {
     e1: async function () {
       if (this.e1 === 1) {
-        this.isEdited = {}
+        this.isEdited = {};
       }
 
       if (this.e1 === 2) {
@@ -556,11 +678,16 @@ export default {
           businessInterruptionMovement: tiv.insurable.businessInterruption,
           stockMovement: tiv.insurable.stock,
 
-          propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
-          businessInterruptionRate: this.accountComplete.tiv.premium.businessInterruptionRate,
+          propertyDamageRate:
+            this.accountComplete.tiv.premium.propertyDamageRate,
+          businessInterruptionRate:
+            this.accountComplete.tiv.premium.businessInterruptionRate,
           stockRate: this.accountComplete.tiv.premium.stockRate,
-          stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
-        }
+          stockPercentaje:
+            (this.accountComplete.tiv.premium.stockPercentaje ||
+              this.accountComplete.tiv.insurable.porcentaje ||
+              0) / 100,
+        };
 
         const dates = {
           effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
@@ -585,9 +712,8 @@ export default {
             sluDamage: this.totalPremium[0].sluDamage,
             sluBi: this.totalPremium[0].sluBi,
             sluStocks: this.totalPremium[0].sluStocks,
-
           },
-        }
+        };
 
         // Obteniendo los calculos de Net premium
         const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
@@ -650,10 +776,15 @@ export default {
             totalUsd: 0,
           },
           premium: {
-            propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
-            businessInterruptionRate: this.accountComplete.tiv.premium.businessInterruptionRate,
+            propertyDamageRate:
+              this.accountComplete.tiv.premium.propertyDamageRate,
+            businessInterruptionRate:
+              this.accountComplete.tiv.premium.businessInterruptionRate,
             stockRate: this.accountComplete.tiv.premium.stockRate,
-            stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
+            stockPercentaje:
+              (this.accountComplete.tiv.premium.stockPercentaje ||
+                this.accountComplete.tiv.insurable.porcentaje ||
+                0) / 100,
 
             propertyDamage: this.totalPremium[0].premiumDamage,
 
@@ -665,13 +796,21 @@ export default {
 
             totalInsured: this.totalPremium[0].premiumTotal,
 
-            propertyDamageUsd: (this.totalPremium[0].premiumDamage / this.accountComplete.deductibles.exchangeRate),
+            propertyDamageUsd:
+              this.totalPremium[0].premiumDamage /
+              this.accountComplete.deductibles.exchangeRate,
 
-            businessInterruptionUsd: (this.totalPremium[0].premiumBi / this.accountComplete.deductibles.exchangeRate),
+            businessInterruptionUsd:
+              this.totalPremium[0].premiumBi /
+              this.accountComplete.deductibles.exchangeRate,
 
-            stockUsd: (this.totalPremium[0].premiumStocks / this.accountComplete.deductibles.exchangeRate),
+            stockUsd:
+              this.totalPremium[0].premiumStocks /
+              this.accountComplete.deductibles.exchangeRate,
 
-            totalUsd: (this.totalPremium[0].premiumTotal / this.accountComplete.deductibles.exchangeRate),
+            totalUsd:
+              this.totalPremium[0].premiumTotal /
+              this.accountComplete.deductibles.exchangeRate,
           },
           boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
           deductibles: this.accountComplete.deductibles,
@@ -689,7 +828,6 @@ export default {
             stocksSluShare: resultUSD.data.stocksPremiumSlu,
             sluShareTotal: resultUSD.data.totalPremiumSlu,
           },
-
         };
 
         // Guardar los valores de netPremium
@@ -732,9 +870,12 @@ export default {
     },
   },
   methods: {
-    addNewSublime(){
-      console.log('Add new sublime', this.technicalConditions)
-      const highestIdCatSublimes = this.technicalConditions.sublime[this.technicalConditions.sublime.length - 1].catSublimes.id
+    addNewSublime() {
+      console.log("Add new sublime", this.technicalConditions);
+      const highestIdCatSublimes =
+        this.technicalConditions.sublime[
+          this.technicalConditions.sublime.length - 1
+        ].catSublimes.id;
 
       this.technicalConditions.sublime.push({
         catSublimes: {
@@ -746,10 +887,13 @@ export default {
           sublimits_value2: null,
         },
         allOtherSublimits: [],
-      })
+      });
     },
-    addNewDeductibleNonProp(){
-      const highestIdUnderlyingCatDeductibles = this.technicalConditions.deductibles[this.technicalConditions.deductibles.length - 1].underlyingCatDeductibles.id
+    addNewDeductibleNonProp() {
+      const highestIdUnderlyingCatDeductibles =
+        this.technicalConditions.deductibles[
+          this.technicalConditions.deductibles.length - 1
+        ].underlyingCatDeductibles.id;
 
       this.technicalConditions.deductibles.push({
         underlyingCatDeductibles: {
@@ -765,11 +909,13 @@ export default {
           volcanic_eruption: 0,
         },
         underlyingFireEcDeductibles: [],
-      })
+      });
     },
-    addNewDeductible(){
-      
-      const highestIdUnderlyingCatDeductibles = this.technicalConditions.deductibles[this.technicalConditions.deductibles.length - 1].UnderlyingCatDeductibles.id
+    addNewDeductible() {
+      const highestIdUnderlyingCatDeductibles =
+        this.technicalConditions.deductibles[
+          this.technicalConditions.deductibles.length - 1
+        ].UnderlyingCatDeductibles.id;
 
       // console.log('highestIdUnderlyingFireECDeductibles ///--->', highestIdUnderlyingFireECDeductibles)
 
@@ -792,19 +938,25 @@ export default {
           underlying_hidro_values_select: 0,
           underlying_hidro_values_select_two: 0,
         },
-        UnderlyingFireECDeductibles: []
-      })
+        UnderlyingFireECDeductibles: [],
+      });
       // console.log('this.technicalConditions --->', this.technicalConditions)
-
     },
     deleteThisDeductibleLocationNonProp(id) {
-      this.technicalConditions.deductibles = this.technicalConditions.deductibles.filter(u => u.underlyingCatDeductibles.id !== id)
+      this.technicalConditions.deductibles =
+        this.technicalConditions.deductibles.filter(
+          (u) => u.underlyingCatDeductibles.id !== id
+        );
     },
     deleteThisDeductibleLocation(id) {
-      this.technicalConditions.deductibles = this.technicalConditions.deductibles.filter(u => u.UnderlyingCatDeductibles.id !== id)
+      this.technicalConditions.deductibles =
+        this.technicalConditions.deductibles.filter(
+          (u) => u.UnderlyingCatDeductibles.id !== id
+        );
     },
     deleteThisSublimeLocation(id) {
-      this.technicalConditions.sublime = this.technicalConditions.sublime.filter(u => u.catSublimes.id !== id)
+      this.technicalConditions.sublime =
+        this.technicalConditions.sublime.filter((u) => u.catSublimes.id !== id);
     },
     formatCurrency(amount) {
       return formatCurrency(amount);
@@ -817,53 +969,51 @@ export default {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
       totalPremium[concept] = value;
 
-      if (concept !== 'premiumTotal' & concept !== 'sluTotal') {
+      if ((concept !== "premiumTotal") & (concept !== "sluTotal")) {
         this.isEdited[concept] = true;
       }
     },
 
-    calcPremium() {
-      // ** En este endoso no hay tivMovement, le pasamos directamente los valores de accountComplete
-      const tiv = this.accountComplete.tiv;
-      const tivMovement = {
-        propertyDamageMovement: tiv.insurable.propertyDamage,
-        businessInterruptionMovement: tiv.insurable.businessInterruption,
-        stockMovement: tiv.insurable.stock,
+    initializeChangeTracking() {
+      this.originalTechnicalConditions = _.cloneDeep(this.technicalConditions);
+    },
 
-        propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
-        businessInterruptionRate: this.accountComplete.tiv.premium.businessInterruptionRate,
-        stockRate: this.accountComplete.tiv.premium.stockRate,
-        stockPercentaje: (this.accountComplete.tiv.premium.stockPercentaje || this.accountComplete.tiv.insurable.porcentaje || 0) / 100,
-      };
+    // Verificar si un deducible ha sido modificado
+    isDeductibleModified(deductibleId) {
+      return this.modifiedDeductibles.has(deductibleId);
+    },
 
-      const dates = {
-        effetiveDate:new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0,10),
-        expiryDate:new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10),
-        endormenteffetiveDate: new Date (this.effectiveDate),
-        movementEndDate:new Date(this.expiryDateReal),
-      };
+    // Verificar si un sublímite ha sido modificado
+    isSublimeModified(sublimeId) {
+      return this.modifiedSublimes.has(sublimeId);
+    },
 
-      const calcPremium = new netPremiumInclusionRisk(
-        tivMovement,
-        this.accountComplete.deductibles,
-        this.accountComplete.tiv?.boundInsurableProp.sluLine,
-        false,
-        dates
-      );
+    // Marcar deducible como modificado
+    markDeductibleAsModified(deductibleId) {
+      this.modifiedDeductibles.add(deductibleId);
+    },
 
-      const totalPremium = this.totalPremium.find((el) => el.id === 1);
+    // Marcar sublímite como modificado
+    markSublimeAsModified(sublimeId) {
+      this.modifiedSublimes.add(sublimeId);
+    },
 
-      const retultTotalPremium = calcPremium.totalPremium();
+    // Método modificado para tracking
+    setTechnicalConditionsUpdate(el) {
+      // Existing logic
+      this.setTechnicalConditionsDeductibles(el);
+      this.setTechnicalConditionsSublime(el);
 
-      totalPremium.premiumDamage = retultTotalPremium.damageTotalPremium;
-      totalPremium.premiumBi = retultTotalPremium.biTotalPremium;
-      totalPremium.premiumStocks = retultTotalPremium.stockTotalPremium;
-      totalPremium.premiumTotal = retultTotalPremium.total;
-
-      totalPremium.sluDamage = calcPremium.damagePremiumSlu();
-      totalPremium.sluBi = calcPremium.biPremiumSlu();
-      totalPremium.sluStocks = calcPremium.stocksPremiumSlu();
-      totalPremium.sluTotal = +calcPremium.totalPremiumSlu().replace('$', '').replace(',', '');
+      // Add tracking
+      if (el.UnderlyingCatDeductibles?.id) {
+        this.markDeductibleAsModified(el.UnderlyingCatDeductibles.id);
+      }
+      if (el.underlyingCatDeductibles?.id) {
+        this.markDeductibleAsModified(el.underlyingCatDeductibles.id);
+      }
+      if (el.catSublimes?.id) {
+        this.markSublimeAsModified(el.catSublimes.id);
+      }
     },
 
     async stepone() {
@@ -902,10 +1052,10 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
-    setTechnicalConditionsUpdate(el){
+    setTechnicalConditionsUpdate(el) {
       this.setTechnicalConditionsDeductibles(el);
       this.setTechnicalConditionsSublime(el);
     },
@@ -916,25 +1066,26 @@ export default {
       }
 
       if (el.allOtherSublimits) {
-        this.technicalConditionsUpdate.sublime.allOtherSublimits = el.allOtherSublimits;
+        this.technicalConditionsUpdate.sublime.allOtherSublimits =
+          el.allOtherSublimits;
       }
-
     },
 
     setTechnicalConditionsDeductibles(el) {
       if (el.underlyingCatDeductibles) {
-        this.technicalConditionsUpdate.deductibles.underlyingCatDeductibles = [el.underlyingCatDeductibles];
+        this.technicalConditionsUpdate.deductibles.underlyingCatDeductibles = [
+          el.underlyingCatDeductibles,
+        ];
       }
 
       if (el.underlyingFireEcDeductibles) {
-        this.technicalConditionsUpdate.deductibles.underlyingFireEcDeductibles = el.underlyingFireEcDeductibles;
+        this.technicalConditionsUpdate.deductibles.underlyingFireEcDeductibles =
+          el.underlyingFireEcDeductibles;
       }
     },
 
     async submit() {
       this.e1 = 1;
-
-
 
       // Obteniendo el insurable
       const tivTotal = this.detailValues.find((el) => el.id === 1);
@@ -954,16 +1105,18 @@ export default {
           total: tivTotal.premiumTotal,
           totalUsd: tivTotalUsd.premiumTotal,
 
-          porcentaje: this.accountComplete.tiv.insurable.porcentaje
+          porcentaje: this.accountComplete.tiv.insurable.porcentaje,
         },
         premium: {
-          propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
-          businessInterruptionRate: this.accountComplete.tiv.premium.businessInterruptionRate,
+          propertyDamageRate:
+            this.accountComplete.tiv.premium.propertyDamageRate,
+          businessInterruptionRate:
+            this.accountComplete.tiv.premium.businessInterruptionRate,
           stockRate: this.accountComplete.tiv.premium.stockRate,
           stockPercentaje: this.accountComplete.tiv.premium.stockPercentaje,
         },
         boundInsurableProp: this.accountComplete.tiv.boundInsurableProp,
-      }
+      };
 
       // guardar la cuenta actualizada en BD
       const accountCompleteResponse =
@@ -971,10 +1124,11 @@ export default {
           ...this.accountComplete,
           deductibles: this.accountComplete.deductibles,
           tiv: tivUpdate,
-          netPremium:{
-            originalValues:{
-              netTotal:this.accountComplete.net_premium.originalValues.netTotal,
-            }
+          netPremium: {
+            originalValues: {
+              netTotal:
+                this.accountComplete.net_premium.originalValues.netTotal,
+            },
           },
           technicalConditions: this.technicalConditionsUpdate,
           cartera: {
@@ -1009,14 +1163,10 @@ export default {
     },
 
     async endDateValidation(event, incomingDate) {
-
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.expiryDateReal)
-      ) {
+      if (Date.parse(incomingDate) >= Date.parse(this.expiryDateReal)) {
         this.endDateError = true;
       } else {
-        await this.changeDateEndorsement(incomingDate)
+        await this.changeDateEndorsement(incomingDate);
         this.endDateError = false;
       }
     },
@@ -1028,22 +1178,28 @@ export default {
         this.premiumPaymentDateError = false;
       }
     },
-
   },
 
   computed: {
     validationFirstStep() {
-
       const showInfoEndorsement = this.showInfoEndorsement;
       const clause = Boolean(this.clause);
-      const endDateError = !this.endDateError
+      const endDateError = !this.endDateError;
 
       const result = !(showInfoEndorsement & clause & endDateError);
 
       return result;
-    }
-  }
-
+    },
+    cleanReport() {
+      return this.endorsmentReporData &&
+        Object.keys(this.endorsmentReporData).length > 0
+        ? {
+            endorsmentReporData: this.endorsmentReporData,
+            cartera: this.cartera,
+          }
+        : {};
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -1057,9 +1213,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1113,6 +1269,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 
@@ -1137,7 +1294,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1263,7 +1420,11 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
+.theme--light.v-stepper
+  .v-stepper__step:not(.v-stepper__step--active):not(
+    .v-stepper__step--complete
+  ):not(.v-stepper__step--error)
+  .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 
@@ -1320,5 +1481,82 @@ export default {
 
 .wide-col {
   width: 100% !important;
+}
+.technical-conditions-section {
+  width: 100%;
+  margin: 30px 0;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #003d6d;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.highlight-info {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+  margin-left: 10px;
+  font-style: italic;
+}
+
+.highlighted-item {
+  position: relative;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 2px solid #f39c12;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+  animation: pulse-highlight 2s ease-in-out infinite;
+}
+
+.highlighted-item::before {
+  content: "MODIFIED";
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  background: #f39c12;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+@keyframes pulse-highlight {
+  0% {
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+  }
+  50% {
+    box-shadow: 0 6px 15px rgba(243, 156, 18, 0.4);
+  }
+  100% {
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+  }
+}
+
+/* Para items no modificados */
+.technical-conditions-section > div:not(.highlighted-item) {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.technical-conditions-section > div:not(.highlighted-item):hover {
+  border-color: #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

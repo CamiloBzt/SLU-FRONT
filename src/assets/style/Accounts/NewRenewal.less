@@ -1,132 +1,130 @@
-@borderRadious:30px;
-@borderButtom:solid 1px var(--lightColor2);
+@borderRadius: 5px;
+@borderbuttom:solid 1px var(--lightColor2);
 .NewRenewalComponent {
   width: 100%;
   height: 50px;
-  position:relative;
-  @media(max-width: 650px){
-    padding-right:45px;
+  position: relative;
+  @media (max-width: 650px) {
+    padding-right: 45px;
   }
-  
+
   .NewRenewalTextContent {
     width: 190px;
     padding: 9px 20px 9px 20px;
     font-size: 16px;
     background: white;
     position: relative;
-    color: #547FA9 !important;
+    color: #547fa9 !important;
     cursor: pointer;
     font-weight: 600 !important;
     display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
 
-    .NewRenSn{
+    .NewRenSn {
       width: auto;
       color: inherit;
       height: auto;
-      position:relative;
+      position: relative;
     }
     /*
-      Añade la línea blanca si 
+      Añade la línea blanca si
       el botón esta activo
     */
-    .bottomline::after{
+    .bottomline::after {
       content: "";
-      position:absolute;
-      left: 0;bottom: 0;
+      position: absolute;
+      left: 0;
+      bottom: 0;
       width: 12px;
       height: 2px;
-      background:white;
+      background: white;
     }
   }
 
   /*
-    Añade color y fondo al boton 
+    Añade color y fondo al boton
     que esta activo
   */
-  .active{
+  .active {
     color: white !important;
-    background:var(--mainColor2);
+    background: var(--mainColor2);
   }
 
   //Radios de los botones
-  .LeftButton{
-    border-top-left-radius: @borderRadious;
-    border-bottom-left-radius: @borderRadious;
-    border-left:@borderButtom;
-    border-top:@borderButtom;
-    border-bottom:@borderButtom;
+  .LeftButton {
+    border-top-left-radius: @borderRadius;
+    border-bottom-left-radius: @borderRadius;
+    border-left: @borderbuttom;
+    border-top: @borderbuttom;
+    border-bottom: @borderbuttom;
   }
-  .RightButton{
-    border-top-right-radius: @borderRadious;
-    border-bottom-right-radius: @borderRadious;
-    border-right:@borderButtom;
-    border-top:@borderButtom;
-    border-bottom:@borderButtom;
+  .RightButton {
+    border-top-right-radius: @borderRadius;
+    border-bottom-right-radius: @borderRadius;
+    border-right: @borderbuttom;
+    border-top: @borderbuttom;
+    border-bottom: @borderbuttom;
   }
-  
+
   //Efectos de sombras
-  .shadow1::before{
+  .shadow1::before {
     content: "";
     width: 10px;
     height: 92%;
-    position:absolute;
+    position: absolute;
     right: -5px;
     top: 0;
     z-index: 2000;
-    background: rgb(0,61,109);
-    background: linear-gradient(87deg, rgba(0,61,109,0.8) 0%, rgba(0,0,0,0) 100%);
+    background: rgb(0, 61, 109);
+    background: linear-gradient(87deg, rgba(0, 61, 109, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
     filter: blur(5px);
   }
-  .shadow2::before{
+  .shadow2::before {
     content: "";
     width: 10px;
     height: 91%;
-    position:absolute;
+    position: absolute;
     left: -5px;
     bottom: 0;
     z-index: 2000;
-    background: rgb(0,61,109);
-    background: linear-gradient(87deg, rgba(0,61,109,0.8) 0%, rgba(0,0,0,0) 100%);
+    background: rgb(0, 61, 109);
+    background: linear-gradient(87deg, rgba(0, 61, 109, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
     filter: blur(5px);
   }
 
-  //BOTONES EN LA VERSIÓN MÓVIL 
-  .MovilIconsCont{
+  //BOTONES EN LA VERSIÓN MÓVIL
+  .MovilIconsCont {
     width: 80px;
     height: 40px;
-    position:absolute;
+    position: absolute;
     right: 0;
     justify-content: space-between;
-    align-items:center;
+    align-items: center;
 
-    .MovilIconCont{
+    .MovilIconCont {
       width: 45%;
       height: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      
     }
   }
 }
 
-
-@media(max-width: 640px)
-{
-  .NewRenewalComponent{
+@media (max-width: 640px) {
+  .NewRenewalComponent {
     justify-content: flex-start !important;
-    
-    .NewRenewalTextContent{
+
+    .NewRenewalTextContent {
       width: 160px;
       font-size: 14px;
-      padding-left:10px;
-      padding-right:10px;
+      padding-left: 10px;
+      padding-right: 10px;
     }
 
-    .active{
-      &::after{
+    .active {
+      &::after {
         left: 10px;
       }
     }

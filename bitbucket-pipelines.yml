@@ -1,19 +1,21 @@
-image: node:16.14.0
+# Temporarily disabled - using CodeDeploy only
+# Uncomment below to re-enable Bitbucket pipeline
 
-pipelines:
-  branches:
-    master:
-      - step:
-          size: 2x
-          name: Deploy to develop
-          caches:
-            - node
-          script: # Modify the commands below to build your repository.
-            - apt-get update && apt-get install -y rsync
-            - npm i
-            - npm run build 
-            - cd dist
-            - ssh-keyscan -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
-            - rsync -r -v -e ssh . $SSH_SERVER_USER@$SSH_SERVER_IP:/usr/share/nginx/html --delete-before --exclude '.git'
-            - echo 'Develop deployment DONE!'
-            
+# image: node:16.14.0
+
+# pipelines:
+#   branches:
+#     master:
+#       - step:
+#           size: 2x
+#           name: Deploy to develop
+#           caches:
+#             - node
+#           script: # Modify the commands below to build your repository.
+#             - apt-get update && apt-get install -y rsync
+#             - npm i
+#             - npm run build
+#             - cd dist
+#             - ssh-keyscan -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
+#             - rsync -r -v -e ssh . $SSH_SERVER_USER@$SSH_SERVER_IP:/usr/share/nginx/html --delete-before --exclude '.git'
+#             - echo 'Develop deployment DONE!'

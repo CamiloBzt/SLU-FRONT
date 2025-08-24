@@ -1,11 +1,7 @@
 <template>
   <v-expansion-panels class="SubExpansionComponent">
     <v-expansion-panel @change="deepDisabled">
-      <v-expansion-panel-header
-        @click="changeSubExpansion"
-        class="ExpansionTitle d-flex justify-start"
-        expand-icon=""
-      >
+      <v-expansion-panel-header @click="changeSubExpansion" class="ExpansionTitle d-flex justify-start" expand-icon="">
         <template v-slot:actions>
           <div class="subIconCont d-flex justify-start align-center">
             <v-icon class="iconExpand mr-1">
@@ -23,9 +19,7 @@
           </div>
           <!--Coverage B // ALOP-->
           <div class="DynamicItemsContent">
-            <div
-              class="InputsCont d-flex justify-space-between align-start flex-wrap"
-            >
+            <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
               <div class="InputRow">
                 <v-text-field
                   v-model.trim="$v.boundEngCatDeductibles.location.$model"
@@ -44,17 +38,11 @@
           <div class="TitleCont d-flex justify-start align-center">
             <h5>Underlying Cat Deductibles</h5>
           </div>
-          <div class="InputTitle d-flex justify-start align-center align-end">
-            Coverage B, Earthquake, Tremor or Volcanic Eruption
-          </div>
-          <div
-            class="InputsCont d-flex justify-space-between align-start flex-wrap"
-          >
+          <div class="InputTitle d-flex justify-start align-center align-end">Coverage B, Earthquake, Tremor or Volcanic Eruption</div>
+          <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
             <div class="InputRow Small">
               <v-text-field
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingCatSelect.$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingCatSelect.$model"
                 label="Underlying Cat Deductibles"
                 @blur="
                   SET_BOUND_ENG_CAT_DED({
@@ -66,27 +54,18 @@
                 "
                 clearable
                 :disabled="underlyingCat.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingCatSelect'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingCatSelect')"
                 suffix="%"
               />
             </div>
             <div class="InputRow Large">
               <v-select
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingCatAplicaSelect.$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingCatAplicaSelect.$model"
                 @blur="
                   SET_BOUND_ENG_CAT_DED({
                     index: indexarr,
                     key: 'underlyingCatAplicaSelect',
-                    value:
-                      $v.boundEngCatDeductibles.underlyingCatAplicaSelect
-                        .$model,
+                    value: $v.boundEngCatDeductibles.underlyingCatAplicaSelect.$model,
                   });
                   checkField('underlyingCatAplicaSelect');
                 "
@@ -96,26 +75,17 @@
                 item-value="id"
                 clearable
                 :disabled="underlyingCatAplica.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingCatAplicaSelect'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingCatAplicaSelect')"
               ></v-select>
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingCatValuesSelect.$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingCatValuesSelect.$model"
                 @blur="
                   SET_BOUND_ENG_CAT_DED({
                     index: indexarr,
                     key: 'underlyingCatValuesSelect',
-                    value:
-                      $v.boundEngCatDeductibles.underlyingCatValuesSelect
-                        .$model,
+                    value: $v.boundEngCatDeductibles.underlyingCatValuesSelect.$model,
                   });
                   checkField('underlyingCatValuesSelect');
                 "
@@ -124,12 +94,7 @@
                 item-value="id"
                 clearable
                 :disabled="underlyingCatValues.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingCatValuesSelect'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingCatValuesSelect')"
               ></v-select>
             </div>
             <div class="InputRow">
@@ -143,24 +108,18 @@
                   });
                   checkField('coverB');
                 "
-                :error-messages="
-                  quotationValids('boundEngCatDeductibles', 'coverB')
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'coverB')"
                 :options="currencyOptions"
               />
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingCatValuesSelectTwo.$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingCatValuesSelectTwo.$model"
                 @blur="
                   SET_BOUND_ENG_CAT_DED({
                     index: indexarr,
                     key: 'underlyingCatValuesSelectTwo',
-                    value:
-                      $v.boundEngCatDeductibles.underlyingCatValuesSelectTwo
-                        .$model,
+                    value: $v.boundEngCatDeductibles.underlyingCatValuesSelectTwo.$model,
                   });
                   checkField('underlyingCatValuesSelectTwo');
                 "
@@ -169,12 +128,7 @@
                 item-value="id"
                 clearable
                 :disabled="underlyingCatValues.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingCatValuesSelectTwo'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingCatValuesSelectTwo')"
               ></v-select>
             </div>
             <div class="InputRow">
@@ -188,25 +142,17 @@
                   });
                   checkField('coverTwoB');
                 "
-                :error-messages="
-                  quotationValids('boundEngCatDeductibles', 'coverTwoB')
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'coverTwoB')"
                 :options="currencyOptions"
               />
             </div>
           </div>
           <!--Hydrometeorological Risk-->
-          <div class="InputTitle d-flex justify-start align-end mt-7">
-            Hidrometeorological Risk
-          </div>
-          <div
-            class="InputsCont d-flex justify-space-between align-start flex-wrap"
-          >
+          <div class="InputTitle d-flex justify-start align-end mt-7">Hidrometeorological Risk</div>
+          <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
             <div class="InputRow Small">
               <v-text-field
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingHidroSelect.$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingHidroSelect.$model"
                 label="Underlying Hydrometeorological Deductibles"
                 type="number"
                 suffix="%"
@@ -214,33 +160,23 @@
                   SET_BOUND_ENG_CAT_DED({
                     index: indexarr,
                     key: 'underlyingHidroSelect',
-                    value:
-                      $v.boundEngCatDeductibles.underlyingHidroSelect.$model,
+                    value: $v.boundEngCatDeductibles.underlyingHidroSelect.$model,
                   });
                   checkField('underlyingHidroSelect');
                 "
                 clearable
                 :disabled="underlyingCat.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingHidroSelect'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingHidroSelect')"
               />
             </div>
             <div class="InputRow Large">
               <v-select
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingHidroAplicaSelect.$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingHidroAplicaSelect.$model"
                 @blur="
                   SET_BOUND_ENG_CAT_DED({
                     index: indexarr,
                     key: 'underlyingHidroAplicaSelect',
-                    value:
-                      $v.boundEngCatDeductibles.underlyingHidroAplicaSelect
-                        .$model,
+                    value: $v.boundEngCatDeductibles.underlyingHidroAplicaSelect.$model,
                   });
                   checkField('underlyingHidroAplicaSelect');
                 "
@@ -250,26 +186,17 @@
                 item-value="id"
                 clearable
                 :disabled="underlyingCatAplica.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingHidroAplicaSelect'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingHidroAplicaSelect')"
               ></v-select>
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingHidroValuesSelect.$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingHidroValuesSelect.$model"
                 @blur="
                   SET_BOUND_ENG_CAT_DED({
                     index: indexarr,
                     key: 'underlyingHidroValuesSelect',
-                    value:
-                      $v.boundEngCatDeductibles.underlyingHidroValuesSelect
-                        .$model,
+                    value: $v.boundEngCatDeductibles.underlyingHidroValuesSelect.$model,
                   });
                   checkField('underlyingHidroValuesSelect');
                 "
@@ -278,12 +205,7 @@
                 item-value="id"
                 clearable
                 :disabled="underlyingCatValues.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingHidroValuesSelect'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingHidroValuesSelect')"
               ></v-select>
             </div>
             <div class="InputRow">
@@ -297,25 +219,18 @@
                   });
                   checkField('hidroRisk');
                 "
-                :error-messages="
-                  quotationValids('boundEngCatDeductibles', 'hidroRisk')
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'hidroRisk')"
                 :options="currencyOptions"
               />
             </div>
             <div class="InputRow">
               <v-select
-                v-model.trim="
-                  $v.boundEngCatDeductibles.underlyingHidroValuesSelectTwo
-                    .$model
-                "
+                v-model.trim="$v.boundEngCatDeductibles.underlyingHidroValuesSelectTwo.$model"
                 @blur="
                   SET_BOUND_ENG_CAT_DED({
                     index: indexarr,
                     key: 'underlyingHidroValuesSelectTwo',
-                    value:
-                      $v.boundEngCatDeductibles.underlyingHidroValuesSelectTwo
-                        .$model,
+                    value: $v.boundEngCatDeductibles.underlyingHidroValuesSelectTwo.$model,
                   });
                   checkField('underlyingHidroValuesSelectTwo');
                 "
@@ -324,12 +239,7 @@
                 item-value="id"
                 clearable
                 :disabled="underlyingCatValues.length === 0"
-                :error-messages="
-                  quotationValids(
-                    'boundEngCatDeductibles',
-                    'underlyingHidroValuesSelectTwo'
-                  )
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'underlyingHidroValuesSelectTwo')"
               ></v-select>
             </div>
             <div class="InputRow">
@@ -343,21 +253,15 @@
                   });
                   checkField('hidroRiskTwo');
                 "
-                :error-messages="
-                  quotationValids('boundEngCatDeductibles', 'hidroRiskTwo')
-                "
+                :error-messages="quotationValids('boundEngCatDeductibles', 'hidroRiskTwo')"
                 :options="currencyOptions"
               />
             </div>
           </div>
           <!--Coverage B // ALOP-->
           <div class="DynamicItemsContent mt-8" v-if="this.showAlopLines">
-            <div class="InputTitle d-flex justify-start align-center align-end">
-              ALOP Coverage B, Earthquake, Tremor or Volcanic Eruption
-            </div>
-            <div
-              class="InputsCont d-flex justify-space-between align-start flex-wrap"
-            >
+            <div class="InputTitle d-flex justify-start align-center align-end">ALOP Coverage B, Earthquake, Tremor or Volcanic Eruption</div>
+            <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
               <div class="InputRow">
                 <v-text-field
                   type="number"
@@ -371,21 +275,15 @@
                     });
                     checkField('alopEarthquake');
                   "
-                  :error-messages="
-                    quotationValids('boundEngCatDeductibles', 'alopEarthquake')
-                  "
+                  :error-messages="quotationValids('boundEngCatDeductibles', 'alopEarthquake')"
                 />
               </div>
             </div>
           </div>
           <!--Hydrometeorological Risk // ALOP-->
           <div class="DynamicItemsContent mt-7" v-if="this.showAlopLines">
-            <div class="InputTitle d-flex justify-start align-center align-end">
-              ALOP Hidrometeorological Risk
-            </div>
-            <div
-              class="InputsCont d-flex justify-space-between align-start flex-wrap"
-            >
+            <div class="InputTitle d-flex justify-start align-center align-end">ALOP Hidrometeorological Risk</div>
+            <div class="InputsCont d-flex justify-space-between align-start flex-wrap">
               <div class="InputRow">
                 <v-text-field
                   type="number"
@@ -399,9 +297,7 @@
                     });
                     checkField('alopHidro');
                   "
-                  :error-messages="
-                    quotationValids('boundEngCatDeductibles', 'alopHidro')
-                  "
+                  :error-messages="quotationValids('boundEngCatDeductibles', 'alopHidro')"
                 />
               </div>
             </div>
@@ -413,11 +309,7 @@
           </div>
 
           <!--Contenedor de deducibles-->
-          <div
-            class="UnderlyingCont d-flex align-start flex-wrap"
-            v-for="(item, index) in $v.boundEngDeductibles.$each.$iter"
-            :key="index"
-          >
+          <div class="UnderlyingCont d-flex align-start flex-wrap" v-for="(item, index) in $v.boundEngDeductibles.$each.$iter" :key="index">
             <!--Fila con todos los inputs-->
             <div class="LineItems">
               <div class="Row">
@@ -458,9 +350,7 @@
                   type="number"
                   suffix="%"
                   @input="item.underlyingFireNumberSelect.$touch()"
-                  @blur="
-                    checkMultipleField(index, 'underlyingFireNumberSelect')
-                  "
+                  @blur="checkMultipleField(index, 'underlyingFireNumberSelect')"
                   clearable
                   :disabled="underlyingCat.length === 0"
                 />
@@ -469,9 +359,7 @@
                 <v-select
                   v-model.trim="item.underlyingFireAplicaSelect.$model"
                   @input="item.underlyingFireAplicaSelect.$touch()"
-                  @blur="
-                    checkMultipleField(index, 'underlyingFireAplicaSelect')
-                  "
+                  @blur="checkMultipleField(index, 'underlyingFireAplicaSelect')"
                   :items="underlyingFireAplica"
                   item-text="data"
                   label="Total value"
@@ -484,9 +372,7 @@
                 <v-select
                   v-model.trim="item.underlyingFireValuesSelect.$model"
                   @input="item.underlyingFireValuesSelect.$touch()"
-                  @blur="
-                    checkMultipleField(index, 'underlyingFireValuesSelect')
-                  "
+                  @blur="checkMultipleField(index, 'underlyingFireValuesSelect')"
                   :items="underlyingCatValues"
                   item-text="data"
                   item-value="id"
@@ -495,20 +381,13 @@
                 ></v-select>
               </div>
               <div class="Row">
-                <currency-input
-                  v-model.trim="item.underlyingFireAmount.$model"
-                  @input="item.underlyingFireAmount.$touch()"
-                  @blur="checkMultipleField(index, 'underlyingFireAmount')"
-                  :options="currencyOptions"
-                />
+                <currency-input v-model.trim="item.underlyingFireAmount.$model" @input="item.underlyingFireAmount.$touch()" @blur="checkMultipleField(index, 'underlyingFireAmount')" :options="currencyOptions" />
               </div>
               <div class="Row">
                 <v-select
                   v-model.trim="item.underlyingFireValuesSelectTwo.$model"
                   @input="item.underlyingFireValuesSelectTwo.$touch()"
-                  @blur="
-                    checkMultipleField(index, 'underlyingFireValuesSelectTwo')
-                  "
+                  @blur="checkMultipleField(index, 'underlyingFireValuesSelectTwo')"
                   :items="underlyingCatValues"
                   item-text="data"
                   item-value="id"
@@ -517,29 +396,16 @@
                 ></v-select>
               </div>
               <div class="Row">
-                <currency-input
-                  v-model.trim="item.underlyingFireAmountTwo.$model"
-                  @input="item.underlyingFireAmountTwo.$touch()"
-                  @blur="checkMultipleField(index, 'underlyingFireAmountTwo')"
-                  :options="currencyOptions"
-                />
+                <currency-input v-model.trim="item.underlyingFireAmountTwo.$model" @input="item.underlyingFireAmountTwo.$touch()" @blur="checkMultipleField(index, 'underlyingFireAmountTwo')" :options="currencyOptions" />
               </div>
               <!-- botón de eliminado -->
-              <v-icon small @click="removeField(index)" class="mt-4">
-                mdi-minus-circle
-              </v-icon>
+              <v-icon small @click="removeField(index)" class="mt-4"> mdi-minus-circle </v-icon>
             </div>
           </div>
 
           <!--Boton para añadir deducible-->
           <div class="ButtonCont">
-            <v-btn
-              class="Btn"
-              text
-              rounded
-              @click="addFields()"
-              :loading="buttonLoader"
-            >
+            <v-btn class="Btn" text rounded @click="addFields()" :loading="buttonLoader">
               <v-icon class="mr-2"> mdi-plus-circle </v-icon>
               Add Deductible
             </v-btn>
@@ -599,16 +465,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      "underlyingCat",
-      "underlyingCatAplica",
-      "underlyingCatValues",
-      "underlyingFireAplica",
-      "underlyingFire",
-      "boundEngCatDeductibles",
-      "boundEngDeductibles",
-      "boundInsurable",
-    ]),
+    ...mapGetters(["underlyingCat", "underlyingCatAplica", "underlyingCatValues", "underlyingFireAplica", "underlyingFire", "boundEngCatDeductibles", "boundEngDeductibles", "boundInsurable"]),
     ...mapGetters({
       boundECD: "boundEngCatDeductibles",
     }),
@@ -628,27 +485,15 @@ export default {
     await this.loadMultipleDeductiblesEng({ table: "boundEngDeductibles" });
 
     //Muestra / oculta las lineas que dependen de los camapos ALOP
-    this.boundInsurable.alopCurrency != ""
-      ? (this.showAlopLines = true)
-      : (this.showAlopLines = false);
+    this.boundInsurable.alopCurrency != "" ? (this.showAlopLines = true) : (this.showAlopLines = false);
   },
   methods: {
-    ...mapActions([
-      "saveBoundMultipleColumn",
-      "addNewFieldBound",
-      "saveEngDeductibleColumn",
-      "loadMultipleDeductiblesEng",
-      "getCatalogByName",
-      "createFireDeductible",
-    ]),
+    ...mapActions(["saveBoundMultipleColumn", "addNewFieldBound", "saveEngDeductibleColumn", "loadMultipleDeductiblesEng", "getCatalogByName", "createFireDeductible"]),
     ...mapMutations(["SET_BOUND_ENG_CAT_DED"]),
     async checkField(column) {
       this.buttonLoader = true;
       this.$v.boundEngCatDeductibles[column].$touch();
-      if (
-        this.$v.boundEngCatDeductibles[column].$invalid ||
-        this.$v.boundEngCatDeductibles[column].$error
-      ) {
+      if (this.$v.boundEngCatDeductibles[column].$invalid || this.$v.boundEngCatDeductibles[column].$error) {
         this.buttonLoader = false;
         return;
       }
@@ -662,10 +507,7 @@ export default {
     },
     async checkMultipleField(index, column) {
       this.buttonLoader = true;
-      if (
-        this.$v.boundEngDeductibles.$each[index][column].$invalid ||
-        this.$v.boundEngDeductibles.$each[index][column].$error
-      ) {
+      if (this.$v.boundEngDeductibles.$each[index][column].$invalid || this.$v.boundEngDeductibles.$each[index][column].$error) {
         this.buttonLoader = false;
         return;
       }
@@ -682,19 +524,13 @@ export default {
     async checkMultipleField2(index, column) {
       this.buttonLoader = true;
 
-      if (
-        this.$v.boundEngDeductibles.$each[index][column].$invalid ||
-        this.$v.boundEngDeductibles.$each[index][column].$error
-      ) {
+      if (this.$v.boundEngDeductibles.$each[index][column].$invalid || this.$v.boundEngDeductibles.$each[index][column].$error) {
         this.buttonLoader = false;
         return;
       }
       var value = "";
       const id = this.$v.boundEngDeductibles.$each[index].$model.id;
-      if (
-        typeof this.$v.boundEngDeductibles.$each[index][column].$model ==
-        "object"
-      ) {
+      if (typeof this.$v.boundEngDeductibles.$each[index][column].$model == "object") {
         value = this.$v.boundEngDeductibles.$each[index][column].$model.id;
         await this.saveEngDeductibleColumn({
           table: "boundEngDeductibles",
@@ -751,10 +587,7 @@ export default {
       const text = hasValue(itemText);
       const query = hasValue(queryText);
 
-      return (
-        text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) >
-        -1
-      );
+      return text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
     },
   },
   validations: {
@@ -798,7 +631,7 @@ export default {
     margin-left: 5px;
     letter-spacing: normal;
     color: #003d6d;
-
+    border-radius: 5px;
     .v-icon {
       font-size: 18px;
       margin-right: 10px;

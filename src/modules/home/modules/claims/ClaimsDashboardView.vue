@@ -5,59 +5,32 @@
         <h2>{{ claimUserName }}</h2>
       </div>
       <div class="button-cont">
-        <v-btn
-          rounded
-          large
-          color="#003D6D"
-          class="btn"
-          :disabled="disabledSelect"
-        >
-          Create claim
-        </v-btn>
+        <v-btn rounded large color="#003D6D" class="btn" :disabled="disabledSelect"> Create claim </v-btn>
       </div>
     </div>
 
     <div class="cards_claims">
-      <v-card
-        v-for="(claims, index) in listClaims"
-        :key="claims.id"
-        width="24%"
-        height="12.5rem"
-        class="margin_cards"
-      >
+      <v-card v-for="claims in listClaims" :key="claims.id" width="24%" height="12.5rem" class="margin_cards">
         <v-list-item three-line>
           <v-list-item-content>
             <div class="text-wrap text-h6">Claim {{ claims.id }}</div>
-            <v-list-item-subtitle>{{
-              claims.updated_at | formattedDate
-            }}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ claims.updated_at | formattedDate }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-card-actions>
-          <v-btn
-            class="color_claims mx-auto"
-            width="12rem"
-            outlined
-            rounded
-            text
-            color="white"
-            @click="backHistoryTableToId(claims.id)"
-          >
-            See claim
-          </v-btn>
+          <v-btn class="color_claims mx-auto" width="12rem" outlined rounded text color="white" @click="backHistoryTableToId(claims.id)"> See claim </v-btn>
         </v-card-actions>
       </v-card>
     </div>
 
-<!-- 
+    <!--
   DESCOMENTAR PARA VER LAS SECCIONES DE CODUMENTOS Y BOTONES PARA GUARDAR Y EDITAR UN CLAIM
     <ClaimsDocuments @setEndorsementDocuments="setclaimsDocuments"  v-show="e1 == 1 || e1 == 3" />
     <button @click="saveClaim()" > save claim test </button>
     <ClaimsCorrespondence @setEndorsementDocuments="setclaimsCorrespondence"  v-show="e1 == 1 || e1 == 3" />
     <button @click="updateClaim()" > update claim text </button> -->
 
-
-    <!-- DESCOMENTAR PARA PROVAR DESPUES EN MOVEMENT 0 (historia 003) 
+    <!-- DESCOMENTAR PARA PROVAR DESPUES EN MOVEMENT 0 (historia 003)
       para cuando se recuperan los archivos en la parte de see claim se usan asi
     		<ClaimsDocuments
       	:idEndorsement="idClaim"
@@ -65,21 +38,20 @@
       	:reloadFiles="reloadFiles"
       	v-if="seeClaim"
       	:key="claimsDocuments"
-    /> 
+    />
     		<ClaimsCorrespondence
       	:idEndorsement="idClaim"
       	:endorsementDocuments="claimsCorrespondence"
       	:reloadFiles="reloadFiles"
       	v-if="seeClaim"
       	:key="claimsCorrespondence"
-    />  
+    />
 
     obtenemos el claim y los documentos
     this.informationCard = await ClaimService.getClaimById(id)
     this.claimsDocuments = this.informationCard.claimsDocuments
     this.claimsCorrespondence = this.informationCard.claimsCorrespondence
-  -->
-  </div>
+  --></div>
 </template>
 
 <script>
@@ -96,7 +68,7 @@ export default {
   name: "ClaimsDashboardView",
   components: {
     ClaimsDocuments,
-    ClaimsCorrespondence
+    ClaimsCorrespondence,
   },
   props: {},
   data() {
@@ -107,45 +79,45 @@ export default {
       disabledSelect: false,
       e1: 1,
       claimsDocuments: [],
-      claimsCorrespondence:[],
-      informationCard: {}
+      claimsCorrespondence: [],
+      informationCard: {},
     };
   },
 
   methods: {
-    async saveClaim () {
-    //guardar registro del claim en data 
-    await claimsService.addClaim({
-      subscriptionId: this.subscriptionId,
-      idUser: this.$store.state.auth.user.id,
-      infoClaim: {
-        dato1: 'test',
-        dato2: 'test',
-        dato3: 'test'
-      },
-      files: this.claimsDocuments,
-      correspondence: this.claimsCorrespondence,
-    });
-  },
+    async saveClaim() {
+      //guardar registro del claim en data
+      await claimsService.addClaim({
+        subscriptionId: this.subscriptionId,
+        idUser: this.$store.state.auth.user.id,
+        infoClaim: {
+          dato1: "test",
+          dato2: "test",
+          dato3: "test",
+        },
+        files: this.claimsDocuments,
+        correspondence: this.claimsCorrespondence,
+      });
+    },
 
-  async updateClaim () {
-    //guardar registro del claim en data 
-    await claimsService.updateClaim({
-      subscriptionId: this.subscriptionId,
-      idUser: this.$store.state.auth.user.id,
-      infoClaim: {
-        dato1: 'testUpdate',
-        dato2: 'testUpdate',
-        dato3: 'testUpdate'
-      },
-      idClaim: 5
-    });
-  },
+    async updateClaim() {
+      //guardar registro del claim en data
+      await claimsService.updateClaim({
+        subscriptionId: this.subscriptionId,
+        idUser: this.$store.state.auth.user.id,
+        infoClaim: {
+          dato1: "testUpdate",
+          dato2: "testUpdate",
+          dato3: "testUpdate",
+        },
+        idClaim: 5,
+      });
+    },
     setclaimsDocuments({ files }) {
-      this.claimsDocuments = files
+      this.claimsDocuments = files;
     },
     setclaimsCorrespondence({ files }) {
-      this.claimsCorrespondence = files
+      this.claimsCorrespondence = files;
     },
   },
 
@@ -157,13 +129,10 @@ export default {
   async beforeMount() {
     this.BarNavData = await BarNavData();
     this.CloseAccountData = await GetCloseAccount();
-    this.listClaims =
-      await claimsService.getClaimsBySubscriptionId(
-        this.subscriptionId
-      );
-    console.log(this.listClaims)
-    this.informationCard = await claimsService.getClaimById(6)
-    console.log({informationCard:  this.informationCard})
+    this.listClaims = await claimsService.getClaimsBySubscriptionId(this.subscriptionId);
+    console.log(this.listClaims);
+    this.informationCard = await claimsService.getClaimById(6);
+    console.log({ informationCard: this.informationCard });
     this.claimUserName = sessionStorage.getItem("ClaimUserName");
   },
 
@@ -195,7 +164,7 @@ export default {
   flex-wrap: wrap;
   background-color: white;
   padding: 40px 60px;
-  border-radius: 15px;
+  border-radius: 5px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 
   .account {
@@ -210,6 +179,7 @@ export default {
     align-items: center;
 
     .btn {
+      border-radius: 5px;
       color: white;
       width: 200px;
       height: 35px;
@@ -235,7 +205,7 @@ export default {
   margin-top: 50px;
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 13px;
 }
 
 .margin_cards {

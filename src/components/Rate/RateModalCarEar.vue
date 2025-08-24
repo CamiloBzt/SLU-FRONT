@@ -1,22 +1,10 @@
 <template>
-  <div
-    v-if="modalRateCarEar"
-    class="Modal d-flex justify-center align-center"
-  >
+  <div v-if="modalRateCarEar" class="Modal d-flex justify-center align-center">
     <div class="ModalContent d-flex flex-wrap align-start justify-center">
       <!--BOTON CERRAR-->
-      <div
-        @click="setModalRate(typeRate)"
-        class="CloseModalBtn"
-      >
-        <v-btn
-          class="btn"
-          icon
-        >
-          <img
-            class="iconClose"
-            src="@/assets/img/icons/close.png"
-          />
+      <div @click="setModalRate(typeRate)" class="CloseModalBtn">
+        <v-btn class="btn" icon>
+          <img class="iconClose" src="@/assets/img/icons/close.png" />
         </v-btn>
       </div>
       <div class="ContScroll scrollable">
@@ -37,24 +25,8 @@
           <SummaryCarEar ref="summary" />
 
           <div class="ButtonsCont d-flex flex-column">
-            <v-btn
-              color="#003D6D"
-              @click="saveForm()"
-              :loading="loader"
-              class="Btn buttons-modal-car"
-              outlined
-              rounded
-            >
-              Load
-            </v-btn>
-            <v-btn
-              @click="setModalRate(typeRate)"
-              color="#003D6D"
-              class="Btn White"
-              rounded
-            >
-              Exit
-            </v-btn>
+            <v-btn color="#003D6D" @click="saveForm()" :loading="loader" class="Btn buttons-modal-car" outlined rounded> Load </v-btn>
+            <v-btn @click="setModalRate(typeRate)" color="#003D6D" class="Btn White" rounded> Exit </v-btn>
           </div>
         </div>
       </div>
@@ -63,18 +35,18 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
+import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
 
-import Proportional from '@/components/Rate/Proportional';
-import Deductions from '@/components/Rate/Deductions';
-import CatRates from '@/components/Rate/CatRates';
-import CatTable from '@/components/Rate/CatTable';
-import AlopRate from '@/components/Rate/AlopRate';
-import NonCatLarge from '@/components/Rate/NonCatLarge';
-import SummaryCarEar from '@/components/Rate/SummaryCarEar';
+import Proportional from "@/components/Rate/Proportional";
+import Deductions from "@/components/Rate/Deductions";
+import CatRates from "@/components/Rate/CatRates";
+import CatTable from "@/components/Rate/CatTable";
+import AlopRate from "@/components/Rate/AlopRate";
+import NonCatLarge from "@/components/Rate/NonCatLarge";
+import SummaryCarEar from "@/components/Rate/SummaryCarEar";
 
 export default {
-  name: 'RateModalCar',
+  name: "RateModalCar",
   components: {
     Proportional,
     Deductions,
@@ -84,26 +56,26 @@ export default {
     SummaryCarEar,
     AlopRate,
   },
-  data () {
+  data() {
     return {
       loader: false,
     };
   },
   computed: {
-    ...mapState(['modalRateCarEar']),
+    ...mapState(["modalRateCarEar"]),
     ...mapGetters({
-      globalRates: 'rates',
-      alopRate: 'alopRate',
-      premium: 'premium',
+      globalRates: "rates",
+      alopRate: "alopRate",
+      premium: "premium",
     }),
-    typeRate () {
-      return 'close';
+    typeRate() {
+      return "close";
     },
   },
   methods: {
-    ...mapActions(['saveQuotationColumn', 'saveRateAndAlopCurrency']),
-    ...mapMutations(['setModalRate', 'setStatePremium', 'SET_BOUND_INSURABLE']),
-    async saveForm () {
+    ...mapActions(["saveQuotationColumn", "saveRateAndAlopCurrency"]),
+    ...mapMutations(["setModalRate", "setStatePremium", "SET_BOUND_INSURABLE"]),
+    async saveForm() {
       this.loader = true;
 
       const rates = this.$refs.rates;
@@ -115,7 +87,7 @@ export default {
 
       if (incorrect) {
         this.loader = false;
-        console.log(rates.$v, table.$v, nonlarge.$v, alop.$v);
+        // console.log(rates.$v, table.$v, nonlarge.$v, alop.$v);
       }
 
       this.premium.businessInterruptionRate = this.alopRate.finalRate;
@@ -130,7 +102,7 @@ export default {
 </script>
 <style lang="less" scoped>
 //CONTENEDOR DE QUOTATION
-@import '~@/assets/style/AccordionStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
 
 .Modal {
   position: fixed;
@@ -143,11 +115,11 @@ export default {
   padding: 5px;
 
   .ModalContent {
-    width: 95%;
+    width: 85%;
     height: 94%;
     background: white;
     padding: 25px 10px;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
 
     //CERRAR MODAL
@@ -161,6 +133,7 @@ export default {
       border-radius: 25px;
       cursor: pointer;
       .btn {
+        border-radius: 5px;
         width: 30px !important;
         height: 30px !important;
         .iconClose {
@@ -201,6 +174,7 @@ export default {
           justify-content: center;
 
           .Btn {
+            border-radius: 5px;
             width: 190px;
             text-transform: none;
             height: 40px;

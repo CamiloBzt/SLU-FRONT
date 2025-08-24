@@ -656,8 +656,7 @@ class NetPremiumPROStrategy {
    * @returns {number}
    */
   damageSluPremiumToBeInvoiced() {
-    const op = Decimal.sub(this.damageNet(), this.damageColombia()).toNumber();
-
+    const op = this.damageNet();
     this.data.damageSluPremiumToBeInvoiced = op;
     return op;
   }
@@ -667,8 +666,7 @@ class NetPremiumPROStrategy {
    * @returns {number}
    */
   businessInterSluPremiumToBeInvoiced() {
-    const op = Decimal.sub(this.biNet(), this.biColombia()).toNumber();
-
+    const op = this.biNet();
     this.data.businessInterSluPremiumToBeInvoiced = op;
     return op;
   }
@@ -678,7 +676,7 @@ class NetPremiumPROStrategy {
    * @returns {number}
    */
   stockSluPremiumToBeInvoiced() {
-    const op = Decimal.sub(this.stocksNet(), this.stocksColombia()).toNumber();
+    const op = this.stocksNet();
 
     this.data.stockSluPremiumToBeInvoiced = op;
     return op;

@@ -1,11 +1,8 @@
 <template>
   <div class="ContactInformation d-flex justify-center align-start align-content-start flex-wrap">
-
     <!--TITULO-->
     <div class="TitleSection d-flex justify-start align-center">
-      <h4>
-        Notifications
-      </h4>
+      <h4>Notifications</h4>
     </div>
 
     <!--CARD NOTIFICATIONS-->
@@ -24,45 +21,45 @@
       </div>
 
       <!--INFO-->
-      <div class="InfoCont  flex-wrap">
+      <div class="InfoCont flex-wrap">
         <div class="InfoLine">
-          <b>{{ noty.reference }}</b><br>
+          <b>{{ noty.reference }}</b
+          ><br />
           You asked {{ noty.NotifyingUser.name }} {{ noty.NotifyingUser.last_name }} for a review
         </div>
       </div>
     </div>
-
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 
 export default {
-  name: 'Notifications',
+  name: "Notifications",
   data() {
     return {
       subscription_id: 0,
       notificationList: this.$store.state.socket.notificationList,
-    }
+    };
   },
   methods: {
-    ...mapActions(['getNotificationsFourEye']),
+    ...mapActions(["getNotificationsFourEye"]),
     TrackModal(id) {
       this.subscription_id = id;
-      this.$emit('TrackModal', id);
+      this.$emit("TrackModal", id);
     },
   },
   async beforeMount() {
     this.notificationList = await this.getNotificationsFourEye(this.$store.state.auth.user.id);
   },
-}
+};
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/Dashboard/General.less';
+@import "~@/assets/style/Dashboard/General.less";
 
 .ContentDashboard {
   height: 150px;
-  background-color: #FFF;
+  background-color: #fff;
   cursor: pointer;
 
   .ImageCont {

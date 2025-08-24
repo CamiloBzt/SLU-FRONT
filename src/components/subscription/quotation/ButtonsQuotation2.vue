@@ -12,6 +12,7 @@
             outlined
             class="btn"
             color="#003D6D"
+            :disabled="validaRejected"
           >
             <v-icon class="mr-2"> mdi-chevron-down </v-icon>
             Define Authorized
@@ -44,14 +45,7 @@
 
             <div class="declineOffer">
               <div
-                class="
-                  buttoNoBorder
-                  d-flex
-                  justify-start
-                  align-center
-                  pl-5
-                  pr-5
-                "
+                class="buttoNoBorder d-flex justify-start align-center pl-5 pr-5"
               >
                 Ask for more information
               </div>
@@ -69,55 +63,61 @@
       class="btn btn--bound mt-3"
       @click="$emit('sendToBound')"
       :loading="loadBtn"
+      :disabled="validaRejected"
     >
       Send to Bound
     </v-btn>
-    <EmailModal
-      ref="emailModal"
-      :headerEmail="reason"
-      :item="item"
-    />
+    <EmailModal ref="emailModal" :headerEmail="reason" :item="item" />
   </div>
 </template>
 <script>
-import EmailModal from '@/components/Email/EmailModalWithQuotation.vue'
-import { mapState, mapActions, mapMutations } from 'vuex'
+import EmailModal from "@/components/Email/EmailModalWithQuotation.vue";
+import { disableExperimentalFragmentVariables } from "graphql-tag";
+import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   beforeMount() {
     Promise.all([
       this.getTemplateEmail(),
-      this.getContactsBySubscriptionId({ subscriptionId: this.$route.params.subscriptionId })
+      this.getContactsBySubscriptionId({
+        subscriptionId: this.$route.params.subscriptionId,
+      }),
     ]).finally(() => {
       this.loading = false;
-    })
+    });
   },
   components: {
-    EmailModal
+    EmailModal,
   },
   data: () => ({
-    reason: '',
+    reason: "",
     loading: false,
     offset: true,
     loadBtn: false,
-    item: '',
+    item: "",
   }),
   computed: {
     ...mapState({
-      items: state => state.emailTemplatesQuotation, 
-    })
+      items: (state) => state.emailTemplatesQuotation,
+    }),
+    validaRejected: function (element) {
+      const validaRejected = this.underwritersTable.find(
+        (e) => e.status === "ACCEPTED"
+      );
+      return !(!validaRejected === false || this.showBoundButton);
+    },
   },
   methods: {
-    ...mapActions(['getTemplateEmail', 'getContactsBySubscriptionId']),
-    ...mapMutations(['SET_MAIL_TEMPLATE']),
+    ...mapActions(["getTemplateEmail", "getContactsBySubscriptionId"]),
+    ...mapMutations(["SET_MAIL_TEMPLATE"]),
     /*
 				El metodo defineQuotation devuelve el tipo de quotation elegido
     	*/
     defineQuotation(event, id) {
       //alert(event)
       this.reason = event.description;
-      this.item = id
-      this.SET_MAIL_TEMPLATE(event)
-      this.$refs.emailModal.showModal = true
+      this.item = id;
+      this.SET_MAIL_TEMPLATE(event);
+      this.$refs.emailModal.showModal = true;
     },
   },
 };
@@ -175,6 +175,7 @@ export default {
 }
 
 .btn {
+  border-radius: 5px;
   width: 200px;
   color: white;
   text-transform: none;
@@ -210,7 +211,7 @@ export default {
 
     .listContent {
       width: 90%;
-      border-radius: 15px;
+      border-radius: 5px;
     }
   }
   /*

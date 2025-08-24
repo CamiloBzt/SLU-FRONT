@@ -208,12 +208,13 @@ export default {
       get() {
         if (
           this.accountInformation.typeOfRisk &&
-          this.risk_type &&
+          Array.isArray(this.risk_type) &&
           this.risk_type.length > 0
         ) {
           const typeObj = this.risk_type.find(
             (v) => v.id === this.accountInformation.typeOfRisk
           );
+          console.log(typeObj);
           return typeObj;
         }
         return 0;
@@ -234,18 +235,21 @@ export default {
     currentCurrency: {
       get() {
         if (
+          this.accountInformation &&
           this.accountInformation.currency &&
-          this.currencies &&
-          this.currencies.length > 0
+          Array.isArray(this.currencies)
         ) {
-          const currencyObj = this.currencies.find(
-            (v) => v.id === this.accountInformation.currency
+          console.log("despliegue ok");
+          return (
+            this.currencies.find(
+              (v) => v.id === this.accountInformation.currency
+            ) || {}
           );
-          return currencyObj;
         }
-        return 0;
+        return {};
       },
     },
+
     tivTotal: {
       get() {
         const values = [

@@ -9,70 +9,81 @@ ESTILOS GENERALES DE LAS SIGUIENTES SECCIONES
 /*FUENTES*/
 
 /**/
-@BorderNotesComponent:solid 2px black;//BORDE DEL COMPONENTE NOTAS
-@LateralMenuWidht:70px;//LARGO DE LA BARRA DE MENU
+@bordernotescomponent:solid 2px black;
+@LateralMenuWidht: 70px;
 
-	// Formato general de los botones
-.btn-finish{
-	background: #003D6D;
-	color: white;
-	font-size: 15px;
-	font-weight: 500;
-	letter-spacing: normal;
-	text-transform: capitalize;
-}
-.btn-secondary{
-	background: white;
-	color: #547FA9 ;
-	border: solid 1px var(--lightColor2);
-	font-size: 15px;
-	font-weight: 500;
-	letter-spacing: normal;
-	text-transform: capitalize;
+.title {
+  font-size: 23px !important;
+  font-weight: 600;
+  font-family: avenir !important;
+  width: 250px;
+  padding-top: 20px;
 }
 
-a{
-	text-decoration: none;
-	color: inherit !important;
+// Formato general de los botones
+.btn-finish {
+  background: #003d6d;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: capitalize;
 }
-.ShowFlexOnMovil{display: none;}
-.ShowOnMovil{display: none;}
+.btn-secondary {
+  background: white;
+  color: #547fa9;
+  border: solid 1px var(--lightColor2);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: capitalize;
+}
+
+a {
+  text-decoration: none;
+  color: inherit !important;
+}
+.ShowFlexOnMovil {
+  display: none;
+}
+.ShowOnMovil {
+  display: none;
+}
 //LINEA DIVISORIA
-.ExpansionLineTop{
-	width: 100%;
-	height: 1px;
-	background: #d2deed;
+.ExpansionLineTop {
+  width: 100%;
+  height: 1px;
+  background: #d2deed;
 }
 //ESTILOS DEL LOGIN
-.LoginContent{
-	width: 100%; 
-	height: 100vh;
-	background-image: url('img/login.jpg');
-	background-size: 100%;
-	justify-content: flex-end;
+.LoginContent {
+  width: 100%;
+  height: 100vh;
+  background-image: url("img/login.jpg");
+  background-size: 100%;
+  justify-content: flex-end;
 }
-html{
-	overflow-y: hidden !important;
+html {
+  overflow-y: hidden !important;
 }
-*{color: black;}
-:root{
-	--backgroundColor:#EDF2F8;
-	--mainColor:#0069BA;
-	--mainColor2:#003D6D;
-	--secondaryColor:#F59607;//AMARILLO
-	--lightColor:#547FA9;
-	--lightColor2:#A8BFD9;
 
+:root {
+  --backgroundColor: #edf0f3;
+  --mainColor: #0069ba;
+  --mainColor2: #003d6d;
+  --secondaryColor: #f59607; //AMARILLO
+  --lightColor: #547fa9;
+  --lightColor2: #a8bfd9;
 }
 //ESTILOS DE LA APLICACIÓN INTERNA
-.AppMain{
-	width: 100%;
-	height: 100vh;
-	background:var(--backgroundColor);
-	//MENU LATERAL IZQUIERDO
-	.LateralMenuContent{
-		width: @LateralMenuWidht;
-		height: 100%;
+.AppMain {
+  width: 100%;
+  height: 100vh;
+  background: var(--backgroundColor);
+  //MENU LATERAL IZQUIERDO
+  .LateralMenuContent {
+    width: @LateralMenuWidht;
+    height: 100%;
     background: white;
     box-shadow: 4px 4px 6px rgba(10, 63, 102, 0.15);
     border-top-right-radius: 10px;
@@ -80,87 +91,87 @@ html{
     display: flex;
     justify-content: center;
     align-items: center;
-	}
+  }
 
-	//MENU EN DISPOSITIVOS MOVILES
-	.SuperiorMenuContent{
-		width: 100%;
-		height:60px;
-	}
+  //MENU EN DISPOSITIVOS MOVILES
+  .SuperiorMenuContent {
+    width: 100%;
+    height: 60px;
+  }
 
-	//CONTENEDOR GENERAL
-	.GeneralContent{
-		width: calc(100% - @LateralMenuWidht);
-		height: 100%;
-		overflow-y: auto;
+  //CONTENEDOR GENERAL
+  .GeneralContent {
+    width: calc(100% - @LateralMenuWidht);
+    height: 100%;
+    overflow-y: auto;
 
-		.CopyAndDetailscont{
-			width: 100%;
-			height: 50px;
-			display: flex;
-			justify-content: space-between;
-			align-items:center;
-			position:relative;
-		}
-		//BOTONES
-		.finishButtonCont{
-			width: 100%;
-  		height:50px;
+    .CopyAndDetailscont {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    //BOTONES
+    .finishButtonCont {
+      width: 100%;
+      height: 50px;
 
-  		.finishBtn{
-  			color: white ;
-				width: 200px ;
-				height: 40px ;
-				background: #003D6D;
-				font-size: 15px;
-				font-weight: 500;
-				letter-spacing: normal;
-				text-transform: capitalize;
-  		}
-  		.secondaryBtn{
-				background: white ;
-  			color: #547FA9 ;
-				border: solid 1px var(--lightColor2);
-				width: 200px;
-				height: 40px;
-				font-size: 15px;
-				font-weight: 500;
-				letter-spacing: normal ;
-				text-transform: capitalize;
-  		}
-		}
-	}
+      .finishBtn {
+        color: white;
+        border-radius: 5px;
+        width: 200px;
+        height: 40px;
+        background: #003d6d;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: normal;
+        text-transform: capitalize;
+      }
+      .secondaryBtn {
+        background: white;
+        color: #547fa9;
+        border: solid 1px var(--lightColor2);
+        width: 200px;
+        height: 40px;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: normal;
+        text-transform: capitalize;
+      }
+    }
+  }
 
-
-	//ESTILOS DE LA BARRA DE SCROLL
-	.GeneralContent::-webkit-scrollbar {
-	  background:white;
-	  width: 8px;
-	}
-	.GeneralContent::-webkit-scrollbar-thumb {
-    background: #C7C7C7;
+  //ESTILOS DE LA BARRA DE SCROLL
+  .GeneralContent::-webkit-scrollbar {
+    background: white;
+    width: 8px;
+  }
+  .GeneralContent::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
     border-radius: 150px;
-	}
+  }
 
-	//CONTENEDOR DE NOTES Y UPCOMING PAYMENT
-	.NotesUncomingContent{
-		width: 20%;
-		height: 100%;
-		border: @BorderNotesComponent;
-		display: none;
-	}
+  //CONTENEDOR DE NOTES Y UPCOMING PAYMENT
+  .NotesUncomingContent {
+    width: 20%;
+    height: 100%;
+    border: solid 2px black;
+    display: none;
+  }
 }
 
-.app-main{
-	width: 100%;
-	height: 100vh;
-	background:var(--backgroundColor);
-	display:flex ;
-	flex-wrap: wrap;
-	//MENU LATERAL IZQUIERDO
-	.lateral-menu-content{
-		width: @LateralMenuWidht;
-		height: 100%;
+.app-main {
+  width: 100%;
+  height: 100vh;
+  background: var(--backgroundColor);
+  display: flex;
+  flex-wrap: wrap;
+  //MENU LATERAL IZQUIERDO
+  .lateral-menu-content {
+    width: @LateralMenuWidht;
+    height: 100%;
     background: white;
     box-shadow: 4px 4px 6px rgba(10, 63, 102, 0.15);
     border-top-right-radius: 10px;
@@ -168,101 +179,99 @@ html{
     display: flex;
     justify-content: center;
     align-items: center;
-	}
+  }
 
-	//MENU EN DISPOSITIVOS MOVILES
-	.superior-menu-content{
-		width: 100%;
-		height:60px;
-	}
+  //MENU EN DISPOSITIVOS MOVILES
+  .superior-menu-content {
+    width: 100%;
+    height: 60px;
+  }
 
-	//CONTENEDOR GENERAL
-	.general-content{
-		width: calc(100% - @LateralMenuWidht);
-		height: 100%;
-		overflow-y: auto;
-		padding: 0 40px;
-		
+  //CONTENEDOR GENERAL
+  .general-content {
+    width: calc(100% - @LateralMenuWidht);
+    height: 100%;
+    overflow-y: auto;
+    padding: 0 40px;
 
-		.copy-and-details-cont{
-			width: 100%;
-			height: 50px;
-			display: flex;
-			justify-content: space-between;
-			align-items:center;
-			position:relative;
-		}
-		//BOTONES
-		.finish-button-cont{
-			width: 100%;
-  		height:50px;
-		margin-top: 28px;
-		display:flex ;
-		justify-content: flex-end;
-		align-items: center;
-		  
+    .copy-and-details-cont {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    //BOTONES
+    .finish-button-cont {
+      width: 100%;
+      height: 50px;
+      margin-top: 28px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
 
-  		.finish-btn{
-  			color: white ;
-				width: 200px ;
-				height: 40px ;
-				background: #003D6D;
-				font-size: 15px;
-				font-weight: 500;
-				letter-spacing: normal;
-				text-transform: capitalize;
-  		}
-  		.secondary-btn{
-				background: white ;
-  			color: #547FA9 ;
-				border: solid 1px var(--lightColor2);
-				width: 200px;
-				height: 40px;
-				font-size: 15px;
-				font-weight: 500;
-				letter-spacing: normal ;
-				text-transform: capitalize;
-  		}
-		}
-	}
+      .finish-btn {
+        color: white;
+        width: 200px;
+        height: 40px;
+        background: #003d6d;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: normal;
+        text-transform: capitalize;
+      }
+      .secondary-btn {
+        background: white;
+        color: #547fa9;
+        border: solid 1px var(--lightColor2);
+        width: 200px;
+        height: 40px;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: normal;
+        text-transform: capitalize;
+      }
+    }
+  }
 
-
-	//ESTILOS DE LA BARRA DE SCROLL
-	.general-content::-webkit-scrollbar {
-	  background:white;
-	  width: 8px;
-	}
-	.general-content::-webkit-scrollbar-thumb {
-    background: #C7C7C7;
+  //ESTILOS DE LA BARRA DE SCROLL
+  .general-content::-webkit-scrollbar {
+    background: white;
+    width: 8px;
+  }
+  .general-content::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
     border-radius: 150px;
-	}
+  }
 
-	//CONTENEDOR DE NOTES Y UPCOMING PAYMENT
-	.notes-uncoming-content{
-		width: 20%;
-		height: 100%;
-		border: @BorderNotesComponent;
-		display: none;
-	}
+  //CONTENEDOR DE NOTES Y UPCOMING PAYMENT
+  .notes-uncoming-content {
+    width: 20%;
+    height: 100%;
+    border: solid 2px black;
+    display: none;
+  }
 }
 
-//Apariencia de los botones 
-.v-btn{
+//Apariencia de los botones
+.v-btn {
+  border-radius: 5px;
   text-transform: none !important;
 }
 /*
 Color de bordes de los input
 */
 .theme--light.v-text-field:not(.v-input--has-state):hover > .v-input__control > .v-input__slot:before {
-	border-color:#D2DEED !important;
+  border-color: #d2deed !important;
 }
 .theme--light.v-text-field > .v-input__control > .v-input__slot:before {
-	border-color:#D2DEED !important;
+  border-color: #d2deed !important;
 }
-.v-input__icon.v-input__icon--append{
-	i{
-		color:#003D6D!important;
-	}
+.v-input__icon.v-input__icon--append {
+  i {
+    color: #003d6d !important;
+  }
 }
 // Permite que la linea (underline) de los input/select de vuetify permanezca continua aunque el componente este deshabilitado
 .theme--light.v-text-field.v-input--is-disabled .v-input__slot::before {
@@ -272,35 +281,34 @@ Color de bordes de los input
 
 /*
 	La clase scrollable le añade los estilos
-	a los componentes que utilizan la barra 
+	a los componentes que utilizan la barra
 	de scroll
 */
 .scrollable::-webkit-scrollbar {
-	background:white;
-	width: 5px;
+  background: white;
+  width: 5px;
 }
 .scrollable::-webkit-scrollbar-thumb {
-  background: #C7C7C7;
+  background: #c7c7c7;
   border-radius: 150px;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
-	background:white;
-	width: 1px;
+  background: white;
+  width: 1px;
   height: 7px;
 }
 .horizontal-scroll::-webkit-scrollbar-thumb {
-  background: #C7C7C7;
+  background: #c7c7c7;
   border-radius: 50px;
 }
-.v-btn__content{
-	font-family: 'avenir' !important;
+.v-btn__content {
+  // font-family: "avenir" !important;
 }
-@media(min-width: 650px) and (min-height: 1200px)
-{
-	.LoginContent{
-		background-size:auto 100%;
-	}
+@media (min-width: 650px) and (min-height: 1200px) {
+  .LoginContent {
+    background-size: auto 100%;
+  }
 }
 
 //Oculta las flechas de los inputs de tipo numericos
@@ -309,126 +317,135 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
 //Añade estilos a los tooltips
 .v-tooltip__content {
-  background: #003D6D;
-  span {color: white;}
+  background: #003d6d;
+  span {
+    color: white;
+  }
 }
 // Deshabilita todos los inputs
-.disabled-element{
-	position: relative;
-	z-index: 0;
-	cursor: not-allowed !important;
-	&::after {
-		content: '';
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		left: 0;
-		top: 0;
-		z-index: 1;
-		cursor: not-allowed !important;
-	}
+.disabled-element {
+  position: relative;
+  z-index: 0;
+  cursor: not-allowed !important;
+  &::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    cursor: not-allowed !important;
+  }
 }
 .disabled-icon {
-	display: none !important;
+  display: none !important;
 }
 .disabled-element-hidden {
-	display: none !important;
-	opacity: 0 !important;
+  display: none !important;
+  opacity: 0 !important;
 }
 //ESTILOS PARA DISPOSITIVOS MOVILES
-@media(max-width: 600px)
-{
-	html{overflow-y: auto !important;}
-	.v-application{overflow: hidden !important;}
-	//REGLAS GENERALES
-	.FullOnMovil{width: 100% !important;}//WIDTH 100%
-	.full-on-movil{width: 100% !important;}//WIDTH 100%
-	.HideOnMovil{display: none !important;}// OCULTA ELEMENTOS EN MOVILES
-	.ShowOnMovil{display: initial !important;}
-	.ShowFlexOnMovil{display: flex;}
-	//PADDING DE LA APLICACION
-	.v-application .pl-10 {
-	  padding-left: 15px !important;
-	}
-	.v-application .pr-10 {
-	  padding-right: 15px !important;
-	}
+@media (max-width: 600px) {
+  html {
+    overflow-y: auto !important;
+  }
+  .v-application {
+    overflow: hidden !important;
+  }
+  //REGLAS GENERALES
+  .FullOnMovil {
+    width: 100% !important;
+  } //WIDTH 100%
+  .full-on-movil {
+    width: 100% !important;
+  } //WIDTH 100%
+  .HideOnMovil {
+    display: none !important;
+  } // OCULTA ELEMENTOS EN MOVILES
+  .ShowOnMovil {
+    display: initial !important;
+  }
+  .ShowFlexOnMovil {
+    display: flex;
+  }
+  //PADDING DE LA APLICACION
+  .v-application .pl-10 {
+    padding-left: 15px !important;
+  }
+  .v-application .pr-10 {
+    padding-right: 15px !important;
+  }
 
+  //ESTILOS GENERALES
+  .LoginContent {
+    background-size: auto !important;
+    background-position: 31% 0%;
+    justify-content: center;
+  }
+  .AppMain {
+    align-items: flex-start;
+    align-content: flex-start;
+    height: auto;
 
-	//ESTILOS GENERALES
-	.LoginContent{
-		background-size:auto !important;
-		background-position:31% 0%;
-		justify-content: center;
-	}
-	.AppMain{
-		align-items: flex-start;
-		align-content: flex-start;
-		height: auto;
+    .LateralMenuContent {
+      width: 100%;
+      height: 60px;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 24px;
+      border-bottom-left-radius: 24px;
+      box-shadow: 0px 7px 10px rgba(10, 63, 102, 0.15);
+      overflow: hidden;
+    }
+    .GeneralContent {
+      height: auto;
 
-		.LateralMenuContent{
-			width: 100%;
-			height: 60px;
-			border-top-right-radius: 0px;
-			border-bottom-right-radius: 24px;
-  		border-bottom-left-radius: 24px;
-  		box-shadow: 0px 7px 10px rgba(10, 63, 102, 0.15);
-			overflow: hidden;
-		}
-		.GeneralContent
-		{
-			height: auto;
+      //BOTONES
+      .finishButtonCont {
+        height: auto;
+        border-radius: 5px;
+        flex-wrap: wrap-reverse;
 
+        .finishBtn {
+          width: 100% !important;
+        }
+      }
+    }
+  }
+  .app-main {
+    align-items: flex-start;
+    align-content: flex-start;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
 
-			//BOTONES
-			.finishButtonCont{
-				height: auto;
-				flex-wrap: wrap-reverse;
+    .lateral-menu-content {
+      width: 100%;
+      height: 60px;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 24px;
+      border-bottom-left-radius: 24px;
+      box-shadow: 0px 7px 10px rgba(10, 63, 102, 0.15);
+      overflow: hidden;
+    }
+    .general-content {
+      height: auto;
 
-				.finishBtn{
-					width: 100% !important;
+      //BOTONES
+      .finish-button-cont {
+        height: auto;
+        flex-wrap: wrap-reverse;
 
-				}
-			}
-		}
-	}
-	.app-main{
-		align-items: flex-start;
-		align-content: flex-start;
-		height: auto;
-		display: flex;
-		flex-wrap: wrap;
-
-		.lateral-menu-content{
-			width: 100%;
-			height: 60px;
-			border-top-right-radius: 0px;
-			border-bottom-right-radius: 24px;
-  		border-bottom-left-radius: 24px;
-  		box-shadow: 0px 7px 10px rgba(10, 63, 102, 0.15);
-			overflow: hidden;
-		}
-		.general-content
-		{
-			height: auto;
-
-
-			//BOTONES
-			.finish-button-cont{
-				height: auto;
-				flex-wrap: wrap-reverse;
-
-				.finish-btn{
-					width: 100% !important;
-
-				}
-			}
-		}
-	}
+        .finish-btn {
+          width: 100% !important;
+        }
+      }
+    }
+  }
 }

@@ -3,17 +3,11 @@
     <div class="endorsement-title">Deduction Change</div>
     <v-stepper v-model="e1">
       <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607">
-          Endorsement
-        </v-stepper-step>
+        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607"> Endorsement </v-stepper-step>
 
-        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
-          Calculate premium
-        </v-stepper-step>
+        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607"> Calculate premium </v-stepper-step>
 
-        <v-stepper-step step="3" color="#F59607">
-          Admitted premium
-        </v-stepper-step>
+        <v-stepper-step step="3" color="#F59607"> Admitted premium </v-stepper-step>
       </v-stepper-header>
       <div class="endorsement-wrapper">
         <div class="content">
@@ -23,276 +17,144 @@
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menu2"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="effectiveDate"
-                          label="Endorsement effective date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs" v-on="on"></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="effectiveDate"
-                        @input="menu2 = false"
-                        @change="endorsementDateValidation($event, effectiveDate)"
-                      ></v-date-picker>
+                      <v-date-picker v-model="effectiveDate" @input="menu2 = false" @change="endorsementDateValidation($event, effectiveDate)"></v-date-picker>
                     </v-menu>
-                    <div v-if="this.endorsementDateError" class="error-message">
-                      The new Endorsement effective date must be lower than
-                      expiry date.
-                    </div>
+                    <div v-if="this.endorsementDateError" class="error-message">The new Endorsement effective date must be lower than expiry date.</div>
                   </div>
                 </div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="movementEndDate"
-                          label="Movement end date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="movementEndDate" label="Movement end date" readonly v-bind="attrs" v-on="on"></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="movementEndDate"
-                        @input="menu = false"
-                        @change="endDateValidation($event, movementEndDate)"
-                      ></v-date-picker>
+                      <v-date-picker v-model="movementEndDate" @input="menu = false" @change="endDateValidation($event, movementEndDate)"></v-date-picker>
                     </v-menu>
-                    <div v-if="this.endDateError" class="error-message">
-                      The new Movement end date must be later than current date.
-                    </div>
+                    <div v-if="this.endDateError" class="error-message">The new Movement end date must be later than current date.</div>
                   </div>
                 </div>
-                <InputDaysDiference
-                  :endorsementDate="effectiveDate"
-                  :expiryDate="expiryDatetoCalc"
-                  :key="effectiveDate"
-                />
+                <InputDaysDiference :endorsementDate="effectiveDate" :expiryDate="expiryDatetoCalc" :key="effectiveDate" />
               </div>
               <div v-if="showInfoEndorsement">
-              <div class="endorsement-title">Original deductions</div>
-              <div class="input-row">
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.brokerage"
-                      label="Brokerage"
-                      suffix="%"
-                      disabled
-                    />
+                <div class="endorsement-title">Original deductions</div>
+                <div class="input-row">
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.brokerage" label="Brokerage" suffix="%" disabled />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.taxes" label="Taxes" suffix="%" disabled />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.eng" label="Eng fee" suffix="%" disabled />
+                    </div>
                   </div>
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.taxes"
-                      label="Taxes"
-                      suffix="%"
-                      disabled
-                    />
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.deductionType" label="Type" disabled />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.fronting" label="Fronting fee" suffix="%" disabled />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.premiumReserve" label="Premium reserve Only Colombia" suffix="%" disabled />
+                    </div>
                   </div>
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.eng"
-                      label="Eng fee"
-                      suffix="%"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.deductionType"
-                      label="Type"
-                      disabled
-                    />
-                  </div>
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.fronting"
-                      label="Fronting fee"
-                      suffix="%"
-                      disabled
-                    />
-                  </div>
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.premiumReserve"
-                      label="Premium reserve Only Colombia"
-                      suffix="%"
-                      disabled
-                    />
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.lta" label="LTA" suffix="%" disabled />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.deductibles.others" label="Others" suffix="%" disabled />
+                    </div>
+                    <div class="input-cont">
+                      <v-text-field v-model="accountComplete.tiv.insurable.porcentaje" label="Stocks Percentage" suffix="%" disabled />
+                    </div>
                   </div>
                 </div>
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.lta"
-                      label="LTA"
-                      suffix="%"
-                      disabled
-                    />
-                  </div>
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.deductibles.others"
-                      label="Others"
-                      suffix="%"
-                      disabled
-                    />
-                  </div>
-                  <div class="input-cont">
-                    <v-text-field
-                      v-model="accountComplete.tiv.insurable.porcentaje"
-                      label="Porcent apply stock"
-                      suffix="%"
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
 
-              <div class="endorsement-title">New deductions</div>
+                <div class="endorsement-title">New deductions</div>
 
-              <div class="input-row">
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-text-field label="Brokerage" v-model="brokerage" />
+                <div class="input-row">
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field label="Brokerage" v-model="brokerage" />
+                    </div>
+
+                    <div class="input-cont">
+                      <v-text-field label="Taxes" v-model="taxes" />
+                    </div>
+
+                    <div class="input-cont">
+                      <v-text-field label="Eng fee" v-model="engFee" />
+                    </div>
                   </div>
 
-                  <div class="input-cont">
-                    <v-text-field label="Taxes" v-model="taxes" />
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field label="Type" v-model="typeDeductions" />
+                    </div>
+
+                    <div class="input-cont">
+                      <v-text-field label="Fronting fee" v-model="frontingFee" />
+                    </div>
+
+                    <div class="input-cont">
+                      <v-text-field label="Premium reserve Only colombia" v-model="premiumReserve" />
+                    </div>
                   </div>
 
-                  <div class="input-cont">
-                    <v-text-field label="Eng fee" v-model="engFee" />
-                  </div>
-                </div>
-                
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-text-field label="Type" v-model="typeDeductions" />
-                  </div>
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-text-field label="LTA" v-model="lta" />
+                    </div>
 
-                  <div class="input-cont">
-                    <v-text-field label="Fronting fee" v-model="frontingFee" />
-                  </div>
+                    <div class="input-cont">
+                      <v-text-field label="Others" v-model="others" />
+                    </div>
 
-                  <div class="input-cont">
-                    <v-text-field
-                      label="Premium reserve Only colombia"
-                      v-model="premiumReserve"
-                    />
+                    <div class="input-cont">
+                      <v-text-field label="Stocks Percentage" v-model="porcentStock" disabled />
+                    </div>
                   </div>
                 </div>
-                
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-text-field label="LTA" v-model="lta" />
-                  </div>
 
-                  <div class="input-cont">
-                    <v-text-field label="Others" v-model="others" />
+                <div class="inner-title">Additional</div>
+                <div class="input-row w-100 d-flex flex-wrap">
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-menu v-model="menu5" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly v-bind="attrs" v-on="on"></v-text-field>
+                        </template>
+                        <v-date-picker v-model="premiumPaymentDate" @input="menu5 = false"></v-date-picker>
+                      </v-menu>
+                    </div>
                   </div>
-                  
-                  <div class="input-cont">
-                    <v-text-field
-                      label="Porcent apply stock"
-                      v-model="porcentStock"
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              <div class="inner-title">Additional</div>
-              <div class="input-row w-100 d-flex flex-wrap">
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menu5"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                        @input="menu5 = false"
-                      ></v-date-picker>
-                    </v-menu>
+                  <div class="input-col">
+                    <div class="input-cont">
+                      <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" />
+                    </div>
                   </div>
                 </div>
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-autocomplete
-                      label="Clause"
-                      v-model="clause"
-                      :items="clauseList"
-                      item-value="clause"
-                      item-text="clause"
-                    />
-                  </div>
-                </div>
-              </div>
               </div>
             </v-stepper-content>
-            
+
             <v-stepper-content step="2">
               <div>
                 <Table :tableData="tableData" />
               </div>
               <div class="detail-date">
-                <div class="table-title-detail table-title-detail--large">
-                  Detail
-                </div>
+                <div class="table-title-detail table-title-detail--large">Detail</div>
                 <div class="input-col">
                   <div class="input-cont">
-                    <v-menu
-                      v-model="menu3"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          disabled
-                        ></v-text-field>
+                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly v-bind="attrs" v-on="on" disabled></v-text-field>
                       </template>
                       <!-- <v-date-picker
                         v-model="movementEndDate"
@@ -307,39 +169,17 @@
                 <div class="input-col">
                   <div class="inner-title">Additional</div>
                   <div class="input-cont">
-                    <v-autocomplete
-                      label="Clause"
-                      v-model="clause"
-                      :items="clauseList"
-                      item-value="clause"
-                      item-text="clause"
-                      disabled
-                    />
+                    <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" disabled />
                   </div>
                 </div>
                 <div class="input-col">
                   <div class="inner-title" style="opacity: 0">|</div>
                   <div class="input-cont">
-                    <v-menu
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          disabled
-                        ></v-text-field>
+                        <v-text-field v-model="premiumPaymentDate" label="Premium payment date" readonly v-bind="attrs" v-on="on" disabled></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                      ></v-date-picker>
+                      <v-date-picker v-model="premiumPaymentDate"></v-date-picker>
                     </v-menu>
                   </div>
                 </div>
@@ -348,9 +188,7 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div
-                class="files-submit flex justify-content-start align-items-start align-content-start"
-              >
+              <div class="files-submit flex justify-content-start align-items-start align-content-start">
                 <AppFile
                   v-for="(item, clave) in files"
                   :key="clave"
@@ -375,12 +213,11 @@
       </div>
 
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments"  v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
       <AdmittedPremiumTableEngineering v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
+        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false" :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -404,7 +241,7 @@ import InputDaysDiference from "../../components/DaysDiference.vue";
 import AdmittedPremiumTableEngineering from "../../components/AdmittedPremiumTableEngineering.vue";
 /* services */
 import EndorsementService from "../../services/endorsement.service";
-import {netPremiumInclusionRiskAutoCalcs} from "@/modules/home/modules/endorsements/engineering/class/netPremiumInclusionRiskEng";
+import { netPremiumInclusionRiskAutoCalcs } from "@/modules/home/modules/endorsements/engineering/class/netPremiumInclusionRiskEng";
 import accountCompleteService from "@/modules/home/services/account-complete.service";
 import PaymentService from "@/modules/home/services/payments.service";
 /* libs */
@@ -433,7 +270,7 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: {type: Boolean}
+    showInfoEndorsement: { type: Boolean },
   },
   data() {
     return {
@@ -449,11 +286,7 @@ export default {
       clauseList: [],
       cartera: {},
       effectiveDate: this.dateSaved,
-      movementEndDate: new Date(
-        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
+      movementEndDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       tableData: {
         currency: {
@@ -513,11 +346,7 @@ export default {
       sluLine: 0,
       resultOriginalCurenncy: {},
       resultUSD: {},
-      currentMovementEndDate: new Date(
-        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
+      currentMovementEndDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       effectiveDateError: false,
       endDateError: false,
       totalPremium: [
@@ -526,10 +355,10 @@ export default {
           name: "Original Currency",
           premiumAllRisk: 0,
           premiumAlop: 0,
-          premiumTotal:0,
+          premiumTotal: 0,
           sluAllRisk: 0,
           sluAlop: 0,
-          sluTotal:0,
+          sluTotal: 0,
         },
         {
           id: 2,
@@ -540,8 +369,8 @@ export default {
           sluAlop: 0,
         },
       ],
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
     };
   },
   async beforeMount() {
@@ -566,12 +395,12 @@ export default {
     e1: async function () {
       switch (this.e1) {
         case 1:
-          this.buttonTitle = 'Next';
-          this.buttonTitleBack = 'Cancel';
+          this.buttonTitle = "Next";
+          this.buttonTitleBack = "Cancel";
           break;
         case 2:
-          this.buttonTitle = 'Next';
-          this.buttonTitleBack = 'Return';
+          this.buttonTitle = "Next";
+          this.buttonTitleBack = "Return";
           this.deductible = Object.assign(this.accountComplete.deductibles);
           this.deductible.brokerage = this.brokerage;
           this.deductible.taxes = this.taxes;
@@ -582,80 +411,55 @@ export default {
           this.deductible.fronting = this.frontingFee;
           this.deductible.premiumReserve = this.premiumReserve;
           this.sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
-          this.deductible.exchangeRate = Number ( this.accountComplete.deductibles.exchangeRate);
-         
-        const tivModificado =  {
-          allRisk: this.accountComplete.tiv.insurable.allRisk,
-          alop:this.accountComplete.tiv.insurable.alop,
+          this.deductible.exchangeRate = Number(this.accountComplete.deductibles.exchangeRate);
 
-          allRiskRate:this.accountComplete.tiv.premium.allRiskRate,
-          alopRate:this.accountComplete.tiv.premium.alopRate,
-        }
- 
-                    
-        const dates = {
-          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-            .toISOString()
-            .substring(0, 10),
-          expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-            .toISOString()
-            .substring(0, 10),
-          endormenteffetiveDate: new Date(this.effectiveDate),
-          movementEndDate: new Date(this.movementEndDate),
-        };
+          const tivModificado = {
+            allRisk: this.accountComplete.tiv.insurable.allRisk,
+            alop: this.accountComplete.tiv.insurable.alop,
 
-          this.resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
-            tivModificado,
-            this.deductible,
-            this.sluLine,
-            false,
-            dates
-          );
-          this.resultUSD = await netPremiumInclusionRiskAutoCalcs(
-            tivModificado,
-            this.deductible,
-            this.sluLine,
-            true,
-            dates
-          );
+            allRiskRate: this.accountComplete.tiv.premium.allRiskRate,
+            alopRate: this.accountComplete.tiv.premium.alopRate,
+          };
+
+          const dates = {
+            effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substring(0, 10),
+            expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0, 10),
+            endormenteffetiveDate: new Date(this.effectiveDate),
+            movementEndDate: new Date(this.movementEndDate),
+          };
+
+          this.resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(tivModificado, this.deductible, this.sluLine, false, dates);
+          this.resultUSD = await netPremiumInclusionRiskAutoCalcs(tivModificado, this.deductible, this.sluLine, true, dates);
 
           const c_t_t_movement = this.accountComplete.tiv.insurable.total;
           const c_t_t_slu = this.accountComplete.tiv.premium.totalInsured;
-          const c_t_t_premium =
-            this.resultOriginalCurenncy.data.netSLUExcludingSurveyFeesTotal;
+          const c_t_t_premium = this.resultOriginalCurenncy.data.netSLUExcludingSurveyFeesTotal;
 
           const u_t_t_movement = this.accountComplete.tiv.insurable.totalUsd;
           const u_t_t_slu = this.accountComplete.tiv.premium.totalUsd;
-          const u_t_t_premium =
-            this.resultUSD.data.netSLUExcludingSurveyFeesTotal;
+          const u_t_t_premium = this.resultUSD.data.netSLUExcludingSurveyFeesTotal;
 
-          this.tableData.currency.total_premium.total_premium_movement =
-            c_t_t_movement;
+          this.tableData.currency.total_premium.total_premium_movement = c_t_t_movement;
           this.tableData.currency.total_premium.premium_slu = c_t_t_slu;
           this.tableData.currency.total_premium.net_premium = c_t_t_premium;
-          this.tableData.currency.total_premium.total =
-            c_t_t_movement + c_t_t_slu + c_t_t_premium;
+          this.tableData.currency.total_premium.total = c_t_t_movement + c_t_t_slu + c_t_t_premium;
 
-          this.tableData.usd.total_premium.total_premium_movement =
-            u_t_t_movement;
+          this.tableData.usd.total_premium.total_premium_movement = u_t_t_movement;
           this.tableData.usd.total_premium.premium_slu = u_t_t_slu;
           this.tableData.usd.total_premium.net_premium = u_t_t_premium;
-          this.tableData.usd.total_premium.total =
-            u_t_t_movement + u_t_t_slu + u_t_t_premium;
+          this.tableData.usd.total_premium.total = u_t_t_movement + u_t_t_slu + u_t_t_premium;
           break;
         case 3:
-          this.buttonTitle = 'Finalize'
-          this.buttonTitleBack = 'Return';
+          this.buttonTitle = "Finalize";
+          this.buttonTitleBack = "Return";
           this.accountComplete.deductibles = {
-           ...this.accountComplete.deductibles,
-            ...this.deductible
+            ...this.accountComplete.deductibles,
+            ...this.deductible,
           };
           const premiumOriginal = this.accountComplete.tiv.insurable;
-          
+
           // Obteniendo premium payment date
-          const premiumPaymentDate = new Date(
-            this.premiumPaymentDate
-          ).toISOString();
+          const premiumPaymentDate = new Date(this.premiumPaymentDate).toISOString();
 
           // Obteniendo la clausula
           const clause = this.clause;
@@ -686,23 +490,23 @@ export default {
             premium: {
               ...this.accountComplete.tiv.premium,
               allRisk: this.resultOriginalCurenncy.totalPremiumResult.allRiskTotalPremium,
-              alop:this.resultOriginalCurenncy.totalPremiumResult.alopTotalPremium,
-              totalInsured:this.resultOriginalCurenncy.totalPremiumResult.total,
+              alop: this.resultOriginalCurenncy.totalPremiumResult.alopTotalPremium,
+              totalInsured: this.resultOriginalCurenncy.totalPremiumResult.total,
               allRiskUsd: this.resultUSD.totalPremiumResult.allRiskTotalPremiumUsd,
               alopUsd: this.resultUSD.totalPremiumResult.alopTotalPremiumUsd,
-              totalUsd:this.resultUSD.totalPremiumResult.totalUsd
+              totalUsd: this.resultUSD.totalPremiumResult.totalUsd,
             },
             boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
             deductibles: this.accountComplete.deductibles,
             netPremium: {
               ...this.resultOriginalCurenncy.data,
-              allRiskSluShare:this.resultOriginalCurenncy.data.allRiskPremiumSlu,
+              allRiskSluShare: this.resultOriginalCurenncy.data.allRiskPremiumSlu,
               alopSluShare: this.resultOriginalCurenncy.data.alopPremiumSlu,
-              sluShareTotal: this.resultOriginalCurenncy.data.totalPremiumSlu
+              sluShareTotal: this.resultOriginalCurenncy.data.totalPremiumSlu,
             },
             netPremiumUSD: {
               ...this.resultUSD.data,
-              allRiskSluShare:this.resultUSD.data.allRiskPremiumSlu,
+              allRiskSluShare: this.resultUSD.data.allRiskPremiumSlu,
               alopSluShare: this.resultUSD.data.alopPremiumSlu,
               totalPremiumSlu: this.resultUSD.data.totalPremiumSlu,
             },
@@ -732,7 +536,7 @@ export default {
     },
   },
   methods: {
-    setTotalPremium({id, value, concept}){
+    setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
       totalPremium[concept] = value;
     },
@@ -765,70 +569,63 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
     async submit() {
       this.e1 = 1;
 
       // calcular diferencia del net premium
-      const originalNetPremium =
-        this.accountComplete.net_premium.originalValues
-          .netSluExcludingSurveyFeesTotal;
-      const newNetPremium =
-        this.resultOriginalCurenncy.data.netSLUExcludingSurveyFeesTotal;
-      const netPremiumDifference = Decimal(Decimal(newNetPremium))
-        .sub(Decimal(originalNetPremium))
-        .toNumber();
+      const originalNetPremium = this.accountComplete.net_premium.originalValues.netSluExcludingSurveyFeesTotal;
+      const newNetPremium = this.resultOriginalCurenncy.data.netSLUExcludingSurveyFeesTotal;
+      const netPremiumDifference = Decimal(Decimal(newNetPremium)).sub(Decimal(originalNetPremium)).toNumber();
 
       // guardar la cuenta actualizada en BD
 
-      const { allRiskSluShare, alopSluShare, totalPremiumSlu, ...netPremium } = this.resultOriginalCurenncy.data
-      const { allRiskSluShare:allRiskSluShareUSD, alopSluShare:alopSluShareUSD, totalPremiumSlu:totalPremiumSluUSD, ...netPremiumUSD } = this.resultUSD.data
+      const { allRiskSluShare, alopSluShare, totalPremiumSlu, ...netPremium } = this.resultOriginalCurenncy.data;
+      const { allRiskSluShare: allRiskSluShareUSD, alopSluShare: alopSluShareUSD, totalPremiumSlu: totalPremiumSluUSD, ...netPremiumUSD } = this.resultUSD.data;
 
-
-      const accountCompleteResponse =
-        await accountCompleteService.addAccountComplete(this.subscriptionId, {
-          deductibles: this.accountComplete.deductibles,
-          tiv: {
-            boundInsurableProp:{
-              ...this.accountComplete.boundInsurableProp
-            },
-            premium:{
-              ...this.accountComplete.premium,
-              allRisk: this.resultOriginalCurenncy.totalPremiumResult.allRiskTotalPremium,
-              alop:this.resultOriginalCurenncy.totalPremiumResult.alopTotalPremium,
-              totalInsured:this.resultOriginalCurenncy.totalPremiumResult.total,
-              allRiskUsd: this.resultUSD.totalPremiumResult.allRiskTotalPremiumUsd,
-              alopUsd: this.resultUSD.totalPremiumResult.alopTotalPremiumUsd,
-              totalUsd:this.resultUSD.totalPremiumResult.totalUsd
-            },
-            insurable:{
-              ...this.accountComplete.insurable,
-            }
+      const accountCompleteResponse = await accountCompleteService.addAccountComplete(this.subscriptionId, {
+        deductibles: this.accountComplete.deductibles,
+        tiv: {
+          boundInsurableProp: {
+            ...this.accountComplete.boundInsurableProp,
           },
-          netPremium: {
-            originalValues:{ 
-              ...netPremium,
-              allRiskSluShare:allRiskSluShare,
-              alopSluShare: alopSluShare,
-              sluShareTotal: totalPremiumSlu
-            },
-            usdValues: {
-              ...netPremiumUSD,
-              allRiskSluShare:allRiskSluShareUSD,
-              alopSluShare: alopSluShareUSD,
-              sluShareTotal: totalPremiumSluUSD
-            },
+          premium: {
+            ...this.accountComplete.premium,
+            allRisk: this.resultOriginalCurenncy.totalPremiumResult.allRiskTotalPremium,
+            alop: this.resultOriginalCurenncy.totalPremiumResult.alopTotalPremium,
+            totalInsured: this.resultOriginalCurenncy.totalPremiumResult.total,
+            allRiskUsd: this.resultUSD.totalPremiumResult.allRiskTotalPremiumUsd,
+            alopUsd: this.resultUSD.totalPremiumResult.alopTotalPremiumUsd,
+            totalUsd: this.resultUSD.totalPremiumResult.totalUsd,
           },
-          additionalInfo: this.accountComplete.additional_info,
-          technicalConditions: this.accountComplete.technical_conditions,
-          cartera: {
-            ...this.accountComplete.cartera,
-            ...this.cartera,
-            netPremiumDifference,
+          insurable: {
+            ...this.accountComplete.insurable,
           },
-        });
+        },
+        netPremium: {
+          originalValues: {
+            ...netPremium,
+            allRiskSluShare: allRiskSluShare,
+            alopSluShare: alopSluShare,
+            sluShareTotal: totalPremiumSlu,
+          },
+          usdValues: {
+            ...netPremiumUSD,
+            allRiskSluShare: allRiskSluShareUSD,
+            alopSluShare: alopSluShareUSD,
+            sluShareTotal: totalPremiumSluUSD,
+          },
+        },
+        additionalInfo: this.accountComplete.additional_info,
+        technicalConditions: this.accountComplete.technical_conditions,
+        cartera: {
+          ...this.accountComplete.cartera,
+          ...this.cartera,
+          netPremiumDifference,
+        },
+      });
 
       //guardar registro del endoso
       await EndorsementService.addEndorsment({
@@ -851,20 +648,16 @@ export default {
       }
     },
     async endorsementDateValidation(event, incomingDate) {
-      
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.movementEndDate)
-      ) {
+      if (Date.parse(incomingDate) >= Date.parse(this.movementEndDate)) {
         this.endorsementDateError = true;
       } else {
-        await this.changeDateEndorsement(incomingDate)
+        await this.changeDateEndorsement(incomingDate);
         this.endorsementDateError = false;
       }
     },
 
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.e1 = 2;
       } else if (e1 == 2) {
@@ -875,7 +668,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -895,9 +688,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -943,6 +736,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -959,7 +753,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1054,11 +848,7 @@ export default {
   border-color: #1c2b39 !important;
 }
 
-.theme--light.v-stepper
-  .v-stepper__step:not(.v-stepper__step--active):not(
-    .v-stepper__step--complete
-  ):not(.v-stepper__step--error)
-  .v-stepper__step__step {
+.theme--light.v-stepper .v-stepper__step:not(.v-stepper__step--active):not(.v-stepper__step--complete):not(.v-stepper__step--error) .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
 

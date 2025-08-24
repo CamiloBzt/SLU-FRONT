@@ -18,7 +18,7 @@
 
       <v-expansion-panel-content>
         <div class="ExpandContent">
-          <div class="TitleTextArea">Offer Comments</div>
+          <div class="TitleTextArea">Offer Comments*</div>
 
           <textarea
             v-model.trim="$v.boundEng.riskProfileComments.$model"
@@ -37,7 +37,7 @@
                   checkField('riskProfileClause');
                 "
                 :items="typeClause"
-                label="Type of clause"
+                label="Type of clause*"
                 item-text="data"
                 item-value="id"
                 clearable
@@ -52,7 +52,7 @@
                   checkField('riskProfileExposure');
                 "
                 :items="exposure"
-                label="Exposure by neighborhood"
+                label="Exposure by neighborhood*"
                 item-text="data"
                 item-value="id"
                 clearable
@@ -67,7 +67,7 @@
                   checkField('riskProfileHousekeeping');
                 "
                 :items="housekeeping"
-                label="Housekeeping"
+                label="Housekeeping*"
                 item-text="data"
                 item-value="id"
                 clearable
@@ -81,45 +81,54 @@
   </v-expansion-panels>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* validations */
-import { required } from 'vuelidate/lib/validators';
+import { required } from "vuelidate/lib/validators";
 
 export default {
-  name: 'RiskProfile',
+  name: "RiskProfile",
   mixins: [stateExpansiveManager],
-  inject: ['deepDisabled'],
+  inject: ["deepDisabled"],
   async beforeMount() {
-    await this.getCatalogByName({ name: 'type_clause' });
-    await this.getCatalogByName({ name: 'exposure' });
-    await this.getCatalogByName({ name: 'housekeeping' });
+    await this.getCatalogByName({ name: "type_clause" });
+    await this.getCatalogByName({ name: "exposure" });
+    await this.getCatalogByName({ name: "housekeeping" });
   },
   computed: {
-    ...mapGetters([
-      'housekeeping',
-      'exposure',
-      'typeClause',
-      'boundEng'
-    ]),
+    ...mapGetters(["housekeeping", "exposure", "typeClause", "boundEng"]),
+    riskProfileCompleted() {
+      return (
+        this.boundEng.riskProfileComments?.trim().length > 0 &&
+        !!this.boundEng.riskProfileClause &&
+        !!this.boundEng.riskProfileExposure &&
+        !!this.boundEng.riskProfileHousekeeping
+      );
+    },
   },
+  watch: {
+    riskProfileCompleted: {
+      handler(newVal) {
+        this.$emit("risk-profile-change", newVal);
+      },
+      immediate: true,
+    },
+  },
+
   methods: {
-    ...mapActions([
-      'saveBoundColumn',
-      'getCatalogByName'
-    ]),
-    ...mapMutations(['SET_BOUND_ENG']),
+    ...mapActions(["saveBoundColumn", "getCatalogByName"]),
+    ...mapMutations(["SET_BOUND_ENG"]),
     async checkField(column) {
       this.$v.boundEng[column].$touch();
-      console.log(
+      /*console.log(
         this.$v.boundEng[column].$invalid,
         this.$v.boundEng[column].$error
-      );
+      );*/
       if (this.$v.boundEng[column].$invalid || this.$v.boundEng[column].$error)
         return;
       await this.saveBoundColumn({
-        table: 'bound',
-        parent: 'boundEng',
+        table: "bound",
+        parent: "boundEng",
         column,
       });
     },
@@ -135,8 +144,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/Subscription/Bound.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/Subscription/Bound.less";
 .InputsCont {
   width: 100%;
   height: auto;

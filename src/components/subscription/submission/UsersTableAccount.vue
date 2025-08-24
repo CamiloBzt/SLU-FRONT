@@ -38,7 +38,7 @@ export default {
   props: {
     selectedItems: {
       type: Array,
-    }
+    },
   },
 };
 </script>
@@ -62,8 +62,8 @@ export default {
     width: 100%;
     height: 55px;
     overflow: hidden;
-    border-bottom: solid 1px #A8BFD9;
-    .TableRow{
+    border-bottom: solid 1px #a8bfd9;
+    .TableRow {
       font-weight: bold;
     }
   }
@@ -72,7 +72,7 @@ export default {
     justify-content: space-between;
     width: 100%;
     height: auto;
-    border-radius: 15px;
+    border-radius: 5px;
     overflow-x: hidden;
     flex-wrap: wrap;
 

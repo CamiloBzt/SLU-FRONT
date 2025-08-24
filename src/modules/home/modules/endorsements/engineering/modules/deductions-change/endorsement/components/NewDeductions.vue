@@ -30,7 +30,7 @@
 			<v-text-field label="Premium reserve Only colombia" />
 		</div>
 		<div class="inputs-container__input">
-			<v-text-field label="Porcent apply stock" />
+			<v-text-field label="Stocks Percentage" />
 		</div>
 		<div class="inputs-container__input" />
 

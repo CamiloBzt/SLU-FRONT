@@ -3,55 +3,26 @@
     <div v-if="showModal" class="modal" @click.self="CloseModal()">
       <div class="modalSn">
         <!--CERRAR MODAL-->
-        <div
-          @click="CloseModal()"
-          class="CloseModalCont d-flex justify-center align-center"
-        >
+        <div @click="CloseModal()" class="CloseModalCont d-flex justify-center align-center">
           <v-icon> mdi-close-circle </v-icon>
         </div>
         <div class="emailContainer">
           <div class="emailLang">
             <h2>Email</h2>
             <div class="selectEmail">
-              <v-select
-                color="#547FA9"
-                solo
-                flat
-                :items="lang"
-                :disabled="loadingLanguages"
-                item-value="lang"
-                item-text="description"
-                v-model="currentLang"
-                label="English"
-              ></v-select>
+              <v-select color="#547FA9" solo flat :items="lang" :disabled="loadingLanguages" item-value="lang" item-text="description" v-model="currentLang" label="English"></v-select>
             </div>
           </div>
           <div class="emailCont pl-3 pr-3 pt-2 pb-1">
-            <EmailHeader
-              :header="headerEmail"
-              :account="nameReference"
-              :reference="nameReference"
-            />
+            <EmailHeader :header="headerEmail" :account="nameReference" :reference="nameReference" />
             <CcParticipantsQuotation ref="ccClose" :ccParticipants="ccParticipants" v-model="ccParticipants" />
-            <CcoParticipantsQuotation
-              ref="ccoClose"
-              :ccoParticipants="ccoParticipants"
-              v-model="ccoParticipants"
-            />
+            <CcoParticipantsQuotation ref="ccoClose" :ccoParticipants="ccoParticipants" v-model="ccoParticipants" />
             <div class="ExpansionLineTop mt-4"></div>
             <!--EDITOR DE TEXTO DEL EMAIL-->
-            <EmailEditor ref="emailEditor" :htmlEmail="htmlTemplate"  v-model="htmlTemp"/>
+            <EmailEditor ref="emailEditor" :htmlEmail="htmlTemplate" v-model="htmlTemp" />
           </div>
           <div class="sendCont">
-            <v-btn
-              rounded
-              depressed
-              color="#003D6D"
-              class="button"
-              @click="closeAccountAndSendEmail()"
-            >
-              Send
-            </v-btn>
+            <v-btn rounded depressed color="#003D6D" class="button" @click="closeAccountAndSendEmail()"> Send </v-btn>
           </div>
         </div>
       </div>
@@ -86,21 +57,19 @@ export default {
     },
     item: {
       type: Number | String,
-    }
+    },
   },
   data() {
     return {
       /* Datos que se envían a las partes que conforman el componente para redactar correos */
       loadingLanguages: false,
       //CcParticipants
-      ccParticipants: [
-      ],
-      htmlTemp: '',
+      ccParticipants: [],
+      htmlTemp: "",
       ccValue: null, //cc que elige el usuario
 
       //CCO Participants
-      ccoParticipants: [
-      ],
+      ccoParticipants: [],
       ccoValue: null, //cco que elige el usuario,
       showModal: false,
     };
@@ -117,19 +86,11 @@ export default {
     this[lla] = false;
   },
   computed: {
-    ...mapGetters([
-      "nameReference",
-      "currentEmailTemplate",
-      "close_account",
-      "currentTemplateRiskID",
-      "subscription_id",
-      "selectedLang",
-      "lang",
-    ]),
+    ...mapGetters(["nameReference", "currentEmailTemplate", "close_account", "currentTemplateRiskID", "subscription_id", "selectedLang", "lang"]),
     ...mapState({
-      htmlTemplate: state => state.htmlTemplate,
-      selectedLang: state => state.selectedLang,
-      template: state => state.currentEmailTemplate
+      htmlTemplate: (state) => state.htmlTemplate,
+      selectedLang: (state) => state.selectedLang,
+      template: (state) => state.currentEmailTemplate,
     }),
     /* html template */
     currentLang: {
@@ -137,25 +98,15 @@ export default {
         return this.selectedLang;
       },
       async set(value) {
-        this.SET_SELECTED_TEMPLATE_LANG(value)
-        this.SET_LANG_MAIL_TEMPLATE(value)
+        this.SET_SELECTED_TEMPLATE_LANG(value);
+        this.SET_LANG_MAIL_TEMPLATE(value);
         await this.setTemplateLang(this.item);
       },
     },
   },
   methods: {
-    ...mapActions([
-      "setEmailTemplate",
-      "getEmailTemplate",
-      "sendEmailAction",
-      "getCatalogByName",
-      "setCurrentTemplateLanguage",
-      "getCurrentTemplateLanguage",
-      "resetTemplateLang",
-      "sendEmail",
-      "getTemplateEmail"
-    ]),
-    ...mapMutations(['SET_LANG_MAIL_TEMPLATE', 'SET_SELECTED_TEMPLATE_LANG']),
+    ...mapActions(["setEmailTemplate", "getEmailTemplate", "sendEmailAction", "getCatalogByName", "setCurrentTemplateLanguage", "getCurrentTemplateLanguage", "resetTemplateLang", "sendEmail", "getTemplateEmail"]),
+    ...mapMutations(["SET_LANG_MAIL_TEMPLATE", "SET_SELECTED_TEMPLATE_LANG"]),
     async send() {
       this.sendEmail();
     },
@@ -178,25 +129,18 @@ export default {
     async setTemplateLang(id) {
       await this.getTemplateEmail(id);
       if (!this.$refs.emailEditor) return;
-      this.$refs.emailEditor.editor.commands.setContent(
-        this.currentEmailTemplate,
-        true
-      );
+      this.$refs.emailEditor.editor.commands.setContent(this.currentEmailTemplate, true);
     },
     async closeAccountAndSendEmail() {
       console.log(this.ccoParticipants);
       console.log(this.ccParticipants);
-      const cc = Array.isArray(this.ccParticipants)
-        ? this.ccParticipants
-        : this.ccoParticipants.split(",");
-      const cco = Array.isArray(this.ccoParticipants)
-        ? this.ccoParticipants
-        : this.ccParticipants.split(",");
+      const cc = Array.isArray(this.ccParticipants) ? this.ccParticipants : this.ccoParticipants.split(",");
+      const cco = Array.isArray(this.ccoParticipants) ? this.ccoParticipants : this.ccParticipants.split(",");
       const emailData = {
         subject: `Reference Number:${this.nameReference}`,
         body: this.template,
         cc,
-        cco
+        cco,
       };
 
       await this.sendEmailAction({ emailData });
@@ -230,7 +174,7 @@ export default {
     width: 650px;
     height: 95%;
     background: white;
-    border-radius: 15px;
+    border-radius: 5px;
     position: relative;
     //CERRAR MODAL
     .CloseModalCont {
@@ -299,7 +243,7 @@ export default {
       .emailCont {
         width: 100%;
         height: auto;
-        border-radius: 15px;
+        border-radius: 5px;
         overflow: auto;
         position: relative;
         margin-top: 15px;

@@ -82,7 +82,17 @@ export default function checkDisableInputsFile() {
     // NUEVOS SELECTORES:
     // Deshabilitar interacción de todos los botones con clase v-btn (por ejemplo, botones de eliminar o restar)
     document.querySelectorAll("button.v-btn").forEach((btn) => {
-      btn.style.pointerEvents = "none";
+      // Habilitar botones en general report despues de ser enviado a facultative
+      const isInDownloadButtons = btn.closest(".DownloadButtons");
+      const isDefineAuthorizedButton = btn.id === "btnDefineAuth";
+
+      if (!isInDownloadButtons && !isDefineAuthorizedButton) {
+        btn.style.pointerEvents = "none";
+      } else {
+        btn.style.pointerEvents = "auto";
+        btn.classList.remove("disabled-element");
+        btn.disabled = false;
+      }
     });
 
     // Para los botones dentro de contenedores .remove-button, deshabilitarlos y aplicar pointerEvents = none
@@ -90,6 +100,20 @@ export default function checkDisableInputsFile() {
       btn.classList.add("disabled-element");
       btn.disabled = true;
       btn.style.pointerEvents = "none";
+    });
+    document
+      .querySelectorAll(".DownloadButtons button.v-btn")
+      .forEach((btn) => {
+        btn.classList.remove("disabled-element");
+        btn.style.pointerEvents = "auto";
+        btn.disabled = false;
+      });
+
+    // Additional protection: Ensure Define Authorized button is always enabled
+    document.querySelectorAll("#btnDefineAuth").forEach((btn) => {
+      btn.classList.remove("disabled-element");
+      btn.style.pointerEvents = "auto";
+      btn.disabled = false;
     });
   }
 

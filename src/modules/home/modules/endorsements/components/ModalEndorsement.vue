@@ -7,14 +7,7 @@
         <v-btn rounded large text class="blue-btn" @click="actionButton1">
           {{ modal.Button1 }}
         </v-btn>
-        <v-btn
-          rounded
-          large
-          outlined
-          class="clear-btn"
-          color="#003D6D"
-          @click="actionButton2"
-        >
+        <v-btn rounded large outlined class="clear-btn" color="#003D6D" @click="actionButton2">
           {{ modal.Button2 }}
         </v-btn>
       </div>
@@ -90,14 +83,13 @@ export default {
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 5px;
   padding: 33px;
 }
 .modal-title {
   width: 100%;
   color: rgb(0, 0, 0);
-  font-weight: 700;
-  border-bottom: 1px solid #a8bfd9;
+  font-weight: 600;
   padding-bottom: 5px;
   font-size: 24px;
   display: flex;

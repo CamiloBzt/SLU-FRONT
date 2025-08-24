@@ -1,23 +1,11 @@
 <template>
-  <div
-    class="
-      DeductionsCont
-      d-flex
-      justify-start
-      align-center
-      flex-wrap
-      align-content-start
-    "
-  >
+  <div class="DeductionsCont d-flex justify-start align-center flex-wrap align-content-start">
     <!--TITULO-->
     <div class="TitleCont d-flex justify-space-between align-center">
       <h5>Deductions</h5>
 
       <!--BOTON TARIFAR-->
-      <div
-        v-if="ShowRateBtn == 'Edit Subs quotation non-proportional'"
-        class="TarifarBtn"
-      >
+      <div v-if="ShowRateBtn == 'Edit Subs quotation non-proportional'" class="TarifarBtn">
         <ButtonActiveModalRate />
       </div>
     </div>
@@ -162,46 +150,44 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from "vuex";
 /* validations */
-import { validationMixin } from 'vuelidate';
-import { required, requiredUnless } from 'vuelidate/lib/validators';
-import { DigitsAndDecimals, Percentage } from '@/constants/validations';
-import { formValidations } from '@/mixins/formValidations';
-import ButtonActiveModalRate from '@/components/Rate/ButtonActiveModalRate.vue';
+import { validationMixin } from "vuelidate";
+import { required, requiredUnless } from "vuelidate/lib/validators";
+import { DigitsAndDecimals, Percentage } from "@/constants/validations";
+import { formValidations } from "@/mixins/formValidations";
+import ButtonActiveModalRate from "@/components/Rate/ButtonActiveModalRate.vue";
 
 export default {
-  name: 'Deductions',
+  name: "Deductions",
   mixins: [formValidations, validationMixin],
   async beforeMount() {
-    await this.getCatalogByName({ name: 'deductions_type' });
+    await this.getCatalogByName({ name: "deductions_type" });
   },
   components: {
     ButtonActiveModalRate,
   },
   computed: {
-    ...mapGetters(['deductions', 'deductionsType']),
+    ...mapGetters(["deductions", "deductionsType"]),
     ShowRateBtn() {
       return this.$route.name;
     },
   },
   methods: {
-    ...mapActions(['saveQuotationColumn', 'getCatalogByName']),
-    ...mapMutations(['setStateDeductions']),
+    ...mapActions(["saveQuotationColumn", "getCatalogByName"]),
+    ...mapMutations(["setStateDeductions"]),
     changeBrokerage(value) {
-      console.log(value);
+      // console.log(value);
     },
     async checkDeductionsColumn(column) {
       this.$v.deductions[column].$touch();
       if (this.$v.deductions[column].$invalid) return;
-      await this.saveQuotationColumn({ parent: 'deductions', column });
+      await this.saveQuotationColumn({ parent: "deductions", column });
       this.sumDeductions();
     },
     sumDeductions() {
       const op =
-        (!this.deductions.brokerage
-          ? 0
-          : parseFloat(this.deductions.brokerage)) +
+        (!this.deductions.brokerage ? 0 : parseFloat(this.deductions.brokerage)) +
         (!this.deductions.fronting ? 0 : parseFloat(this.deductions.fronting)) +
         (!this.deductions.eng ? 0 : parseFloat(this.deductions.eng)) +
         (!this.deductions.taxes ? 0 : parseFloat(this.deductions.taxes)) +

@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="input-col">
-          <div class="column-title">Porcent apply stock</div>
+          <div class="column-title">Stocks percentage</div>
 
           <div class="input-cont">
             <v-text-field

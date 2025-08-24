@@ -22,391 +22,352 @@
         <div class="content">
           <v-stepper-items>
             <v-stepper-content step="1" class="step-one">
-              <div class="input-row w-50 d-flex flex-wrap">
+              <div class="endorsement-main-container">
+                <div class="endorsement-form-section">
+                  <div class="inner-title">Endorsement</div>
 
-                <div class="input-col">
-                  <div class="inner-title">Endorsement date</div>
-                  <div class="input-cont column">
-                    <v-menu
-                      v-model="menuControllStepOne.endorsementEffectiveDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="endorsementEffectiveDate"
-                          label="Endorsement effective date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="endorsementEffectiveDate"
-                        @input="menuControllStepOne.endorsementEffectiveDate = false"
-                        @change="endorsementDateValidation($event,endorsementEffectiveDate)"
-                      ></v-date-picker>
-                    </v-menu>
-                    <div v-if="this.errorsDates['endorsementEffectiveDate']"  class="error-message">
-                      The new Endorment effective date must be lower than expiry date .
-                    </div>
-                    <div v-if="this.errorsDates['endorsementEffectiveDate'] && !this.errorsDates['endorsementEffectiveDate'] && sent"  class="error-message">
-                      The new Endorment effective date must be lower than expiry date .
-                    </div>
-                    <div v-if="this.errorsDates['validDate']"  class="error-message">
-                      Select a valid date
-                    </div>
-                    
-                  </div>
-                </div>
-
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepOne.movementEndDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="movementEndDate"
-                          label="expiry date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="movementEndDate"
-                        @input="menuControllStepOne.movementEndDate = false"
-                        @change="validateDates($event, {
-                            lowerDate:endorsementEffectiveDate,
-                            higherDate:movementEndDate,
-                            error:'movementEndDate'
-                        })"
-                      ></v-date-picker>
-                    </v-menu>
-                    <div v-if="this.errorsDates['movementEndDate']" class="error-message">
-                      The expiry date must be later than Endorsement effective date.
-                    </div>
-                    <div v-if="this.errorsDates['inceptionDate'] && sent" class="error-message">
-                      The Expiry date cannot be equal to the Inception date
+                  <!-- Endorsement effective date -->
+                  <div class="input-row w-100 mb-4">
+                    <div class="input-col-full">
+                      <div class="input-cont">
+                        <v-menu
+                          v-model="menuControllStepOne.endorsementEffectiveDate"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="endorsementEffectiveDate"
+                              label="Endorsement effective date"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="endorsementEffectiveDate"
+                            @input="
+                              menuControllStepOne.endorsementEffectiveDate = false
+                            "
+                            @change="
+                              endorsementDateValidation(
+                                $event,
+                                endorsementEffectiveDate
+                              )
+                            "
+                          ></v-date-picker>
+                        </v-menu>
+                        <div
+                          v-if="this.errorsDates['endorsementEffectiveDate']"
+                          class="error-message"
+                        >
+                          The new Endorment effective date must be lower than
+                          expiry date.
+                        </div>
+                        <div
+                          v-if="this.errorsDates['validDate']"
+                          class="error-message"
+                        >
+                          Select a valid date
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <InputDaysDiference
-                  :endorsementDate="endorsementEffectiveDate"
-                  :expiryDate="expiryDatetoCalc"
-                  :key="endorsementEffectiveDate"
-                />
-                <div class="input-col" v-if="showInfoEndorsement">
-                  <div class="input-cont-lg">
-                    <v-select
-                      v-model="clause"
-                      label="Clause"
-                      item-value="clause"
-                      item-text="clause"
-                      :items="clauseList"
+                  <!-- Current dates row -->
+                  <div class="input-row w-100 mb-4">
+                    <div class="input-col">
+                      <div class="input-cont">
+                        <v-text-field
+                          :value="currentInceptionDateFormatted"
+                          label="Current Inception date"
+                          readonly
+                          disabled
+                        ></v-text-field>
+                      </div>
+                    </div>
+                    <div class="input-col">
+                      <div class="input-cont">
+                        <v-text-field
+                          :value="currentExpiryDateFormatted"
+                          label="Current Expiry date"
+                          readonly
+                          disabled
+                        ></v-text-field>
+                      </div>
+                    </div>
+                    <div class="input-col-days">
+                      <div class="input-cont">
+                        <v-text-field
+                          :value="currentPolicyDays"
+                          label="Days"
+                          readonly
+                          disabled
+                        ></v-text-field>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- New dates row -->
+                  <div class="input-row w-100 mb-4">
+                    <div class="input-col">
+                      <div class="input-cont">
+                        <v-menu
+                          v-model="menuControllStepOne.inceptionDate"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="inceptionDate"
+                              label="New Inception date"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="inceptionDate"
+                            @input="menuControllStepOne.inceptionDate = false"
+                            @change="
+                              ExpiryDateValidation($event, inceptionDate)
+                            "
+                          ></v-date-picker>
+                        </v-menu>
+                        <div
+                          v-if="this.errorsDates['inceptionDate']"
+                          class="error-message"
+                        >
+                          The Expiry date cannot be equal to the Inception date
+                        </div>
+                      </div>
+                    </div>
+                    <div class="input-col">
+                      <div class="input-cont">
+                        <v-menu
+                          v-model="menuControllStepOne.movementEndDate"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="movementEndDate"
+                              label="New Expiry date"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="movementEndDate"
+                            @input="menuControllStepOne.movementEndDate = false"
+                            @change="
+                              validateDates($event, {
+                                lowerDate: endorsementEffectiveDate,
+                                higherDate: movementEndDate,
+                                error: 'movementEndDate',
+                              })
+                            "
+                          ></v-date-picker>
+                        </v-menu>
+                        <div
+                          v-if="this.errorsDates['movementEndDate']"
+                          class="error-message"
+                        >
+                          The expiry date must be later than Endorsement
+                          effective date.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="input-col-days">
+                      <InputDaysDiference
+                        :endorsementDate="endorsementEffectiveDate"
+                        :expiryDate="expiryDatetoCalc"
+                        :key="endorsementEffectiveDate"
                       />
-                  </div>
-                </div>
-                <div class="input-col" v-if="showInfoEndorsement">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepOne.inceptionDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="inceptionDate"
-                          label="Inception date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="inceptionDate"
-                        @input="menuControllStepOne.inceptionDate = false"
-                        @change="ExpiryDateValidation($event, inceptionDate)"
-                      ></v-date-picker>
-                    </v-menu>
-                    <div v-if="this.errorsDates['inceptionDate']"  class="error-message">
-                      The Expiry date cannot be equal to the Inception date
                     </div>
-                    <!-- <div v-if="this.errorsDates['inceptionDateTwo']"  class="error-message">
-                      The new Movement end date must be later than current date.
-                    </div> -->
+                  </div>
+
+                  <!-- Additional section -->
+                  <div class="mb-4" v-if="showInfoEndorsement">
+                    <div class="inner-title">Additional</div>
+                    <div class="input-row w-100">
+                      <div class="input-col">
+                        <div class="input-cont">
+                          <v-select
+                            v-model="clause"
+                            label="Clause"
+                            item-value="clause"
+                            item-text="clause"
+                            :items="clauseList"
+                          />
+                        </div>
+                      </div>
+                      <div class="input-col">
+                        <div class="input-cont">
+                          <v-menu
+                            v-model="menuControllStepOne.premiumPaymentDate"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="auto"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-text-field
+                                v-model="premiumPaymentDate"
+                                label="Premium payment warranty"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                              ></v-text-field>
+                            </template>
+                            <v-date-picker
+                              v-model="premiumPaymentDate"
+                              @input="
+                                menuControllStepOne.premiumPaymentDate = false
+                              "
+                            ></v-date-picker>
+                          </v-menu>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <div class="input-col" v-if="showInfoEndorsement">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepOne.premiumPaymentDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment Date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                        @input="menuControllStepOne.premiumPaymentDate = false"
-                      ></v-date-picker>
-                    </v-menu>
-                  </div>
-                </div> 
               </div>
-
-
             </v-stepper-content>
             <v-stepper-content step="2">
-              <div class="table-container input-row justify-center">
-                
-                <div class="table-title-space"></div>
-                <div class="title-col">
-                  <div class="col-subtitle">Total Premium Moment</div>
-                  <div class="col-subtitle">Premium SLU</div>
-                  <div class="col-subtitle">Net Premium</div>
-                  <div class="col-subtitle mt-4">Total</div>
-                </div>
-
-
-
-                <div class="table-col">
-                  <div class="table-title">Original Currency</div>
-                  
-                    <div class="input-row mt-4">
-                      
-                      <div class="inner-col">
-                        <div class="table-input blue-input">
-                        ${{  this.originalValues.lastInformation.totalPremiumMovement.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input blue-input">
-                        ${{ this.originalValues.lastInformation.PremiumSlu.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input blue-input">
-                        ${{ this.originalValues.lastInformation.netPremium.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input mt-4">
-                        ${{ this.originalValues.lastInformation.total.toFixed(2) }}
-                        </div>   
-                      </div>
- 
-                      <div class="inner-col">
-                        <div class="table-input blue-input">
-                          ${{  this.originalValues.newInformation.totalPremiumMovement.toFixed(2)}}
-                        </div>
-
-                        <div class="table-input blue-input">
-                          ${{  this.originalValues.newInformation.PremiumSlu.toFixed(2)}}
-                        </div>
-
-                        <div class="table-input blue-input">
-                         ${{ this.originalValues.newInformation.netPremium.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input mt-4">
-                         ${{ this.originalValues.newInformation.total.toFixed(2) }}
-                        </div>  
-                      </div> 
-                
-                    </div>
-                  </div>
-                 
-                <div class="table-col">
-                  <div class="table-title">USD</div>
-                    <div class="input-row mt-4">
-                      
-                      <div class="inner-col">
-                        <div class="table-input blue-input">
-                        ${{  this.usdValues.lastInformation.totalPremiumMovement.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input blue-input">
-                        ${{ this.usdValues.lastInformation.PremiumSlu.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input blue-input">
-                        ${{ this.usdValues.lastInformation.netPremium.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input mt-4">
-                        ${{ this.usdValues.lastInformation.total.toFixed(2) }}
-                        </div>   
-                      </div>
- 
-                      <div class="inner-col">
-                        <div class="table-input blue-input">
-                          ${{  this.usdValues.newInformation.totalPremiumMovement.toFixed(2)}}
-                        </div>
-
-                        <div class="table-input blue-input">
-                          ${{  this.usdValues.newInformation.PremiumSlu.toFixed(2)}}
-                        </div>
-
-                        <div class="table-input blue-input">
-                         ${{ this.usdValues.newInformation.netPremium.toFixed(2) }}
-                        </div>
-
-                        <div class="table-input mt-4">
-                         ${{ this.usdValues.newInformation.total.toFixed(2) }}
-                        </div>  
-                      </div> 
-                
-                    </div>
-                </div>
-
-              </div>
-
               <!--Details -->
-            <div class="details-container">
-              <h3 class="">Details</h3>
+              <div class="details-container">
+                <h3 class="">Details</h3>
 
-              <div class="details-input-container  d-flex flex-wrap">
-
-                <div class="input-col-details">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepTwo.endorsementEffectiveDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
+                <div class="details-input-container d-flex flex-wrap">
+                  <div class="input-col-details">
+                    <div class="input-cont">
+                      <v-menu
+                        v-model="menuControllStepTwo.endorsementEffectiveDate"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="endorsementEffectiveDate"
+                            label="Endorment effective date"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            disabled
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
                           v-model="endorsementEffectiveDate"
-                          label="Endorment effective date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          disabled
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="endorsementEffectiveDate"
-                        @input="menuControllStepTwo.endorsementEffectiveDate = false"
-                      ></v-date-picker>
-                    </v-menu>
+                          @input="
+                            menuControllStepTwo.endorsementEffectiveDate = false
+                          "
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
                   </div>
-                </div>
 
-
-                <div class="input-col-details">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepTwo.inceptionDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
+                  <div class="input-col-details">
+                    <div class="input-cont">
+                      <v-menu
+                        v-model="menuControllStepTwo.inceptionDate"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="inceptionDate"
+                            label="Inception date"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            disabled
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
                           v-model="inceptionDate"
-                          label="Inception date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          disabled
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="inceptionDate"
-                        @input="menuControllStepTwo.inceptionDate = false"
-                      ></v-date-picker>
-                    </v-menu>
+                          @input="menuControllStepTwo.inceptionDate = false"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
                   </div>
-                </div>
 
-
-
-                <div class="input-col-details">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepTwo.movementEndDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
+                  <div class="input-col-details">
+                    <div class="input-cont">
+                      <v-menu
+                        v-model="menuControllStepTwo.movementEndDate"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="movementEndDate"
+                            label="expiry date"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            disabled
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
                           v-model="movementEndDate"
-                          label="expiry date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          disabled
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="movementEndDate"
-                        @input="menuControllStepTwo.movementEndDate = false"
-                      ></v-date-picker>
-                    </v-menu>
+                          @input="menuControllStepTwo.movementEndDate = false"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
+                  </div>
+
+                  <div class="input-col-details">
+                    <div class="input-cont">
+                      <v-menu
+                        v-model="menuControllStepTwo.premiumPaymentDate"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="premiumPaymentDate"
+                            label="Premium payment Date"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            disabled
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          v-model="premiumPaymentDate"
+                          @input="
+                            menuControllStepTwo.premiumPaymentDate = false
+                          "
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
                   </div>
                 </div>
-
-                
-                <div class="input-col-details">
-                  <div class="input-cont">
-                    <v-menu
-                      v-model="menuControllStepTwo.premiumPaymentDate"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="premiumPaymentDate"
-                          label="Premium payment Date"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          disabled
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="premiumPaymentDate"
-                        @input="menuControllStepTwo.premiumPaymentDate = false"
-                      ></v-date-picker>
-                    </v-menu>
-                  
-                  </div>
-                </div>  
-              </div>
-              <div class="input-col">
+                <div class="input-col">
                   <div class="input-cont-lg">
                     <v-select
                       v-model="clause"
@@ -415,15 +376,153 @@
                       item-text="clause"
                       :items="clauseList"
                       disabled
-                      />
+                    />
                   </div>
                 </div>
-            </div>
-              
+              </div>
+              <div class="table-container input-row justify-center">
+                <div class="table-title-space"></div>
+                <div class="title-col">
+                  <div class="col-subtitle">Total Premium Moment</div>
+                  <div class="col-subtitle">Premium SLU</div>
+                  <div class="col-subtitle">Net Premium</div>
+                  <div class="col-subtitle mt-4">Total</div>
+                </div>
+
+                <div class="table-col">
+                  <div class="table-title">Original Currency</div>
+
+                  <div class="input-row mt-4">
+                    <div class="inner-col">
+                      <div class="table-input blue-input">
+                        ${{
+                          this.originalValues.lastInformation.totalPremiumMovement.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.originalValues.lastInformation.PremiumSlu.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.originalValues.lastInformation.netPremium.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input mt-4">
+                        ${{
+                          this.originalValues.lastInformation.total.toFixed(2)
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="inner-col">
+                      <div class="table-input blue-input">
+                        ${{
+                          this.originalValues.newInformation.totalPremiumMovement.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.originalValues.newInformation.PremiumSlu.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.originalValues.newInformation.netPremium.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input mt-4">
+                        ${{
+                          this.originalValues.newInformation.total.toFixed(2)
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="table-col">
+                  <div class="table-title">USD</div>
+                  <div class="input-row mt-4">
+                    <div class="inner-col">
+                      <div class="table-input blue-input">
+                        ${{
+                          this.usdValues.lastInformation.totalPremiumMovement.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.usdValues.lastInformation.PremiumSlu.toFixed(2)
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.usdValues.lastInformation.netPremium.toFixed(2)
+                        }}
+                      </div>
+
+                      <div class="table-input mt-4">
+                        ${{ this.usdValues.lastInformation.total.toFixed(2) }}
+                      </div>
+                    </div>
+
+                    <div class="inner-col">
+                      <div class="table-input blue-input">
+                        ${{
+                          this.usdValues.newInformation.totalPremiumMovement.toFixed(
+                            2
+                          )
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.usdValues.newInformation.PremiumSlu.toFixed(2)
+                        }}
+                      </div>
+
+                      <div class="table-input blue-input">
+                        ${{
+                          this.usdValues.newInformation.netPremium.toFixed(2)
+                        }}
+                      </div>
+
+                      <div class="table-input mt-4">
+                        ${{ this.usdValues.newInformation.total.toFixed(2) }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </v-stepper-content>
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
+              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+                <EndorsementReportCompleteTable :report="cleanReport" />
+              </div>
               <div
                 class="files-submit flex justify-content-start align-items-start align-content-start"
               >
@@ -450,12 +549,22 @@
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments"  v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
-        <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)"
-          :disabled="validationFirstStep">
+        <v-btn
+          :outlined="e1 == 3 ? false : true"
+          rounded
+          large
+          :text="e1 == 3 ? true : false"
+          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 3 ? 'none' : '#003D6D'"
+          @click="goNext(e1)"
+          :disabled="validationFirstStep"
+        >
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -474,12 +583,14 @@ import AppFile from "../../components/AppFile.vue";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
+
 /* services */
 import { getFiles } from "../../services/mock-files.service";
-import PaymentService from '@/modules/home/services/payments.service'
+import PaymentService from "@/modules/home/services/payments.service";
 
 //Clases
-import { ChangeofPeriodAutoCalcs } from '../models/ChangeOfPeriod'
+import { ChangeofPeriodAutoCalcs } from "../models/ChangeOfPeriod";
 import EndorsementService from "../../services/endorsement.service";
 import AccountCompleteService from "@/modules/home/services/account-complete.service";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
@@ -492,6 +603,7 @@ export default {
     DocumentsEndorsement,
     InputDaysDiference,
     EndorsementDocuments,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "Inclusion Risk" },
@@ -500,85 +612,87 @@ export default {
       type: Function,
     },
     dateSaved: { type: String },
-    showInfoEndorsement: {type: Boolean},
-    isFirstEndorsement: {type: Boolean},
-    backToCreateEndorsement:  {
+    showInfoEndorsement: { type: Boolean },
+    isFirstEndorsement: { type: Boolean },
+    backToCreateEndorsement: {
       type: Function,
     },
-    listendorsement: { type: Array}
+    listendorsement: { type: Array },
   },
   data() {
     return {
       expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
-      attrs:{},
-      on:{},
-      isMadeCals:false,
+      attrs: {},
+      on: {},
+      isMadeCals: false,
       e1: 1,
-      sent:false,
+      sent: false,
       subscriptionId: this.$route.params.id,
-      errorsDates:{
-        endorsementEffectiveDate:false,
-        movementEndDate:false,
+      errorsDates: {
+        endorsementEffectiveDate: false,
+        movementEndDate: false,
         inceptionDate: false,
         inceptionDateTwo: false,
-        validDate: false
+        validDate: false,
       },
-      menuControllStepOne : {
-        movementEndDate:false,
-        endorsementEffectiveDate: false,
-        InceptionDate: false,
-        premiumPaymentDate: false, 
-      },
-      menuControllStepTwo : {
-        movementEndDate:false,
+      menuControllStepOne: {
+        movementEndDate: false,
         endorsementEffectiveDate: false,
         InceptionDate: false,
         premiumPaymentDate: false,
-        clause:false
       },
-      originalValues:{
-          lastInformation:{
-            totalPremiumMovement:0,
-            PremiumSlu:0,
-            netPremium:0,
-            total:0
-          },
-          newInformation:{
-            totalPremiumMovement:0,
-            PremiumSlu:0,
-            netPremium:0,
-            total:0
-          } 
+      menuControllStepTwo: {
+        movementEndDate: false,
+        endorsementEffectiveDate: false,
+        InceptionDate: false,
+        premiumPaymentDate: false,
+        clause: false,
       },
-      usdValues:{
-        lastInformation:{
-            totalPremiumMovement:0,
-            PremiumSlu:0,
-            netPremium:0,
-            total:0
-          },
-          newInformation:{
-            totalPremiumMovement:0,
-            PremiumSlu:0,
-            netPremium:0,
-            total:0
-          } 
+      originalValues: {
+        lastInformation: {
+          totalPremiumMovement: 0,
+          PremiumSlu: 0,
+          netPremium: 0,
+          total: 0,
+        },
+        newInformation: {
+          totalPremiumMovement: 0,
+          PremiumSlu: 0,
+          netPremium: 0,
+          total: 0,
+        },
+      },
+      usdValues: {
+        lastInformation: {
+          totalPremiumMovement: 0,
+          PremiumSlu: 0,
+          netPremium: 0,
+          total: 0,
+        },
+        newInformation: {
+          totalPremiumMovement: 0,
+          PremiumSlu: 0,
+          netPremium: 0,
+          total: 0,
+        },
       },
       detail: 20,
-      clauseList:[],
-      files: [{
+      clauseList: [],
+      files: [
+        {
           fileId: 1,
-          fileName: 'Change of period',
-          fileDownloadLink: '',
+          fileName: "Change of period",
+          fileDownloadLink: "",
           loaded: false,
           error: false,
-          errorMessage: 'Could not load the file',
+          errorMessage: "Could not load the file",
           loading: true,
-          fileType: 'xlsx',
-          fileTypeMessage: 'Download',
-      }],
+          fileType: "xlsx",
+          fileTypeMessage: "Download",
+        },
+      ],
       endorsementDocuments: [],
-      endorsmentReporData:{},
+      endorsmentReporData: {},
       endDateError: false,
       clause: this.accountComplete.cartera.clausula,
       effectiveDateError: false,
@@ -588,78 +702,145 @@ export default {
       )
         .toISOString()
         .substr(0, 10),
-      endorsementEffectiveDate:  this.dateSaved,
+      endorsementEffectiveDate: this.dateSaved,
       //nuevo valor para guardar el expiry date
-      movementEndDate:  this.initialDateValue(),
+      movementEndDate: this.initialDateValue(),
       currentMovementEndDate: new Date(
         new Date(this.accountComplete.deductibles.expiryDate)
-        .toISOString()
-        .substr(0, 10),
+          .toISOString()
+          .substr(0, 10)
       )
         .toISOString()
         .substr(0, 10),
-      inceptionDate:  this.initialDateValue(),
-      premiumPaymentDate:   new Date().toISOString().substr(0, 10),
+      inceptionDate: this.initialDateValue(),
+      premiumPaymentDate: new Date().toISOString().substr(0, 10),
       lastAccountInformacion: {},
       accountCompleteList: [],
       dataOldEndorsements: {},
-      buttonTitle: 'Next',
-      buttonTitleBack: 'Cancel',
-    }
+      buttonTitle: "Next",
+      buttonTitleBack: "Cancel",
+      cartera: {},
+    };
   },
   async beforeMount() {
-    this.el = 1
+    this.el = 1;
     this.files = await getFiles();
-    this.clauseList = await PaymentService.getClauses()   
-    this.lastAccountInformacion = await AccountCompleteService.getFirstAccountCompleteByIdSubscription(this.subscriptionId)
+    this.clauseList = await PaymentService.getClauses();
+    this.lastAccountInformacion =
+      await AccountCompleteService.getFirstAccountCompleteByIdSubscription(
+        this.subscriptionId
+      );
 
     // this.accountCompleteList = await AccountCompleteService.getAllAccountComplete(this.subscriptionId)
     // console.log({accountCompleteList: this.accountCompleteList})
   },
-  mounted(){
-    // this.lastAccountInformacion = {...this.accountComplete}
-    const effective =  new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10)
-    const expiry =  new Date(this.accountComplete.deductibles.expiryDate).toISOString().substring(0,10)
+  mounted() {
+    this.initializeDates();
+  },
+  computed: {
+    currentInceptionDateFormatted() {
+      if (!this.accountComplete?.deductibles?.inceptionDate) return "";
+      return new Date(
+        this.accountComplete.deductibles.inceptionDate
+      ).toLocaleDateString("en-US");
+    },
 
-    // //inicializacion de la fechas de las fechas a cambiar
-    this.effectiveDate = effective
-    this.expiryDate = expiry
-    this.inceptionDate = effective
-    this.movementEndDate = expiry
+    currentExpiryDateFormatted() {
+      if (!this.accountComplete?.deductibles?.expiryDate) return "";
+      return new Date(
+        this.accountComplete.deductibles.expiryDate
+      ).toLocaleDateString("en-US");
+    },
+
+    currentPolicyDays() {
+      if (
+        !this.accountComplete?.deductibles?.inceptionDate ||
+        !this.accountComplete?.deductibles?.expiryDate
+      )
+        return 0;
+
+      const start = new Date(this.accountComplete.deductibles.inceptionDate);
+      const end = new Date(this.accountComplete.deductibles.expiryDate);
+      return Math.round((end - start) / (1000 * 60 * 60 * 24));
+    },
+
+    validationFirstStep() {
+      const showInfoEndorsement = this.showInfoEndorsement;
+      const clause = Boolean(this.clause);
+      const hasValidDates =
+        this.endorsementEffectiveDate &&
+        this.inceptionDate &&
+        this.movementEndDate;
+      const noDateErrors = !Object.values(this.errorsDates).some(
+        (error) => error
+      );
+
+      return !(showInfoEndorsement && clause && hasValidDates && noDateErrors);
+    },
+    cleanReport() {
+      if (
+        !this.endorsmentReporData ||
+        Object.keys(this.endorsmentReporData).length === 0
+      ) {
+        return {};
+      }
+
+      const carteraData = {
+        premiumPaymentDate:
+          this.cartera?.premiumPaymentDate || this.premiumPaymentDate,
+        clausula: this.cartera?.clausula || this.clause,
+        ...(this.cartera || {}),
+      };
+
+      return {
+        endorsmentReporData: this.endorsmentReporData,
+        cartera: carteraData,
+      };
+    },
   },
   methods: {
-    initialDateValue(){
-      const  newDate = new Date(  Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000)
-      .toISOString()
-      .substr(0, 10)
+    initializeDates() {
+      if (!this.accountComplete?.deductibles) return;
 
-      return newDate
+      const currentInception = this.accountComplete.deductibles.inceptionDate;
+      const currentExpiry = this.accountComplete.deductibles.expiryDate;
+
+      this.inceptionDate = new Date(currentInception)
+        .toISOString()
+        .substr(0, 10);
+      this.movementEndDate = new Date(currentExpiry)
+        .toISOString()
+        .substr(0, 10);
+
+      if (this.dateSaved) {
+        this.endorsementEffectiveDate = this.dateSaved;
+      }
+    },
+    initialDateValue() {
+      const newDate = new Date(
+        Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
+
+      return newDate;
     },
 
     nextStep() {
-       if(this.e1=== 1){
-        this.ExpiryDateValidation('', this.inceptionDate)
-        if (!this.endorsementEffectiveDate){
-          this.errorsDates['validDate'] = true
+      if (this.e1 === 1) {
+        const isValid = this.validateAllDates();
+
+        if (isValid) {
+          this.e1 = 2;
+          this.sent = false;
+        } else {
+          this.sent = true;
         }
-          this.sent = true
-          let changeStep = true
-          for (const property in this.errorsDates) {
-             if(this.errorsDates[property] === true) changeStep = false
-          }
-          if(changeStep === true) {
-            this.e1 = 2
-            this.sent = false
-          }
-          return 
-       }
+        return;
+      }
     },
 
-
-    calcualteTotalPremiumMoments() { 
-     
-      
-    },
+    calcualteTotalPremiumMoments() {},
     async prevStep() {
       console.log("prev step");
     },
@@ -681,34 +862,37 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files
+      this.endorsementDocuments = files;
     },
 
     async submit() {
       this.e1 = 1;
       // Obteniendo premium payment date
-      const premiumPaymentDate = new Date(this.premiumPaymentDate).toISOString();
+      const premiumPaymentDate = new Date(
+        this.premiumPaymentDate
+      ).toISOString();
 
       // Obteniendo la clausula
       const clause = this.clause;
 
       // Guardando los datos de cartera nuevos
       this.cartera = {
-          premiumPaymentDate,
-          clausula: clause,
-       };
-        const accountCompleteResponse = await AccountCompleteService.addAccountComplete(this.subscriptionId, {
+        premiumPaymentDate,
+        clausula: clause,
+      };
+      const accountCompleteResponse =
+        await AccountCompleteService.addAccountComplete(this.subscriptionId, {
           ...this.accountComplete,
-        deductibles: this.accountComplete.deductibles,
-        tiv: this.accountComplete.tiv,
-        netPremium: this.accountComplete.net_premium,
-        additionalInfo: this.accountComplete.additional_info,
-        technicalConditions: this.accountComplete.technical_conditions,
-        cartera:{
-          ...this.accountComplete.cartera,
-          ...this.cartera,  
-        },
-      });
+          deductibles: this.accountComplete.deductibles,
+          tiv: this.accountComplete.tiv,
+          netPremium: this.accountComplete.net_premium,
+          additionalInfo: this.accountComplete.additional_info,
+          technicalConditions: this.accountComplete.technical_conditions,
+          cartera: {
+            ...this.accountComplete.cartera,
+            ...this.cartera,
+          },
+        });
 
       await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
@@ -717,83 +901,98 @@ export default {
         accountId: accountCompleteResponse.id,
         effectiveDate: this.effectiveDate,
         report: {
-          endorsmentReporData:{
+          endorsmentReporData: {
             ...this.endorsmentReporData,
-            additionalInfo:{},
+            additionalInfo: {},
           },
-          cartera:{
+          cartera: {
             ...this.accountComplete.cartera,
-            ...this.cartera,  
+            ...this.cartera,
           },
         },
         files: this.endorsementDocuments,
       });
 
-     await this.backToCreateEndorsement();
+      await this.backToCreateEndorsement();
     },
 
     /**
      *  @typedef {object} validateDatesParams
      *  @property {Date}  lowerDate fecga que menor
      *  @property {Date} higherDate fecha que debe ser mayor
-     *  @property {string} error proiedad del object error 
+     *  @property {string} error proiedad del object error
      */
 
     /**
-     * controa  
-     * @param {*} event 
+     * controa
+     * @param {*} event
      * @param {validateDatesParams} params
      */
-    validateDates(event,{
-       lowerDate,
-       higherDate,
-       error
-    }) {
-      if (Date.parse(lowerDate) < Date.parse(higherDate)) {
+    validateDates(event, { lowerDate, higherDate, error }) {
+      const lowerTime = Date.parse(lowerDate);
+      const higherTime = Date.parse(higherDate);
+
+      if (lowerTime < higherTime) {
         this.errorsDates[error] = false;
-        if (Date.parse(higherDate) == Date.parse(this.endorsementEffectiveDate)) {
-         this.errorsDates['inceptionDate'] = true;
-       } else {
-        this.errorsDates['inceptionDate'] = false;
-       }
+
+        if (
+          Date.parse(this.inceptionDate) >= Date.parse(this.movementEndDate)
+        ) {
+          this.errorsDates["inceptionDate"] = true;
+        } else {
+          this.errorsDates["inceptionDate"] = false;
+        }
       } else {
         this.errorsDates[error] = true;
-        if (Date.parse(higherDate) == Date.parse(this.endorsementEffectiveDate)) {
-         this.errorsDates['inceptionDate'] = true;
-       } else {
-        this.errorsDates['inceptionDate'] = false;
-       }
       }
     },
-    validfields(event){
-      return 0
+    validfields(event) {
+      return 0;
     },
     ExpiryDateValidation(event, incomingDate) {
-      if (Date.parse(incomingDate) == Date.parse(this.movementEndDate)) {
-        this.errorsDates['inceptionDate'] = true;
+      if (Date.parse(incomingDate) >= Date.parse(this.movementEndDate)) {
+        this.errorsDates["inceptionDate"] = true;
       } else {
-        this.errorsDates['inceptionDate'] = false;
-      //   if (Date.parse(incomingDate) < Date.parse(this.currentMovementEndDate)) {
-      //     this.errorsDates['inceptionDateTwo'] = true;
-      // } else {
-      //     this.errorsDates['inceptionDateTwo'] = false;
-      // }
+        this.errorsDates["inceptionDate"] = false;
       }
     },
     async endorsementDateValidation(event, incomingDate) {
-      if (
-        Date.parse(incomingDate) >=
-        Date.parse(this.movementEndDate)
-      ) {
-        this.errorsDates['endorsementEffectiveDate'] = true;
+      if (Date.parse(incomingDate) >= Date.parse(this.movementEndDate)) {
+        this.errorsDates["endorsementEffectiveDate"] = true;
       } else {
-        this.errorsDates['endorsementEffectiveDate'] = false;
-        await this.changeDateEndorsement(incomingDate)
+        this.errorsDates["endorsementEffectiveDate"] = false;
+        await this.changeDateEndorsement(incomingDate);
       }
     },
+    validateAllDates() {
+      const endorsementDate = Date.parse(this.endorsementEffectiveDate);
+      const inceptionDate = Date.parse(this.inceptionDate);
+      const expiryDate = Date.parse(this.movementEndDate);
 
+      Object.keys(this.errorsDates).forEach((key) => {
+        this.errorsDates[key] = false;
+      });
+
+      if (!this.endorsementEffectiveDate) {
+        this.errorsDates["validDate"] = true;
+      }
+
+      if (endorsementDate >= expiryDate) {
+        this.errorsDates["endorsementEffectiveDate"] = true;
+      }
+
+      if (inceptionDate >= expiryDate) {
+        this.errorsDates["inceptionDate"] = true;
+      }
+
+      if (expiryDate <= endorsementDate) {
+        this.errorsDates["movementEndDate"] = true;
+      }
+
+      return !Object.values(this.errorsDates).some((error) => error);
+    },
     goNext(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.nextStep();
       } else if (e1 == 2) {
@@ -804,7 +1003,7 @@ export default {
     },
 
     goBack(e1) {
-      this.$refs.targetRef.scrollIntoView({ behavior: 'smooth' });
+      this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
@@ -814,50 +1013,89 @@ export default {
       }
     },
   },
-  watch:{ 
-    e1: async function(){
+  watch: {
+    e1: async function () {
       if (this.e1 === 1) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Cancel';
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Cancel";
       }
 
-      if(this.e1 === 2 && this.isMadeCals == false) {
-        this.buttonTitle = 'Next';
-        this.buttonTitleBack = 'Return';
-        let accDamage = 0
-        let accBi = 0
-        let accStocks = 0
-        let accTotalpremium = 0
-        let accDamageUsd = 0
-        let accBiUsd = 0
-        let accStocksUsd = 0
-        let accTotalpremiumUsd = 0
-        let accTotalPremiumObj = {}
+      if (this.e1 === 2 && this.isMadeCals == false) {
+        this.buttonTitle = "Next";
+        this.buttonTitleBack = "Return";
+        let accDamage = 0;
+        let accBi = 0;
+        let accStocks = 0;
+        let accTotalpremium = 0;
+        let accDamageUsd = 0;
+        let accBiUsd = 0;
+        let accStocksUsd = 0;
+        let accTotalpremiumUsd = 0;
+        let accTotalPremiumObj = {};
 
-        if (!this.isFirstEndorsement) {  
-            const effetiveDate = new Date(this.lastAccountInformacion.deductibles.inceptionDate)
-            const expiryDate = new Date(this.lastAccountInformacion.deductibles.expiryDate)
-            const endormenteffetiveDate = new Date(this.endorsementEffectiveDate)
-            const movementEndDate = new Date(this.currentMovementEndDate)
+        if (!this.isFirstEndorsement) {
+          const effetiveDate = new Date(
+            this.lastAccountInformacion.deductibles.inceptionDate
+          );
+          const expiryDate = new Date(
+            this.lastAccountInformacion.deductibles.expiryDate
+          );
+          const endormenteffetiveDate = new Date(this.endorsementEffectiveDate);
+          const movementEndDate = new Date(this.currentMovementEndDate);
 
-            const resultInital  = Math.round(Math.abs( effetiveDate - expiryDate) /86400000) 
-            const resultEndorment = Math.round(Math.abs( endormenteffetiveDate - movementEndDate) /86400000)
+          const resultInital = Math.round(
+            Math.abs(effetiveDate - expiryDate) / 86400000
+          );
+          const resultEndorment = Math.round(
+            Math.abs(endormenteffetiveDate - movementEndDate) / 86400000
+          );
 
-            accBi += this.lastAccountInformacion.net_premium.originalValues.biSluShare / resultInital * resultEndorment - this.lastAccountInformacion.net_premium.originalValues.biSluShare || 0
-            accBiUsd += this.lastAccountInformacion.net_premium.usdValues.biSluShare / resultInital * resultEndorment - this.lastAccountInformacion.net_premium.usdValues.biSluShare || 0
-            accDamage += this.lastAccountInformacion.net_premium.originalValues.damageSluShare / resultInital * resultEndorment -  this.lastAccountInformacion.net_premium.originalValues.damageSluShare || 0
-            accDamageUsd += this.lastAccountInformacion.net_premium.usdValues.damageSluShare / resultInital * resultEndorment - this.lastAccountInformacion.net_premium.usdValues.damageSluShare || 0
-            accStocks += this.lastAccountInformacion.net_premium.originalValues.stocksSluShare / resultInital * resultEndorment - this.lastAccountInformacion.net_premium.originalValues.stocksSluShare || 0
-            accStocksUsd += this.lastAccountInformacion.net_premium.usdValues.stocksSluShare / resultInital * resultEndorment - this.lastAccountInformacion.net_premium.usdValues.stocksSluShare || 0
+          accBi +=
+            (this.lastAccountInformacion.net_premium.originalValues.biSluShare /
+              resultInital) *
+              resultEndorment -
+              this.lastAccountInformacion.net_premium.originalValues
+                .biSluShare || 0;
+          accBiUsd +=
+            (this.lastAccountInformacion.net_premium.usdValues.biSluShare /
+              resultInital) *
+              resultEndorment -
+              this.lastAccountInformacion.net_premium.usdValues.biSluShare || 0;
+          accDamage +=
+            (this.lastAccountInformacion.net_premium.originalValues
+              .damageSluShare /
+              resultInital) *
+              resultEndorment -
+              this.lastAccountInformacion.net_premium.originalValues
+                .damageSluShare || 0;
+          accDamageUsd +=
+            (this.lastAccountInformacion.net_premium.usdValues.damageSluShare /
+              resultInital) *
+              resultEndorment -
+              this.lastAccountInformacion.net_premium.usdValues
+                .damageSluShare || 0;
+          accStocks +=
+            (this.lastAccountInformacion.net_premium.originalValues
+              .stocksSluShare /
+              resultInital) *
+              resultEndorment -
+              this.lastAccountInformacion.net_premium.originalValues
+                .stocksSluShare || 0;
+          accStocksUsd +=
+            (this.lastAccountInformacion.net_premium.usdValues.stocksSluShare /
+              resultInital) *
+              resultEndorment -
+              this.lastAccountInformacion.net_premium.usdValues
+                .stocksSluShare || 0;
 
           this.listendorsement.map(async (endosos, index) => {
-          // if (index == 0){
+            // if (index == 0){
             // const effetiveDate = new Date(endosos.report.endorsmentReporData?.deductibles.inceptionDate)
             // const expiryDate = new Date(endosos.report.endorsmentReporData?.deductibles.expiryDate)
             // const endormenteffetiveDate = new Date(this.effectiveDate)
             // const movementEndDate = new Date(this.currentMovementEndDate)
 
-            // const resultInital  = Math.round(Math.abs( effetiveDate - expiryDate) /86400000) 
+            // const resultInital  = Math.round(Math.abs( effetiveDate - expiryDate) /86400000)
             // const resultEndorment = Math.round(Math.abs( endormenteffetiveDate - movementEndDate) /86400000)
 
             // biBrokerage += endosos.report.endorsmentReporData?.netPremium.biBrokerage / resultInital * resultEndorment - endosos.report.endorsmentReporData.netPremium.biBrokerage || 0
@@ -867,216 +1105,315 @@ export default {
             // stocksBrokerage += endosos.report.endorsmentReporData?.netPremium.stocksBrokerage / resultInital * resultEndorment - endosos.report.endorsmentReporData.netPremium.stocksBrokerage || 0
             // stocksBrokerageUsd += endosos.report.endorsmentReporData?.netPremiumUSD.stocksBrokerage / resultInital * resultEndorment - endosos.report.endorsmentReporData.netPremiumUSD.stocksBrokerage || 0
 
-          // } else {
-          if(endosos.report.endorsmentReporData){
-            const endormenteffetiveDate = new Date(this.endorsementEffectiveDate)
-            const movementEndDate = new Date(this.currentMovementEndDate)
-            const currentEndormenteffetiveDate = new Date(endosos.effective_date) 
-            const currentMovementEndDate = new Date(endosos.report.endorsmentReporData?.deductibles.expiryDate)
-            const currentResultEndorment = Math.round(Math.abs( currentEndormenteffetiveDate - currentMovementEndDate) /86400000) ||0
+            // } else {
+            if (endosos.report.endorsmentReporData) {
+              const endormenteffetiveDate = new Date(
+                this.endorsementEffectiveDate
+              );
+              const movementEndDate = new Date(this.currentMovementEndDate);
+              const currentEndormenteffetiveDate = new Date(
+                endosos.effective_date
+              );
+              const currentMovementEndDate = new Date(
+                endosos.report.endorsmentReporData?.deductibles.expiryDate
+              );
+              const currentResultEndorment =
+                Math.round(
+                  Math.abs(
+                    currentEndormenteffetiveDate - currentMovementEndDate
+                  ) / 86400000
+                ) || 0;
 
-            const result = currentEndormenteffetiveDate > endormenteffetiveDate ?  Math.round(Math.abs( movementEndDate - currentEndormenteffetiveDate) /86400000): Math.round(Math.abs( movementEndDate - endormenteffetiveDate) /86400000)
-            if (currentResultEndorment && currentResultEndorment > 0){
-            accBi += endosos.report.endorsmentReporData?.premium.businessInterruption / currentResultEndorment * result - endosos.report.endorsmentReporData?.premium.businessInterruption ||0
-            accBiUsd += endosos.report.endorsmentReporData?.premium.businessInterruptionUsd / currentResultEndorment * result - endosos.report.endorsmentReporData?.premium.businessInterruptionUsd ||0
-            accDamage += endosos.report.endorsmentReporData?.premium.propertyDamage / currentResultEndorment * result - endosos.report.endorsmentReporData?.premium.propertyDamage||0
-            accDamageUsd += endosos.report.endorsmentReporData?.premium.propertyDamageUsd / currentResultEndorment * result - endosos.report.endorsmentReporData?.premium.propertyDamageUsd||0
-            accStocks += endosos.report.endorsmentReporData?.premium.stock / currentResultEndorment * result - endosos.report.endorsmentReporData?.premium.stock||0
-            accStocksUsd += endosos.report.endorsmentReporData?.premium.stockUsd / currentResultEndorment * result - endosos.report.endorsmentReporData?.premium.stockUsd||0
+              const result =
+                currentEndormenteffetiveDate > endormenteffetiveDate
+                  ? Math.round(
+                      Math.abs(movementEndDate - currentEndormenteffetiveDate) /
+                        86400000
+                    )
+                  : Math.round(
+                      Math.abs(movementEndDate - endormenteffetiveDate) /
+                        86400000
+                    );
+              if (currentResultEndorment && currentResultEndorment > 0) {
+                accBi +=
+                  (endosos.report.endorsmentReporData?.premium
+                    .businessInterruption /
+                    currentResultEndorment) *
+                    result -
+                    endosos.report.endorsmentReporData?.premium
+                      .businessInterruption || 0;
+                accBiUsd +=
+                  (endosos.report.endorsmentReporData?.premium
+                    .businessInterruptionUsd /
+                    currentResultEndorment) *
+                    result -
+                    endosos.report.endorsmentReporData?.premium
+                      .businessInterruptionUsd || 0;
+                accDamage +=
+                  (endosos.report.endorsmentReporData?.premium.propertyDamage /
+                    currentResultEndorment) *
+                    result -
+                    endosos.report.endorsmentReporData?.premium
+                      .propertyDamage || 0;
+                accDamageUsd +=
+                  (endosos.report.endorsmentReporData?.premium
+                    .propertyDamageUsd /
+                    currentResultEndorment) *
+                    result -
+                    endosos.report.endorsmentReporData?.premium
+                      .propertyDamageUsd || 0;
+                accStocks +=
+                  (endosos.report.endorsmentReporData?.premium.stock /
+                    currentResultEndorment) *
+                    result -
+                    endosos.report.endorsmentReporData?.premium.stock || 0;
+                accStocksUsd +=
+                  (endosos.report.endorsmentReporData?.premium.stockUsd /
+                    currentResultEndorment) *
+                    result -
+                    endosos.report.endorsmentReporData?.premium.stockUsd || 0;
+              }
+
+              // }
             }
-
-            // }
-          }
-          })
+          });
           accTotalPremiumObj = {
             accBi: accBi,
             accDamage: accDamage,
             accStocks: accStocks,
             accBiUsd: accBiUsd,
             accDamageUsd: accDamageUsd,
-            accStocksUsd: accStocksUsd
+            accStocksUsd: accStocksUsd,
+          };
+
+          this.dataOldEndorsements = { ...accTotalPremiumObj };
+        }
+
+        const dataOldEndorsements = {
+          accDamage,
+          accBi,
+          accStocks,
+          accTotalpremium,
+        };
+        const premium = this.lastAccountInformacion.tiv.premium;
+        const deductibles = this.lastAccountInformacion.deductibles;
+        const sluline =
+          this.lastAccountInformacion.tiv.boundInsurableProp.sluLine;
+
+        console.log(this.lastAccountInformacion);
+
+        const damage = this.lastAccountInformacion.tiv.premium.propertyDamage;
+        const bi = this.lastAccountInformacion.tiv.premium.businessInterruption;
+        const stocks = this.lastAccountInformacion.tiv.premium.stock;
+
+        const damageUsd =
+          this.lastAccountInformacion.tiv.premium.propertyDamageUsd;
+        const biUsd =
+          this.lastAccountInformacion.tiv.premium.businessInterruptionUsd;
+        const stocksUsd = this.lastAccountInformacion.tiv.premium.stockUsd;
+
+        ///nueva forma de caculcar el net-premium origina currency
+        const results = await ChangeofPeriodAutoCalcs(
+          premium,
+          deductibles,
+          sluline,
+          false,
+          this.dataOldEndorsements,
+          !this.isFirstEndorsement,
+          {
+            effetiveDate: this.effectiveDate,
+            expiryDate: this.expiryDate,
+            endormenteffetiveDate: this.endorsementEffectiveDate,
+            movementEndDate: this.movementEndDate,
           }
+        );
 
-          this.dataOldEndorsements = {...accTotalPremiumObj}
-        }
+        ///nueva forma de caculcar el net-premium  en dolares
+        const resultsUSD = await ChangeofPeriodAutoCalcs(
+          premium,
+          deductibles,
+          sluline,
+          true,
+          this.dataOldEndorsements,
+          !this.isFirstEndorsement,
+          {
+            effetiveDate: this.effectiveDate,
+            expiryDate: this.expiryDate,
+            endormenteffetiveDate: this.endorsementEffectiveDate,
+            movementEndDate: this.movementEndDate,
+          }
+        );
 
-        const dataOldEndorsements = {accDamage,accBi,accStocks,accTotalpremium}
-         const premium = this.lastAccountInformacion.tiv.premium
-         const deductibles =  this.lastAccountInformacion.deductibles
-         const  sluline = this.lastAccountInformacion.tiv.boundInsurableProp.sluLine    
-         
-         console.log(this.lastAccountInformacion)
-         
-         const damage = this.lastAccountInformacion.tiv.premium.propertyDamage
-         const bi = this.lastAccountInformacion.tiv.premium.businessInterruption
-         const stocks = this.lastAccountInformacion.tiv.premium.stock
-         
-         const damageUsd = this.lastAccountInformacion.tiv.premium.propertyDamageUsd
-         const biUsd = this.lastAccountInformacion.tiv.premium.businessInterruptionUsd
-         const stocksUsd = this.lastAccountInformacion.tiv.premium.stockUsd
+        //premium que sera premiom Moment
 
-         ///nueva forma de caculcar el net-premium origina currency
-         const results =  await ChangeofPeriodAutoCalcs(premium, deductibles, sluline, false, this.dataOldEndorsements, !this.isFirstEndorsement, {
-           effetiveDate:this.effectiveDate,
-           expiryDate:this.expiryDate,
-           endormenteffetiveDate: this.endorsementEffectiveDate,
-           movementEndDate:this.movementEndDate
-        })  
+        const totalPremiumMovement = damage + bi + stocks;
+        this.originalValues.lastInformation.totalPremiumMovement =
+          totalPremiumMovement;
 
-         ///nueva forma de caculcar el net-premium  en dolares
-        const resultsUSD =  await ChangeofPeriodAutoCalcs(premium, deductibles, sluline, true, this.dataOldEndorsements, !this.isFirstEndorsement,{
-           effetiveDate:this.effectiveDate,
-           expiryDate:this.expiryDate,
-           endormenteffetiveDate: this.endorsementEffectiveDate,
-           movementEndDate:this.movementEndDate
-        })
-  
-      //premium que sera premiom Moment
-    
-       const totalPremiumMovement = (damage + bi + stocks)
-       this.originalValues.lastInformation.totalPremiumMovement = totalPremiumMovement
+        const totalPremiumMovementDamge = !this.isFirstEndorsement
+          ? results.damageSluShare()
+          : (damage / results.daysResult.endormentsDays) *
+              results.daysResult.initialDays -
+            damage;
+        const totalPremiumMovementBi = !this.isFirstEndorsement
+          ? results.biSluShare()
+          : (bi / results.daysResult.endormentsDays) *
+              results.daysResult.initialDays -
+            bi;
+        const totalPremiumMovementStocks = !this.isFirstEndorsement
+          ? results.stocksSluShare()
+          : (stocks / results.daysResult.endormentsDays) *
+              results.daysResult.initialDays -
+            stocks;
+        const newTotalPremiumMovement =
+          totalPremiumMovementDamge +
+          totalPremiumMovementBi +
+          totalPremiumMovementStocks;
+        this.originalValues.newInformation.totalPremiumMovement =
+          newTotalPremiumMovement;
 
-       const totalPremiumMovementDamge = !this.isFirstEndorsement? results.damageSluShare() : damage / results.daysResult.endormentsDays * results.daysResult.initialDays - damage
-       const totalPremiumMovementBi = !this.isFirstEndorsement? results.biSluShare() : bi / results.daysResult.endormentsDays * results.daysResult.initialDays - bi
-       const totalPremiumMovementStocks = !this.isFirstEndorsement? results.stocksSluShare() : stocks / results.daysResult.endormentsDays * results.daysResult.initialDays -stocks
-       const newTotalPremiumMovement = (totalPremiumMovementDamge + totalPremiumMovementBi + totalPremiumMovementStocks)
-       this.originalValues.newInformation.totalPremiumMovement = newTotalPremiumMovement
-         console.log('--------->', totalPremiumMovementDamge)
-         console.log('--------->', totalPremiumMovementBi)
-         console.log('--------->', totalPremiumMovementStocks)
+        //premum SLU
+        this.originalValues.lastInformation.PremiumSlu =
+          this.lastAccountInformacion.net_premium.originalValues.sluShareTotal;
+        this.originalValues.newInformation.PremiumSlu =
+          results.data.sluShareTotal;
 
-       //premum SLU
-       this.originalValues.lastInformation.PremiumSlu = this.lastAccountInformacion.net_premium.originalValues.sluShareTotal
-       this.originalValues.newInformation.PremiumSlu = results.data.sluShareTotal
+        //informacion netPremium
+        this.originalValues.lastInformation.netPremium =
+          this.lastAccountInformacion.net_premium.originalValues.netTotal;
+        this.originalValues.newInformation.netPremium = results.data.netTotal;
 
+        //totales
+        this.originalValues.lastInformation.total =
+          totalPremiumMovement +
+          this.lastAccountInformacion.net_premium.originalValues.sluShareTotal +
+          this.lastAccountInformacion.net_premium.originalValues.netTotal;
 
-      //informacion netPremium 
-       this.originalValues.lastInformation.netPremium = this.lastAccountInformacion.net_premium.originalValues.netTotal
-       this.originalValues.newInformation.netPremium = results.data.netTotal
+        this.originalValues.newInformation.total =
+          newTotalPremiumMovement +
+          results.data.sluShareTotal +
+          results.data.netTotal;
 
-      //totales
-      this.originalValues.lastInformation.total = (
-      totalPremiumMovement + 
-      this.lastAccountInformacion.net_premium.originalValues.sluShareTotal + 
-      this.lastAccountInformacion.net_premium.originalValues.netTotal
-      )
-       
-      this.originalValues.newInformation.total = (
-      newTotalPremiumMovement + 
-      results.data.sluShareTotal + 
-      results.data.netTotal
-      )
-      
-      //valres pasador pero ahora su valor en dolares
-       
+        //valres pasador pero ahora su valor en dolares
 
-       //informacion pasada del  premium  que toma el lugar de totalPremiumMoment
-    
-       const totalPremiumMovementUsd = (damageUsd + biUsd + stocksUsd)
-       this.usdValues.lastInformation.totalPremiumMovement = totalPremiumMovementUsd
+        //informacion pasada del  premium  que toma el lugar de totalPremiumMoment
 
-       //la nueva informacion del  premium  que toma el lugar de totalPremiumMoment
-       const totalPremiumMovementDamgeUsd = !this.isFirstEndorsement? resultsUSD.damageSluShare() : damageUsd / results.daysResult.result
-       const totalPremiumMovementBiUsd = !this.isFirstEndorsement? resultsUSD.biSluShare() : biUsd / results.daysResult.result
-       const totalPremiumMovementStocksUsd = !this.isFirstEndorsement? resultsUSD.stocksSluShare() : stocksUsd / results.daysResult.result
-       const newTotalPremiumMovementUsd = (totalPremiumMovementDamgeUsd + totalPremiumMovementBiUsd + totalPremiumMovementStocksUsd)
-       this.usdValues.newInformation.totalPremiumMovement = newTotalPremiumMovementUsd
-       //premum SLU
-       this.usdValues.lastInformation.PremiumSlu = this.lastAccountInformacion.net_premium.usdValues.sluShareTotal
-       this.usdValues.newInformation.PremiumSlu = resultsUSD.data.sluShareTotal
+        const totalPremiumMovementUsd = damageUsd + biUsd + stocksUsd;
+        this.usdValues.lastInformation.totalPremiumMovement =
+          totalPremiumMovementUsd;
 
+        //la nueva informacion del  premium  que toma el lugar de totalPremiumMoment
+        const totalPremiumMovementDamgeUsd = !this.isFirstEndorsement
+          ? resultsUSD.damageSluShare()
+          : damageUsd / results.daysResult.result;
+        const totalPremiumMovementBiUsd = !this.isFirstEndorsement
+          ? resultsUSD.biSluShare()
+          : biUsd / results.daysResult.result;
+        const totalPremiumMovementStocksUsd = !this.isFirstEndorsement
+          ? resultsUSD.stocksSluShare()
+          : stocksUsd / results.daysResult.result;
+        const newTotalPremiumMovementUsd =
+          totalPremiumMovementDamgeUsd +
+          totalPremiumMovementBiUsd +
+          totalPremiumMovementStocksUsd;
+        this.usdValues.newInformation.totalPremiumMovement =
+          newTotalPremiumMovementUsd;
+        //premum SLU
+        this.usdValues.lastInformation.PremiumSlu =
+          this.lastAccountInformacion.net_premium.usdValues.sluShareTotal;
+        this.usdValues.newInformation.PremiumSlu =
+          resultsUSD.data.sluShareTotal;
 
-      //informacion netPremium 
-       this.usdValues.lastInformation.netPremium = this.lastAccountInformacion.net_premium.usdValues.netTotal
-       this.usdValues.newInformation.netPremium = resultsUSD.data.netTotal
+        //informacion netPremium
+        this.usdValues.lastInformation.netPremium =
+          this.lastAccountInformacion.net_premium.usdValues.netTotal;
+        this.usdValues.newInformation.netPremium = resultsUSD.data.netTotal;
 
-      //totales
-      this.usdValues.lastInformation.total = (
-      totalPremiumMovementUsd + 
-      this.lastAccountInformacion.net_premium.usdValues.sluShareTotal + 
-      this.lastAccountInformacion.net_premium.usdValues.netTotal
-      )
-       
-      this.usdValues.newInformation.total = (
-      newTotalPremiumMovementUsd + 
-      resultsUSD.data.sluShareTotal + 
-      resultsUSD.data.netTotal
-      )
-          
+        //totales
+        this.usdValues.lastInformation.total =
+          totalPremiumMovementUsd +
+          this.lastAccountInformacion.net_premium.usdValues.sluShareTotal +
+          this.lastAccountInformacion.net_premium.usdValues.netTotal;
+
+        this.usdValues.newInformation.total =
+          newTotalPremiumMovementUsd +
+          resultsUSD.data.sluShareTotal +
+          resultsUSD.data.netTotal;
+
         //sustitumimos los nuevos valores para generar el reporte
-        this.accountComplete.net_premium.originalValues = results.data
-        this.accountComplete.net_premium.usdValues = resultsUSD.data 
+        this.accountComplete.net_premium.originalValues = results.data;
+        this.accountComplete.net_premium.usdValues = resultsUSD.data;
         this.accountComplete.tiv.premium = {
-           ...this.accountComplete.tiv.premium, 
-           propertyDamage: totalPremiumMovementDamge,
-           businessInterruption: totalPremiumMovementBi,
-           stock: totalPremiumMovementStocks,
-           propertyDamageUsd: totalPremiumMovementDamgeUsd,
-           businessInterruptionUsd: totalPremiumMovementBiUsd,
-           stockUsd: totalPremiumMovementStocksUsd,
-           totalInsured:newTotalPremiumMovement,
-           totalUsd:newTotalPremiumMovementUsd,
-           total:newTotalPremiumMovement
-        }
+          ...this.accountComplete.tiv.premium,
+          propertyDamage: totalPremiumMovementDamge,
+          businessInterruption: totalPremiumMovementBi,
+          stock: totalPremiumMovementStocks,
+          propertyDamageUsd: totalPremiumMovementDamgeUsd,
+          businessInterruptionUsd: totalPremiumMovementBiUsd,
+          stockUsd: totalPremiumMovementStocksUsd,
+          totalInsured: newTotalPremiumMovement,
+          totalUsd: newTotalPremiumMovementUsd,
+          total: newTotalPremiumMovement,
+        };
         this.accountComplete.cartera = {
           ...this.accountComplete.cartera,
-            premiumPaymentDate: this.premiumPaymentDate,
-            clause: this.clause
-        }
+          premiumPaymentDate: this.premiumPaymentDate,
+          clause: this.clause,
+        };
         this.accountComplete.deductibles = {
-         ...this.accountComplete.deductibles, 
-         //TODO:estandarizar el guardado de las fechas
-         expiryDate: this.movementEndDate ,
-         inceptionDate: this.endorsementEffectiveDate
-        }
+          ...this.accountComplete.deductibles,
+          //TODO:estandarizar el guardado de las fechas
+          expiryDate: this.movementEndDate,
+          inceptionDate: this.endorsementEffectiveDate,
+        };
 
         this.endorsmentReporData = {
-          boundInsurableProp:{
-             ...this.accountComplete.tiv.boundInsurableProp
+          boundInsurableProp: {
+            ...this.accountComplete.tiv.boundInsurableProp,
           },
-          deductibles:{
-            ...this.accountComplete.deductibles
+          deductibles: {
+            ...this.accountComplete.deductibles,
           },
-          netPremium:{
-            ...results.data
+          netPremium: {
+            ...results.data,
           },
-          netPremiumUSD:{
-            ...resultsUSD.data
+          netPremiumUSD: {
+            ...resultsUSD.data,
           },
-          premium:{
-            ...this.accountComplete.tiv.premium
+          premium: {
+            ...this.accountComplete.tiv.premium,
           },
-          totalValues:{
-            ...this.accountComplete.tiv.insurable
+          totalValues: {
+            ...this.accountComplete.tiv.insurable,
           },
-          cartera:{
+          cartera: {
             ...this.accountComplete.cartera,
-            ...this.cartera,  
+            ...this.cartera,
           },
           // admintedPremium:45646464654545466,
-          movementValues:{
+          movementValues: {
             bi: totalPremiumMovementBiUsd,
-					  biUsd: totalPremiumMovementBiUsd,
-					  damage: totalPremiumMovementDamgeUsd,
-					  damageUsd: totalPremiumMovementDamgeUsd,
-					  stocks: totalPremiumMovementStocksUsd,
-					  stocksUsd: totalPremiumMovementStocksUsd,
-					  total: newTotalPremiumMovement,
-					  totalUsd: newTotalPremiumMovementUsd 
-          }
-        }
+            biUsd: totalPremiumMovementBiUsd,
+            damage: totalPremiumMovementDamgeUsd,
+            damageUsd: totalPremiumMovementDamgeUsd,
+            stocks: totalPremiumMovementStocksUsd,
+            stocksUsd: totalPremiumMovementStocksUsd,
+            total: newTotalPremiumMovement,
+            totalUsd: newTotalPremiumMovementUsd,
+          },
+        };
 
-         // Invoca el  servicio para generar el excel
-         const fileLink = await EndorsementService.getEndorsmentReport({
+        // Invoca el  servicio para generar el excel
+        const fileLink = await EndorsementService.getEndorsmentReport({
           subscriptionId: this.subscriptionId,
           endorsmentType: 8,
-          endorsmentReporData:this.endorsmentReporData
-        })
+          endorsmentReporData: this.endorsmentReporData,
+        });
 
-        const file = this.files.find(file => file.fileId === 1);
+        const file = this.files.find((file) => file.fileId === 1);
 
         if (!fileLink) {
-          file.error = true
+          file.error = true;
         } else {
           file.fileDownloadLink = fileLink;
           file.loaded = true;
@@ -1084,16 +1421,18 @@ export default {
         }
 
         //variable que controlara si se tienen que volver a hacer los calculos
-        this.isMadeCals = true
-        
-    } 
-      if (this.e1 === 3) {
-        this.buttonTitle = 'Finalize'
-        this.buttonTitleBack = 'Return';
+        this.isMadeCals = true;
       }
-
-  }
- }
+      if (this.e1 === 3) {
+        this.buttonTitle = "Finalize";
+        this.buttonTitleBack = "Return";
+        this.cartera = {
+          premiumPaymentDate: this.premiumPaymentDate,
+          clausula: this.clause,
+        };
+      }
+    },
+  },
 };
 </script>
 
@@ -1105,9 +1444,9 @@ export default {
 .endorsement-wrapper {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -1131,6 +1470,7 @@ export default {
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
+    border-radius: 5px;
   }
 }
 .table-container {
@@ -1150,7 +1490,7 @@ export default {
   color: white;
   font-weight: 800;
   background-color: #547fa9;
-  border-radius: 6px;
+  border-radius: 0px;
   margin: 2px;
   font-size: 20px;
   display: flex;
@@ -1200,7 +1540,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   align-content: center;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 .input-col {
@@ -1215,7 +1555,7 @@ export default {
   margin-right: 30px;
 }
 
-.input-cont-lg{
+.input-cont-lg {
   width: 40%;
   display: flex;
   flex-wrap: wrap;
@@ -1284,27 +1624,27 @@ export default {
   color: red;
   max-width: 200px;
   transform: translateY(-14px);
-} 
+}
 
 .details-container {
-    width: 100%;
-    height: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-left: 5%;
-    margin-top: 44px;
+  width: 100%;
+  height: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 5%;
+  margin-top: 44px;
 }
-.details-input-container{
+.details-input-container {
   justify-content: center;
-  align-items: center ;
+  align-items: center;
 }
 
-.input-col-details{
+.input-col-details {
   flex-grow: 1;
   margin-inline-end: 20px;
 }
 
-.column{
+.column {
   flex-direction: column;
 }
 
@@ -1313,5 +1653,43 @@ export default {
   color: #f59607;
   font-weight: 600;
   font-size: 19px;
+}
+
+.endorsement-main-container {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+}
+
+.endorsement-form-section {
+  flex: 2;
+}
+
+.input-col-full {
+  width: 100%;
+  max-width: 350px;
+}
+
+.input-col-days {
+  width: 15%;
+  min-width: 120px;
+}
+
+.premium-payment {
+  display: flex;
+  align-items: center;
+}
+
+.premium-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  color: #666;
+
+  span {
+    font-weight: 600;
+    color: #000;
+    margin-top: 2px;
+  }
 }
 </style>

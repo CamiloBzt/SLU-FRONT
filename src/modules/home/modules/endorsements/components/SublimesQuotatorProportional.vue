@@ -17,7 +17,7 @@
 
       <!--Cat Sublimes title-->
       <div class="TitleCont d-flex justify-start align-center">
-        <h5>Cat Sublimes</h5>
+        <h5>Cat Sublimits</h5>
       </div>
 
       <v-row class="mt-4">

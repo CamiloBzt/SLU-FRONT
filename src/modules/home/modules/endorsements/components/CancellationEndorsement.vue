@@ -22,32 +22,27 @@
           <div class="input-row w-100 d-flex flex-wrap pl-15">
             <div class="input-col">
               <div class="input-cont">
-                <v-text-field v-model="deductionType" label="Type" v-on="on" readonly>
-                </v-text-field>
+                <v-text-field v-model="deductionType" label="Type" v-on="on" readonly> </v-text-field>
               </div>
 
               <div class="input-cont">
-                <v-text-field v-model="cancellationDate" label="Cancellation date" v-on="on">
-                </v-text-field>
+                <v-text-field v-model="cancellationDate" label="Cancellation date" v-on="on"> </v-text-field>
               </div>
             </div>
 
             <div class="input-col">
               <div class="input-cont">
-                <v-text-field v-model="inceptionDate" label="Inception date" v-on="on" readonly>
-                </v-text-field>
+                <v-text-field v-model="inceptionDate" label="Inception date" v-on="on" readonly> </v-text-field>
               </div>
 
               <div class="input-cont">
-                <v-text-field v-model="cancellationTerm" label="Cancellation term" v-on="on">
-                </v-text-field>
+                <v-text-field v-model="cancellationTerm" label="Cancellation term" v-on="on"> </v-text-field>
               </div>
             </div>
 
             <div class="input-col">
               <div class="input-cont">
-                <v-text-field v-model="expiryDate" label="Expiry date" v-on="on" readonly>
-                </v-text-field>
+                <v-text-field v-model="expiryDate" label="Expiry date" v-on="on" readonly> </v-text-field>
               </div>
             </div>
           </div>
@@ -91,9 +86,7 @@
           </div>
 
           <div class="head-items-cont-checkbox">
-            <div class="endorsement-title" style="padding: 20px 0">
-              Cancel endorsement
-            </div>
+            <div class="endorsement-title" style="padding: 20px 0">Cancel endorsement</div>
 
             <div class="endorsement-title" style="padding: 20px 40px">
               <v-checkbox v-model="checkEndorsement" :value="elementComplete.id" @click="checkOrNotCheck(item + 1)"></v-checkbox>
@@ -107,7 +100,7 @@
 <script>
 /* utils */
 import { formatCurrency } from "../utils";
-import { stateExpansiveManager } from '@/mixins/subscription.js';
+import { stateExpansiveManager } from "@/mixins/subscription.js";
 
 export default {
   name: "CancellationEndorsement",
@@ -118,13 +111,7 @@ export default {
   },
   data() {
     return {
-      subtitleList: [
-        'Total premium',
-        'Premium SLU',
-        'Net premium',
-        'Deductions',
-        'Fronting',
-      ],
+      subtitleList: ["Total premium", "Premium SLU", "Net premium", "Deductions", "Fronting"],
       originalCurrencyDatas: {
         totalPremium: 0,
         premiumSLU: 0,
@@ -132,8 +119,7 @@ export default {
         deductions: 0,
         fronting: this.elementComplete.AccountComplete.deductibles.fronting,
       },
-      usdDatas:
-      {
+      usdDatas: {
         totalPremium: 0,
         premiumSLU: 0,
         netPremium: 0,
@@ -144,18 +130,14 @@ export default {
       showAccountOrEndorsements: false,
       on: {},
       deductionType: this.elementComplete.AccountComplete.deductibles.deductionType,
-      cancellationDate: '',
-      inceptionDate: new Date(this.elementComplete.AccountComplete.deductibles.inceptionDate)
-        .toISOString()
-        .substr(0, 10),
-      cancellationTerm: '',
-      expiryDate: new Date(this.elementComplete.AccountComplete.deductibles.expiryDate)
-        .toISOString()
-        .substr(0, 10),
+      cancellationDate: "",
+      inceptionDate: new Date(this.elementComplete.AccountComplete.deductibles.inceptionDate).toISOString().substr(0, 10),
+      cancellationTerm: "",
+      expiryDate: new Date(this.elementComplete.AccountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
       checkEndorsement: false,
     };
   },
-  async beforeMount() { },
+  async beforeMount() {},
   async mounted() {
     // console.log('this.endorsementCancellationList --->', this.endorsementCancellationList)
   },
@@ -167,22 +149,22 @@ export default {
     checkOrNotCheck(index) {
       // console.log('this.checkEndorsement --->', this.checkEndorsement)
       // console.log('value', index)
-      this.$emit('arrayCancellationEndorsement', { id: index, value: this.checkEndorsement })
+      this.$emit("arrayCancellationEndorsement", { id: index, value: this.checkEndorsement });
     },
   },
 };
 </script>
 <style lang="less" scoped>
 //ESTILOS GENERALES DEL ACORDEON
-@import '~@/assets/style/AccordionStyle.less';
-@import '~@/assets/style/FilesStyle.less';
+@import "~@/assets/style/AccordionStyle.less";
+@import "~@/assets/style/FilesStyle.less";
 
 .endorsement-cancellation {
   width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 5px;
   background: white;
-  box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
+  //box-shadow: 8px 8px 12px rgba(10, 63, 102, 0.15);
   margin-top: 28px;
   margin-bottom: 28px;
   padding: 0 20px;
@@ -290,7 +272,7 @@ export default {
 }
 
 .ExpansionBordered {
-  border-radius: 12px;
+  border-radius: 5px;
 }
 
 .ExpansionComponent,
@@ -319,13 +301,13 @@ export default {
         .SubIconCont {
           width: 30px;
           height: 30px;
-          background: #D2DEED;
+          background: #d2deed;
           border-radius: 35px;
           margin-right: 15px;
 
           i {
             font-size: 18px;
-            color: #003D6D;
+            color: #003d6d;
             margin-top: -1px;
             margin-left: 1px;
           }
@@ -345,6 +327,6 @@ export default {
 .endorsement-title {
   font-weight: 800;
   font-size: 18px;
-  color: #003D6D;
+  color: #003d6d;
 }
 </style>

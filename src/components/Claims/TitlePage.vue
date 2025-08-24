@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="TitlePageComponent justify-space-between align-center HideOnMovil"
-  >
+  <div class="TitlePageComponent justify-space-between align-center HideOnMovil">
     <!--TITULO-->
     <h4>
       {{ title }}
@@ -34,7 +32,7 @@ export default {
   position: relative;
   display: flex;
   h4 {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 23px;
   }
 

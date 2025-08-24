@@ -31,39 +31,20 @@ import messages from "../../constants/messages";
 import NEW_OR_RENEWAL_CONSTANT from "../../constants/newOrRenewal";
 
 /* utils */
-import {
-  searchKeyInStorage,
-  searchObjectInStorage,
-  setItemInStorage,
-  removeKeyFromStorage,
-  toSnakeCase,
-  keysToCamel,
-} from "./utils";
+import { searchKeyInStorage, searchObjectInStorage, setItemInStorage, removeKeyFromStorage, toSnakeCase, keysToCamel } from "./utils";
 
 /* vue imports */
 import $router from "../../router";
 
 export default {
   /* (context) destructured */
-  async subscriptionSubmission(
-    { commit, dispatch, state, getters },
-    { accountInformation, contactsInformation /* documentsInformation */ }
-  ) {
+  async subscriptionSubmission({ commit, dispatch, state, getters }, { accountInformation, contactsInformation /* documentsInformation */ }) {
     try {
       // save data on store
       commit("saveAccountInformation", accountInformation);
       commit("saveContactsInformation", contactsInformation);
       // commit('saveDocumentsInformation', documentsInformation)
-      const {
-        name,
-        country,
-        activity,
-        currency,
-        typeOfRisk,
-        insuredName,
-        broker,
-        cedent,
-      } = state.accountInformation;
+      const { name, country, activity, currency, typeOfRisk, insuredName, broker, cedent } = state.accountInformation;
 
       /* create or edit */
       const CREATE_OR_EDIT_CONFIG = {
@@ -101,8 +82,7 @@ export default {
       const responseName = data[key];
 
       const { statusCode, response, message, error } = responseName;
-      if (statusCode !== 200)
-        throw new Error(`Account Information Save Error: ${message}, ${error}`);
+      if (statusCode !== 200) throw new Error(`Account Information Save Error: ${message}, ${error}`);
 
       const parsedResponse = JSON.parse(response);
 
@@ -133,9 +113,7 @@ export default {
     } catch ({ message }) {
       commit("RESET_ACCOUNT_INFORMATION");
       commit("RESET_CONTACTS_INFORMATION");
-      const messageToDisplay =
-        "subscriptionSubmission error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "subscriptionSubmission error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -155,16 +133,13 @@ export default {
       });
 
       const { statusCode, response } = data.updateSubscriptionStatus;
-      if (statusCode !== 200)
-        throw new Error("Error updating Subscription status");
+      if (statusCode !== 200) throw new Error("Error updating Subscription status");
 
       const parsedResponse = JSON.parse(response);
 
       commit("SET_SUBSCRIPTION_STATUS", parsedResponse.status_id);
     } catch ({ message }) {
-      const messageToDisplay =
-        "updateSubscriptionStatus error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateSubscriptionStatus error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -175,9 +150,7 @@ export default {
     try {
       commit("RESET_SUBSCRIPTION_STATUS");
     } catch ({ message }) {
-      const messageToDisplay =
-        "resetSubscriptionStatus error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "resetSubscriptionStatus error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -195,14 +168,12 @@ export default {
         },
         fetchPolicy: "no-cache",
       });
-
       const { statusCode, message, response } = getCatalog;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching ${name} data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching ${name} data: ${message}`);
       commit("setCatalogByName", { name, response });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getCatalogByName error: " + message.replace("GraphQL error: ", "");
+      console.log(message);
+      const messageToDisplay = "getCatalogByName error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -215,8 +186,7 @@ export default {
       if (!isValidForm) throw new Error("Invalid Data on Type");
       commit("NEW_OR_RENEWAL", { value });
     } catch ({ message }) {
-      const messageToDisplay =
-        "newOrRenewal error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "newOrRenewal error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -232,12 +202,10 @@ export default {
       });
 
       const { statusCode, message, response } = getLastSubscription;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       commit("setLastSubscription", { response });
     } catch ({ message }) {
-      const messageToDisplay =
-        "getLastSubscription error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getLastSubscription error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -257,15 +225,12 @@ export default {
       });
 
       const { statusCode, message, response } = updateSubscription;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       const parsedResponse = JSON.parse(response);
       const nameReference = parsedResponse.reference;
       commit("SET_SUBSCRIPTION_REFERENCE", { nameReference });
     } catch ({ message }) {
-      const messageToDisplay =
-        "updateDataSubscription error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateDataSubscription error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -283,16 +248,13 @@ export default {
       });
 
       const { statusCode, message, response } = addSubscription;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       const parsedResponse = JSON.parse(response);
       const subscription_id = parsedResponse.id;
       commit("SET_SUBSCRIPTION_INFO", { subscription_id });
       setItemInStorage("subscriptionData", "subscriptionId", subscription_id);
     } catch ({ message }) {
-      const messageToDisplay =
-        "registerIdSubscription error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "registerIdSubscription error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -302,25 +264,17 @@ export default {
   async checkSubscriptionStored({ commit, dispatch, state, getters }) {
     try {
       /* temporal */
-      if (
-        $router.currentRoute.params &&
-        $router.currentRoute.params.subscriptionId
-      ) {
+      if ($router.currentRoute.params && $router.currentRoute.params.subscriptionId) {
         const editID = $router.currentRoute.params.subscriptionId;
         setItemInStorage("subscriptionData", "subscriptionId", editID);
       } else {
         removeKeyFromStorage("subscriptionData", "subscriptionId");
         commit("RESET_SUBSCRIPTION_INFO");
       }
-      const existsOnStorage = !!(
-        searchObjectInStorage("subscriptionData") &&
-        searchKeyInStorage("subscriptionData", "subscriptionId")
-      );
+      const existsOnStorage = !!(searchObjectInStorage("subscriptionData") && searchKeyInStorage("subscriptionData", "subscriptionId"));
       if (existsOnStorage) {
         commit("SET_SUBSCRIPTION_INFO", {
-          subscription_id: parseInt(
-            searchKeyInStorage("subscriptionData", "subscriptionId")
-          ),
+          subscription_id: parseInt(searchKeyInStorage("subscriptionData", "subscriptionId")),
         });
         const { subscription_id } = state;
         const {
@@ -335,8 +289,7 @@ export default {
 
         const { statusCode, response, message, error } = getSubscription;
 
-        if (statusCode !== 200)
-          throw new Error(`msg: ${message} error: ${error}`);
+        if (statusCode !== 200) throw new Error(`msg: ${message} error: ${error}`);
 
         const { subscription, submission = false } = JSON.parse(response);
 
@@ -367,9 +320,7 @@ export default {
     } catch (e) {
       console.error(e);
       const { message } = e;
-      const messageToDisplay =
-        "checkSubscriptionStored error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "checkSubscriptionStored error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -414,8 +365,7 @@ export default {
 
       const { statusCode, response, message, error } = createCloseReason;
 
-      if (statusCode !== 200)
-        throw new Error(`msg: ${message} error: ${error}`);
+      if (statusCode !== 200) throw new Error(`msg: ${message} error: ${error}`);
 
       await dispatch("resetSubscription");
 
@@ -426,8 +376,7 @@ export default {
         text: "Closed Account",
       });
     } catch ({ message }) {
-      const messageToDisplay =
-        "closeAccountAction error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "closeAccountAction error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -454,17 +403,7 @@ export default {
   },
   async getSubscriptionList({ commit, state }, payload) {
     try {
-      const {
-        limit,
-        offset,
-        query1,
-        query2,
-        query3,
-        filterOrderBy = [["s.id", "desc"]],
-        filterSearch1 = "s.reference",
-        filterSearch2 = "s.reference",
-        filterSearch3 = "s.reference",
-      } = payload;
+      const { limit, offset, query1, query2, query3, filterOrderBy = [["s.id", "desc"]], filterSearch1 = "s.reference", filterSearch2 = "s.reference", filterSearch3 = "s.reference" } = payload;
 
       const page = Math.ceil(offset / limit) + 1;
 
@@ -491,8 +430,7 @@ export default {
 
         const { statusCode, message, response } = getSubscriptionList;
 
-        if (statusCode != 200)
-          throw new Error(`Failed fetching data: ${message}`);
+        if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
 
         commit("cacheSubscriptionPage", { page, data: response });
 
@@ -501,8 +439,7 @@ export default {
 
       commit("setSubscriptionListPagination", payload);
     } catch ({ message }) {
-      const messageToDisplay =
-        "getSubscriptionList error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "getSubscriptionList error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -521,13 +458,11 @@ export default {
         fetchPolicy: "no-cache",
       });
       const { statusCode, message, response } = filterSubscription;
-      if (statusCode != 200)
-        throw new Error(`Failed fetching data: ${message}`);
+      if (statusCode != 200) throw new Error(`Failed fetching data: ${message}`);
       commit("setSubscriptionList", response);
       commit("setSubscriptionListPagination", payload);
     } catch ({ message }) {
-      const messageToDisplay =
-        "filterSubscriptions error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "filterSubscriptions error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -536,8 +471,7 @@ export default {
   },
   async loadSubscription({ commit }, payload) {
     try {
-      const { id, reference, catalog_type_risk_id, facultative_reference } =
-        payload;
+      const { id, reference, catalog_type_risk_id, facultative_reference } = payload;
       commit("SET_SUBSCRIPTION_INFO", { subscription_id: id });
       setItemInStorage("subscriptionData", "subscriptionId", id);
       commit("SET_SUBSCRIPTION_REFERENCE", { nameReference: reference });
@@ -545,8 +479,7 @@ export default {
         facultativeReference: facultative_reference,
       });
     } catch ({ message }) {
-      const messageToDisplay =
-        "loadSubscription error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "loadSubscription error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -577,8 +510,7 @@ export default {
 
       if (statusCode !== 200) throw new Error("Error creating/updating Column");
     } catch ({ message }) {
-      const messageToDisplay =
-        "globalSaveColumn error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "globalSaveColumn error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -587,12 +519,7 @@ export default {
   },
   async saveColumn({ commit, state }, payload) {
     try {
-      const {
-        table = "submission",
-        parent,
-        column,
-        difname = column,
-      } = payload;
+      const { table = "submission", parent, column, difname = column } = payload;
 
       const settings = {
         submission: {
@@ -609,9 +536,7 @@ export default {
         fetchPolicy: "no-cache",
       });
 
-      const response = JSON.parse(
-        findResponse.data[settings[table].response].response
-      );
+      const response = JSON.parse(findResponse.data[settings[table].response].response);
 
       const { id } = response;
       const snakeCasedDifname = toSnakeCase(difname);
@@ -633,11 +558,9 @@ export default {
 
       const { statusCode } = data["updateChange"];
 
-      if (statusCode !== 200)
-        throw new Error("Error creating/updating Quotation Column");
+      if (statusCode !== 200) throw new Error("Error creating/updating Quotation Column");
     } catch ({ message }) {
-      const messageToDisplay =
-        "saveColumn error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "saveColumn error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -663,9 +586,7 @@ export default {
         fetchPolicy: "no-cache",
       });
 
-      const response = JSON.parse(
-        findResponse.data[settings[table].response].response
-      );
+      const response = JSON.parse(findResponse.data[settings[table].response].response);
 
       const { id } = response;
       const snakeCasedDifname = toSnakeCase(difname);
@@ -687,12 +608,9 @@ export default {
 
       const { statusCode } = data["updateJson"];
 
-      if (statusCode !== 200)
-        throw new Error("Error creating/updating Quotation Column");
+      if (statusCode !== 200) throw new Error("Error creating/updating Quotation Column");
     } catch ({ message }) {
-      const messageToDisplay =
-        "saveContactsSubmission error: " +
-        message.replace("GraphQL error: ", "");
+      const messageToDisplay = "saveContactsSubmission error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
@@ -716,8 +634,7 @@ export default {
       });
       const { statusCode, response, message, error } = getSubscriptionReport;
 
-      if (statusCode !== 200)
-        throw new Error(`Cannot create general report: ${message}, ${error}`);
+      if (statusCode !== 200) throw new Error(`Cannot create general report: ${message}, ${error}`);
       return response;
     } catch ({ message }) {
       //const messageToDisplay = message.replace('GraphQL error: ', '');
@@ -744,11 +661,9 @@ export default {
       });
       const { statusCode } = data["updateReferenceSubscription"];
 
-      if (statusCode !== 200)
-        throw new Error("Error creating/updating Reference Subscription");
+      if (statusCode !== 200) throw new Error("Error creating/updating Reference Subscription");
     } catch ({ message }) {
-      const messageToDisplay =
-        "updateReference error: " + message.replace("GraphQL error: ", "");
+      const messageToDisplay = "updateReference error: " + message.replace("GraphQL error: ", "");
       commit("addNotification", {
         type: messages.DANGER,
         text: messageToDisplay,
