@@ -20,13 +20,15 @@
         <div class="ExpandContent">
           <div class="TitleTextArea">Offer Comments*</div>
 
-          <textarea
+          <v-textarea
             v-model.trim="$v.boundEng.riskProfileComments.$model"
             @blur="
               SET_BOUND_ENG('riskProfileComments', this);
               checkField('riskProfileComments');
             "
-          ></textarea>
+            hint="Required field"
+            persistent-hint
+          />
 
           <div class="InputsCont d-flex justify-start align-center">
             <div class="InputCont">
@@ -42,6 +44,8 @@
                 item-value="id"
                 clearable
                 :disabled="typeClause.length === 0"
+                hint="Required field"
+                persistent-hint
               ></v-select>
             </div>
             <div class="InputCont">
@@ -57,6 +61,8 @@
                 item-value="id"
                 clearable
                 :disabled="exposure.length === 0"
+                hint="Required field"
+                persistent-hint
               ></v-select>
             </div>
             <div class="InputCont">
@@ -72,6 +78,8 @@
                 item-value="id"
                 clearable
                 :disabled="housekeeping.length === 0"
+                hint="Required field"
+                persistent-hint
               ></v-select>
             </div>
           </div>

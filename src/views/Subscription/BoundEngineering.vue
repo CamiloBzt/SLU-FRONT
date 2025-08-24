@@ -57,17 +57,19 @@
       </div>
       <!--BOTON PARA FINALIZAR-->
       <div class="finishButtonCont mt-7 d-flex justify-end align-center">
-        <v-btn
-          v-if="showFacultativeButton"
-          rounded
-          large
-          text
-          class="finishBtn"
-          @click="sendToFacultative"
-          :disabled="!buttonsEnabled"
-        >
-          Send To Facultative
-        </v-btn>
+        <div @click="onSendToFacultative">
+          <v-btn
+            v-if="showFacultativeButton"
+            rounded
+            large
+            text
+            class="finishBtn"
+            @click.stop
+            :disabled="!buttonsEnabled"
+          >
+            Send To Facultative
+          </v-btn>
+        </div>
       </div>
 
       <!--ESPACIO EN BLANCO-->
@@ -241,10 +243,21 @@ export default {
         }, 50);
       }
     },
+    onSendToFacultative() {
+      if (this.buttonsEnabled) {
+        this.sendToFacultative();
+      } else {
+        this.scrollToFirstInvalid();
+      }
+    },
     async sendToFacultative() {
       const subscriptionId = Number(this.subscriptionId);
       await AccountCompleteService.addInitialRegister(subscriptionId);
       this.$router.push({ name: "Subs home" });
+    },
+
+    scrollToFirstInvalid() {
+      this.$refs.riskAnalysis?.scrollToFirstInvalid();
     },
 
     async saveNatcatDocument({ subscription_id, doc_s3 }) {},

@@ -21,6 +21,8 @@
               SET_MLIV_BOUND('damage', this);
               checkField('damage');
             "
+            hint="Required field"
+            persistent-hint
           />
         </div>
         <div class="Row">

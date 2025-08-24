@@ -26,6 +26,7 @@
       <v-expansion-panel-content>
         <div class="ExpandContent">
           <InputsRiskQuotator
+            ref="inputsRisk"
             @required-fields-change="onRequiredFieldsChange"
           />
 
@@ -43,11 +44,17 @@
             v-if="propEng && propEng != ''"
           />
 
-          <MainLocation @damage-field-change="onDamageFieldChange" />
+          <MainLocation
+            ref="mainLocation"
+            @damage-field-change="onDamageFieldChange"
+          />
 
           <div class="ExpansionLineTop mt-2" />
 
-          <PmlProperty @pml-fields-change="onPmlFieldsChange" />
+          <PmlProperty
+            ref="pmlProperty"
+            @pml-fields-change="onPmlFieldsChange"
+          />
 
           <div class="ExpansionLineTop mt-7" />
 
@@ -90,15 +97,25 @@
           </div>
 
           <PremiumPaymentWarranty
+            ref="premiumPaymentWarranty"
             @payments-warranty-change="onPaymentsWarrantyChange"
           />
 
-          <BoundClaims @bound-claims-change="onBoundClaimsChange" />
+          <BoundClaims
+            ref="boundClaims"
+            @bound-claims-change="onBoundClaimsChange"
+          />
 
           <div class="ExpansionLineTop mt-2" />
-          <Rational @rational-comments-change="onRationalCommentsChange" />
+          <Rational
+            ref="rational"
+            @rational-comments-change="onRationalCommentsChange"
+          />
 
-          <RiskProfile @risk-profile-change="onRiskProfileChange" />
+          <RiskProfile
+            ref="riskProfile"
+            @risk-profile-change="onRiskProfileChange"
+          />
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -266,6 +283,78 @@ export default {
     onRiskProfileChange(isComplete) {
       this.riskProfileCompleted = isComplete;
       this.emitValidationStatus();
+    },
+
+    scrollToFirstInvalid() {
+      if (!this.requiredFieldsCompleted && this.$refs.inputsRisk) {
+        this.$refs.inputsRisk.$v.boundEng.$touch();
+        this.$nextTick(() =>
+          this.$refs.inputsRisk.$el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        );
+        return;
+      }
+      if (!this.damageFieldCompleted && this.$refs.mainLocation) {
+        this.$nextTick(() =>
+          this.$refs.mainLocation.$el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        );
+        return;
+      }
+      if (!this.pmlFieldsCompleted && this.$refs.pmlProperty) {
+        this.$nextTick(() =>
+          this.$refs.pmlProperty.$el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        );
+        return;
+      }
+      if (!this.paymentsWarrantyCompleted && this.$refs.premiumPaymentWarranty) {
+        this.$nextTick(() =>
+          this.$refs.premiumPaymentWarranty.$el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        );
+        return;
+      }
+      if (!this.boundClaimsCompleted && this.$refs.boundClaims) {
+        this.$nextTick(() =>
+          this.$refs.boundClaims.$el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        );
+        return;
+      }
+      if (!this.rationalCommentsCompleted && this.$refs.rational) {
+        this.$refs.rational.$v.boundEng.rationalComments.$touch();
+        this.$nextTick(() =>
+          this.$refs.rational.$el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        );
+        return;
+      }
+      if (!this.riskProfileCompleted && this.$refs.riskProfile) {
+        const v = this.$refs.riskProfile.$v.boundEng;
+        v.riskProfileComments.$touch();
+        v.riskProfileClause.$touch();
+        v.riskProfileExposure.$touch();
+        v.riskProfileHousekeeping.$touch();
+        this.$nextTick(() =>
+          this.$refs.riskProfile.$el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        );
+      }
     },
 
     emitValidationStatus() {
