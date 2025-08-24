@@ -23,6 +23,7 @@
             "
             hint="Required field"
             persistent-hint
+            :error-messages="requiredInputVuelidateParent('damage', 'mliv')"
           />
         </div>
         <div class="Row">
@@ -96,13 +97,16 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import Decimal from "decimal.js";
 import numeral from "numeral";
 /* validations */
+import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 /* lodash */
 import { debounce } from "lodash";
 
 export default {
   name: "MainLocation",
   components: { CurrencyInput },
+  mixins: [validationMixin, formValidations],
   data() {
     return {
       currencyOptions: {

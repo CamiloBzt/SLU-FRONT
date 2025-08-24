@@ -33,6 +33,7 @@
                   :options="currencyOptions"
                   @input="update(key, item.model)"
                   @blur="saveData(key, 'columnModel', item.model)"
+                  :error-messages="requiredNestedInputParent('model', 'computedYears', key)"
                   hint="Required field"
                   persistent-hint
                 />
@@ -74,13 +75,17 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* libs */
 import Decimal from "decimal.js";
 import { mapActions, mapGetters } from "vuex";
+/* validations */
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 /* lodash */
 import { debounce } from "lodash";
 
 export default {
   name: "BoundClaims",
   components: { CurrencyInput },
-  mixins: [stateExpansiveManager],
+  mixins: [stateExpansiveManager, validationMixin, formValidations],
   inject: ["deepDisabled"],
   data() {
     return {
@@ -242,6 +247,13 @@ export default {
     formatNumber(value) {
       const formatted = this.formatter.format(value);
       return formatted;
+    },
+  },
+  validations: {
+    computedYears: {
+      $each: {
+        model: { required },
+      },
     },
   },
   watch: {

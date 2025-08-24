@@ -29,14 +29,15 @@
               <div class="line" v-for="(item, key) in ClaimsArray" :key="key">
                 <div class="input-row small light">{{ item.date }}*</div>
                 <div class="input-row medium">
-                  <currency-input
-                    v-model="item.amount"
-                    :options="currencyOptions"
-                    @blur="updateByColumn('amount', item.amount, item.sub)"
-                    @input="$emit('bound-claims-change', boundClaimsCompleted)"
-                    hint="Required field"
-                    persistent-hint
-                  />
+                <currency-input
+                  v-model="item.amount"
+                  :options="currencyOptions"
+                  @blur="updateByColumn('amount', item.amount, item.sub)"
+                  @input="$emit('bound-claims-change', boundClaimsCompleted)"
+                  :error-messages="requiredNestedInputParent('amount', 'ClaimsArray', key)"
+                  hint="Required field"
+                  persistent-hint
+                />
                 </div>
                 <div class="input-row large">
                   <v-text-field
@@ -76,6 +77,10 @@ import { stateExpansiveManager } from "@/mixins/subscription.js";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 /* Tienda */
 import { mapGetters } from "vuex";
+/* validations */
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 // Services
 import {
   getBoundClaims,
@@ -86,7 +91,7 @@ import { getCatalog } from "@/constants/catalogs/services/catalogs.service.js";
 export default {
   name: "Claims",
   components: { CurrencyInput },
-  mixins: [stateExpansiveManager],
+  mixins: [stateExpansiveManager, validationMixin, formValidations],
   inject: ["deepDisabled"],
   data() {
     return {
@@ -171,6 +176,13 @@ export default {
         );
         return amountComplete;
       });
+    },
+  },
+  validations: {
+    ClaimsArray: {
+      $each: {
+        amount: { required },
+      },
     },
   },
   watch: {
