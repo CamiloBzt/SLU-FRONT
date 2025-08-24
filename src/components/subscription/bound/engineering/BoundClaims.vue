@@ -32,7 +32,10 @@
                   v-model="item.model"
                   :options="currencyOptions"
                   @input="update(key, item.model)"
-                  @blur="saveData(key, 'columnModel', item.model)"
+                  @blur="
+                    $v.computedYears.$each[key].model.$touch();
+                    saveData(key, 'columnModel', item.model);
+                  "
                   :error-messages="requiredNestedInputParent('model', 'computedYears', key)"
                   hint="Required field"
                   persistent-hint

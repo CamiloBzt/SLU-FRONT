@@ -28,6 +28,7 @@
             "
             hint="Required field"
             persistent-hint
+            :error-messages="requiredInputVuelidateParent('riskProfileComments', 'boundEng')"
           />
 
           <div class="InputsCont d-flex justify-start align-center">
@@ -46,6 +47,7 @@
                 :disabled="typeClause.length === 0"
                 hint="Required field"
                 persistent-hint
+                :error-messages="requiredInputVuelidateParent('riskProfileClause', 'boundEng')"
               ></v-select>
             </div>
             <div class="InputCont">
@@ -63,6 +65,7 @@
                 :disabled="exposure.length === 0"
                 hint="Required field"
                 persistent-hint
+                :error-messages="requiredInputVuelidateParent('riskProfileExposure', 'boundEng')"
               ></v-select>
             </div>
             <div class="InputCont">
@@ -80,6 +83,7 @@
                 :disabled="housekeeping.length === 0"
                 hint="Required field"
                 persistent-hint
+                :error-messages="requiredInputVuelidateParent('riskProfileHousekeeping', 'boundEng')"
               ></v-select>
             </div>
           </div>
@@ -92,11 +96,13 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* validations */
+import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 
 export default {
   name: "RiskProfile",
-  mixins: [stateExpansiveManager],
+  mixins: [stateExpansiveManager, validationMixin, formValidations],
   inject: ["deepDisabled"],
   async beforeMount() {
     await this.getCatalogByName({ name: "type_clause" });

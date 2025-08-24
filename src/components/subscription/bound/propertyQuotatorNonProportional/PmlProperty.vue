@@ -24,6 +24,7 @@
               step="1"
               hint="Required field"
               persistent-hint
+              :rules="[(v) => !!v || 'Required field']"
             />
           </div>
           <div class="input-row">
@@ -52,6 +53,7 @@
       @input="handleCommentsChange"
       hint="Required field"
       persistent-hint
+      :rules="[(v) => !!v || 'Required field']"
     />
   </div>
 </template>

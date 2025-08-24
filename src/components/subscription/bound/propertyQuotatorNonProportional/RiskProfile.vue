@@ -28,6 +28,7 @@
             @input="$emit('risk-profile-change', riskProfileCompleted)"
             hint="Required field"
             persistent-hint
+            :rules="[(v) => !!v || 'Required field']"
           />
 
           <div class="inputs-cont">
@@ -42,6 +43,7 @@
                 :disabled="disabled"
                 hint="Required field"
                 persistent-hint
+                :rules="[(v) => !!v || 'Required field']"
                 @change="
                   updateByColumn('risk_profile_clause', $event);
                   $emit('risk-profile-change', riskProfileCompleted);
@@ -60,6 +62,7 @@
                 :disabled="disabled"
                 hint="Required field"
                 persistent-hint
+                :rules="[(v) => !!v || 'Required field']"
                 @change="
                   updateByColumn('risk_profile_exposure', $event);
                   $emit('risk-profile-change', riskProfileCompleted);
@@ -78,6 +81,7 @@
                 :disabled="disabled"
                 hint="Required field"
                 persistent-hint
+                :rules="[(v) => !!v || 'Required field']"
                 @change="
                   updateByColumn('risk_profile_housekeeping', $event);
                   $emit('risk-profile-change', riskProfileCompleted);

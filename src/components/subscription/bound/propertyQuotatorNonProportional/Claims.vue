@@ -32,7 +32,10 @@
                 <currency-input
                   v-model="item.amount"
                   :options="currencyOptions"
-                  @blur="updateByColumn('amount', item.amount, item.sub)"
+                  @blur="
+                    $v.ClaimsArray.$each[key].amount.$touch();
+                    updateByColumn('amount', item.amount, item.sub);
+                  "
                   @input="$emit('bound-claims-change', boundClaimsCompleted)"
                   :error-messages="requiredNestedInputParent('amount', 'ClaimsArray', key)"
                   hint="Required field"

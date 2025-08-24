@@ -27,6 +27,7 @@
             "
             hint="Required field"
             persistent-hint
+            :rules="[(v) => !!v || 'Required field']"
           />
         </div>
       </v-expansion-panel-content>

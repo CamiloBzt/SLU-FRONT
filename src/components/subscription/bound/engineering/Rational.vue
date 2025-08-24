@@ -28,6 +28,7 @@
             "
             hint="Required field"
             persistent-hint
+            :error-messages="requiredInputVuelidateParent('rationalComments', 'boundEng')"
           />
         </div>
       </v-expansion-panel-content>
@@ -38,11 +39,13 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { stateExpansiveManager } from "@/mixins/subscription.js";
 /* validations */
+import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import { formValidations } from "@/mixins/formValidations";
 
 export default {
   name: "Rational",
-  mixins: [stateExpansiveManager],
+  mixins: [stateExpansiveManager, validationMixin, formValidations],
   inject: ["deepDisabled"],
   computed: {
     ...mapGetters(["boundEng"]),
