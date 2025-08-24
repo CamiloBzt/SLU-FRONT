@@ -20,13 +20,15 @@
         <div class="expand-content">
           <div class="title-text-area">Offer Comments*</div>
 
-          <textarea
+          <v-textarea
             v-model.trim="riskProfileComments"
             @change="
               updateByColumn('risk_profile_comments', $event.target.value)
             "
             @input="$emit('risk-profile-change', riskProfileCompleted)"
-          ></textarea>
+            hint="Required field"
+            persistent-hint
+          />
 
           <div class="inputs-cont">
             <div class="input-cont">
@@ -38,6 +40,8 @@
                 item-value="id"
                 clearable
                 :disabled="disabled"
+                hint="Required field"
+                persistent-hint
                 @change="
                   updateByColumn('risk_profile_clause', $event);
                   $emit('risk-profile-change', riskProfileCompleted);
@@ -54,6 +58,8 @@
                 item-value="id"
                 clearable
                 :disabled="disabled"
+                hint="Required field"
+                persistent-hint
                 @change="
                   updateByColumn('risk_profile_exposure', $event);
                   $emit('risk-profile-change', riskProfileCompleted);
@@ -70,6 +76,8 @@
                 item-value="id"
                 clearable
                 :disabled="disabled"
+                hint="Required field"
+                persistent-hint
                 @change="
                   updateByColumn('risk_profile_housekeeping', $event);
                   $emit('risk-profile-change', riskProfileCompleted);

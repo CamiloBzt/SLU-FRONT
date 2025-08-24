@@ -21,6 +21,8 @@
               SET_BOUND_PML('pmlDamage', this);
               checkField('pmlDamage');
             "
+            hint="Required field"
+            persistent-hint
           />
         </div>
         <div class="Row">
@@ -84,14 +86,16 @@
     </div>
 
     <div class="TitleTextArea">PML Comments*</div>
-    <textarea
+    <v-textarea
       v-model="$v.boundPml.pmlComments.$model"
       @blur="
         SET_BOUND_PML('pmlComments', this);
         checkField('pmlComments');
       "
       placeholder="Please enter PML comments"
-    ></textarea>
+      hint="Required field"
+      persistent-hint
+    />
   </div>
 </template>
 <script>

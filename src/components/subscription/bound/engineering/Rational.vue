@@ -20,13 +20,15 @@
         <div class="ExpandContent">
           <div class="TitleTextArea">Offer Comments*</div>
 
-          <textarea
+          <v-textarea
             v-model.trim="$v.boundEng.rationalComments.$model"
             @blur="
               SET_BOUND_ENG('rationalComments', this);
               checkField('rationalComments');
             "
-          ></textarea>
+            hint="Required field"
+            persistent-hint
+          />
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>

@@ -23,6 +23,8 @@
             v-model="payment.installment"
             :label="'Installment ' + (index + 1) + '*'"
             type="number"
+            hint="Required field"
+            persistent-hint
           />
         </div>
         <div class="Row">
@@ -38,6 +40,8 @@
             v-model="payment.percent"
             label="Percentage*"
             type="number"
+            hint="Required field"
+            persistent-hint
           />
         </div>
         <div class="Row">
@@ -55,6 +59,8 @@
                 label="PPW Due Date*"
                 v-bind="attrs"
                 v-on="on"
+                hint="Required field"
+                persistent-hint
               />
             </template>
             <v-date-picker
@@ -88,6 +94,8 @@
             item-value="id"
             item-text="clause"
             :items="clauseList"
+            hint="Required field"
+            persistent-hint
           />
         </div>
         <div class="Row">
@@ -104,6 +112,8 @@
             v-model="payment.days_of_prior_notice"
             label="Days of prior notice*"
             type="number"
+            hint="Required field"
+            persistent-hint
           />
         </div>
 

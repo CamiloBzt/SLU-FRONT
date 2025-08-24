@@ -34,6 +34,8 @@
                     :options="currencyOptions"
                     @blur="updateByColumn('amount', item.amount, item.sub)"
                     @input="$emit('bound-claims-change', boundClaimsCompleted)"
+                    hint="Required field"
+                    persistent-hint
                   />
                 </div>
                 <div class="input-row large">

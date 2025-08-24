@@ -18,6 +18,8 @@
               v-model="mainLocation.damage"
               @blur="saveField('damage', mainLocation.damage)"
               :options="currencyOptions"
+              hint="Required field"
+              persistent-hint
             />
           </div>
           <div class="input-row">

@@ -33,6 +33,8 @@
                   :options="currencyOptions"
                   @input="update(key, item.model)"
                   @blur="saveData(key, 'columnModel', item.model)"
+                  hint="Required field"
+                  persistent-hint
                 />
               </div>
               <div class="Row Large">
