@@ -29,11 +29,23 @@
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="input-cont">
+                    <v-text-field v-model="InceptionDate" label="Inception date" readonly disabled />
+                  </div>
+                </div>
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-text-field v-model="ExpiryDate" label="Expiry date" readonly disabled />
+                  </div>
+                </div>
+              </div>
+              <div class="input-row w-100 d-flex flex-wrap">
+                <div class="input-col">
+                  <div class="input-cont">
                     <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs" v-on="on"></v-text-field>
+                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs" v-on="on" />
                       </template>
-                      <v-date-picker v-model="effectiveDate" @input="menu2 = false" @change="endorsementDateValidation($event, effectiveDate)"></v-date-picker>
+                      <v-date-picker v-model="effectiveDate" @input="menu2 = false" @change="endorsementDateValidation($event, effectiveDate)" />
                     </v-menu>
                     <div v-if="this.endorsementDateError" class="error-message">The new Endorsement effective date must be lower than expiry date.</div>
                     <div v-if="!showInfoEndorsement" class="error-message">Please provide a valid endorsement effective date.</div>
@@ -43,25 +55,14 @@
                   <div class="input-cont">
                     <v-menu v-model="menu6" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="workStopDate" label="Work stoppage end date" readonly v-bind="attrs" v-on="on"></v-text-field>
+                        <v-text-field v-model="workStopDate" label="Reactivation of works" readonly v-bind="attrs" v-on="on" />
                       </template>
-                      <v-date-picker v-model="workStopDate" @input="menu6 = false" @change="StoppageDateValidation($event, workStopDate)"></v-date-picker>
+                      <v-date-picker v-model="workStopDate" @input="menu6 = false" @change="StoppageDateValidation($event, workStopDate)" />
                     </v-menu>
                     <div v-if="this.stoppageDateError" class="error-message">The new stoppage end date must be less than expiry date.</div>
                   </div>
                 </div>
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-menu v-model="menu4" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="ExpiryDate" label="Expiry date" readonly v-bind="attrs" v-on="on" disabled></v-text-field>
-                      </template>
-                      <v-date-picker v-model="ExpiryDate" @input="menu4 = false" @change="endDateValidation($event, ExpiryDate)"></v-date-picker>
-                    </v-menu>
-                    <div v-if="this.endDateError" class="error-message">The new Movement end date must be later than current date.</div>
-                  </div>
-                </div>
-                <InputDaysDiference :endorsementDate="effectiveDate" :expiryDate="expiryDatetoCalc" :key="effectiveDate" />
+                <InputDaysDiference :endorsementDate="effectiveDate" :expiryDate="workStopDate" :key="effectiveDate + workStopDate" />
               </div>
               <div v-if="showInfoEndorsement">
                 <div class="input-row w-100 d-flex flex-wrap">
@@ -420,7 +421,6 @@ export default {
       menu: false,
       menu2: false,
       menu3: false,
-      menu4: false,
       menu5: false,
       menu9: false,
       menu6: false,
@@ -435,6 +435,7 @@ export default {
       workStopDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       workStopDateCalc: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000),
       ExpiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
+      InceptionDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substr(0, 10),
       stoppageDateError: false,
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       movementEndDate4: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
@@ -453,9 +454,6 @@ export default {
         },
       ],
       endorsementDocuments: [],
-      currentMovementEndDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
-      effectiveDateError: false,
-      endDateError: false,
       endorsmentReporData: {},
       admitedPremium: 0,
       isEdited: {},
@@ -644,14 +642,6 @@ export default {
       });
 
       this.$router.push(`/subscription`);
-    },
-
-    endDateValidation(event, incomingDate) {
-      if (Date.parse(incomingDate) < Date.parse(this.currentMovementEndDate)) {
-        this.endDateError = true;
-      } else {
-        this.endDateError = false;
-      }
     },
 
     StoppageDateValidation(event, incomingDate) {
