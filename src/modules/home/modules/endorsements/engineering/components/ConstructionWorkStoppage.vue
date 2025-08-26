@@ -15,7 +15,19 @@
             <v-stepper-content step="1" class="step-one">
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
-                  <div class="inner-title">Endorsement date</div>
+                  <div class="input-cont">
+                    <v-text-field v-model.number="exchangeRate" label="Exchange rate" type="number" />
+                  </div>
+                </div>
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-text-field v-model.number="share" label="Share" suffix="%" type="number" />
+                  </div>
+                </div>
+              </div>
+              <div class="inner-title">Date</div>
+              <div class="input-row w-100 d-flex flex-wrap">
+                <div class="input-col">
                   <div class="input-cont">
                     <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
@@ -54,7 +66,7 @@
               <div v-if="showInfoEndorsement">
                 <div class="input-row w-100 d-flex flex-wrap">
                   <div class="w-100">
-                    <div class="inner-title">Reason for the stop</div>
+                    <div class="inner-title">Description (up to 300 characters)</div>
                     <div class="textarea-stopped-container">
                       <v-textarea v-model="reason" class="textarea-stopped" variant="filled" auto-grow rows="4" row-height="30" :maxlength="300"></v-textarea>
                     </div>
@@ -414,6 +426,8 @@ export default {
       menu6: false,
       menu8: false,
       reason: "",
+      exchangeRate: Number(this.accountComplete.deductibles.exchangeRate || 0),
+      share: this.accountComplete.tiv?.boundInsurableProp?.sluLine || 0,
       clause: this.accountComplete.cartera.clausula,
       clauseList: [],
       cartera: {},
@@ -425,7 +439,6 @@ export default {
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       movementEndDate4: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       movementEndDate5: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
-      detail: 20,
       files: [
         {
           fileId: 1,
@@ -523,6 +536,14 @@ export default {
           file.loaded = true;
           file.loading = false;
         }
+      }
+    },
+    exchangeRate(val) {
+      this.accountComplete.deductibles.exchangeRate = val;
+    },
+    share(val) {
+      if (this.accountComplete.tiv && this.accountComplete.tiv.boundInsurableProp) {
+        this.accountComplete.tiv.boundInsurableProp.sluLine = val;
       }
     },
   },
