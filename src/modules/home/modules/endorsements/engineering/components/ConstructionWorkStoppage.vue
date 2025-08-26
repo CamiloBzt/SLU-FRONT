@@ -130,94 +130,78 @@
                       <div class="table-input table-title-without-bg">All Risk</div>
                       <div class="table-input table-title-without-bg">ALOP</div>
                       <div class="table-input table-title-without-bg">Total</div>
-                      <!--
-                      <div class="table-input table-title-without-bg-total">
-                        Total
-                      </div>
-                      -->
                     </div>
                   </div>
                 </div>
                 <div class="table-col">
                   <div class="table-title-empty-two">Total premium</div>
-                  <div class="container-table-subtitles">
-                    <div class="table-title-left">Original currency</div>
-                    <div class="table-title-rigth">USD</div>
-                  </div>
+                  <div class="table-title-left">Original currency</div>
                   <div class="input-row">
                     <div class="inner-col">
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].premiumAllRisk) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].premiumAllRisk) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].premiumAlop) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].premiumAlop) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].premiumTotal) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].premiumTotal) }}</div>
                       </div>
-                      <!--
-                      <div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                      </div>
-                      -->
                     </div>
                   </div>
                 </div>
                 <div class="table-col">
                   <div class="table-title-empty-two">Premium SLU</div>
-                  <div class="container-table-subtitles">
-                    <div class="table-title-left">Original currency</div>
-                    <div class="table-title-rigth">USD</div>
-                  </div>
+                  <div class="table-title-left">Original currency</div>
                   <div class="input-row">
                     <div class="inner-col">
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].sluAllRisk) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].sluAllRisk) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].sluAlop) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].sluAlop) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].sluTotal) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].sluTotal) }}</div>
                       </div>
-                      <!--<div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
-                      </div>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="totalPremium[1].premiumTotal > 0"
+                class="table-container container-input-row justify-center mt-6"
+              >
+                <div class="table-col-subtitle">
+                  <div class="table-title-empty"></div>
+                  <div class="input-row">
+                    <div class="inner-col">
+                      <div class="table-input table-title-without-bg">All Risk</div>
+                      <div class="table-input table-title-without-bg">ALOP</div>
+                      <div class="table-input table-title-without-bg">Total</div>
                     </div>
                   </div>
                 </div>
                 <div class="table-col">
-                  <div class="table-title-empty-two">Total premium</div>
+                  <div class="table-title-empty-two">USD</div>
                   <div class="container-table-subtitles">
-                    <div class="table-title-left">Original currency</div>
-                    <div class="table-title-rigth">USD</div>
+                    <div class="table-title-left">Total premium</div>
+                    <div class="table-title-rigth">Premium SLU</div>
                   </div>
                   <div class="input-row">
                     <div class="inner-col">
                       <div class="table-input-heigth blue-input space-between">
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[0].netAllRisk) }}</div>
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].netAllRisk) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].premiumAllRisk) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].sluAllRisk) }}</div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[0].netAlop) }}</div>
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].netAlop) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].premiumAlop) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].sluAlop) }}</div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[0].netTotal) }}</div>
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].netTotal) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].premiumTotal) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].sluTotal) }}</div>
                       </div>
-                      <!--<div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                      </div>-->
                     </div>
                   </div>
                 </div>
