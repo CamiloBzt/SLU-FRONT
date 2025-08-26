@@ -303,6 +303,9 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
+              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+                <EndorsementReportCompleteTable :report="cleanReport" />
+              </div>
               <div class="files-submit flex justify-content-start align-items-start align-content-start">
                 <AppFile
                   v-for="(item, clave) in files"
@@ -350,6 +353,7 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
 import ModalEndorsement from "../../components/ModalEndorsement.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
 /* services */
 import EndorsementService from "../../services/endorsement.service";
 import PaymentService from "@/modules/home/services/payments.service";
@@ -369,6 +373,7 @@ export default {
     InputDaysDiference,
     ModalEndorsement,
     EndorsementDocuments,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "construction Work Stoppage" },
@@ -488,6 +493,15 @@ export default {
       const result = !(showInfoEndorsement & clause);
 
       return result;
+    },
+    cleanReport() {
+      return this.endorsmentReporData &&
+        Object.keys(this.endorsmentReporData).length > 0
+        ? {
+            endorsmentReporData: this.endorsmentReporData,
+            cartera: this.cartera,
+          }
+        : {};
     },
   },
   watch: {
