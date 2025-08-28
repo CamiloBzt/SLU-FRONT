@@ -346,15 +346,6 @@
         :showInfoEndorsement="showInfoEndorsement"
         :key="reloadEndorsementData"
       />
-      <PmdAdjustment
-        v-if="endorsementType == 13"
-        :backToCreateEndorsement="backToCreateEndorsement"
-        :accountComplete="accountComplete"
-        :changeDateEndorsement="changeDateEndorsement"
-        :dateSaved="dateSaved"
-        :showInfoEndorsement="showInfoEndorsement"
-        :key="reloadEndorsementData"
-      />
       <InternalAdjustmentsEngineering
         v-if="endorsementType == 15"
         :backToCreateEndorsement="backToCreateEndorsement"
@@ -382,7 +373,6 @@ import ChangeOfShare from "./components/ChangeOfShare.vue";
 import ChangeOfPeriod from "./components/ChangeOfPeriod.vue";
 import DeductionsChangeView from "./modules/deductions-change/detail/DetailView.vue";
 import ConstructionWorkStoppage from "./components/ConstructionWorkStoppage.vue";
-import PmdAdjustment from "./components/PmdAdjustment.vue";
 import EndorsementDocuments from "../components/EndorsementDocuments.vue";
 import EndorsementHistoryTableEngineering from "../components/EndorsementHistoryTableEngineering.vue";
 import AdmittedPremiumTableEngineering from "../components/AdmittedPremiumTableEngineering.vue";
@@ -418,7 +408,6 @@ export default {
     ChangeOfPeriod,
     DeductionsChangeView,
     ConstructionWorkStoppage,
-    PmdAdjustment,
     EndorsementDocuments,
     EndorsementHistoryTableEngineering,
     AdmittedPremiumTableEngineering,
@@ -914,7 +903,10 @@ export default {
   },
 
   async mounted() {
-    this.catalogEndorsements = await EndorsementService.getEndorsementType();
+    const endorsements = await EndorsementService.getEndorsementType();
+    this.catalogEndorsements = endorsements.filter(
+      (endorsement) => endorsement.id !== 13
+    );
     this.accountComplete =
       await AccountCompleteService.getLastAccountCompleteByIdSubscription(
         this.subscriptionId
