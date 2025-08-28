@@ -840,33 +840,30 @@ export default {
         // ){
 
         // Primera Tabla
-        this.totalPremiumHistoryTable[0].premiumAllRisk =
-          this.informationCard.report.endorsmentReporData.movementValues.allRisk;
-        this.totalPremiumHistoryTable[0].premiumAlop =
-          this.informationCard.report.endorsmentReporData.movementValues.alop;
-        this.totalPremiumHistoryTable[0].premiumTotal =
-          this.informationCard.report.endorsmentReporData.movementValues.total;
+        const reportData =
+          this.informationCard.report.endorsmentReporData || {};
+        const mv = reportData.movementValues || {};
+        this.totalPremiumHistoryTable[0].premiumAllRisk = mv.allRisk || 0;
+        this.totalPremiumHistoryTable[0].premiumAlop = mv.alop || 0;
+        this.totalPremiumHistoryTable[0].premiumTotal = mv.total || 0;
 
         this.totalPremiumHistoryTable[1].premiumAllRisk =
-          this.informationCard.report.endorsmentReporData.movementValues.allRiskUsd;
-        this.totalPremiumHistoryTable[1].premiumAlop =
-          this.informationCard.report.endorsmentReporData.movementValues.alopUsd;
-        this.totalPremiumHistoryTable[1].premiumTotal =
-          this.informationCard.report.endorsmentReporData.movementValues.totalUsd;
+          mv.allRiskUsd || 0;
+        this.totalPremiumHistoryTable[1].premiumAlop = mv.alopUsd || 0;
+        this.totalPremiumHistoryTable[1].premiumTotal = mv.totalUsd || 0;
 
         // Segunda Tabla
-        this.totalPremium[0].premiumAllRisk =
-          this.informationCard.report.endorsmentReporData.premium.allRisk;
-        this.totalPremium[0].premiumAlop =
-          this.informationCard.report.endorsmentReporData.premium.alop;
-        this.totalPremium[0].premiumTotal =
-          this.informationCard.report.endorsmentReporData.premium.totalInsured;
+        const premium = reportData.premium || {};
+        const netPremium = reportData.netPremium || {};
+        this.totalPremium[0].premiumAllRisk = premium.allRisk || 0;
+        this.totalPremium[0].premiumAlop = premium.alop || 0;
+        this.totalPremium[0].premiumTotal = premium.totalInsured || 0;
         this.totalPremium[0].sluAllRisk =
-          this.informationCard.report.endorsmentReporData.netPremium.allRiskSluShare;
+          netPremium.allRiskSluShare || 0;
         this.totalPremium[0].sluAlop =
-          this.informationCard.report.endorsmentReporData.netPremium.alopSluShare;
+          netPremium.alopSluShare || 0;
         this.totalPremium[0].sluTotal =
-          this.informationCard.report.endorsmentReporData.netPremium.sluShareTotal;
+          netPremium.sluShareTotal || 0;
       }
 
       // Invoca el  servicio para generar el excel

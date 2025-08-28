@@ -15,13 +15,37 @@
             <v-stepper-content step="1" class="step-one">
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
-                  <div class="inner-title">Endorsement date</div>
+                  <div class="input-cont">
+                    <v-text-field v-model.number="exchangeRate" label="Exchange rate" type="number" />
+                  </div>
+                </div>
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-text-field v-model.number="share" label="Share" suffix="%" type="number" />
+                  </div>
+                </div>
+              </div>
+              <div class="inner-title">Date</div>
+              <div class="input-row w-100 d-flex flex-wrap">
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-text-field v-model="InceptionDate" label="Inception date" readonly disabled />
+                  </div>
+                </div>
+                <div class="input-col">
+                  <div class="input-cont">
+                    <v-text-field v-model="ExpiryDate" label="Expiry date" readonly disabled />
+                  </div>
+                </div>
+              </div>
+              <div class="input-row w-100 d-flex flex-wrap">
+                <div class="input-col">
                   <div class="input-cont">
                     <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs" v-on="on"></v-text-field>
+                        <v-text-field v-model="effectiveDate" label="Endorsement effective date" readonly v-bind="attrs" v-on="on" />
                       </template>
-                      <v-date-picker v-model="effectiveDate" @input="menu2 = false" @change="endorsementDateValidation($event, effectiveDate)"></v-date-picker>
+                      <v-date-picker v-model="effectiveDate" @input="menu2 = false" @change="endorsementDateValidation($event, effectiveDate)" />
                     </v-menu>
                     <div v-if="this.endorsementDateError" class="error-message">The new Endorsement effective date must be lower than expiry date.</div>
                     <div v-if="!showInfoEndorsement" class="error-message">Please provide a valid endorsement effective date.</div>
@@ -31,30 +55,19 @@
                   <div class="input-cont">
                     <v-menu v-model="menu6" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="workStopDate" label="Work stoppage end date" readonly v-bind="attrs" v-on="on"></v-text-field>
+                        <v-text-field v-model="workStopDate" label="Reactivation of works" readonly v-bind="attrs" v-on="on" />
                       </template>
-                      <v-date-picker v-model="workStopDate" @input="menu6 = false" @change="StoppageDateValidation($event, workStopDate)"></v-date-picker>
+                      <v-date-picker v-model="workStopDate" @input="menu6 = false" @change="StoppageDateValidation($event, workStopDate)" />
                     </v-menu>
                     <div v-if="this.stoppageDateError" class="error-message">The new stoppage end date must be less than expiry date.</div>
                   </div>
                 </div>
-                <div class="input-col">
-                  <div class="input-cont">
-                    <v-menu v-model="menu4" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="ExpiryDate" label="Expiry date" readonly v-bind="attrs" v-on="on" disabled></v-text-field>
-                      </template>
-                      <v-date-picker v-model="ExpiryDate" @input="menu4 = false" @change="endDateValidation($event, ExpiryDate)"></v-date-picker>
-                    </v-menu>
-                    <div v-if="this.endDateError" class="error-message">The new Movement end date must be later than current date.</div>
-                  </div>
-                </div>
-                <InputDaysDiference :endorsementDate="effectiveDate" :expiryDate="expiryDatetoCalc" :key="effectiveDate" />
+                <InputDaysDiference :endorsementDate="effectiveDate" :expiryDate="workStopDate" :key="effectiveDate + workStopDate" />
               </div>
               <div v-if="showInfoEndorsement">
                 <div class="input-row w-100 d-flex flex-wrap">
                   <div class="w-100">
-                    <div class="inner-title">Reason for the stop</div>
+                    <div class="inner-title">Description (up to 300 characters)</div>
                     <div class="textarea-stopped-container">
                       <v-textarea v-model="reason" class="textarea-stopped" variant="filled" auto-grow rows="4" row-height="30" :maxlength="300"></v-textarea>
                     </div>
@@ -117,94 +130,78 @@
                       <div class="table-input table-title-without-bg">All Risk</div>
                       <div class="table-input table-title-without-bg">ALOP</div>
                       <div class="table-input table-title-without-bg">Total</div>
-                      <!--
-                      <div class="table-input table-title-without-bg-total">
-                        Total
-                      </div>
-                      -->
                     </div>
                   </div>
                 </div>
                 <div class="table-col">
                   <div class="table-title-empty-two">Total premium</div>
-                  <div class="container-table-subtitles">
-                    <div class="table-title-left">Original currency</div>
-                    <div class="table-title-rigth">USD</div>
-                  </div>
+                  <div class="table-title-left">Original currency</div>
                   <div class="input-row">
                     <div class="inner-col">
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].premiumAllRisk) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].premiumAllRisk) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].premiumAlop) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].premiumAlop) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].premiumTotal) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].premiumTotal) }}</div>
                       </div>
-                      <!--
-                      <div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                      </div>
-                      -->
                     </div>
                   </div>
                 </div>
                 <div class="table-col">
                   <div class="table-title-empty-two">Premium SLU</div>
-                  <div class="container-table-subtitles">
-                    <div class="table-title-left">Original currency</div>
-                    <div class="table-title-rigth">USD</div>
-                  </div>
+                  <div class="table-title-left">Original currency</div>
                   <div class="input-row">
                     <div class="inner-col">
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].sluAllRisk) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].sluAllRisk) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].sluAlop) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].sluAlop) }}</div>
                       </div>
-                      <div class="table-input-heigth blue-input space-between">
+                      <div class="table-input-heigth blue-input">
                         <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[0].sluTotal) }}</div>
-                        <div class="table-input-data" :readonly="!checkedModifyTable">{{ formatCurrency(totalPremium[1].sluTotal) }}</div>
                       </div>
-                      <!--<div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> {{ accountComplete.tiv.insurable.totalUsd }}</div>
-                      </div>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="totalPremium[1].premiumTotal > 0"
+                class="table-container container-input-row justify-center mt-6"
+              >
+                <div class="table-col-subtitle">
+                  <div class="table-title-empty"></div>
+                  <div class="input-row">
+                    <div class="inner-col">
+                      <div class="table-input table-title-without-bg">All Risk</div>
+                      <div class="table-input table-title-without-bg">ALOP</div>
+                      <div class="table-input table-title-without-bg">Total</div>
                     </div>
                   </div>
                 </div>
                 <div class="table-col">
-                  <div class="table-title-empty-two">Total premium</div>
+                  <div class="table-title-empty-two">USD</div>
                   <div class="container-table-subtitles">
-                    <div class="table-title-left">Original currency</div>
-                    <div class="table-title-rigth">USD</div>
+                    <div class="table-title-left">Total premium</div>
+                    <div class="table-title-rigth">Premium SLU</div>
                   </div>
                   <div class="input-row">
                     <div class="inner-col">
                       <div class="table-input-heigth blue-input space-between">
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[0].netAllRisk) }}</div>
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].netAllRisk) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].premiumAllRisk) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].sluAllRisk) }}</div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[0].netAlop) }}</div>
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].netAlop) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].premiumAlop) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].sluAlop) }}</div>
                       </div>
                       <div class="table-input-heigth blue-input space-between">
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[0].netTotal) }}</div>
-                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].netTotal) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].premiumTotal) }}</div>
+                        <div class="table-input-data">{{ formatCurrency(totalPremium[1].sluTotal) }}</div>
                       </div>
-                      <!--<div class="table-input-heigth blue-input space-between">
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                        <div  class="table-input-data"> ${{ accountComplete.tiv.insurable.totalUsd }}</div>
-                      </div>-->
                     </div>
                   </div>
                 </div>
@@ -306,6 +303,9 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
+              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+                <EndorsementReportCompleteTable :report="cleanReport" />
+              </div>
               <div class="files-submit flex justify-content-start align-items-start align-content-start">
                 <AppFile
                   v-for="(item, clave) in files"
@@ -353,6 +353,7 @@ import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
 import ModalEndorsement from "../../components/ModalEndorsement.vue";
+import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
 /* services */
 import EndorsementService from "../../services/endorsement.service";
 import PaymentService from "@/modules/home/services/payments.service";
@@ -372,6 +373,7 @@ export default {
     InputDaysDiference,
     ModalEndorsement,
     EndorsementDocuments,
+    EndorsementReportCompleteTable,
   },
   props: {
     type: { type: String, default: "construction Work Stoppage" },
@@ -408,12 +410,13 @@ export default {
       menu: false,
       menu2: false,
       menu3: false,
-      menu4: false,
       menu5: false,
       menu9: false,
       menu6: false,
       menu8: false,
       reason: "",
+      exchangeRate: Number(this.accountComplete.deductibles.exchangeRate || 0),
+      share: this.accountComplete.tiv?.boundInsurableProp?.sluLine || 0,
       clause: this.accountComplete.cartera.clausula,
       clauseList: [],
       cartera: {},
@@ -421,11 +424,11 @@ export default {
       workStopDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       workStopDateCalc: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000),
       ExpiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
+      InceptionDate: new Date(this.accountComplete.deductibles.inceptionDate).toISOString().substr(0, 10),
       stoppageDateError: false,
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       movementEndDate4: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       movementEndDate5: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
-      detail: 20,
       files: [
         {
           fileId: 1,
@@ -440,9 +443,6 @@ export default {
         },
       ],
       endorsementDocuments: [],
-      currentMovementEndDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
-      effectiveDateError: false,
-      endDateError: false,
       endorsmentReporData: {},
       admitedPremium: 0,
       isEdited: {},
@@ -494,6 +494,15 @@ export default {
 
       return result;
     },
+    cleanReport() {
+      return this.endorsmentReporData &&
+        Object.keys(this.endorsmentReporData).length > 0
+        ? {
+            endorsmentReporData: this.endorsmentReporData,
+            cartera: this.cartera,
+          }
+        : {};
+    },
   },
   watch: {
     e1: async function () {
@@ -523,6 +532,14 @@ export default {
           file.loaded = true;
           file.loading = false;
         }
+      }
+    },
+    exchangeRate(val) {
+      this.accountComplete.deductibles.exchangeRate = val;
+    },
+    share(val) {
+      if (this.accountComplete.tiv && this.accountComplete.tiv.boundInsurableProp) {
+        this.accountComplete.tiv.boundInsurableProp.sluLine = val;
       }
     },
   },
@@ -625,14 +642,6 @@ export default {
       this.$router.push(`/subscription`);
     },
 
-    endDateValidation(event, incomingDate) {
-      if (Date.parse(incomingDate) < Date.parse(this.currentMovementEndDate)) {
-        this.endDateError = true;
-      } else {
-        this.endDateError = false;
-      }
-    },
-
     StoppageDateValidation(event, incomingDate) {
       if (Date.parse(incomingDate) < Date.parse(this.expiryDatetoCalc)) {
         this.stoppageDateError = false;
@@ -705,6 +714,14 @@ export default {
           allRiskUsd: this.accountComplete.tiv.insurable.allRiskUsd,
           alopUsd: this.accountComplete.tiv.insurable.totalUsd,
           totalUsd: this.accountComplete.tiv.insurable.allRisk,
+        },
+        movementValues: {
+          allRisk: 0,
+          alop: 0,
+          total: 0,
+          allRiskUsd: 0,
+          alopUsd: 0,
+          totalUsd: 0,
         },
         premium: {
           ...this.accountComplete.tiv.premium,
