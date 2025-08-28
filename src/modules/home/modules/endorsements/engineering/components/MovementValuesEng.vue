@@ -215,13 +215,15 @@ export default {
         case 1: // Original currency action
           switch (concept) {
             case 'allRisk':
-              this.movementValuesComputed[1].allRisk = Decimal(!value ? 0 : Decimal(value)).div(
-                Decimal(this.exchangeRate || 0));
-              return value;
+              this.movementValuesComputed[1].allRisk = Decimal(value || 0)
+                .div(Decimal(this.exchangeRate || 1))
+                .toNumber();
+              return Number(value) || 0;
             case 'alop':
-              this.movementValuesComputed[1].alop = Decimal(!value ? 0 : Decimal(value)).div(
-                Decimal(this.exchangeRate || 0));
-              return value;
+              this.movementValuesComputed[1].alop = Decimal(value || 0)
+                .div(Decimal(this.exchangeRate || 1))
+                .toNumber();
+              return Number(value) || 0;
           }
         case 2: // USD action
           return 29;

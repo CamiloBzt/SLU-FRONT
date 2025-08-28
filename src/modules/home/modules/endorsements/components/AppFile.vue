@@ -3,7 +3,7 @@
     <!-- Muestra el archivo -->
     <div v-if="loaded" class="file">
       <!-- Header / Nombre del archivo -->
-      <div @click="downloadFile" class="file__header" v-tooltip="'Open'">
+      <div @click="downloadFile" class="file__header" :title="'Open'">
         {{ fileName }}
       </div>
 
