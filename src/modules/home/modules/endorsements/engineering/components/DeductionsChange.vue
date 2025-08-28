@@ -536,6 +536,12 @@ export default {
     },
   },
   methods: {
+    validateNumericValue(value, defaultValue = 0) {
+      if (value === null || value === undefined || isNaN(Number(value))) {
+        return defaultValue;
+      }
+      return Number(value);
+    },
     setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
       totalPremium[concept] = value;
@@ -576,9 +582,18 @@ export default {
       this.e1 = 1;
 
       // calcular diferencia del net premium
-      const originalNetPremium = this.accountComplete.net_premium.originalValues.netSluExcludingSurveyFeesTotal;
-      const newNetPremium = this.resultOriginalCurenncy.data.netSLUExcludingSurveyFeesTotal;
-      const netPremiumDifference = Decimal(Decimal(newNetPremium)).sub(Decimal(originalNetPremium)).toNumber();
+      const originalNetPremium = this.validateNumericValue(
+        this.accountComplete.net_premium?.originalValues
+          ?.netSluExcludingSurveyFeesTotal,
+        0
+      );
+      const newNetPremium = this.validateNumericValue(
+        this.resultOriginalCurenncy?.data?.netSLUExcludingSurveyFeesTotal,
+        0
+      );
+      const netPremiumDifference = Decimal(newNetPremium)
+        .sub(originalNetPremium)
+        .toNumber();
 
       // guardar la cuenta actualizada en BD
 

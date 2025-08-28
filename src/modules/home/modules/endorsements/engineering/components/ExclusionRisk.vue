@@ -720,6 +720,12 @@ export default {
     },
   },
   methods: {
+    validateNumericValue(value, defaultValue = 0) {
+      if (value === null || value === undefined || isNaN(Number(value))) {
+        return defaultValue;
+      }
+      return Number(value);
+    },
     toUsd(value) {
       const exchangeRate = this.accountComplete.deductibles.exchangeRate;
       return Decimal.div(value, exchangeRate).toNumber();
@@ -823,20 +829,24 @@ export default {
       this.e1 = 1;
 
       // calcular diferencia del net premium
-      const originalNetPremium =
-        this.accountComplete.net_premium.originalValues
-          .netSluExcludingSurveyFeesTotal;
+      const originalNetPremium = this.validateNumericValue(
+        this.accountComplete.net_premium?.originalValues
+          ?.netSluExcludingSurveyFeesTotal,
+        0
+      );
 
-      const netPremiumMovement =
-        this.netPremium.originalValues.netSLUExcludingSurveyFeesTotal;
+      const netPremiumMovement = this.validateNumericValue(
+        this.netPremium?.originalValues?.netSLUExcludingSurveyFeesTotal,
+        0
+      );
 
       const newNetPremium = Decimal.sub(
         originalNetPremium,
         netPremiumMovement
       ).toNumber();
 
-      const netPremiumDifference = Decimal(Decimal(newNetPremium))
-        .sub(Decimal(originalNetPremium))
+      const netPremiumDifference = Decimal(newNetPremium)
+        .sub(originalNetPremium)
         .toNumber();
 
       // Obteniendo el insurable

@@ -1269,16 +1269,19 @@ export default {
       this.accountComplete.tiv.insurable.total = premiumOriginal.premiumTotal;
       this.accountComplete.tiv.insurable.totalUsd = premiumUSD.premiumTotal;
 
-      // calcular diferencia del net premium
-      const originalNetPremium = removeDollarSign(
-        this.accountComplete.net_premium.originalValues.netTotal
-      );
-      const newNetPremium = removeDollarSign(
-        this.netPremium.originalValues.netTotal
-      );
-      const netPremiumDifference = Decimal(Decimal(newNetPremium))
-        .sub(Decimal(originalNetPremium))
-        .toNumber();
+        // calcular diferencia del net premium
+        const originalNetPremium =
+          Number(
+            removeDollarSign(
+              this.accountComplete.net_premium?.originalValues?.netTotal
+            )
+          ) || 0;
+        const newNetPremium =
+          Number(removeDollarSign(this.netPremium?.originalValues?.netTotal)) ||
+          0;
+        const netPremiumDifference = Decimal(newNetPremium)
+          .sub(originalNetPremium)
+          .toNumber();
 
       // Actualizar netPremium
       this.accountComplete.net_premium = this.netPremium;

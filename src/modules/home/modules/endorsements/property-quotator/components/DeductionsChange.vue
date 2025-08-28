@@ -889,9 +889,19 @@ export default {
       this.e1 = 1;
 
       // calcular diferencia del net premium
-      const originalNetPremium = removeDollarSign(this.accountComplete.net_premium.originalValues.netTotal);
-      const newNetPremium = removeDollarSign(this.resultOriginalCurenncy.data.netTotal);
-      const netPremiumDifference = Decimal(Decimal(newNetPremium)).sub(Decimal(originalNetPremium)).toNumber();
+      const originalNetPremium =
+        Number(
+          removeDollarSign(
+            this.accountComplete.net_premium?.originalValues?.netTotal
+          )
+        ) || 0;
+      const newNetPremium =
+        Number(
+          removeDollarSign(this.resultOriginalCurenncy?.data?.netTotal)
+        ) || 0;
+      const netPremiumDifference = Decimal(newNetPremium)
+        .sub(originalNetPremium)
+        .toNumber();
 
       const accountCompleteResponse = await accountCompleteService.addAccountComplete(this.subscriptionId, {
         ...this.accountComplete,

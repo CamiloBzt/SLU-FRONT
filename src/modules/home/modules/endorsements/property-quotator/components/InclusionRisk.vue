@@ -858,13 +858,17 @@ export default {
       this.e1 = 1;
 
       // calcular diferencia del net premium
-      const originalNetPremium = removeDollarSign(
-        this.accountComplete.net_premium.originalValues.netTotal
-      );
+      const originalNetPremium =
+        Number(
+          removeDollarSign(
+            this.accountComplete.net_premium?.originalValues?.netTotal
+          )
+        ) || 0;
 
-      const netPremiumMovement = removeDollarSign(
-        this.netPremium.originalValues.netTotal
-      );
+      const netPremiumMovement =
+        Number(
+          removeDollarSign(this.netPremium?.originalValues?.netTotal)
+        ) || 0;
 
       const newNetPremium = Decimal.add(
         originalNetPremium,
