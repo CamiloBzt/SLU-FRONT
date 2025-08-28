@@ -715,6 +715,14 @@ export default {
           alopUsd: this.accountComplete.tiv.insurable.totalUsd,
           totalUsd: this.accountComplete.tiv.insurable.allRisk,
         },
+        movementValues: {
+          allRisk: 0,
+          alop: 0,
+          total: 0,
+          allRiskUsd: 0,
+          alopUsd: 0,
+          totalUsd: 0,
+        },
         premium: {
           ...this.accountComplete.tiv.premium,
           allRisk: this.totalPremium[0].premiumAllRisk,
