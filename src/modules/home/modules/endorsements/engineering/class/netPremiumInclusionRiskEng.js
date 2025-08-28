@@ -19,6 +19,8 @@ export class netPremiumInclusionRiskEng {
     allRiskEng: 0,
     allRiskFronting: 0,
     allRiskColombia: 0,
+    allRiskLta: 0,
+    allRiskOthers: 0,
     allRiskNetSLUExcludingSurveyFees: 0,
     alopPremiumSlu: 0,
     alopBrokerage: 0,
@@ -26,12 +28,16 @@ export class netPremiumInclusionRiskEng {
     alopEng: 0,
     alopFronting: 0,
     alopColombia: 0,
+    alopLta: 0,
+    alopOthers: 0,
     alopNetSLUExcludingSurveyFees: 0,
     totalPremiumSlu: 0,
     brokerageTotal: 0,
     taxesTotal: 0,
     engTotal: 0,
     colombiaTotal: 0,
+    ltaTotal: 0,
+    othersTotal: 0,
     frontingTotal: 0,
     netSLUExcludingSurveyFeesTotal: 0,
   };
@@ -278,12 +284,36 @@ export class netPremiumInclusionRiskEng {
     this.data.allRiskEng = result;
     return result;
   }
+  allRiskLta() {
+    this.calculateTotalPremium();
+
+    const sluShare = this.allRiskPremiumSlu();
+    const result = calculateProperty(this.deductibles.lta, sluShare);
+
+    this.data.allRiskLta = result;
+    return result;
+  }
+
+  allRiskOthers() {
+    this.calculateTotalPremium();
+
+    const sluShare = this.allRiskPremiumSlu();
+    const result = calculateProperty(this.deductibles.others, sluShare);
+
+    this.data.allRiskOthers = result;
+    return result;
+  }
 
   allRiskFronting() {
     this.calculateTotalPremium();
 
-    const sluShare = this.allRiskPremiumSlu();
-    const result = calculateProperty(this.deductibles.fronting, sluShare);
+    const base = Decimal.sub(this.allRiskPremiumSlu(), this.allRiskBrokerage())
+      .sub(this.allRiskTaxes())
+      .sub(this.allRiskLta())
+      .sub(this.allRiskOthers())
+      .toNumber();
+
+    const result = calculateProperty(this.deductibles.fronting, base);
 
     this.data.allRiskFronting = result;
     return result;
@@ -349,11 +379,34 @@ export class netPremiumInclusionRiskEng {
     return value;
   }
 
-  alopFronting() {
+  alopLta() {
     this.calculateTotalPremium();
 
     const sluShare = this.alopPremiumSlu();
-    const value = calculateProperty(this.deductibles.fronting, sluShare);
+    const value = calculateProperty(this.deductibles.lta, sluShare);
+    this.data.alopLta = value;
+    return value;
+  }
+
+  alopOthers() {
+    this.calculateTotalPremium();
+
+    const sluShare = this.alopPremiumSlu();
+    const value = calculateProperty(this.deductibles.others, sluShare);
+    this.data.alopOthers = value;
+    return value;
+  }
+
+  alopFronting() {
+    this.calculateTotalPremium();
+
+    const base = Decimal.sub(this.alopPremiumSlu(), this.alopBrokerage())
+      .sub(this.alopTaxes())
+      .sub(this.alopLta())
+      .sub(this.alopOthers())
+      .toNumber();
+
+    const value = calculateProperty(this.deductibles.fronting, base);
     this.data.alopFronting = value;
     return value;
   }
@@ -371,9 +424,9 @@ export class netPremiumInclusionRiskEng {
   alopNetSLUExcludingSurveyFees() {
     const value = Decimal.sub(this.alopPremiumSlu(), this.alopBrokerage())
       .sub(this.alopTaxes())
-      .sub(this.alopEng())
       .sub(this.alopFronting())
-      .sub(this.alopColombia())
+      .sub(this.alopLta())
+      .sub(this.alopOthers())
       .toNumber();
 
     this.data.alopNetSLUExcludingSurveyFees = value;
@@ -383,9 +436,9 @@ export class netPremiumInclusionRiskEng {
   allRiskNetSLUExcludingSurveyFees() {
     const value = Decimal.sub(this.allRiskPremiumSlu(), this.allRiskBrokerage())
       .sub(this.allRiskTaxes())
-      .sub(this.allRiskEng())
       .sub(this.allRiskFronting())
-      .sub(this.allRiskColombia())
+      .sub(this.allRiskLta())
+      .sub(this.allRiskOthers())
       .toNumber();
 
     this.data.allRiskNetSLUExcludingSurveyFees = value;
@@ -436,6 +489,24 @@ export class netPremiumInclusionRiskEng {
       this.alopColombia()
     );
     this.data.colombiaTotal = result;
+    return format;
+  }
+
+  ltaTotal() {
+    const { format, result } = calculateTotal(
+      this.allRiskLta(),
+      this.alopLta()
+    );
+    this.data.ltaTotal = result;
+    return format;
+  }
+
+  othersTotal() {
+    const { format, result } = calculateTotal(
+      this.allRiskOthers(),
+      this.alopOthers()
+    );
+    this.data.othersTotal = result;
     return format;
   }
 
