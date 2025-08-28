@@ -64,7 +64,7 @@
             large
             text
             class="finishBtn"
-            @click.stop
+            @click = "sendToFacultative"
             :disabled="!buttonsEnabled"
           >
             Send To Facultative

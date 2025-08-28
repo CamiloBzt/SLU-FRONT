@@ -57,7 +57,7 @@
             text
             class="finishBtn"
             :disabled="!buttonsEnabled"
-            @click.stop
+            @click = "sendToFacultative"
           >
             Send To Facultative
           </v-btn>
@@ -72,7 +72,7 @@
             text
             class="finishBtn"
             :disabled="!buttonsEnabled"
-            @click.stop
+            @click = "createWallet"
           >
             Create Wallet
           </v-btn>
