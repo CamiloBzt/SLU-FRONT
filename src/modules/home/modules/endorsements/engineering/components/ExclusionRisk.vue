@@ -911,7 +911,7 @@ export default {
         files: this.endorsementDocuments,
       });
 
-      this.$router.push(`/subscription`);
+      this.$router.push(`/endorsements/engineering/${this.subscriptionId}`);
     },
 
     async endDateValidation(event, incomingDate) {
