@@ -1002,7 +1002,7 @@ export default {
         files: this.endorsementDocuments,
       });
 
-      this.$router.push(`/subscription`);
+      await this.backToCreateEndorsement();
     },
 
     ExpiryDateValidation(event, incomingDate) {
