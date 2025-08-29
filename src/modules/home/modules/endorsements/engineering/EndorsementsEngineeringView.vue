@@ -788,6 +788,10 @@ export default {
         await EndorsementService.getEndorsementsBySubscriptionId(
           this.subscriptionId
         );
+      const target = `/endorsements/engineering/${this.subscriptionId}`;
+      if (this.$route.path !== target) {
+        this.$router.push(target);
+      }
     },
     async backHistoryTableToId(id) {
       this.selectedEndorsementId = id;

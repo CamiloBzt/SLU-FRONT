@@ -917,10 +917,12 @@ export default {
           await this.$refs.endorsementDocs.uploadPendingFiles();
         }
       }
-
-      await this.backToCreateEndorsement();
       this.createdEndorsementId = 0;
       this.endorsementDocuments = [];
+
+      if (typeof this.backToCreateEndorsement === "function") {
+        await this.backToCreateEndorsement();
+      }
     },
 
     endDateValidation(event, incomingDate) {
