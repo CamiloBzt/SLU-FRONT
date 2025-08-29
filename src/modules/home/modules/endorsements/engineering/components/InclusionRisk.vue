@@ -914,7 +914,10 @@ export default {
         });
       }
 
-      this.$router.push(`/endorsements/engineering/${this.subscriptionId}`);
+      const target = `/endorsements/engineering/${this.subscriptionId}`;
+      if (this.$route.path !== target) {
+        this.$router.push(target);
+      }
     },
 
     endDateValidation(event, incomingDate) {
