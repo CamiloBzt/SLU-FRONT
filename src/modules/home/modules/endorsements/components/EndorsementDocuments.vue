@@ -69,6 +69,7 @@ export default {
     return {
       dragging: false,
       files: [],
+      isUploading: false,
     };
   },
   props: {
@@ -126,6 +127,8 @@ export default {
         return;
       }
 
+      if (this.isUploading) return;
+      this.isUploading = true;
       this.setLoading();
       try {
         const resp = await EndorsementServices.updateDocumentsEndorsement({
@@ -149,6 +152,7 @@ export default {
         console.error('Error in updateDocumentsEndorsement: ', error);
       } finally {
         this.setLoading();
+        this.isUploading = false;
       }
 
       this.$emit("setEndorsementDocuments", { files: this.files });
@@ -156,11 +160,12 @@ export default {
     },
 
     async uploadPendingFiles() {
-      if (!this.effectiveIdEndorsement) return;
+      if (!this.effectiveIdEndorsement || this.isUploading) return;
       const pending = this.files.filter((f) => !f.id && f.file);
       if (pending.length === 0) return;
 
       const uploaded = this.files.filter((f) => f.id);
+      this.isUploading = true;
       this.setLoading();
       try {
         const resp = await EndorsementServices.updateDocumentsEndorsement({
@@ -185,6 +190,7 @@ export default {
         console.error('Error uploading pending files: ', error);
       } finally {
         this.setLoading();
+        this.isUploading = false;
       }
       this.$emit("setEndorsementDocuments", { files: this.files });
       if (this.reloadFiles && typeof this.reloadFiles === 'function') this.reloadFiles();
@@ -236,9 +242,6 @@ export default {
   mounted() {
     if (this.effectiveEndorsementDocuments.length > 0) {
       this.files = this.effectiveEndorsementDocuments;
-    }
-    if (this.effectiveIdEndorsement) {
-      this.uploadPendingFiles();
     }
   },
 };
