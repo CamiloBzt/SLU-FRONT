@@ -551,6 +551,9 @@
       </div>
 
       <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
         @setEndorsementDocuments="setEndorsementDocuments"
         v-show="e1 == 1 || e1 == 3"
       />
@@ -746,6 +749,7 @@ export default {
         },
       ],
       endorsementDocuments: [],
+      createdEndorsementId: 0,
       cartera: {},
       endorsmentReporData: {},
       buttonTitle: "Next",
@@ -817,7 +821,7 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     /* Hooks para tabla de archivos (placeholders) */
@@ -879,7 +883,7 @@ export default {
       );
 
       // 2) Guardar el endoso 15 (Internal Adjustments)
-      await EndorsementService.addEndorsment({
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 15,
         idUser: this.$store.state.auth.user.id,
@@ -895,10 +899,18 @@ export default {
             ...this.cartera,
           },
         },
-        files: this.endorsementDocuments,
       });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
+      }
 
       await this.backToCreateEndorsement();
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
     },
   },
   watch: {

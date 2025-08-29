@@ -233,6 +233,7 @@
       :endorsementDocuments="endorsementDocuments"
       :reloadFiles="reloadFiles"
       :key="idEndorsementDinamic"
+      @setEndorsementDocuments="endorsementDocuments = $event.files"
     />
 
     <!-- Boton return para la vista de endosos creados -->
@@ -787,6 +788,10 @@ export default {
         await EndorsementService.getEndorsementsBySubscriptionId(
           this.subscriptionId
         );
+      const target = `/endorsements/engineering/${this.subscriptionId}`;
+      if (this.$route.path !== target) {
+        this.$router.push(target);
+      }
     },
     async backHistoryTableToId(id) {
       this.selectedEndorsementId = id;

@@ -74,7 +74,13 @@
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
         <v-btn :outlined="e1 == 3 ? false : true" rounded large :text="e1 == 3 ? true : false" :class="e1 == 3 ? 'blue-btn' : 'clear-btn'" :color="e1 == 3 ? 'none' : '#003D6D'" @click="goNext(e1)">
@@ -147,6 +153,7 @@ export default {
       clauseList: [],
       clause: this.accountComplete.cartera.clausula,
       endorsementDocuments: [],
+      createdEndorsementId: 0,
       buttonTitle: "Finalize",
       buttonTitleBack: "Cancel",
     };
@@ -189,7 +196,7 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     async submit() {
@@ -223,7 +230,7 @@ export default {
       });
 
       //guardar registro del endoso
-      await EndorsementService.addEndorsment({
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 5,
         idUser: this.$store.state.auth.user.id,
@@ -235,9 +242,17 @@ export default {
             ...this.cartera,
           },
         },
-        files: this.endorsementDocuments,
       });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
+      }
       await this.backToCreateEndorsement();
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
     },
 
     endDateValidation(event, incomingDate) {

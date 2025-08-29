@@ -305,6 +305,9 @@
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
       <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
         @setEndorsementDocuments="setEndorsementDocuments"
         v-show="e1 == 1 || e1 == 3"
       />
@@ -427,6 +430,7 @@ export default {
         },
       ],
       endorsementDocuments: [],
+      createdEndorsementId: 0,
       insurable: [],
       detailValues: [
         {
@@ -819,7 +823,7 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     async submit() {
@@ -887,7 +891,7 @@ export default {
         });
 
       //guardar registro del endoso
-      await EndorsementService.addEndorsment({
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 1,
         idUser: this.$store.state.auth.user.id,
@@ -905,10 +909,20 @@ export default {
             admitedPremium: this.admitedPremium,
           },
         },
-        files: this.endorsementDocuments,
       });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
+      }
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
 
-      this.$router.push(`/subscription`);
+      if (typeof this.backToCreateEndorsement === "function") {
+        await this.backToCreateEndorsement();
+      }
     },
 
     endDateValidation(event, incomingDate) {

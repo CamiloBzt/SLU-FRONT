@@ -13,6 +13,8 @@
         <th class="table-header">fronting</th>
         <th class="table-header" colspan="2">ENG fee</th>
         <th class="table-header">Reserve</th>
+        <th class="table-header">LTA</th>
+        <th class="table-header">Others</th>
       </tr>
     </thead>
     <tbody>
@@ -32,6 +34,8 @@
         <td class="table-info">
           {{ formatPercentage(deductibles.premiumReserve) }}
         </td>
+        <td class="table-info">{{ formatPercentage(deductibles.lta) }}</td>
+        <td class="table-info">{{ formatPercentage(deductibles.others) }}</td>
       </tr>
       <tr class="data-row">
         <td colspan="30"></td>
@@ -50,6 +54,8 @@
         <th class="table-header" colspan="2">fronting</th>
         <th class="table-header" colspan="2">ENG</th>
         <th class="table-header" colspan="2">Reserve</th>
+        <th class="table-header" colspan="2">LTA</th>
+        <th class="table-header" colspan="2">Others</th>
         <th class="table-header" colspan="2">
           Net to SLU excluding survey fees
         </th>
@@ -68,6 +74,8 @@
         <td colspan="2">{{ formatCurrency(netPremium.allRiskFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.allRiskEng) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.allRiskColombia) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremium.allRiskLta) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremium.allRiskOthers) }}</td>
         <td colspan="2">
           {{ formatCurrency(netPremium.allRiskNetSLUExcludingSurveyFees) }}
         </td>
@@ -86,6 +94,8 @@
         <td colspan="2">{{ formatCurrency(netPremium.alopFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.alopEng) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.alopColombia) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremium.alopLta) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremium.alopOthers) }}</td>
         <td colspan="2">
           {{ formatCurrency(netPremium.alopNetSLUExcludingSurveyFees) }}
         </td>
@@ -104,6 +114,8 @@
         <td colspan="2">{{ formatCurrency(netPremium.frontingTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.engTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremium.colombiaTotal) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremium.ltaTotal) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremium.othersTotal) }}</td>
         <td colspan="2">
           {{ formatCurrency(netPremium.netSLUExcludingSurveyFeesTotal) }}
         </td>
@@ -122,6 +134,8 @@
         <th class="table-header">fronting</th>
         <th class="table-header" colspan="2">ENG fee</th>
         <th class="table-header">Reserve</th>
+        <th class="table-header">LTA</th>
+        <th class="table-header">Others</th>
       </tr>
     </thead>
     <tbody>
@@ -141,6 +155,8 @@
         <td class="table-info">
           {{ formatPercentage(deductibles.premiumReserve) }}
         </td>
+        <td class="table-info">{{ formatPercentage(deductibles.lta) }}</td>
+        <td class="table-info">{{ formatPercentage(deductibles.others) }}</td>
       </tr>
       <tr class="data-row">
         <td colspan="30"></td>
@@ -159,6 +175,8 @@
         <th class="table-header" colspan="2">fronting</th>
         <th class="table-header" colspan="2">ENG</th>
         <th class="table-header" colspan="2">Reserve</th>
+        <th class="table-header" colspan="2">LTA</th>
+        <th class="table-header" colspan="2">Others</th>
         <th class="table-header" colspan="2">
           Net to SLU excluding survey fees
         </th>
@@ -179,6 +197,8 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.allRiskFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.allRiskEng) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.allRiskColombia) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremiumUSD.allRiskLta) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremiumUSD.allRiskOthers) }}</td>
         <td colspan="2">
           {{ formatCurrency(netPremiumUSD.allRiskNetSLUExcludingSurveyFees) }}
         </td>
@@ -199,6 +219,8 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.alopFronting) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.alopEng) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.alopColombia) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremiumUSD.alopLta) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremiumUSD.alopOthers) }}</td>
         <td colspan="2">
           {{ formatCurrency(netPremiumUSD.alopNetSLUExcludingSurveyFees) }}
         </td>
@@ -217,6 +239,8 @@
         <td colspan="2">{{ formatCurrency(netPremiumUSD.frontingTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.engTotal) }}</td>
         <td colspan="2">{{ formatCurrency(netPremiumUSD.colombiaTotal) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremiumUSD.ltaTotal) }}</td>
+        <td colspan="2">{{ formatCurrency(netPremiumUSD.othersTotal) }}</td>
         <td colspan="2">
           {{ formatCurrency(netPremiumUSD.netSLUExcludingSurveyFeesTotal) }}
         </td>
@@ -275,9 +299,6 @@ export default {
     totalValues() {
       return this.report.endorsmentReporData.totalValues || {};
     },
-  },
-  async mounted() {
-    console.log("report", this.report.endorsmentReporData);
   },
   methods: {
     formattedDate() {

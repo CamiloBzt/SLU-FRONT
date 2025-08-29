@@ -181,7 +181,13 @@
         </div>
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
       <AdmittedPremiumTableEngineering v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
@@ -273,6 +279,7 @@ export default {
         },
       ],
       endorsementDocuments: [],
+      createdEndorsementId: 0,
       sharePorcent: 0,
       premiumMovement: 0,
       premiumSlu: 0,
@@ -514,7 +521,7 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     async submit() {
@@ -562,7 +569,7 @@ export default {
       });
 
       //guardar registro del endoso
-      await EndorsementService.addEndorsment({
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 6,
         idUser: this.$store.state.auth.user.id,
@@ -579,10 +586,18 @@ export default {
             admitedPremium: this.admitedPremium,
           },
         },
-        files: this.endorsementDocuments,
       });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
+      }
 
-      this.$router.push(`/subscription`);
+      await this.backToCreateEndorsement();
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
     },
 
     endDateValidation(event, incomingDate) {

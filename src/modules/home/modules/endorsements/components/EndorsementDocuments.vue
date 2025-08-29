@@ -69,6 +69,7 @@ export default {
     return {
       dragging: false,
       files: [],
+      isUploading: false,
     };
   },
   props: {
@@ -87,15 +88,23 @@ export default {
       return Array.isArray(this.endorsementDocuments) ? this.endorsementDocuments : [];
     }
   },
+  watch: {
+    // Once the endorsement id exists, upload any pending files
+    effectiveIdEndorsement(newVal, oldVal) {
+      if (newVal && newVal !== oldVal) {
+        this.uploadPendingFiles();
+      }
+    },
+    // Keep local list in sync when parent updates the documents array
+    effectiveEndorsementDocuments(newDocs) {
+      this.files = Array.isArray(newDocs) ? [...newDocs] : [];
+    },
+  },
   methods: {
     ...mapActions(["DownloadDoc", "downloadDocument", "upload"]),
     ...mapMutations(["setLoading"]),
 
     async addFiles(files) {
-      if (!this.effectiveIdEndorsement) {
-        console.warn('No endorsement id yet. Open an endorsement first.')
-        return;
-      }
       const fileList = Array.from(files);
       for (const file of fileList) {
         if (file.size > 30000000) {
@@ -103,17 +112,34 @@ export default {
           return;
         }
       }
+
+      // If there is no endorsement yet, keep files locally and emit them to the parent
+      if (!this.effectiveIdEndorsement) {
+        for (const file of fileList) {
+          this.files.push({
+            id: null,
+            name: file.name,
+            text: file.name,
+            file,
+          });
+        }
+        this.$emit("setEndorsementDocuments", { files: this.files });
+        return;
+      }
+
+      if (this.isUploading) return;
+      this.isUploading = true;
       this.setLoading();
-      try{
+      try {
         const resp = await EndorsementServices.updateDocumentsEndorsement({
           id: this.effectiveIdEndorsement,
           files: fileList,
         });
-        const created = Array.isArray(resp) 
-        ? resp 
-        : Array.isArray(resp?.response)
-        ?resp.response
-        : JSON.parse(resp?.response || "[]");
+        const created = Array.isArray(resp)
+          ? resp
+          : Array.isArray(resp?.response)
+          ? resp.response
+          : JSON.parse(resp?.response || "[]");
         for (const doc of created) {
           this.files.push({
             id: doc.id,
@@ -126,11 +152,50 @@ export default {
         console.error('Error in updateDocumentsEndorsement: ', error);
       } finally {
         this.setLoading();
+        this.isUploading = false;
+      }
+
+      this.$emit("setEndorsementDocuments", { files: this.files });
+      if (this.reloadFiles && typeof this.reloadFiles === 'function') this.reloadFiles();
+    },
+
+    async uploadPendingFiles() {
+      if (!this.effectiveIdEndorsement || this.isUploading) return;
+      const pending = this.files.filter((f) => !f.id && f.file);
+      if (pending.length === 0) return;
+
+      const uploaded = this.files.filter((f) => f.id);
+      this.isUploading = true;
+      this.setLoading();
+      try {
+        const resp = await EndorsementServices.updateDocumentsEndorsement({
+          id: this.effectiveIdEndorsement,
+          files: pending.map((p) => p.file),
+        });
+        const created = Array.isArray(resp)
+          ? resp
+          : Array.isArray(resp?.response)
+          ? resp.response
+          : JSON.parse(resp?.response || "[]");
+        this.files = uploaded;
+        for (const doc of created) {
+          this.files.push({
+            id: doc.id,
+            name: doc.name,
+            text: doc.name,
+            url: doc.url,
+          });
+        }
+      } catch (error) {
+        console.error('Error uploading pending files: ', error);
+      } finally {
+        this.setLoading();
+        this.isUploading = false;
       }
       this.$emit("setEndorsementDocuments", { files: this.files });
       if (this.reloadFiles && typeof this.reloadFiles === 'function') this.reloadFiles();
     },
-    
+
     removeFile(index, file) {
       this.files.splice(index, 1);
       if (this.effectiveIdEndorsement && file?.id) {
@@ -140,15 +205,15 @@ export default {
       if (this.reloadFiles && typeof this.reloadFiles === 'function') this.reloadFiles();
     },
     async download(item) {
-      console.log('Download clicked for item:', item);
-      console.log('Current idEndorsement:', this.idEndorsement);
-      console.log('Effective idEndorsement:', this.effectiveIdEndorsement);
-      
-      // Prefer a direct URI if present
+      if (item?.file) {
+        const url = URL.createObjectURL(item.file);
+        this.downloadDocument(url);
+        URL.revokeObjectURL(url);
+        return;
+      }
       if (item?.uri) return this.downloadDocument(item.uri, item.text || item.name);
-      if (item?.document_url) return this.downloadDocument (item.document_url, item.text ||item.name);
-      // Use the S3 path structure for endorsements: END_<endorsementId>/
-      const fileKey = item?.url
+      if (item?.document_url) return this.downloadDocument(item.document_url, item.text || item.name);
+      const fileKey = item?.url;
       if (!fileKey) {
         return;
       }
@@ -162,26 +227,12 @@ export default {
       } catch (e) {
         console.error('Error downloading file:', e);
       }
-      
-      console.warn('No file information available for download', { 
-        fileKey, 
-        idEndorsement: this.idEndorsement, 
-        effectiveIdEndorsement: this.effectiveIdEndorsement 
-      });
     },
     async handleFileSelect(event) {
-      if (!this.effectiveIdEndorsement) {
-        console.warn('No endorsement id yet. Open an endorsement first.')
-        return;
-      }
       const files = Array.from(event.target.files);
       await this.addFiles(files);
     },
     dropFile(event) {
-      if (!this.effectiveIdEndorsement) {
-        console.warn('No endorsement id yet. Open an endorsement first.')
-        return;
-      }
       const files = Array.from(event.dataTransfer.files);
       this.addFiles(files);
       this.dragging = false;
@@ -189,17 +240,8 @@ export default {
     },
   },
   mounted() {
-    console.log('EndorsementDocuments mounted with props:', {
-      idEndorsement: this.idEndorsement,
-      endorsementDocuments: this.endorsementDocuments,
-      reloadFiles: this.reloadFiles,
-      effectiveIdEndorsement: this.effectiveIdEndorsement,
-      effectiveEndorsementDocuments: this.effectiveEndorsementDocuments
-    });
-    
     if (this.effectiveEndorsementDocuments.length > 0) {
       this.files = this.effectiveEndorsementDocuments;
-      console.log('Loaded existing files:', this.files);
     }
   },
 };
