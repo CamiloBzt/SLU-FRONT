@@ -887,7 +887,7 @@ export default {
         });
 
       //guardar registro del endoso
-      await EndorsementService.addEndorsment({
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 1,
         idUser: this.$store.state.auth.user.id,
@@ -905,8 +905,14 @@ export default {
             admitedPremium: this.admitedPremium,
           },
         },
-        files: this.endorsementDocuments,
       });
+
+      if (endorsementResponse?.id && this.endorsementDocuments.length) {
+        await EndorsementService.updateDocumentsEndorsement({
+          id: endorsementResponse.id,
+          files: this.endorsementDocuments.map((f) => f.file),
+        });
+      }
 
       this.$router.push(`/subscription`);
     },

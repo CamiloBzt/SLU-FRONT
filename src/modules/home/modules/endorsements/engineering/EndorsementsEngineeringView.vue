@@ -233,6 +233,7 @@
       :endorsementDocuments="endorsementDocuments"
       :reloadFiles="reloadFiles"
       :key="idEndorsementDinamic"
+      @setEndorsementDocuments="endorsementDocuments = $event.files"
     />
 
     <!-- Boton return para la vista de endosos creados -->

@@ -96,7 +96,7 @@ export default {
         reader.onload = () => {
           // Notifica que se termino de cargar el archivo
           this.$emit("loading", {
-            id: fileId,
+            id: this.fileId,
             loaded: false,
             error: false,
             errorMessage: "",
@@ -123,7 +123,7 @@ export default {
         });
       } else {
         this.$emit("errors", {
-          id: fileId,
+          id: this.fileId,
           loaded: false,
           error: true,
           errorMessage: "Document size must be less than 30 MB",
@@ -136,9 +136,8 @@ export default {
       if (!input.files?.length) {
         return;
       }
-      const file = input.files[0]
-      console.log('addfileconsole')
-      this.addFile(file)
+      const file = input.files[0];
+      this.addFile(file);
     },
 
     downloadFile() {

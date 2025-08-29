@@ -94,6 +94,10 @@ export default {
         this.uploadPendingFiles();
       }
     },
+    // Keep local list in sync when parent updates the documents array
+    effectiveEndorsementDocuments(newDocs) {
+      this.files = Array.isArray(newDocs) ? [...newDocs] : [];
+    },
   },
   methods: {
     ...mapActions(["DownloadDoc", "downloadDocument", "upload"]),
