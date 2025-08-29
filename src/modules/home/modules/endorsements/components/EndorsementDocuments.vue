@@ -87,6 +87,14 @@ export default {
       return Array.isArray(this.endorsementDocuments) ? this.endorsementDocuments : [];
     }
   },
+  watch: {
+    // Once the endorsement id exists, upload any pending files
+    effectiveIdEndorsement(newVal, oldVal) {
+      if (newVal && newVal !== oldVal) {
+        this.uploadPendingFiles();
+      }
+    },
+  },
   methods: {
     ...mapActions(["DownloadDoc", "downloadDocument", "upload"]),
     ...mapMutations(["setLoading"]),
@@ -142,7 +150,42 @@ export default {
       this.$emit("setEndorsementDocuments", { files: this.files });
       if (this.reloadFiles && typeof this.reloadFiles === 'function') this.reloadFiles();
     },
-    
+
+    async uploadPendingFiles() {
+      if (!this.effectiveIdEndorsement) return;
+      const pending = this.files.filter((f) => !f.id && f.file);
+      if (pending.length === 0) return;
+
+      const uploaded = this.files.filter((f) => f.id);
+      this.setLoading();
+      try {
+        const resp = await EndorsementServices.updateDocumentsEndorsement({
+          id: this.effectiveIdEndorsement,
+          files: pending.map((p) => p.file),
+        });
+        const created = Array.isArray(resp)
+          ? resp
+          : Array.isArray(resp?.response)
+          ? resp.response
+          : JSON.parse(resp?.response || "[]");
+        this.files = uploaded;
+        for (const doc of created) {
+          this.files.push({
+            id: doc.id,
+            name: doc.name,
+            text: doc.name,
+            url: doc.url,
+          });
+        }
+      } catch (error) {
+        console.error('Error uploading pending files: ', error);
+      } finally {
+        this.setLoading();
+      }
+      this.$emit("setEndorsementDocuments", { files: this.files });
+      if (this.reloadFiles && typeof this.reloadFiles === 'function') this.reloadFiles();
+    },
+
     removeFile(index, file) {
       this.files.splice(index, 1);
       if (this.effectiveIdEndorsement && file?.id) {
@@ -189,6 +232,9 @@ export default {
   mounted() {
     if (this.effectiveEndorsementDocuments.length > 0) {
       this.files = this.effectiveEndorsementDocuments;
+    }
+    if (this.effectiveIdEndorsement) {
+      this.uploadPendingFiles();
     }
   },
 };
