@@ -921,7 +921,7 @@ export default {
         }
       }
 
-      this.$router.push(`/endorsements/engineering/${this.subscriptionId}`);
+      await this.backToCreateEndorsement();
       this.createdEndorsementId = 0;
       this.endorsementDocuments = [];
     },
