@@ -305,6 +305,9 @@
       </div>
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
       <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
         @setEndorsementDocuments="setEndorsementDocuments"
         v-show="e1 == 1 || e1 == 3"
       />
@@ -427,6 +430,7 @@ export default {
         },
       ],
       endorsementDocuments: [],
+      createdEndorsementId: 0,
       insurable: [],
       detailValues: [
         {
@@ -819,7 +823,7 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     async submit() {
@@ -906,18 +910,17 @@ export default {
           },
         },
       });
-
-      if (endorsementResponse?.id && this.endorsementDocuments.length) {
-        await EndorsementService.updateDocumentsEndorsement({
-          id: endorsementResponse.id,
-          files: this.endorsementDocuments.map((f) => f.file),
-        });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
       }
 
-      const target = `/endorsements/engineering/${this.subscriptionId}`;
-      if (this.$route.path !== target) {
-        this.$router.push(target);
-      }
+      await this.backToCreateEndorsement();
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
     },
 
     endDateValidation(event, incomingDate) {
