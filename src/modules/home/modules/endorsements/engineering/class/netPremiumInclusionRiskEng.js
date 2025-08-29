@@ -3,7 +3,6 @@ import {
   sluShare,
   calculateProperty,
   calculateTotal,
-  calculateNet,
 } from "@/application/class/utils";
 
 export class netPremiumInclusionRiskEng {

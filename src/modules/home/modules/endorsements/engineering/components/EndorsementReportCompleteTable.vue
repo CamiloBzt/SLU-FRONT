@@ -300,9 +300,6 @@ export default {
       return this.report.endorsmentReporData.totalValues || {};
     },
   },
-  async mounted() {
-    console.log("report", this.report.endorsmentReporData);
-  },
   methods: {
     formattedDate() {
       if (this.report.cartera && this.report.cartera.premiumPaymentDate) {
