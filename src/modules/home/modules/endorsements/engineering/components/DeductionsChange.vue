@@ -213,7 +213,13 @@
       </div>
 
       <!-- <DocumentsEndorsement v-if="e1 == 1 || e1 == 3" /> -->
-      <EndorsementDocuments @setEndorsementDocuments="setEndorsementDocuments" v-show="e1 == 1 || e1 == 3" />
+      <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
+        @setEndorsementDocuments="setEndorsementDocuments"
+        v-show="e1 == 1 || e1 == 3"
+      />
       <AdmittedPremiumTableEngineering v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" />
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
@@ -333,6 +339,7 @@ export default {
         },
       ],
       endorsementDocuments: [],
+      createdEndorsementId: 0,
       brokerage: 0,
       taxes: 0,
       engFee: 0,
@@ -575,7 +582,7 @@ export default {
     },
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     async submit() {
@@ -643,16 +650,24 @@ export default {
       });
 
       //guardar registro del endoso
-      await EndorsementService.addEndorsment({
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 4,
         idUser: this.$store.state.auth.user.id,
         accountId: accountCompleteResponse.id,
         effectiveDate: this.effectiveDate,
-        files: this.endorsementDocuments,
       });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
+      }
 
       this.$router.push(`/endorsements/engineering/${this.subscriptionId}`);
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
     },
 
     endDateValidation(event, incomingDate) {

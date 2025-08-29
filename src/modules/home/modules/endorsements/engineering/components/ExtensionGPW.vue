@@ -195,6 +195,9 @@
         </div>
       </div>
       <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
         @setEndorsementDocuments="setEndorsementDocuments"
         v-show="e1 == 1 || e1 == 3"
       />
@@ -286,6 +289,7 @@ export default {
       selectedEndorsement: 0,
       endorsmentReporData: {},
       endorsementDocuments: [],
+      createdEndorsementId: 0,
       endorsementDateError: false,
       expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
       attrs: null,
@@ -851,7 +855,7 @@ export default {
     async updateFile(data) {},
 
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     async submit() {
@@ -916,8 +920,14 @@ export default {
             admitedPremium: this.admitedPremium,
           },
         },
-        files: this.endorsementDocuments,
       });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
+      }
 
       // Guardar todo lo hecho en installments
       // this.allDatas.map(async el => {
@@ -972,6 +982,8 @@ export default {
       });
 
       await this.backToCreateEndorsement();
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
     },
 
     deleteInstallment(id) {

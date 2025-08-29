@@ -438,6 +438,9 @@
       </div>
 
       <EndorsementDocuments
+        ref="endorsementDocs"
+        :idEndorsement="createdEndorsementId"
+        :endorsementDocuments="endorsementDocuments"
         @setEndorsementDocuments="setEndorsementDocuments"
         v-show="e1 == 1 || e1 == 3"
       />
@@ -555,6 +558,7 @@ export default {
       clauseList: [],
       clause: this.accountComplete.cartera.clausula,
       endorsementDocuments: [],
+      createdEndorsementId: 0,
 
       // Valores para las tablas
       originalValues: {
@@ -863,7 +867,7 @@ export default {
 
     // Otros métodos existentes...
     setEndorsementDocuments({ files }) {
-      this.endorsementDocuments = files;
+      this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
 
     async getExcel() {
@@ -1038,7 +1042,7 @@ export default {
         });
 
       //guardar registro del endoso
-      await EndorsementService.addEndorsment({
+      const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
         endorsmentType: 8,
         idUser: this.$store.state.auth.user.id,
@@ -1054,10 +1058,18 @@ export default {
             ...this.cartera,
           },
         },
-        files: this.endorsementDocuments,
       });
+      if (endorsementResponse?.id) {
+        this.createdEndorsementId = endorsementResponse.id;
+        if (this.endorsementDocuments.length) {
+          await this.$nextTick();
+          await this.$refs.endorsementDocs.uploadPendingFiles();
+        }
+      }
 
       await this.backToCreateEndorsement();
+      this.createdEndorsementId = 0;
+      this.endorsementDocuments = [];
     },
 
     goNext(e1) {
