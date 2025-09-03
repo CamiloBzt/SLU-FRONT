@@ -191,7 +191,8 @@
                       :items="clauseList"
                       item-value="clause"
                       item-text="clause"
-                      disabled
+                      :menu-props="{ disabled: true }"
+                      readonly
                     />
                   </div>
                 </div>

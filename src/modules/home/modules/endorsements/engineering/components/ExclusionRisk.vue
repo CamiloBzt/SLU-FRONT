@@ -189,9 +189,10 @@
                       label="Clause"
                       v-model="clause"
                       :items="clauseList"
-                      item-value="id"
+                      item-value="clause"
                       item-text="clause"
-                      disabled
+                      :menu-props="{ disabled: true }"
+                      readonly
                     />
                   </div>
                 </div>
