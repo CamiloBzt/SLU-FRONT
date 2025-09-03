@@ -761,7 +761,7 @@ export default {
 
       if (this.$refs.premiumPaymentWarranty) {
         this.$refs.premiumPaymentWarranty.paymentsWarranty = [installment];
-        this.$refs.premiumPaymentWarranty.addPaymentDisabled = true;
+        this.$refs.premiumPaymentWarranty.addPaymentDisabled = false;
       }
 
       this.allDatas = [installment];
