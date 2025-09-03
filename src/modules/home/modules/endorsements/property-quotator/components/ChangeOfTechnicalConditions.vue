@@ -958,6 +958,72 @@ export default {
       this.technicalConditions.sublime =
         this.technicalConditions.sublime.filter((u) => u.catSublimes.id !== id);
     },
+    calcPremium() {
+      const tiv = this.accountComplete.tiv;
+      const tivMovement = {
+        propertyDamageMovement: tiv.insurable.propertyDamage,
+        businessInterruptionMovement: tiv.insurable.businessInterruption,
+        stockMovement: tiv.insurable.stock,
+        propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
+        businessInterruptionRate:
+          this.accountComplete.tiv.premium.businessInterruptionRate,
+        stockRate: this.accountComplete.tiv.premium.stockRate,
+        stockPercentaje:
+          (this.accountComplete.tiv.premium.stockPercentaje ||
+            this.accountComplete.tiv.insurable.porcentaje ||
+            0) / 100,
+      };
+
+      const dates = {
+        effetiveDate: new Date(
+          this.accountComplete.deductibles.inceptionDate
+        )
+          .toISOString()
+          .substring(0, 10),
+        expiryDate: new Date(
+          this.accountComplete.deductibles.expiryDate
+        )
+          .toISOString()
+          .substring(0, 10),
+        endormenteffetiveDate: new Date(this.effectiveDate),
+        movementEndDate: new Date(this.expiryDateReal),
+      };
+
+      const calcPremium = new netPremiumInclusionRisk(
+        tivMovement,
+        this.accountComplete.deductibles,
+        this.accountComplete.tiv?.boundInsurableProp.sluLine,
+        false,
+        dates
+      );
+
+      const retultTotalPremium = calcPremium.totalPremium();
+
+      const totalPremium = this.totalPremium.find((el) => el.id === 1);
+      totalPremium.premiumDamage = retultTotalPremium.damageTotalPremium;
+      totalPremium.premiumBi = retultTotalPremium.biTotalPremium;
+      totalPremium.premiumStocks = retultTotalPremium.stockTotalPremium;
+      totalPremium.premiumTotal = retultTotalPremium.total;
+
+      totalPremium.sluDamage = calcPremium.damagePremiumSlu();
+      totalPremium.sluBi = calcPremium.biPremiumSlu();
+      totalPremium.sluStocks = calcPremium.stocksPremiumSlu();
+      totalPremium.sluTotal = +calcPremium
+        .totalPremiumSlu()
+        .replace("$", "")
+        .replace(/,/g, "");
+
+      const exchangeRate = this.accountComplete.deductibles.exchangeRate;
+      const totalPremiumUsd = this.totalPremium.find((el) => el.id === 2);
+      totalPremiumUsd.premiumDamage = retultTotalPremium.damageTotalPremiumUsd;
+      totalPremiumUsd.premiumBi = retultTotalPremium.biTotalPremiumUsd;
+      totalPremiumUsd.premiumStocks = retultTotalPremium.stockTotalPremiumUsd;
+      totalPremiumUsd.premiumTotal = retultTotalPremium.totalUsd;
+      totalPremiumUsd.sluDamage = totalPremium.sluDamage / exchangeRate;
+      totalPremiumUsd.sluBi = totalPremium.sluBi / exchangeRate;
+      totalPremiumUsd.sluStocks = totalPremium.sluStocks / exchangeRate;
+      totalPremiumUsd.sluTotal = totalPremium.sluTotal / exchangeRate;
+    },
     formatCurrency(amount) {
       return formatCurrency(amount);
     },
