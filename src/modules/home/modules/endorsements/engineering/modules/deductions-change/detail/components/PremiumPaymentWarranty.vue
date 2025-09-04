@@ -91,7 +91,7 @@
             label="Clause*"
             item-value="id"
             item-text="clause"
-            :items="clauseList"
+            :items="effectiveClauseList"
             :readonly="readonly"
           />
         </div>
@@ -144,7 +144,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import PaymentService from "@/modules/home/services/payments.service";
 
 export default {
@@ -168,7 +167,7 @@ export default {
   data() {
     return {
       subscriptionId: null,
-      clauseList: [],
+      internalClauseList: [],
       paymentsWarranty: [],
       addPaymentDisabled: false,
       menu: false,
@@ -197,7 +196,7 @@ export default {
 
   computed: {
     effectiveClauseList() {
-      return this.readonly ? this.internalClauseList : this.internalClauseList;
+      return this.internalClauseList;
     },
   },
 
@@ -228,7 +227,7 @@ export default {
      */
     async loadInitialData() {
       try {
-        this.clauseList = await PaymentService.getClauses();
+        this.internalClauseList = await PaymentService.getClauses();
         this.paymentsWarranty = await PaymentService.getPayments(
           this.subscriptionId
         );
