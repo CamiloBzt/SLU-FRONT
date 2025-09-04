@@ -915,18 +915,33 @@ export default {
       "Rate Change",
       "Bi Adjustment",
     ];
-    this.catalogEndorsements = endorsements.filter(
-      (endorsement) =>
-        endorsement.id !== 13 && !excluded.includes(endorsement.type)
-    );
+    const renameCancellation = (e) =>
+      e.type?.toLowerCase().includes("cancel")
+        ? { ...e, type: "Policy Cancellation" }
+        : e;
+    this.catalogEndorsements = endorsements
+      .filter(
+        (endorsement) =>
+          endorsement.id !== 13 && !excluded.includes(endorsement.type)
+      )
+      .map(renameCancellation);
     this.accountComplete =
       await AccountCompleteService.getLastAccountCompleteByIdSubscription(
         this.subscriptionId
       );
-    this.listEndorsement =
+    this.listEndorsement = (
       await EndorsementService.getEndorsementsBySubscriptionId(
         this.subscriptionId
-      );
+      )
+    ).map((e) => {
+      if (
+        e.EndorsementType?.type &&
+        e.EndorsementType.type.toLowerCase().includes("cancel")
+      ) {
+        e.EndorsementType.type = "Policy Cancellation";
+      }
+      return e;
+    });
 
     this.formatEndorsement5 = new Intl.NumberFormat("en-US", {
       style: "currency",

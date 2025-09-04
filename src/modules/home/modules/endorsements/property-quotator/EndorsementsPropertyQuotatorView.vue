@@ -891,17 +891,30 @@ export default {
         "Rate Change",
         "Bi Adjustment",
       ];
-      this.catalogEndorsements = endorsements.filter(
-        (e) => !excluded.includes(e.type)
-      );
+      const renameCancellation = (e) =>
+        e.type?.toLowerCase().includes("cancel")
+          ? { ...e, type: "Policy Cancellation" }
+          : e;
+      this.catalogEndorsements = endorsements
+        .filter((e) => !excluded.includes(e.type))
+        .map(renameCancellation);
       this.accountComplete =
         await AccountCompleteService.getLastAccountCompleteByIdSubscription(
           this.subscriptionId
         );
-      this.listEndorsement =
+      this.listEndorsement = (
         await EndorsementService.getEndorsementsBySubscriptionId(
           this.subscriptionId
-        );
+        )
+      ).map((e) => {
+        if (
+          e.EndorsementType?.type &&
+          e.EndorsementType.type.toLowerCase().includes("cancel")
+        ) {
+          e.EndorsementType.type = "Policy Cancellation";
+        }
+        return e;
+      });
       console.log("listEndorsement =>", this.listEndorsement);
 
       if (!this.accountComplete) {
