@@ -208,7 +208,7 @@
                   >
                     <SublimesQuotatorProportional
                       v-if="quotationType == 1"
-                      :exchangeRate="accountComplete.deductibles.exchangeRate"
+                      :exchangeRate="exchangeRateNumber"
                       :sublime="sublime"
                       @setTechnicalConditionsUpdate="
                         setTechnicalConditionsUpdate
@@ -218,7 +218,7 @@
                     />
                     <SublimesQuotatorNonProportional
                       v-if="quotationType == 2"
-                      :exchangeRate="accountComplete.deductibles.exchangeRate"
+                      :exchangeRate="exchangeRateNumber"
                       :sublime="sublime"
                       @setTechnicalConditionsUpdate="
                         setTechnicalConditionsUpdate
@@ -329,7 +329,7 @@
               <AdmittedPremiumTable
                 @setTotalPremium="setTotalPremium"
                 :detailValues="totalPremium"
-                :exchangeRate="accountComplete.deductibles.exchangeRate"
+                :exchangeRate="exchangeRateNumber"
               />
             </v-stepper-content>
 
@@ -834,20 +834,16 @@ export default {
             totalInsured: this.totalPremium[0].premiumTotal,
 
             propertyDamageUsd:
-              this.totalPremium[0].premiumDamage /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumDamage / this.exchangeRateNumber,
 
             businessInterruptionUsd:
-              this.totalPremium[0].premiumBi /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumBi / this.exchangeRateNumber,
 
             stockUsd:
-              this.totalPremium[0].premiumStocks /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumStocks / this.exchangeRateNumber,
 
             totalUsd:
-              this.totalPremium[0].premiumTotal /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumTotal / this.exchangeRateNumber,
           },
           boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
           deductibles: this.accountComplete.deductibles,
@@ -1054,7 +1050,7 @@ export default {
         .replace("$", "")
         .replace(/,/g, "");
 
-      const exchangeRate = this.accountComplete.deductibles.exchangeRate;
+      const exchangeRate = this.exchangeRateNumber;
       const totalPremiumUsd = this.totalPremium.find((el) => el.id === 2);
       totalPremiumUsd.premiumDamage = retultTotalPremium.damageTotalPremiumUsd;
       totalPremiumUsd.premiumBi = retultTotalPremium.biTotalPremiumUsd;
@@ -1288,6 +1284,13 @@ export default {
   },
 
   computed: {
+    exchangeRateNumber() {
+      const rate =
+        this.accountComplete?.deductibles?.exchangeRate ??
+        this.accountComplete?.exchange_rate ??
+        this.accountComplete?.exchangeRate;
+      return parseFloat(String(rate).replace(/[^0-9.-]/g, "")) || 1;
+    },
     validationFirstStep() {
       const showInfoEndorsement = this.showInfoEndorsement;
       const clause = Boolean(this.clause);
