@@ -884,26 +884,14 @@ export default {
 
   async mounted() {
     try {
-      const endorsements = await EndorsementService.getEndorsementType();
-      const excluded = [
-        "Deductions Change",
-        "Change of Share",
-        "Rate Change",
-        "Bi Adjustment",
-      ];
       const normalize = (str) =>
         str
           ?.toString()
           .toLowerCase()
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "");
-      const renameCancellation = (e) =>
-        normalize(e.type).includes("cancelacion")
-          ? { ...e, type: "Policy Cancellation" }
-          : e;
-      this.catalogEndorsements = endorsements
-        .filter((e) => !excluded.includes(e.type))
-        .map(renameCancellation);
+      const endorsements = await EndorsementService.getEndorsementType();
+      this.catalogEndorsements = endorsements;
       this.accountComplete =
         await AccountCompleteService.getLastAccountCompleteByIdSubscription(
           this.subscriptionId
@@ -915,11 +903,10 @@ export default {
       ).map((e) => {
         const text = normalize(e.EndorsementType?.type || "");
         if (text.includes("cancelacion")) {
-          e.EndorsementType.type = "Policy Cancellation";
+          e.EndorsementType.type = "Cancelación de póliza";
         }
         return e;
       });
-      console.log("listEndorsement =>", this.listEndorsement);
 
       if (!this.accountComplete) {
         console.warn(

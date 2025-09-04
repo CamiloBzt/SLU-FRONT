@@ -20,6 +20,39 @@ export async function getCatalog(name) {
 
   const { response } = data.getCatalog;
   const parsedResponse = JSON.parse(response);
+
+  if (name === 'endorsement') {
+    const normalize = (str) =>
+      str
+        ?.toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+    const excluded = [
+      'deductions change',
+      'deduction change',
+      'change of share',
+      'rate change',
+      'bi adjustment',
+    ];
+
+    const renameCancellation = (e) => {
+      const text = e.description || e.type;
+      if (normalize(text).includes('cancelacion')) {
+        return {
+          ...e,
+          ...(e.description ? { description: 'Cancelación de póliza' } : { type: 'Cancelación de póliza' }),
+        };
+      }
+      return e;
+    };
+
+    return parsedResponse
+      .filter((e) => !excluded.includes(normalize(e.description || e.type)))
+      .map(renameCancellation);
+  }
+
   return parsedResponse;
 }
 
