@@ -91,7 +91,7 @@
             label="Clause*"
             item-value="id"
             item-text="clause"
-            :items="effectiveClauseList"
+            :items="clauseList"
             :readonly="readonly"
           />
         </div>
@@ -154,20 +154,12 @@ export default {
       type: Boolean,
       default: false,
     },
-    installments: {
-      type: Array,
-      default: () => [],
-    },
-    clauseList: {
-      type: Array,
-      default: () => [],
-    },
   },
 
   data() {
     return {
       subscriptionId: null,
-      internalClauseList: [],
+      clauseList: [],
       paymentsWarranty: [],
       addPaymentDisabled: false,
       menu: false,
@@ -176,28 +168,17 @@ export default {
   },
 
   async created() {
-    if (this.readonly) {
-      this.paymentsWarranty = [...this.installments];
-      this.internalClauseList = [...this.clauseList];
-    } else {
-      this.subscriptionId = this.getSubscriptionIdFromRoute();
+    this.subscriptionId = this.getSubscriptionIdFromRoute();
 
-      if (!this.subscriptionId) {
-        console.error(
-          "No se pudo obtener subscriptionId de la ruta:",
-          this.$route.params
-        );
-        return;
-      }
-
-      await this.loadInitialData();
+    if (!this.subscriptionId) {
+      console.error(
+        "No se pudo obtener subscriptionId de la ruta:",
+        this.$route.params
+      );
+      return;
     }
-  },
 
-  computed: {
-    effectiveClauseList() {
-      return this.internalClauseList;
-    },
+    await this.loadInitialData();
   },
 
   watch: {
@@ -227,7 +208,7 @@ export default {
      */
     async loadInitialData() {
       try {
-        this.internalClauseList = await PaymentService.getClauses();
+        this.clauseList = await PaymentService.getClauses();
         this.paymentsWarranty = await PaymentService.getPayments(
           this.subscriptionId
         );
@@ -247,7 +228,7 @@ export default {
     },
 
     isLSWClause(idClause) {
-      const clause = this.effectiveClauseList.find((cl) => cl.id === idClause);
+      const clause = this.clauseList.find((cl) => cl.id === idClause);
       return clause && clause.clause.includes("LSW");
     },
 
@@ -344,7 +325,7 @@ export default {
     },
 
     getClauseName(idClause) {
-      const clause = this.effectiveClauseList.find((cl) => cl.id === idClause);
+      const clause = this.clauseList.find((cl) => cl.id === idClause);
       return clause ? clause.clause : "Unknown Clause";
     },
   },
