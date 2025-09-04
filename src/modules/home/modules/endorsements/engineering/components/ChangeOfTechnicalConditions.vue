@@ -1104,8 +1104,9 @@ export default {
     async submit() {
       this.e1 = 1;
       const OriginalUnderlyingCatDeductibles =
-        this.accountComplete.technical_conditions.deductibles
-          .underlyingCatDeductibles[0];
+        this.accountComplete.technical_conditions?.deductibles?.underlyingCatDeductibles?.[0] ||
+        this.technicalConditions.deductibles.underlyingCatDeductibles[0] ||
+        {};
       // Obteniendo los inputs del usuario
       const technicalConditions = {
         deductibles: {
