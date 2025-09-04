@@ -891,8 +891,14 @@ export default {
         "Rate Change",
         "Bi Adjustment",
       ];
+      const normalize = (str) =>
+        str
+          ?.toString()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
       const renameCancellation = (e) =>
-        e.type?.toLowerCase().includes("cancel")
+        normalize(e.type).includes("cancelacion")
           ? { ...e, type: "Policy Cancellation" }
           : e;
       this.catalogEndorsements = endorsements
@@ -907,10 +913,8 @@ export default {
           this.subscriptionId
         )
       ).map((e) => {
-        if (
-          e.EndorsementType?.type &&
-          e.EndorsementType.type.toLowerCase().includes("cancel")
-        ) {
+        const text = normalize(e.EndorsementType?.type || "");
+        if (text.includes("cancelacion")) {
           e.EndorsementType.type = "Policy Cancellation";
         }
         return e;
