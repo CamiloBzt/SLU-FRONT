@@ -329,6 +329,7 @@
               <AdmittedPremiumTable
                 @setTotalPremium="setTotalPremium"
                 :detailValues="totalPremium"
+                :exchangeRate="accountComplete.deductibles.exchangeRate"
               />
             </v-stepper-content>
 
