@@ -500,14 +500,22 @@ export default {
     showInfoEndorsement: { type: Boolean },
   },
   data() {
+    const deductibles = this.accountComplete?.deductibles || {};
+    const expiryDateReal = deductibles.expiryDate
+      ? new Date(deductibles.expiryDate).toISOString().substr(0, 10)
+      : "";
+    const technicalConditions =
+      this.accountComplete?.technical_conditions || {
+        deductibles: [],
+        sublime: [],
+      };
+
     return {
-      expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
-      expiryDateReal: new Date(this.accountComplete.deductibles.expiryDate)
-        .toISOString()
-        .substr(0, 10),
+      expiryDatetoCalc: deductibles.expiryDate || null,
+      expiryDateReal,
       menu3: false,
       menu4: false,
-      clause: this.accountComplete.cartera.clausula,
+      clause: this.accountComplete?.cartera?.clausula || "",
       clauseList: [],
       cartera: {},
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
@@ -622,10 +630,8 @@ export default {
       deductibleIndex: 0,
       deductibleId: 1,
       sublimeIndex: 1,
-      technicalConditions: this.accountComplete.technical_conditions,
-      technicalConditionsUpdate: _.cloneDeep(
-        this.accountComplete.technical_conditions
-      ),
+      technicalConditions,
+      technicalConditionsUpdate: _.cloneDeep(technicalConditions),
       originalTechnicalConditions: {},
       modifiedDeductibles: new Set(),
       modifiedSublimes: new Set(),
@@ -633,30 +639,33 @@ export default {
   },
   async beforeMount() {
     this.clauseList = await PaymentService.getClauses();
-    this.quotationType =
-      await SubscriptionService.getTypeQuotationBySubscription(
-        this.accountComplete.id_subscription
-      );
+    if (this.accountComplete?.id_subscription) {
+      this.quotationType =
+        await SubscriptionService.getTypeQuotationBySubscription(
+          this.accountComplete.id_subscription
+        );
+    }
   },
   created() {
     // console.log('this.technicalConditions --->', this.technicalConditions);
 
     // llenamos los valores del segundo paso del endoso
-    const tiv = this.accountComplete.tiv;
-    this.detailValues[0]["premiumDamage"] = tiv.insurable.propertyDamage;
-    this.detailValues[0]["premiumBi"] = tiv.insurable.businessInterruption;
-    this.detailValues[0]["premiumStocks"] = tiv.insurable.stock;
-    this.detailValues[0]["premiumTotal"] = tiv.insurable.total;
+    const tiv = this.accountComplete?.tiv;
+    if (tiv?.insurable) {
+      this.detailValues[0]["premiumDamage"] = tiv.insurable.propertyDamage;
+      this.detailValues[0]["premiumBi"] = tiv.insurable.businessInterruption;
+      this.detailValues[0]["premiumStocks"] = tiv.insurable.stock;
+      this.detailValues[0]["premiumTotal"] = tiv.insurable.total;
 
-    this.detailValues[1]["premiumDamage"] = tiv.insurable.propertyDamageUsd;
-    this.detailValues[1]["premiumBi"] = tiv.insurable.businessInterruptionUsd;
-    this.detailValues[1]["premiumStocks"] = tiv.insurable.stockUsd;
-    this.detailValues[1]["premiumTotal"] = tiv.insurable.totalUsd;
+      this.detailValues[1]["premiumDamage"] = tiv.insurable.propertyDamageUsd;
+      this.detailValues[1]["premiumBi"] = tiv.insurable.businessInterruptionUsd;
+      this.detailValues[1]["premiumStocks"] = tiv.insurable.stockUsd;
+      this.detailValues[1]["premiumTotal"] = tiv.insurable.totalUsd;
+    }
 
     console.log("this.accountComplete --->", this.accountComplete);
 
-    this.deductibleIndex =
-      this.accountComplete.technical_conditions.deductibles.length;
+    this.deductibleIndex = this.technicalConditions.deductibles.length;
     this.initializeChangeTracking();
   },
   watch: {
@@ -691,14 +700,22 @@ export default {
         };
 
         const dates = {
-          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-            .toISOString()
-            .substring(0, 10),
-          expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-            .toISOString()
-            .substring(0, 10),
-          endormenteffetiveDate: new Date(this.effectiveDate),
-          movementEndDate: new Date(this.expiryDateReal),
+          effetiveDate: this.accountComplete?.deductibles?.inceptionDate
+            ? new Date(this.accountComplete.deductibles.inceptionDate)
+                .toISOString()
+                .substring(0, 10)
+            : null,
+          expiryDate: this.accountComplete?.deductibles?.expiryDate
+            ? new Date(this.accountComplete.deductibles.expiryDate)
+                .toISOString()
+                .substring(0, 10)
+            : null,
+          endormenteffetiveDate: this.effectiveDate
+            ? new Date(this.effectiveDate)
+            : null,
+          movementEndDate: this.expiryDateReal
+            ? new Date(this.expiryDateReal)
+            : null,
         };
 
         const options = {
@@ -976,18 +993,22 @@ export default {
       };
 
       const dates = {
-        effetiveDate: new Date(
-          this.accountComplete.deductibles.inceptionDate
-        )
-          .toISOString()
-          .substring(0, 10),
-        expiryDate: new Date(
-          this.accountComplete.deductibles.expiryDate
-        )
-          .toISOString()
-          .substring(0, 10),
-        endormenteffetiveDate: new Date(this.effectiveDate),
-        movementEndDate: new Date(this.expiryDateReal),
+        effetiveDate: this.accountComplete?.deductibles?.inceptionDate
+          ? new Date(this.accountComplete.deductibles.inceptionDate)
+              .toISOString()
+              .substring(0, 10)
+          : null,
+        expiryDate: this.accountComplete?.deductibles?.expiryDate
+          ? new Date(this.accountComplete.deductibles.expiryDate)
+              .toISOString()
+              .substring(0, 10)
+          : null,
+        endormenteffetiveDate: this.effectiveDate
+          ? new Date(this.effectiveDate)
+          : null,
+        movementEndDate: this.expiryDateReal
+          ? new Date(this.expiryDateReal)
+          : null,
       };
 
       const calcPremium = new netPremiumInclusionRisk(
