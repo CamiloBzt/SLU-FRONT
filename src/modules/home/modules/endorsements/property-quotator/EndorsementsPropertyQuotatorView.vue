@@ -884,7 +884,16 @@ export default {
 
   async mounted() {
     try {
-      this.catalogEndorsements = await EndorsementService.getEndorsementType();
+      const endorsements = await EndorsementService.getEndorsementType();
+      const excluded = [
+        "Deductions Change",
+        "Change of Share",
+        "Rate Change",
+        "Bi Adjustment",
+      ];
+      this.catalogEndorsements = endorsements.filter(
+        (e) => !excluded.includes(e.type)
+      );
       this.accountComplete =
         await AccountCompleteService.getLastAccountCompleteByIdSubscription(
           this.subscriptionId

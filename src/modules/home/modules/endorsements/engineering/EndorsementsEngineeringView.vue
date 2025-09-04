@@ -909,8 +909,15 @@ export default {
 
   async mounted() {
     const endorsements = await EndorsementService.getEndorsementType();
+    const excluded = [
+      "Deductions Change",
+      "Change of Share",
+      "Rate Change",
+      "Bi Adjustment",
+    ];
     this.catalogEndorsements = endorsements.filter(
-      (endorsement) => endorsement.id !== 13
+      (endorsement) =>
+        endorsement.id !== 13 && !excluded.includes(endorsement.type)
     );
     this.accountComplete =
       await AccountCompleteService.getLastAccountCompleteByIdSubscription(
