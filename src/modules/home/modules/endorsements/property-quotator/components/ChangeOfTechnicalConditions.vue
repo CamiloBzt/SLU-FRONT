@@ -669,6 +669,25 @@ export default {
     this.initializeChangeTracking();
   },
   watch: {
+    accountComplete: {
+      immediate: true,
+      handler(newVal) {
+        const deductibles = newVal?.deductibles || {};
+
+        this.expiryDatetoCalc = deductibles.expiryDate || null;
+        this.expiryDateReal = deductibles.expiryDate
+          ? new Date(deductibles.expiryDate).toISOString().substr(0, 10)
+          : "";
+
+        this.technicalConditions =
+          newVal?.technical_conditions || { deductibles: [], sublime: [] };
+        this.technicalConditionsUpdate = _.cloneDeep(this.technicalConditions);
+
+        this.clause = newVal?.cartera?.clausula || "";
+        this.deductibleIndex = this.technicalConditions.deductibles.length;
+        this.initializeChangeTracking();
+      },
+    },
     e1: async function () {
       if (this.e1 === 1) {
         this.isEdited = {};
