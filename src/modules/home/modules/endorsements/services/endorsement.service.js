@@ -169,8 +169,8 @@ class EndorsementsService {
 
       const renameCancellation = (e) => {
         const text = e.type || e.description;
-        return normalize(text).includes("cancelacion")
-          ? { ...e, type: "Cancelación de póliza" }
+        return normalize(text).includes("canelacion")
+          ? { ...e, type: "Policy Cancellation" }
           : e;
       };
 
