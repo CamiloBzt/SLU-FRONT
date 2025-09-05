@@ -44,15 +44,13 @@
             :disabled="underlyingCatAplica.length === 0" @blur="onUnderlyingCatDeductiblesChange"></v-select>
         </div>
         <div class="InputRow">
-          <v-select v-model.trim="boundPropDeductibles.underlyingCatValuesSelect" :items="underlyingCatValues"
-            item-text="data" item-value="id" clearable :disabled="underlyingCatValues.length === 0" @blur="onUnderlyingCatDeductiblesChange"></v-select>
+          <v-text-field value="Minimum" readonly />
         </div>
         <div class="InputRow">
           <currency-input v-model.trim="boundPropDeductibles.coverB" :options="currencyOptions" @blur="onUnderlyingCatDeductiblesChange"/>
         </div>
         <div class="InputRow">
-          <v-select v-model.trim="boundPropDeductibles.underlyingCatValuesSelectTwo" :items="underlyingCatValues"
-            item-text="data" item-value="id" clearable :disabled="underlyingCatValues.length === 0" @blur="onUnderlyingCatDeductiblesChange"></v-select>
+          <v-text-field value="Maximum" readonly />
         </div>
         <div class="InputRow">
           <currency-input v-model.trim="boundPropDeductibles.coverTwoB" :options="currencyOptions" @blur="onUnderlyingCatDeductiblesChange" />
@@ -71,15 +69,13 @@
             :disabled="underlyingCatAplica.length === 0" @blur="onUnderlyingCatDeductiblesChange"></v-select>
         </div>
         <div class="InputRow">
-          <v-select v-model.trim="boundPropDeductibles.underlyingHidroValuesSelect" :items="underlyingCatValues"
-            item-text="data" item-value="id" clearable :disabled="underlyingCatValues.length === 0" @blur="onUnderlyingCatDeductiblesChange"></v-select>
+          <v-text-field value="Minimum" readonly />
         </div>
         <div class="InputRow">
           <currency-input v-model.trim="boundPropDeductibles.hidroRisk" :options="currencyOptions" @blur="onUnderlyingCatDeductiblesChange" />
         </div>
         <div class="InputRow">
-          <v-select v-model.trim="boundPropDeductibles.underlyingHidroValuesSelectTwo" :items="underlyingCatValues"
-            item-text="data" item-value="id" clearable :disabled="underlyingCatValues.length === 0" @blur="onUnderlyingCatDeductiblesChange"></v-select>
+          <v-text-field value="Maximum" readonly />
         </div>
         <div class="InputRow">
           <currency-input v-model.trim="boundPropDeductibles.hidroRiskTwo" :options="currencyOptions" @blur="onUnderlyingCatDeductiblesChange" />
@@ -148,15 +144,13 @@
               label="Total value" item-value="id" clearable :disabled="underlyingFireAplica.length === 0" @blur="onUnderlyingFireECDeductiblesChange"></v-select>
           </div>
           <div class="Row">
-            <v-select v-model.trim="item.underlyingFireValuesSelect" :items="underlyingCatValues" item-text="data"
-              item-value="id" clearable :disabled="underlyingCatValues.length === 0" @blur="onUnderlyingFireECDeductiblesChange"></v-select>
+            <v-text-field value="Minimum" readonly />
           </div>
           <div class="Row">
             <currency-input :options="currencyOptions" v-model.trim="item.underlyingFireAmount" @blur="onUnderlyingFireECDeductiblesChange" />
           </div>
           <div class="Row">
-            <v-select v-model.trim="item.underlyingFireValuesSelectTwo" :items="underlyingCatValues" item-text="data"
-              item-value="id" clearable :disabled="underlyingCatValues.length === 0" @blur="onUnderlyingFireECDeductiblesChange"></v-select>
+            <v-text-field value="Maximum" readonly />
           </div>
           <div class="Row">
             <currency-input :options="currencyOptions" v-model.trim="item.underlyingFireAmountTwo" @blur="onUnderlyingFireECDeductiblesChange" />
@@ -258,17 +252,39 @@ export default {
       },
       underlyingCat:[],
       underlyingCatAplica:[],
-      underlyingCatValues:[],
       underlyingFireAplica:[],
       //underlyingFire:[],
       underlyingFireQuotator:[],
       showAlopLines:true,
+      minimumId: null,
+      maximumId: null,
     };
   },
   async beforeMount() {
     this.underlyingCat = await Catalog.getUnderlyingCat();
     this.underlyingCatAplica = await Catalog.getUnderlyingCatAplica()
-    this.underlyingCatValues = await Catalog.getUnderlyingCatValues();
+    const values = await Catalog.getUnderlyingCatValues();
+    this.minimumId = values.find(v => v.data?.toLowerCase() === 'minimum')?.id || null;
+    this.maximumId = values.find(v => v.data?.toLowerCase() === 'maximum')?.id || null;
+    if(!this.boundPropDeductibles.underlyingCatValuesSelect && this.minimumId !== null){
+      this.boundPropDeductibles.underlyingCatValuesSelect = this.minimumId;
+    }
+    if(!this.boundPropDeductibles.underlyingCatValuesSelectTwo && this.maximumId !== null){
+      this.boundPropDeductibles.underlyingCatValuesSelectTwo = this.maximumId;
+    }
+    if(!this.boundPropDeductibles.underlyingHidroValuesSelect && this.minimumId !== null){
+      this.boundPropDeductibles.underlyingHidroValuesSelect = this.minimumId;
+    }
+    if(!this.boundPropDeductibles.underlyingHidroValuesSelectTwo && this.maximumId !== null){
+      this.boundPropDeductibles.underlyingHidroValuesSelectTwo = this.maximumId;
+    }
+    this.boundEngDeductibles = this.boundEngDeductibles.map(u => ({
+      ...u,
+      underlyingFireValuesSelect: u.underlyingFireValuesSelect || this.minimumId,
+      underlyingFireValuesSelectTwo: u.underlyingFireValuesSelectTwo || this.maximumId,
+    }));
+    this.onUnderlyingCatDeductiblesChange();
+    this.onUnderlyingFireECDeductiblesChange();
     this.underlyingFireAplica = await Catalog.getUnderlyingFireAplica();
     //this.underlyingFire = await Catalog.getUnderlyingFire();
     this.underlyingFireQuotator = await Catalog.getUnderlyingFireQuotator();
@@ -338,9 +354,9 @@ export default {
           underlyingFireSelect:0,
           underlyingFireNumberSelect: 0,
           underlyingFireAplicaSelect: 0,
-          underlyingFireValuesSelect: 0,
+          underlyingFireValuesSelect: this.minimumId,
           underlyingFireAmount: 0,
-          underlyingFireValuesSelectTwo: 0,
+          underlyingFireValuesSelectTwo: this.maximumId,
           underlyingFireAmountTwo: 0,
           underlyingFireText: "",
         })

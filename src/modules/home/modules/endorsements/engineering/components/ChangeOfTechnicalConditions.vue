@@ -1,26 +1,21 @@
 <template>
   <div class="outter-wrapper" ref="targetRef">
     <div class="endorsement-title">Change of technical conditions</div>
-
     <div class="editAccount" v-if="accountComplete.reference">
       {{ accountComplete.reference }}
     </div>
-
     <v-stepper v-model="e1">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1" color="#F59607">
           Endorsement
         </v-stepper-step>
-
         <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
           Calculate premium
         </v-stepper-step>
-
         <v-stepper-step step="3" color="#F59607">
           Endorsement summary
         </v-stepper-step>
       </v-stepper-header>
-
       <div class="endorsement-wrapper">
         <div class="content">
           <v-stepper-items>
@@ -45,7 +40,6 @@
                         >
                         </v-text-field>
                       </template>
-
                       <v-date-picker
                         v-model="effectiveDate"
                         @input="menu2 = false"
@@ -53,18 +47,15 @@
                       >
                       </v-date-picker>
                     </v-menu>
-
                     <div v-if="this.endorsementDateError" class="error-message">
                       The new Endorsement effective date must be lower than
                       expiry date.
                     </div>
-
                     <div v-if="!showInfoEndorsement" class="error-message">
                       Please provide a valid endorsement effective date.
                     </div>
                   </div>
                 </div>
-
                 <div class="input-col">
                   <div class="input-cont">
                     <v-menu
@@ -88,71 +79,50 @@
                     </v-menu>
                   </div>
                 </div>
-
                 <InputDaysDiference
                   :endorsementDate="effectiveDate"
                   :expiryDate="expiryDatetoCalc"
                   :key="effectiveDate"
                 />
               </div>
-
               <div v-if="showInfoEndorsement">
                 <!-- Sección de Deducibles -->
                 <div class="technical-conditions-section">
                   <div class="section-title">
                     <v-icon class="mr-2">mdi-shield-outline</v-icon>
                     Current Deductibles
-                    <span class="highlight-info"
-                      >(Changes will be highlighted)</span
-                    >
                   </div>
-
-                  <div
-                    :class="{
-                      'highlighted-item': isDeductibleModified(
-                        technicalConditions.deductibles
-                          .underlyingCatDeductibles[0].id
-                      ),
-                    }"
-                  >
+                  <div>
                     <div class="ExpandContent justify-center">
                       <div
                         class="TitleCont d-flex justify-space-between align-center"
                       >
                         <h5>Location</h5>
                       </div>
-
                       <!--Coverage B // ALOP-->
                       <div class="DynamicItemsContent">
                         <div
                           class="InputsCont d-flex justify-space-between align-start flex-wrap"
                         >
                           <div class="InputRow">
-                            <v-text-field
-                              v-model.trim="location"
-                              @blur="trackFieldChanges"
-                            />
+                            <v-text-field v-model.trim="location" />
                           </div>
                         </div>
                       </div>
-
                       <div class="TitleCont d-flex justify-start align-center">
                         <h5>Underlying Cat Deductibles</h5>
                       </div>
-
                       <div
                         class="InputTitle d-flex justify-start align-center align-end"
                       >
                         Coverage B, Earthquake, Tremor or Volcanic Eruption
                       </div>
-
                       <div
                         class="InputsCont d-flex justify-space-between align-start flex-wrap"
                       >
                         <div class="InputRow Small">
                           <v-select
                             v-model.trim="underlyingCatSelect"
-                            @change="trackFieldChanges"
                             :items="underlyingCat"
                             item-text="data"
                             item-value="id"
@@ -161,11 +131,9 @@
                           >
                           </v-select>
                         </div>
-
                         <div class="InputRow Large">
                           <v-select
                             v-model.trim="underlyingCatAplicaSelect"
-                            @change="trackFieldChanges"
                             :items="underlyingCatAplica"
                             item-text="data"
                             label="Total value"
@@ -175,46 +143,37 @@
                           >
                           </v-select>
                         </div>
-
                         <div class="InputRow">
                           <v-text-field value="Minimum" readonly />
                         </div>
-
                         <div class="InputRow">
                           <currency-input
                             v-model.trim="coverB"
-                            @blur="trackFieldChanges"
                             :options="currencyOptions"
                           />
                         </div>
-
                         <div class="InputRow">
                           <v-text-field value="Maximum" readonly />
                         </div>
-
                         <div class="InputRow">
                           <currency-input
                             v-model.trim="coverTwoB"
-                            @blur="trackFieldChanges"
                             :options="currencyOptions"
                           />
                         </div>
                       </div>
-
                       <!--Hydrometeorological Risk-->
                       <div
                         class="InputTitle d-flex justify-start align-end mt-7"
                       >
                         Hidrometeorological Risk
                       </div>
-
                       <div
                         class="InputsCont d-flex justify-space-between align-start flex-wrap"
                       >
                         <div class="InputRow Small">
                           <v-select
                             v-model.trim="underlyingHidroSelect"
-                            @change="trackFieldChanges"
                             :items="underlyingCat"
                             item-text="data"
                             item-value="id"
@@ -223,11 +182,9 @@
                           >
                           </v-select>
                         </div>
-
                         <div class="InputRow Large">
                           <v-select
                             v-model.trim="underlyingHidroAplicaSelect"
-                            @change="trackFieldChanges"
                             :items="underlyingCatAplica"
                             item-text="data"
                             label="Total value"
@@ -237,32 +194,25 @@
                           >
                           </v-select>
                         </div>
-
                         <div class="InputRow">
                           <v-text-field value="Minimum" readonly />
                         </div>
-
                         <div class="InputRow">
                           <currency-input
                             v-model.trim="hidroRisk"
-                            @blur="trackFieldChanges"
                             :options="currencyOptions"
                           />
                         </div>
-
                         <div class="InputRow">
                           <v-text-field value="Maximum" readonly />
                         </div>
-
                         <div class="InputRow">
                           <currency-input
                             v-model.trim="hidroRiskTwo"
-                            @blur="trackFieldChanges"
                             :options="currencyOptions"
                           />
                         </div>
                       </div>
-
                       <!--Coverage B // ALOP-->
                       <div
                         class="DynamicItemsContent mt-8"
@@ -282,12 +232,10 @@
                               type="number"
                               suffix="DAY(S)"
                               v-model.trim="alopEarthquake"
-                              @blur="trackFieldChanges"
                             />
                           </div>
                         </div>
                       </div>
-
                       <!-- Hydrometeorological Risk // ALOP -->
                       <div
                         class="DynamicItemsContent mt-7"
@@ -298,7 +246,6 @@
                         >
                           ALOP Hidrometeorological Risk
                         </div>
-
                         <div
                           class="InputsCont d-flex justify-space-between align-start flex-wrap"
                         >
@@ -307,19 +254,16 @@
                               type="number"
                               suffix="DAY(S)"
                               v-model.trim="alopHidro"
-                              @blur="trackFieldChanges"
                             />
                           </div>
                         </div>
                       </div>
-
                       <!--Underlying Fire -->
                       <div
                         class="TitleCont mt-6 d-flex justify-start align-center"
                       >
                         <h5>Underlying Fire &#38; EC Deductibles</h5>
                       </div>
-
                       <!--Contenedor de deducibles-->
                       <div
                         class="UnderlyingCont d-flex align-start flex-wrap"
@@ -335,7 +279,6 @@
                               :hide-no-data="!item.search"
                               :items="underlyingFire"
                               :search-input.sync="item.search"
-                              @change="trackFieldChanges"
                               hide-selected
                               item-text="data"
                               item-value="id"
@@ -352,7 +295,6 @@
                                   </v-chip>
                                 </v-list-item>
                               </template>
-
                               <template v-slot:selection="{ attrs, item }">
                                 <span
                                   v-if="typeof item === 'object'"
@@ -366,11 +308,9 @@
                               </template>
                             </v-combobox>
                           </div>
-
                           <div class="Row Small">
                             <v-select
                               v-model.trim="item.underlyingFireNumberSelect"
-                              @change="trackFieldChanges"
                               :items="underlyingCat"
                               item-text="data"
                               item-value="id"
@@ -379,11 +319,9 @@
                             >
                             </v-select>
                           </div>
-
                           <div class="Row Large">
                             <v-select
                               v-model.trim="item.underlyingFireAplicaSelect"
-                              @change="trackFieldChanges"
                               :items="underlyingFireAplica"
                               item-text="data"
                               label="Total value"
@@ -393,31 +331,24 @@
                             >
                             </v-select>
                           </div>
-
                           <div class="Row">
                             <v-text-field value="Minimum" readonly />
                           </div>
-
                           <div class="Row">
                             <currency-input
                               v-model.trim="item.underlyingFireAmount"
-                              @blur="trackFieldChanges"
                               :options="currencyOptions"
                             />
                           </div>
-
                           <div class="Row">
                             <v-text-field value="Maximum" readonly />
                           </div>
-
                           <div class="Row">
                             <currency-input
                               v-model.trim="item.underlyingFireAmountTwo"
-                              @blur="trackFieldChanges"
                               :options="currencyOptions"
                             />
                           </div>
-
                           <!-- botón de eliminado -->
                           <v-icon
                             small
@@ -428,7 +359,6 @@
                           </v-icon>
                         </div>
                       </div>
-
                       <!--Boton para añadir deducible-->
                       <div class="ButtonCont">
                         <v-btn
@@ -445,39 +375,21 @@
                     </div>
                   </div>
                 </div>
-
                 <!-- Sección de Sublímites -->
                 <div class="technical-conditions-section">
                   <div class="section-title">
                     <v-icon class="mr-2">mdi-format-list-numbered</v-icon>
                     Current Sublimits
-                    <span class="highlight-info"
-                      >(Changes will be highlighted)</span
-                    >
                   </div>
-
-                  <div
-                    :class="{
-                      'highlighted-item': isSublimeModified(
-                        technicalConditions.sublime.catSublimes.id
-                      ),
-                    }"
-                  >
+                  <div>
                     <Sublimes
                       :boundSublimes="boundSublimes"
                       :quotation="quotation"
                       :boundSublimitsEng="boundSublimitsEng"
-                      :isHighlighted="
-                        isSublimeModified(
-                          technicalConditions.sublime.catSublimes.id
-                        )
-                      "
-                      @change="trackSublimeChanges"
                     />
                   </div>
                 </div>
               </div>
-
               <div class="input-row w-100 d-flex flex-wrap">
                 <div class="input-col">
                   <div class="inner-title">Additional</div>
@@ -522,7 +434,6 @@
                 </div>
               </div>
             </v-stepper-content>
-
             <v-stepper-content step="2">
               <div class="detail-date">
                 <div class="table-title-detail table-title-detail--large">
@@ -564,7 +475,6 @@
                   </div>
                 </div>
               </div>
-
               <!-- Solo mostrar tabla de prima admitida -->
               <AdmittedPremiumTableEngineering
                 @setTotalPremium="setTotalPremium"
@@ -572,10 +482,12 @@
                 :exchangeRate="accountComplete.deductibles.exchangeRate"
               />
             </v-stepper-content>
-
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -603,7 +515,6 @@
           </v-stepper-items>
         </div>
       </div>
-
       <EndorsementDocuments
         ref="endorsementDocs"
         :idEndorsement="createdEndorsementId"
@@ -611,7 +522,6 @@
         @setEndorsementDocuments="setEndorsementDocuments"
         v-show="e1 == 1 || e1 == 3"
       />
-
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
         <v-btn
           :outlined="e1 == 3 ? false : true"
@@ -626,7 +536,6 @@
           {{ buttonTitle }}
         </v-btn>
       </div>
-
       <div class="stepper-btn mb-7 d-flex justify-end align-center">
         <v-btn rounded large text class="blue-btn" @click="goBack(e1)">
           {{ buttonTitleBack }}
@@ -635,7 +544,6 @@
     </v-stepper>
   </div>
 </template>
-
 <script>
 /* components */
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
@@ -658,7 +566,6 @@ import {
 /* libs */
 import Decimal from "@/lib/decimal";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
-
 export default {
   name: "ChangeOfTechnicalConditions",
   components: {
@@ -696,19 +603,16 @@ export default {
       catSublimes: {},
       allOtherSublimits: [],
     };
-
     return {
       // Variables de estado del stepper y botones
       e1: 1,
       buttonTitle: "Next",
       buttonTitleBack: "Cancel",
-
       // Variables de validación y errores
       endorsementDateError: false,
       endDateError: false,
       effectiveDateError: false,
       premiumPaymentDateError: true,
-
       // Variables de fechas
       effectiveDate: this.dateSaved,
       expiryDatetoCalc: this.accountComplete?.deductibles?.expiryDate || null,
@@ -728,14 +632,12 @@ export default {
       )
         .toISOString()
         .substr(0, 10),
-
       // Variables de menús
       menu: false,
       menu2: false,
       menu3: false,
       menu4: false,
       buttonLoader: false,
-
       // Variables de datos principales
       clause: this.accountComplete?.cartera?.clausula || "",
       clauseList: [],
@@ -743,7 +645,6 @@ export default {
       subscriptionId: this.$route.params.id,
       admitedPremium: 0,
       on: true,
-
       // Variables de datos de negocio
       movementValues: [],
       netPremium: {},
@@ -752,7 +653,6 @@ export default {
       createdEndorsementId: 0,
       insurable: [],
       isEdited: {},
-
       // Archivos
       files: [
         {
@@ -767,7 +667,6 @@ export default {
           fileTypeMessage: "Download",
         },
       ],
-
       // Estructuras de datos para las tablas
       detailValues: [
         {
@@ -809,7 +708,6 @@ export default {
           sluTotal: 0,
         },
       ],
-
       // Datos específicos de Engineering - Deducibles (con valores por defecto)
       location: underlyingCatDeductibles.location || "",
       underlyingCat: [],
@@ -830,7 +728,6 @@ export default {
       alopEarthquake: underlyingCatDeductibles.alop_earthquake || null,
       showAlopLines: true,
       alopHidro: underlyingCatDeductibles.alop_hidro || null,
-
       // Fire & EC Deductibles (con validación)
       boundEngDeductibles: underlyingFireECDeductibles.map((u) => {
         return {
@@ -848,14 +745,12 @@ export default {
         };
       }),
       underlyingFire: [],
-
       // Opciones de moneda
       currencyOptions: {
         currency: "MXN",
         currencyDisplay: "narrowSymbol",
         locale: "en-US",
       },
-
       // Sublímites específicos de Engineering (con validación)
       boundSublimes: {
         sublimits1: sublime.catSublimes?.sublimits1 || 0,
@@ -872,15 +767,8 @@ export default {
           endosoUsd: s.endoso_usd || 0,
         };
       }),
-
-      // Tracking de cambios
-      originalTechnicalConditions: {},
-      modifiedDeductibles: new Set(),
-      modifiedSublimes: new Set(),
-
       // Configuración específica de Engineering
       quotationType: 1, // Para Engineering siempre es 1
-
       // Estructura de condiciones técnicas específica para Engineering (con validación)
       technicalConditions: {
         deductibles: {
@@ -924,22 +812,17 @@ export default {
       },
     };
   },
-  created() {
-    this.initializeChangeTracking();
-  },
   async beforeMount() {
     // Validar que tenemos los datos necesarios
     if (!this.accountComplete) {
       console.error("accountComplete is required but not provided");
       return;
     }
-
     if (!this.accountComplete.technical_conditions) {
       console.warn(
         "technical_conditions not found in accountComplete, using default structure"
       );
     }
-
     try {
       this.clauseList = await PaymentService.getClauses();
       this.underlyingCat = (await Catalog.getUnderlyingCat()) || [];
@@ -961,7 +844,6 @@ export default {
       const showInfoEndorsement = this.showInfoEndorsement;
       const clause = Boolean(this.clause);
       const endorsementDateError = !this.endorsementDateError;
-
       const result = !(showInfoEndorsement & clause & endorsementDateError);
       return result;
     },
@@ -987,23 +869,19 @@ export default {
         this.buttonTitleBack = "Return";
         this.calcPremium();
       }
-
       if (this.e1 === 3) {
         this.buttonTitle = "Finalize";
         this.buttonTitleBack = "Return";
         const premiumOriginal = this.detailValues.find((el) => el.id === 1);
         const premiumUSD = this.detailValues.find((el) => el.id === 2);
-
         // Obteniendo los calculos de Net premium
         const tiv = this.accountComplete.tiv;
         const tivMovement = {
           allRisk: tiv.insurable.allRisk,
           alop: tiv.insurable.alop,
-
           allRiskRate: tiv.premium.allRiskRate,
           alopRate: tiv.premium.alopRate,
         };
-
         const dates = {
           effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
             .toISOString()
@@ -1014,20 +892,17 @@ export default {
           endormenteffetiveDate: new Date(this.effectiveDate),
           movementEndDate: new Date(this.expiryDateReal),
         };
-
         const options = {
           isEdited: this.isEdited,
           dataEdited: {
             // totalPremium
             premiumAllRisk: this.totalPremium[0].premiumAllRisk,
             premiumAlop: this.totalPremium[0].premiumAlop,
-
             // premiumSlu
             sluAllRisk: this.totalPremium[0].sluAllRisk,
             sluAlop: this.totalPremium[0].sluAlop,
           },
         };
-
         const sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
         const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
           tivMovement,
@@ -1045,21 +920,17 @@ export default {
           dates,
           options
         );
-
         // Obteniendo premium payment date
         const premiumPaymentDate = new Date(
           this.premiumPaymentDate
         ).toISOString();
-
         // Obteniendo la clausula
         const clause = this.clause;
-
         // Guardando los datos de cartera nuevos
         this.cartera = {
           premiumPaymentDate,
           clausula: clause,
         };
-
         // Construyendo el objeto para generar el excel
         const endorsmentReporData = {
           cartera: this.cartera,
@@ -1104,7 +975,6 @@ export default {
             sluShareTotal: resultUSD.data.totalPremiumSlu,
           },
         };
-
         // Guardar los valores de netPremium
         this.netPremium = {
           originalValues: {
@@ -1120,18 +990,14 @@ export default {
             sluShareTotal: resultUSD.data.totalPremiumSlu,
           },
         };
-
         this.endorsmentReporData = endorsmentReporData;
-
         // Invoca el  servicio para generar el excel
         const fileLink = await EndorsementService.getEndorsmentReport({
           subscriptionId: this.subscriptionId,
           endorsmentType: 11,
           endorsmentReporData,
         });
-
         const file = this.files.find((file) => file.fileId === 1);
-
         if (!fileLink) {
           file.error = true;
         } else {
@@ -1178,12 +1044,9 @@ export default {
     },
     filter(item, queryText, itemText) {
       if (item.header) return false;
-
       const hasValue = (val) => (val != null ? val : "");
-
       const text = hasValue(itemText);
       const query = hasValue(queryText);
-
       return (
         text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) >
         -1
@@ -1201,7 +1064,6 @@ export default {
       if (isNaN(amount)) {
         return "Invalid data";
       }
-
       const formatter = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -1209,7 +1071,6 @@ export default {
       });
       return formatter.format(amount);
     },
-
     calcPremium() {
       const tiv = this.accountComplete.tiv;
       this.detailValues[0]["premiumAllRisk"] = tiv.insurable.allRisk;
@@ -1218,14 +1079,12 @@ export default {
       this.detailValues[1]["premiumAllRisk"] = tiv.insurable.allRiskUsd;
       this.detailValues[1]["premiumAlop"] = tiv.insurable.alopUsd;
       this.detailValues[1]["premiumTotal"] = tiv.insurable.totalUsd;
-
       const tivMovement = {
         allRisk: tiv.insurable.allRisk,
         alop: tiv.insurable.alop,
         allRiskRate: tiv.premium.allRiskRate,
         alopRate: tiv.premium.alopRate,
       };
-
       const dates = {
         effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
           .toISOString()
@@ -1236,7 +1095,6 @@ export default {
         endormenteffetiveDate: new Date(this.effectiveDate),
         movementEndDate: new Date(this.expiryDateReal),
       };
-
       this.calcTotalPremium = new netPremiumInclusionRiskEng(
         tivMovement,
         this.accountComplete.deductibles,
@@ -1244,7 +1102,6 @@ export default {
         false,
         dates
       );
-
       const totalPremiumResult = this.calcTotalPremium.calculateTotalPremium();
       const totalPremium = this.totalPremium.find((el) => el.id === 1);
       totalPremium.premiumAllRisk = totalPremiumResult.allRiskTotalPremium;
@@ -1254,48 +1111,40 @@ export default {
       totalPremium.sluAlop = this.calcTotalPremium.alopPremiumSlu();
       totalPremium.sluTotal = this.calcTotalPremium.totalPremiumSlu();
     },
-
     async stepone() {
       this.e1 = 2;
     },
-
     async nextStep() {
       console.log("next step");
     },
     async prevStep() {
       console.log("prev step");
     },
-
     async saveEndorsement() {
       console.log("Save endorsement");
     },
-
     async removeFileById({ id }) {
       console.log("remove file");
     },
-
     async loadingFile({ data }) {
       console.log("loafing file");
     },
-
     async updateFile(data) {
       console.log("update file");
     },
     async downloadFile() {
       console.log("downloadFile");
     },
-
     setEndorsementDocuments({ files }) {
       this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
     },
-
     async submit() {
       this.e1 = 1;
-
       const OriginalUnderlyingCatDeductibles =
-        this.accountComplete.technical_conditions.deductibles
-          .underlyingCatDeductibles[0];
-
+        this.accountComplete.technical_conditions?.deductibles
+          ?.underlyingCatDeductibles?.[0] ||
+        this.technicalConditions.deductibles.underlyingCatDeductibles[0] ||
+        {};
       // Obteniendo los inputs del usuario
       const technicalConditions = {
         deductibles: {
@@ -1334,7 +1183,6 @@ export default {
             };
           }),
         },
-
         sublime: {
           catSublimes: {
             sublimits1: this.boundSublimes.sublimits1,
@@ -1350,18 +1198,15 @@ export default {
           }),
         },
       };
-
       // Obteniendo el insurable
       const tivTotal = this.detailValues.find((el) => el.id === 1);
       const tivTotalUsd = this.detailValues.find((el) => el.id === 2);
-
       // actualizando tiv.insurable de account complete
       const tivUpdate = {
         insurable: {
           allRisk: tivTotal.premiumAllRisk,
           alop: tivTotal.premiumAlop,
           total: tivTotal.premiumTotal,
-
           allRiskUsd: tivTotalUsd.premiumAllRisk,
           alopUsd: tivTotalUsd.premiumAlop,
           totalUsd: tivTotalUsd.premiumTotal,
@@ -1372,10 +1217,10 @@ export default {
         },
         boundInsurableProp: this.accountComplete.tiv.boundInsurableProp,
       };
-
       // guardar la cuenta actualizada en BD
       const accountCompleteResponse =
         await AccountCompleteService.addAccountComplete(this.subscriptionId, {
+          ...this.accountComplete,
           deductibles: this.accountComplete.deductibles,
           tiv: tivUpdate,
           netPremium: {
@@ -1392,7 +1237,6 @@ export default {
             admitedPremium: this.admitedPremium,
           },
         });
-
       //guardar registro del endoso
       const endorsementResponse = await EndorsementService.addEndorsment({
         subscriptionId: this.subscriptionId,
@@ -1411,6 +1255,7 @@ export default {
             admitedPremium: this.admitedPremium,
           },
         },
+        files: this.endorsementDocuments,
       });
       if (endorsementResponse?.id) {
         this.createdEndorsementId = endorsementResponse.id;
@@ -1419,12 +1264,10 @@ export default {
           await this.$refs.endorsementDocs.uploadPendingFiles();
         }
       }
-
       await this.backToCreateEndorsement();
       this.createdEndorsementId = 0;
       this.endorsementDocuments = [];
     },
-
     endDateValidation(event, incomingDate) {
       if (
         Date.parse(incomingDate) <=
@@ -1439,7 +1282,6 @@ export default {
         }
       }
     },
-
     premiumPaymentDateValidation(event, incomingDate) {
       if (Date.parse(incomingDate) <= Date.parse(this.currentMovementEndDate)) {
         this.premiumPaymentDateError = true;
@@ -1447,7 +1289,6 @@ export default {
         this.premiumPaymentDateError = true;
       }
     },
-
     goNext(e1) {
       this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
@@ -1458,7 +1299,6 @@ export default {
         this.submit();
       }
     },
-
     goBack(e1) {
       this.$refs.targetRef.scrollIntoView({ behavior: "smooth" });
       if (e1 == 1) {
@@ -1469,61 +1309,16 @@ export default {
         this.e1 = 2;
       }
     },
-    initializeChangeTracking() {
-      this.originalTechnicalConditions = _.cloneDeep(this.technicalConditions);
-    },
-
-    // Verificar si un deducible ha sido modificado
-    isDeductibleModified(deductibleId) {
-      return this.modifiedDeductibles.has(deductibleId);
-    },
-
-    // Verificar si un sublímite ha sido modificado
-    isSublimeModified(sublimeId) {
-      return this.modifiedSublimes.has(sublimeId);
-    },
-
-    // Marcar deducible como modificado
-    markDeductibleAsModified(deductibleId) {
-      this.modifiedDeductibles.add(deductibleId);
-    },
-
-    // Marcar sublímite como modificado
-    markSublimeAsModified(sublimeId) {
-      this.modifiedSublimes.add(sublimeId);
-    },
-
-    // Método para detectar cambios
-    trackFieldChanges() {
-      // Marcar como modificado cuando cambian los campos
-      this.markDeductibleAsModified(
-        this.technicalConditions.deductibles.underlyingCatDeductibles[0].id
-      );
-
-      if (this.technicalConditions.sublime?.catSublimes?.id) {
-        this.markSublimeAsModified(
-          this.technicalConditions.sublime.catSublimes.id
-        );
-      }
-    },
-
-    trackSublimeChanges(sublimeData) {
-      if (sublimeData.catSublimes?.id) {
-        this.markSublimeAsModified(sublimeData.catSublimes.id);
-      }
-    },
   },
 };
 </script>
 <style lang="less" scoped>
 @import "~@/assets/style/AccordionStyle.less";
 @import "~@/assets/style/Subscription/Bound.less";
-
 .endorsement-title {
   font-weight: 800;
   font-size: 20px;
 }
-
 .endorsement-wrapper {
   width: 100%;
   height: auto;
@@ -1536,13 +1331,10 @@ export default {
   justify-content: flex-start;
   align-content: center;
   padding: 0 20px;
-
   @media (max-width: 650px) {
     overflow-x: auto !important;
   }
-
   //CABEZA DE LA TABLA
-
   .content {
     width: 100%;
     height: auto;
@@ -1553,7 +1345,6 @@ export default {
     align-content: flex-start;
     flex-wrap: wrap;
     padding-bottom: 10px;
-
     .button-cont {
       width: 100%;
       height: auto;
@@ -1561,7 +1352,6 @@ export default {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-
       .blue-btn {
         color: white;
         width: 200px;
@@ -1572,37 +1362,30 @@ export default {
         letter-spacing: normal;
         text-transform: capitalize;
       }
-
       .clear-btn {
         width: 200px;
         height: 35px;
       }
     }
   }
-
   .v-btn {
     justify-content: flex-start !important;
     color: #003d6d;
     border-radius: 5px;
   }
 }
-
 .table-container {
   margin-top: 30px;
 }
-
 .title-col {
   width: 10%;
 }
-
 .table-col {
   width: 40%;
-
   .inner-col {
     width: 100%;
   }
 }
-
 .table-title {
   height: 50px;
   color: white;
@@ -1615,20 +1398,16 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .table-title-space {
   height: 54px;
 }
-
 .table-subtitle {
   height: 60px;
   font-weight: 800;
 }
-
 .stepper-btn {
   width: 100%;
   height: 40px;
-
   .blue-btn {
     color: white;
     width: 200px;
@@ -1639,35 +1418,29 @@ export default {
     letter-spacing: normal;
     text-transform: capitalize;
   }
-
   .clear-btn {
     width: 200px;
     height: 35px;
   }
 }
-
 .v-stepper__items {
   width: 100%;
 }
-
 .col-subtitle {
   min-height: 40px;
   font-weight: 800;
   display: flex;
   align-items: center;
 }
-
 .table-input {
   min-height: 40px;
   padding: 0 10px;
   display: flex;
   align-items: center;
 }
-
 .blue-input {
   background-color: #dce5fc;
 }
-
 .input-row {
   width: 100%;
   display: flex;
@@ -1676,13 +1449,11 @@ export default {
   align-items: flex-start;
   justify-content: flex-start;
 }
-
 .input-col {
   width: 20%;
   display: block;
   margin-right: 30px;
 }
-
 .input-cont {
   width: 100%;
   display: flex;
@@ -1692,41 +1463,33 @@ export default {
   align-content: center;
   margin: 5px 0;
 }
-
 .input-title {
   width: 100%;
 }
-
 .inner-title {
   width: 100%;
   font-size: 20px;
   font-weight: 800;
   margin: 15px 0;
 }
-
 .column-title {
   font-size: 16px;
   font-weight: 800;
 }
-
 .v-sheet.v-stepper:not(.v-sheet--outlined) {
   box-shadow: none !important;
 }
-
 .v-stepper__step__step {
   display: none !important;
 }
-
 .v-stepper__label {
   color: #547fa9;
   font-weight: 800;
 }
-
 .v-application .primary {
   background-color: #586675 !important;
   border-color: #1c2b39 !important;
 }
-
 .theme--light.v-stepper
   .v-stepper__step:not(.v-stepper__step--active):not(
     .v-stepper__step--complete
@@ -1734,35 +1497,29 @@ export default {
   .v-stepper__step__step {
   background: rgb(186, 34, 34);
 }
-
 .v-stepper__header {
   justify-content: center;
   box-shadow: none;
 }
-
 .theme--light.v-stepper {
   background: #ffe9e900;
 }
-
 .error-message {
   font-size: 12px;
   color: red;
   max-width: 200px;
   transform: translateY(-14px);
 }
-
 .editAccount {
   width: auto;
   color: #f59607;
   font-weight: 600;
   font-size: 19px;
 }
-
 .table-title-detail {
   &--large {
     width: 100%;
   }
-
   width: 100%;
   font-weight: 800;
   font-size: 16px;
@@ -1773,7 +1530,6 @@ export default {
   align-items: center;
   padding: 0px 5px;
 }
-
 .detail-date {
   width: 91%;
   height: auto;
@@ -1800,12 +1556,10 @@ export default {
 .InputsCont {
   width: 95%;
   height: auto;
-
   .InputRow {
     width: 16%;
     height: 50px;
   }
-
   /*Largo de los inputs*/
   .Small {
     width: 10%;
@@ -1832,17 +1586,14 @@ export default {
     height: auto;
   }
 }
-
 /*Underlying*/
 .UnderlyingCont {
   width: 95%;
   height: auto;
-
   .LineItems {
     .flex();
     width: 100%;
     justify-content: space-between;
-
     .Row {
       width: 10%;
       height: 100%;
@@ -1854,7 +1605,6 @@ export default {
       width: 30%;
     }
   }
-
   /*Linea con dos inputs*/
   .TwoInputs {
     justify-content: flex-end;
@@ -1875,7 +1625,6 @@ export default {
   border-radius: 8px;
   background-color: #fafafa;
 }
-
 .section-title {
   font-size: 18px;
   font-weight: 700;
@@ -1884,64 +1633,7 @@ export default {
   display: flex;
   align-items: center;
 }
-
-.highlight-info {
-  font-size: 12px;
-  font-weight: 400;
-  color: #666;
-  margin-left: 10px;
-  font-style: italic;
-}
-
-.highlighted-item {
-  position: relative;
-  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-  border: 2px solid #f39c12;
-  border-radius: 8px;
-  padding: 15px;
-  margin: 10px 0;
-  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
-  animation: pulse-highlight 2s ease-in-out infinite;
-}
-
-.highlighted-item::before {
-  content: "MODIFIED";
-  position: absolute;
-  top: -8px;
-  right: 10px;
-  background: #f39c12;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-@keyframes pulse-highlight {
-  0% {
-    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
-  }
-  50% {
-    box-shadow: 0 6px 15px rgba(243, 156, 18, 0.4);
-  }
-  100% {
-    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
-  }
-}
-
-/* Para items no modificados */
-.technical-conditions-section > div:not(.highlighted-item) {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 15px;
-  margin: 10px 0;
-  transition: all 0.3s ease;
-}
-
-.technical-conditions-section > div:not(.highlighted-item):hover {
-  border-color: #ccc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.report-complete {
+  overflow: auto;
 }
 </style>

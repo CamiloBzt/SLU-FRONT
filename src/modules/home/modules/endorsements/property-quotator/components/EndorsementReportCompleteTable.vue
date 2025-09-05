@@ -454,16 +454,20 @@ export default {
       return "";
     },
     formatCurrency(value) {
-      return value
-        ? new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-          }).format(value)
-        : "";
+      if (value === null || value === undefined) {
+        return "";
+      }
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+      }).format(value);
     },
     formatPercentage(value) {
-      return value ? `${value.toFixed(2)}%` : "";
+      if (value === null || value === undefined) {
+        return "";
+      }
+      return `${Number(value).toFixed(2)}%`;
     },
   },
   watch: {},

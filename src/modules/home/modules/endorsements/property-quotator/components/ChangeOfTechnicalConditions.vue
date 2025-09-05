@@ -79,12 +79,17 @@
                         <v-text-field
                           v-model="expiryDateReal"
                           label="Expiry date"
-                          disabled
                           v-bind="attrs"
                           v-on="on"
                         >
                         </v-text-field>
                       </template>
+                      <v-date-picker
+                        v-model="expiryDateReal"
+                        @input="menu = false"
+                        @change="setExpiryDate"
+                      >
+                      </v-date-picker>
                     </v-menu>
                   </div>
                 </div>
@@ -92,7 +97,7 @@
                 <InputDaysDiference
                   :endorsementDate="effectiveDate"
                   :expiryDate="expiryDatetoCalc"
-                  :key="effectiveDate"
+                  :key="effectiveDate + '-' + expiryDatetoCalc"
                 />
               </div>
 
@@ -208,7 +213,7 @@
                   >
                     <SublimesQuotatorProportional
                       v-if="quotationType == 1"
-                      :exchangeRate="accountComplete.deductibles.exchangeRate"
+                      :exchangeRate="exchangeRateNumber"
                       :sublime="sublime"
                       @setTechnicalConditionsUpdate="
                         setTechnicalConditionsUpdate
@@ -218,7 +223,7 @@
                     />
                     <SublimesQuotatorNonProportional
                       v-if="quotationType == 2"
-                      :exchangeRate="accountComplete.deductibles.exchangeRate"
+                      :exchangeRate="exchangeRateNumber"
                       :sublime="sublime"
                       @setTechnicalConditionsUpdate="
                         setTechnicalConditionsUpdate
@@ -329,12 +334,16 @@
               <AdmittedPremiumTable
                 @setTotalPremium="setTotalPremium"
                 :detailValues="totalPremium"
+                :exchangeRate="exchangeRateNumber"
               />
             </v-stepper-content>
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -499,20 +508,30 @@ export default {
     showInfoEndorsement: { type: Boolean },
   },
   data() {
+    const deductibles = this.accountComplete?.deductibles || {};
+    const expiryDateReal = deductibles.expiryDate
+      ? new Date(deductibles.expiryDate).toISOString().substr(0, 10)
+      : "";
+    const technicalConditions = this.accountComplete?.technical_conditions || {
+      deductibles: [],
+      sublime: [],
+    };
+
     return {
-      expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
-      expiryDateReal: new Date(this.accountComplete.deductibles.expiryDate)
-        .toISOString()
-        .substr(0, 10),
+      expiryDatetoCalc: deductibles.expiryDate || null,
+      expiryDateReal,
       menu3: false,
       menu4: false,
-      clause: this.accountComplete.cartera.clausula,
+      clause: this.accountComplete?.cartera?.clausula || "",
       clauseList: [],
       cartera: {},
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       on: true,
 
-      movementValues: [],
+      movementValues: [
+        { id: 1, damage: 0, bi: 0, stocks: 0, total: 0 },
+        { id: 2, damage: 0, bi: 0, stocks: 0, total: 0 },
+      ],
       netPremium: {},
       subscriptionId: this.$route.params.id,
       e1: 1,
@@ -621,10 +640,8 @@ export default {
       deductibleIndex: 0,
       deductibleId: 1,
       sublimeIndex: 1,
-      technicalConditions: this.accountComplete.technical_conditions,
-      technicalConditionsUpdate: _.cloneDeep(
-        this.accountComplete.technical_conditions
-      ),
+      technicalConditions,
+      technicalConditionsUpdate: _.cloneDeep(technicalConditions),
       originalTechnicalConditions: {},
       modifiedDeductibles: new Set(),
       modifiedSublimes: new Set(),
@@ -632,33 +649,57 @@ export default {
   },
   async beforeMount() {
     this.clauseList = await PaymentService.getClauses();
-    this.quotationType =
-      await SubscriptionService.getTypeQuotationBySubscription(
-        this.accountComplete.id_subscription
-      );
+    if (this.accountComplete?.id_subscription) {
+      this.quotationType =
+        await SubscriptionService.getTypeQuotationBySubscription(
+          this.accountComplete.id_subscription
+        );
+    }
   },
   created() {
     // console.log('this.technicalConditions --->', this.technicalConditions);
 
     // llenamos los valores del segundo paso del endoso
-    const tiv = this.accountComplete.tiv;
-    this.detailValues[0]["premiumDamage"] = tiv.insurable.propertyDamage;
-    this.detailValues[0]["premiumBi"] = tiv.insurable.businessInterruption;
-    this.detailValues[0]["premiumStocks"] = tiv.insurable.stock;
-    this.detailValues[0]["premiumTotal"] = tiv.insurable.total;
+    const tiv = this.accountComplete?.tiv;
+    if (tiv?.insurable) {
+      this.detailValues[0]["premiumDamage"] = tiv.insurable.propertyDamage;
+      this.detailValues[0]["premiumBi"] = tiv.insurable.businessInterruption;
+      this.detailValues[0]["premiumStocks"] = tiv.insurable.stock;
+      this.detailValues[0]["premiumTotal"] = tiv.insurable.total;
 
-    this.detailValues[1]["premiumDamage"] = tiv.insurable.propertyDamageUsd;
-    this.detailValues[1]["premiumBi"] = tiv.insurable.businessInterruptionUsd;
-    this.detailValues[1]["premiumStocks"] = tiv.insurable.stockUsd;
-    this.detailValues[1]["premiumTotal"] = tiv.insurable.totalUsd;
+      this.detailValues[1]["premiumDamage"] = tiv.insurable.propertyDamageUsd;
+      this.detailValues[1]["premiumBi"] = tiv.insurable.businessInterruptionUsd;
+      this.detailValues[1]["premiumStocks"] = tiv.insurable.stockUsd;
+      this.detailValues[1]["premiumTotal"] = tiv.insurable.totalUsd;
+    }
 
     console.log("this.accountComplete --->", this.accountComplete);
 
-    this.deductibleIndex =
-      this.accountComplete.technical_conditions.deductibles.length;
+    this.deductibleIndex = this.technicalConditions.deductibles.length;
     this.initializeChangeTracking();
   },
   watch: {
+    accountComplete: {
+      immediate: true,
+      handler(newVal) {
+        const deductibles = newVal?.deductibles || {};
+
+        this.expiryDatetoCalc = deductibles.expiryDate || null;
+        this.expiryDateReal = deductibles.expiryDate
+          ? new Date(deductibles.expiryDate).toISOString().substr(0, 10)
+          : "";
+
+        this.technicalConditions = newVal?.technical_conditions || {
+          deductibles: [],
+          sublime: [],
+        };
+        this.technicalConditionsUpdate = _.cloneDeep(this.technicalConditions);
+
+        this.clause = newVal?.cartera?.clausula || "";
+        this.deductibleIndex = this.technicalConditions.deductibles.length;
+        this.initializeChangeTracking();
+      },
+    },
     e1: async function () {
       if (this.e1 === 1) {
         this.isEdited = {};
@@ -690,14 +731,22 @@ export default {
         };
 
         const dates = {
-          effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-            .toISOString()
-            .substring(0, 10),
-          expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-            .toISOString()
-            .substring(0, 10),
-          endormenteffetiveDate: new Date(this.effectiveDate),
-          movementEndDate: new Date(this.expiryDateReal),
+          effetiveDate: this.accountComplete?.deductibles?.inceptionDate
+            ? new Date(this.accountComplete.deductibles.inceptionDate)
+                .toISOString()
+                .substring(0, 10)
+            : null,
+          expiryDate: this.accountComplete?.deductibles?.expiryDate
+            ? new Date(this.accountComplete.deductibles.expiryDate)
+                .toISOString()
+                .substring(0, 10)
+            : null,
+          endormenteffetiveDate: this.effectiveDate
+            ? new Date(this.effectiveDate)
+            : null,
+          movementEndDate: this.expiryDateReal
+            ? new Date(this.expiryDateReal)
+            : null,
         };
 
         const options = {
@@ -715,10 +764,24 @@ export default {
           },
         };
 
+        const reportDeductibles = {
+          ...this.accountComplete.deductibles,
+          exchangeRate: this.exchangeRateNumber,
+          brokerage: Number(this.accountComplete.deductibles?.brokerage || 0),
+          taxes: Number(this.accountComplete.deductibles?.taxes || 0),
+          fronting: Number(this.accountComplete.deductibles?.fronting || 0),
+          eng: Number(this.accountComplete.deductibles?.eng || 0),
+          premiumReserve: Number(
+            this.accountComplete.deductibles?.premiumReserve || 0
+          ),
+          lta: Number(this.accountComplete.deductibles?.lta || 0),
+          others: Number(this.accountComplete.deductibles?.others || 0),
+        };
+
         // Obteniendo los calculos de Net premium
         const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
           tivModificado,
-          this.accountComplete.deductibles,
+          reportDeductibles,
           this.accountComplete.tiv?.boundInsurableProp.sluLine,
           false,
           dates,
@@ -727,7 +790,7 @@ export default {
 
         const resultUSD = await netPremiumInclusionRiskAutoCalcs(
           tivModificado,
-          this.accountComplete.deductibles,
+          reportDeductibles,
           this.accountComplete.tiv?.boundInsurableProp.sluLine,
           true,
           dates,
@@ -766,14 +829,14 @@ export default {
             totalUsd: premiumUSD.premiumTotal,
           },
           movementValues: {
-            damage: 0,
-            bi: 0,
-            stocks: 0,
-            total: 0,
-            damageUsd: 0,
-            biUsd: 0,
-            stocksUsd: 0,
-            totalUsd: 0,
+            damage: movementValues?.damage || 0,
+            bi: movementValues?.bi || 0,
+            stocks: movementValues?.stocks || 0,
+            total: movementValues?.total || 0,
+            damageUsd: movementValuesUSD?.damage || 0,
+            biUsd: movementValuesUSD?.bi || 0,
+            stocksUsd: movementValuesUSD?.stocks || 0,
+            totalUsd: movementValuesUSD?.total || 0,
           },
           premium: {
             propertyDamageRate:
@@ -797,23 +860,19 @@ export default {
             totalInsured: this.totalPremium[0].premiumTotal,
 
             propertyDamageUsd:
-              this.totalPremium[0].premiumDamage /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumDamage / this.exchangeRateNumber,
 
             businessInterruptionUsd:
-              this.totalPremium[0].premiumBi /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumBi / this.exchangeRateNumber,
 
             stockUsd:
-              this.totalPremium[0].premiumStocks /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumStocks / this.exchangeRateNumber,
 
             totalUsd:
-              this.totalPremium[0].premiumTotal /
-              this.accountComplete.deductibles.exchangeRate,
+              this.totalPremium[0].premiumTotal / this.exchangeRateNumber,
           },
           boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
-          deductibles: this.accountComplete.deductibles,
+          deductibles: reportDeductibles,
           netPremium: {
             ...resultOriginalCurenncy.data,
             biSluShare: resultOriginalCurenncy.data.biPremiumSlu,
@@ -867,6 +926,9 @@ export default {
           file.loading = false;
         }
       }
+    },
+    expiryDateReal(newVal) {
+      this.expiryDatetoCalc = newVal;
     },
   },
   methods: {
@@ -957,6 +1019,90 @@ export default {
     deleteThisSublimeLocation(id) {
       this.technicalConditions.sublime =
         this.technicalConditions.sublime.filter((u) => u.catSublimes.id !== id);
+    },
+    calcPremium() {
+      const tiv = this.accountComplete.tiv;
+      const tivMovement = {
+        propertyDamageMovement: tiv.insurable.propertyDamage,
+        businessInterruptionMovement: tiv.insurable.businessInterruption,
+        stockMovement: tiv.insurable.stock,
+        propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
+        businessInterruptionRate:
+          this.accountComplete.tiv.premium.businessInterruptionRate,
+        stockRate: this.accountComplete.tiv.premium.stockRate,
+        stockPercentaje:
+          (this.accountComplete.tiv.premium.stockPercentaje ||
+            this.accountComplete.tiv.insurable.porcentaje ||
+            0) / 100,
+      };
+
+      const dates = {
+        effetiveDate: this.accountComplete?.deductibles?.inceptionDate
+          ? new Date(this.accountComplete.deductibles.inceptionDate)
+              .toISOString()
+              .substring(0, 10)
+          : null,
+        expiryDate: this.accountComplete?.deductibles?.expiryDate
+          ? new Date(this.accountComplete.deductibles.expiryDate)
+              .toISOString()
+              .substring(0, 10)
+          : null,
+        endormenteffetiveDate: this.effectiveDate
+          ? new Date(this.effectiveDate)
+          : null,
+        movementEndDate: this.expiryDateReal
+          ? new Date(this.expiryDateReal)
+          : null,
+      };
+
+      const calcPremium = new netPremiumInclusionRisk(
+        tivMovement,
+        this.accountComplete.deductibles,
+        this.accountComplete.tiv?.boundInsurableProp.sluLine,
+        false,
+        dates
+      );
+
+      const retultTotalPremium = calcPremium.totalPremium();
+
+      const totalPremium = this.totalPremium.find((el) => el.id === 1);
+      totalPremium.premiumDamage = retultTotalPremium.damageTotalPremium;
+      totalPremium.premiumBi = retultTotalPremium.biTotalPremium;
+      totalPremium.premiumStocks = retultTotalPremium.stockTotalPremium;
+      totalPremium.premiumTotal = retultTotalPremium.total;
+
+      totalPremium.sluDamage = calcPremium.damagePremiumSlu();
+      totalPremium.sluBi = calcPremium.biPremiumSlu();
+      totalPremium.sluStocks = calcPremium.stocksPremiumSlu();
+      totalPremium.sluTotal = +calcPremium
+        .totalPremiumSlu()
+        .replace("$", "")
+        .replace(/,/g, "");
+
+      const exchangeRate = this.exchangeRateNumber;
+
+      const movementOriginal = this.movementValues.find((el) => el.id === 1);
+      movementOriginal.damage = tivMovement.propertyDamageMovement;
+      movementOriginal.bi = tivMovement.businessInterruptionMovement;
+      movementOriginal.stocks = tivMovement.stockMovement;
+      movementOriginal.total =
+        movementOriginal.damage + movementOriginal.bi + movementOriginal.stocks;
+
+      const movementUsd = this.movementValues.find((el) => el.id === 2);
+      movementUsd.damage = movementOriginal.damage / exchangeRate;
+      movementUsd.bi = movementOriginal.bi / exchangeRate;
+      movementUsd.stocks = movementOriginal.stocks / exchangeRate;
+      movementUsd.total = movementOriginal.total / exchangeRate;
+
+      const totalPremiumUsd = this.totalPremium.find((el) => el.id === 2);
+      totalPremiumUsd.premiumDamage = retultTotalPremium.damageTotalPremiumUsd;
+      totalPremiumUsd.premiumBi = retultTotalPremium.biTotalPremiumUsd;
+      totalPremiumUsd.premiumStocks = retultTotalPremium.stockTotalPremiumUsd;
+      totalPremiumUsd.premiumTotal = retultTotalPremium.totalUsd;
+      totalPremiumUsd.sluDamage = totalPremium.sluDamage / exchangeRate;
+      totalPremiumUsd.sluBi = totalPremium.sluBi / exchangeRate;
+      totalPremiumUsd.sluStocks = totalPremium.sluStocks / exchangeRate;
+      totalPremiumUsd.sluTotal = totalPremium.sluTotal / exchangeRate;
     },
     formatCurrency(amount) {
       return formatCurrency(amount);
@@ -1171,6 +1317,15 @@ export default {
       }
     },
 
+    setExpiryDate(date) {
+      if (Date.parse(this.effectiveDate) >= Date.parse(date)) {
+        this.endDateError = true;
+      } else {
+        this.endDateError = false;
+        this.expiryDatetoCalc = date;
+      }
+    },
+
     premiumPaymentDateValidation(event, incomingDate) {
       if (Date.parse(incomingDate) <= Date.parse(this.currentMovementEndDate)) {
         this.premiumPaymentDateError = true;
@@ -1181,6 +1336,13 @@ export default {
   },
 
   computed: {
+    exchangeRateNumber() {
+      const rate =
+        this.accountComplete?.deductibles?.exchangeRate ??
+        this.accountComplete?.exchange_rate ??
+        this.accountComplete?.exchangeRate;
+      return parseFloat(String(rate).replace(/[^0-9.-]/g, "")) || 1;
+    },
     validationFirstStep() {
       const showInfoEndorsement = this.showInfoEndorsement;
       const clause = Boolean(this.clause);
@@ -1558,5 +1720,8 @@ export default {
 .technical-conditions-section > div:not(.highlighted-item):hover {
   border-color: #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.report-complete {
+  overflow: auto;
 }
 </style>

@@ -191,7 +191,8 @@
                       :items="clauseList"
                       item-value="clause"
                       item-text="clause"
-                      disabled
+                      :menu-props="{ disabled: true }"
+                      readonly
                     />
                   </div>
                 </div>
@@ -268,7 +269,10 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -1302,5 +1306,8 @@ export default {
 
 .wide-col {
   width: 100% !important;
+}
+.report-complete {
+  overflow: auto;
 }
 </style>

@@ -150,10 +150,33 @@ class EndorsementsService {
       });
 
       const { data } = await findResponse;
-
       const response = JSON.parse(data["getEndorsementType"].response);
 
-      return response;
+      const normalize = (str) =>
+        str
+          ?.toString()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+
+      const excluded = [
+        "deductions change",
+        "deduction change",
+        "change of share",
+        "rate change",
+        "bi adjustment",
+      ];
+
+      const renameCancellation = (e) => {
+        const text = e.type || e.description;
+        return normalize(text).includes("canelacion")
+          ? { ...e, type: "Policy Cancellation" }
+          : e;
+      };
+
+      return response
+        .filter((e) => !excluded.includes(normalize(e.type)))
+        .map(renameCancellation);
     } catch (error) {
       //console.log(error)
       const message = String(error);

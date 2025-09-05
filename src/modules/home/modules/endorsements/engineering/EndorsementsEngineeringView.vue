@@ -909,6 +909,12 @@ export default {
 
   async mounted() {
     const endorsements = await EndorsementService.getEndorsementType();
+    const normalize = (str) =>
+      str
+        ?.toString()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
     this.catalogEndorsements = endorsements.filter(
       (endorsement) => endorsement.id !== 13
     );
@@ -916,10 +922,17 @@ export default {
       await AccountCompleteService.getLastAccountCompleteByIdSubscription(
         this.subscriptionId
       );
-    this.listEndorsement =
+    this.listEndorsement = (
       await EndorsementService.getEndorsementsBySubscriptionId(
         this.subscriptionId
-      );
+      )
+    ).map((e) => {
+      const text = normalize(e.EndorsementType?.type || "");
+      if (text.includes("cancelacion")) {
+        e.EndorsementType.type = "Cancelación de póliza";
+      }
+      return e;
+    });
 
     this.formatEndorsement5 = new Intl.NumberFormat("en-US", {
       style: "currency",

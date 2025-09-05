@@ -189,9 +189,10 @@
                       label="Clause"
                       v-model="clause"
                       :items="clauseList"
-                      item-value="id"
+                      item-value="clause"
                       item-text="clause"
-                      disabled
+                      :menu-props="{ disabled: true }"
+                      readonly
                     />
                   </div>
                 </div>
@@ -213,13 +214,15 @@
                         <div class="inner-col">
                           <div class="table-subtitle">Total premium</div>
                           <div class="table-input blue-input">
-                            {{ item.premiumAllRisk }}
+                            {{ formatCurrency(item.premiumAllRisk) }}
                           </div>
                           <div class="table-input blue-input">
-                            {{ item.premiumAlop }}
+                            {{ formatCurrency(item.premiumAlop) }}
                           </div>
 
-                          <div class="table-input">{{ item.premiumTotal }}</div>
+                          <div class="table-input">
+                            {{ formatCurrency(item.premiumTotal) }}
+                          </div>
                         </div>
 
                         <!--
@@ -258,13 +261,15 @@
                         <div class="inner-col">
                           <div class="table-subtitle">Total premium</div>
                           <div class="table-input blue-input">
-                            {{ item.premiumAllRisk }}
+                            {{ formatCurrency(item.premiumAllRisk) }}
                           </div>
                           <div class="table-input blue-input">
-                            {{ item.premiumAlop }}
+                            {{ formatCurrency(item.premiumAlop) }}
                           </div>
 
-                          <div class="table-input">{{ item.premiumTotal }}</div>
+                          <div class="table-input">
+                            {{ formatCurrency(item.premiumTotal) }}
+                          </div>
                         </div>
 
                         <!--
@@ -345,7 +350,10 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -435,6 +443,7 @@ import {
 /* libs */
 import Decimal from "@/lib/decimal";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
+import { formatCurrency as formatCurrencyUtil } from "@/modules/home/modules/endorsements/utils";
 
 export default {
   name: "ExclusionRisk",
@@ -733,6 +742,9 @@ export default {
     toUsd(value) {
       const exchangeRate = this.accountComplete.deductibles.exchangeRate;
       return Decimal.div(value, exchangeRate).toNumber();
+    },
+    formatCurrency(amount) {
+      return formatCurrencyUtil(amount);
     },
     setTotalPremium({ id, value, concept }) {
       const totalPremium = this.totalPremium.find((el) => el.id === id);
@@ -1255,5 +1267,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 50px 0 20px;
+}
+.report-complete {
+  overflow: auto;
 }
 </style>

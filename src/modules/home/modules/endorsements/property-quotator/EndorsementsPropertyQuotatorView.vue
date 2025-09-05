@@ -884,16 +884,29 @@ export default {
 
   async mounted() {
     try {
-      this.catalogEndorsements = await EndorsementService.getEndorsementType();
+      const normalize = (str) =>
+        str
+          ?.toString()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      const endorsements = await EndorsementService.getEndorsementType();
+      this.catalogEndorsements = endorsements;
       this.accountComplete =
         await AccountCompleteService.getLastAccountCompleteByIdSubscription(
           this.subscriptionId
         );
-      this.listEndorsement =
+      this.listEndorsement = (
         await EndorsementService.getEndorsementsBySubscriptionId(
           this.subscriptionId
-        );
-      console.log("listEndorsement =>", this.listEndorsement);
+        )
+      ).map((e) => {
+        const text = normalize(e.EndorsementType?.type || "");
+        if (text.includes("cancelacion")) {
+          e.EndorsementType.type = "Cancelación de póliza";
+        }
+        return e;
+      });
 
       if (!this.accountComplete) {
         console.warn(

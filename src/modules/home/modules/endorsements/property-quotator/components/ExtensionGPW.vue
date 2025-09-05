@@ -171,7 +171,10 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -1098,4 +1101,7 @@ export default {
 <style lang="less" scoped>
 @import "~@/assets/style/AccordionStyle.less";
 @import "~@/assets/style/ExtensionGPW.less";
+.report-complete {
+  overflow: auto;
+}
 </style>
