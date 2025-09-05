@@ -1062,6 +1062,22 @@ export default {
         .replace(/,/g, "");
 
       const exchangeRate = this.exchangeRateNumber;
+
+      const movementOriginal = this.movementValues.find((el) => el.id === 1);
+      movementOriginal.damage = tivMovement.propertyDamageMovement;
+      movementOriginal.bi = tivMovement.businessInterruptionMovement;
+      movementOriginal.stocks = tivMovement.stockMovement;
+      movementOriginal.total =
+        movementOriginal.damage +
+        movementOriginal.bi +
+        movementOriginal.stocks;
+
+      const movementUsd = this.movementValues.find((el) => el.id === 2);
+      movementUsd.damage = movementOriginal.damage / exchangeRate;
+      movementUsd.bi = movementOriginal.bi / exchangeRate;
+      movementUsd.stocks = movementOriginal.stocks / exchangeRate;
+      movementUsd.total = movementOriginal.total / exchangeRate;
+
       const totalPremiumUsd = this.totalPremium.find((el) => el.id === 2);
       totalPremiumUsd.premiumDamage = retultTotalPremium.damageTotalPremiumUsd;
       totalPremiumUsd.premiumBi = retultTotalPremium.biTotalPremiumUsd;
