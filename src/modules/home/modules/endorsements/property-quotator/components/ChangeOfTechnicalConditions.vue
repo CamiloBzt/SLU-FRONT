@@ -760,10 +760,24 @@ export default {
           },
         };
 
+        const reportDeductibles = {
+          ...this.accountComplete.deductibles,
+          exchangeRate: this.exchangeRateNumber,
+          brokerage: Number(this.accountComplete.deductibles?.brokerage || 0),
+          taxes: Number(this.accountComplete.deductibles?.taxes || 0),
+          fronting: Number(this.accountComplete.deductibles?.fronting || 0),
+          eng: Number(this.accountComplete.deductibles?.eng || 0),
+          premiumReserve: Number(
+            this.accountComplete.deductibles?.premiumReserve || 0
+          ),
+          lta: Number(this.accountComplete.deductibles?.lta || 0),
+          others: Number(this.accountComplete.deductibles?.others || 0),
+        };
+
         // Obteniendo los calculos de Net premium
         const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
           tivModificado,
-          this.accountComplete.deductibles,
+          reportDeductibles,
           this.accountComplete.tiv?.boundInsurableProp.sluLine,
           false,
           dates,
@@ -772,7 +786,7 @@ export default {
 
         const resultUSD = await netPremiumInclusionRiskAutoCalcs(
           tivModificado,
-          this.accountComplete.deductibles,
+          reportDeductibles,
           this.accountComplete.tiv?.boundInsurableProp.sluLine,
           true,
           dates,
@@ -854,7 +868,7 @@ export default {
               this.totalPremium[0].premiumTotal / this.exchangeRateNumber,
           },
           boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
-          deductibles: this.accountComplete.deductibles,
+          deductibles: reportDeductibles,
           netPremium: {
             ...resultOriginalCurenncy.data,
             biSluShare: resultOriginalCurenncy.data.biPremiumSlu,
