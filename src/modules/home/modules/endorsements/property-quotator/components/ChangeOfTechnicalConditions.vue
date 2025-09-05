@@ -79,12 +79,17 @@
                         <v-text-field
                           v-model="expiryDateReal"
                           label="Expiry date"
-                          disabled
                           v-bind="attrs"
                           v-on="on"
                         >
                         </v-text-field>
                       </template>
+                      <v-date-picker
+                        v-model="expiryDateReal"
+                        @input="menu = false"
+                        @change="setExpiryDate"
+                      >
+                      </v-date-picker>
                     </v-menu>
                   </div>
                 </div>
@@ -92,7 +97,7 @@
                 <InputDaysDiference
                   :endorsementDate="effectiveDate"
                   :expiryDate="expiryDatetoCalc"
-                  :key="effectiveDate"
+                  :key="effectiveDate + '-' + expiryDatetoCalc"
                 />
               </div>
 
@@ -521,7 +526,10 @@ export default {
       premiumPaymentDate: new Date().toISOString().substr(0, 10),
       on: true,
 
-      movementValues: [],
+      movementValues: [
+        { id: 1, damage: 0, bi: 0, stocks: 0, total: 0 },
+        { id: 2, damage: 0, bi: 0, stocks: 0, total: 0 },
+      ],
       netPremium: {},
       subscriptionId: this.$route.params.id,
       e1: 1,
@@ -803,14 +811,14 @@ export default {
             totalUsd: premiumUSD.premiumTotal,
           },
           movementValues: {
-            damage: 0,
-            bi: 0,
-            stocks: 0,
-            total: 0,
-            damageUsd: 0,
-            biUsd: 0,
-            stocksUsd: 0,
-            totalUsd: 0,
+            damage: movementValues?.damage || 0,
+            bi: movementValues?.bi || 0,
+            stocks: movementValues?.stocks || 0,
+            total: movementValues?.total || 0,
+            damageUsd: movementValuesUSD?.damage || 0,
+            biUsd: movementValuesUSD?.bi || 0,
+            stocksUsd: movementValuesUSD?.stocks || 0,
+            totalUsd: movementValuesUSD?.total || 0,
           },
           premium: {
             propertyDamageRate:
@@ -900,6 +908,9 @@ export default {
           file.loading = false;
         }
       }
+    },
+    expiryDateReal(newVal) {
+      this.expiryDatetoCalc = newVal;
     },
   },
   methods: {
@@ -1271,6 +1282,15 @@ export default {
       } else {
         await this.changeDateEndorsement(incomingDate);
         this.endDateError = false;
+      }
+    },
+
+    setExpiryDate(date) {
+      if (Date.parse(this.effectiveDate) >= Date.parse(date)) {
+        this.endDateError = true;
+      } else {
+        this.endDateError = false;
+        this.expiryDatetoCalc = date;
       }
     },
 
