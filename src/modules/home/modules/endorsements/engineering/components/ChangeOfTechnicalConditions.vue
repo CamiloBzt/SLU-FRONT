@@ -6,10 +6,10 @@
     </div>
     <v-stepper v-model="e1">
       <v-stepper-header>
-        <v-stepper-step :complete="e1> 1" step="1" color="#F59607">
+        <v-stepper-step :complete="e1 > 1" step="1" color="#F59607">
           Endorsement
         </v-stepper-step>
-        <v-stepper-step :complete="e1> 2" step="2" color="#F59607">
+        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
           Calculate premium
         </v-stepper-step>
         <v-stepper-step step="3" color="#F59607">
@@ -29,19 +29,22 @@
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
-                      min-width="auto">
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           v-model="effectiveDate"
                           label="Endorsement effective date"
                           v-bind="attrs"
-                          v-on="on">
+                          v-on="on"
+                        >
                         </v-text-field>
                       </template>
                       <v-date-picker
                         v-model="effectiveDate"
                         @input="menu2 = false"
-                        @change="endDateValidation($event, effectiveDate)">
+                        @change="endDateValidation($event, effectiveDate)"
+                      >
                       </v-date-picker>
                     </v-menu>
                     <div v-if="this.endorsementDateError" class="error-message">
@@ -61,14 +64,16 @@
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
-                      min-width="auto">
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           v-model="expiryDateReal"
                           label="Expiry date"
                           disabled
                           v-bind="attrs"
-                          v-on="on">
+                          v-on="on"
+                        >
                         </v-text-field>
                       </template>
                     </v-menu>
@@ -90,17 +95,17 @@
                   <div>
                     <div class="ExpandContent justify-center">
                       <div
-                        class="TitleCont d-flex justify-space-between align-center">
+                        class="TitleCont d-flex justify-space-between align-center"
+                      >
                         <h5>Location</h5>
                       </div>
                       <!--Coverage B // ALOP-->
                       <div class="DynamicItemsContent">
                         <div
-                          class="InputsCont d-flex justify-space-between align-start flex-wrap">
+                          class="InputsCont d-flex justify-space-between align-start flex-wrap"
+                        >
                           <div class="InputRow">
-                            <v-text-field
-                              v-model.trim="location"
-                            />
+                            <v-text-field v-model.trim="location" />
                           </div>
                         </div>
                       </div>
@@ -108,11 +113,13 @@
                         <h5>Underlying Cat Deductibles</h5>
                       </div>
                       <div
-                        class="InputTitle d-flex justify-start align-center align-end">
+                        class="InputTitle d-flex justify-start align-center align-end"
+                      >
                         Coverage B, Earthquake, Tremor or Volcanic Eruption
                       </div>
                       <div
-                        class="InputsCont d-flex justify-space-between align-start flex-wrap">
+                        class="InputsCont d-flex justify-space-between align-start flex-wrap"
+                      >
                         <div class="InputRow Small">
                           <v-select
                             v-model.trim="underlyingCatSelect"
@@ -120,7 +127,8 @@
                             item-text="data"
                             item-value="id"
                             clearable
-                            :disabled="underlyingCat.length === 0">
+                            :disabled="underlyingCat.length === 0"
+                          >
                           </v-select>
                         </div>
                         <div class="InputRow Large">
@@ -131,7 +139,8 @@
                             label="Total value"
                             item-value="id"
                             clearable
-                            :disabled="underlyingCatAplica.length === 0">
+                            :disabled="underlyingCatAplica.length === 0"
+                          >
                           </v-select>
                         </div>
                         <div class="InputRow">
@@ -155,11 +164,13 @@
                       </div>
                       <!--Hydrometeorological Risk-->
                       <div
-                        class="InputTitle d-flex justify-start align-end mt-7">
+                        class="InputTitle d-flex justify-start align-end mt-7"
+                      >
                         Hidrometeorological Risk
                       </div>
                       <div
-                        class="InputsCont d-flex justify-space-between align-start flex-wrap">
+                        class="InputsCont d-flex justify-space-between align-start flex-wrap"
+                      >
                         <div class="InputRow Small">
                           <v-select
                             v-model.trim="underlyingHidroSelect"
@@ -167,7 +178,8 @@
                             item-text="data"
                             item-value="id"
                             clearable
-                            :disabled="underlyingCat.length === 0">
+                            :disabled="underlyingCat.length === 0"
+                          >
                           </v-select>
                         </div>
                         <div class="InputRow Large">
@@ -178,7 +190,8 @@
                             label="Total value"
                             item-value="id"
                             clearable
-                            :disabled="underlyingCatAplica.length === 0">
+                            :disabled="underlyingCatAplica.length === 0"
+                          >
                           </v-select>
                         </div>
                         <div class="InputRow">
@@ -203,14 +216,17 @@
                       <!--Coverage B // ALOP-->
                       <div
                         class="DynamicItemsContent mt-8"
-                        v-if="this.showAlopLines">
+                        v-if="this.showAlopLines"
+                      >
                         <div
-                          class="InputTitle d-flex justify-start align-center align-end">
+                          class="InputTitle d-flex justify-start align-center align-end"
+                        >
                           ALOP Coverage B, Earthquake, Tremor or Volcanic
                           Eruption
                         </div>
                         <div
-                          class="InputsCont d-flex justify-space-between align-start flex-wrap">
+                          class="InputsCont d-flex justify-space-between align-start flex-wrap"
+                        >
                           <div class="InputRow">
                             <v-text-field
                               type="number"
@@ -223,13 +239,16 @@
                       <!-- Hydrometeorological Risk // ALOP -->
                       <div
                         class="DynamicItemsContent mt-7"
-                        v-if="this.showAlopLines">
+                        v-if="this.showAlopLines"
+                      >
                         <div
-                          class="InputTitle d-flex justify-start align-center align-end">
+                          class="InputTitle d-flex justify-start align-center align-end"
+                        >
                           ALOP Hidrometeorological Risk
                         </div>
                         <div
-                          class="InputsCont d-flex justify-space-between align-start flex-wrap">
+                          class="InputsCont d-flex justify-space-between align-start flex-wrap"
+                        >
                           <div class="InputRow">
                             <v-text-field
                               type="number"
@@ -241,14 +260,16 @@
                       </div>
                       <!--Underlying Fire -->
                       <div
-                        class="TitleCont mt-6 d-flex justify-start align-center">
+                        class="TitleCont mt-6 d-flex justify-start align-center"
+                      >
                         <h5>Underlying Fire &#38; EC Deductibles</h5>
                       </div>
                       <!--Contenedor de deducibles-->
                       <div
                         class="UnderlyingCont d-flex align-start flex-wrap"
                         v-for="(item, index) in boundEngDeductibles"
-                        :key="index">
+                        :key="index"
+                      >
                         <!--Fila con todos los inputs-->
                         <div class="LineItems">
                           <div class="Row">
@@ -264,7 +285,8 @@
                               label="Search for an option"
                               clearable
                               return-object
-                              :disabled="underlyingFire.length === 0">
+                              :disabled="underlyingFire.length === 0"
+                            >
                               <template v-slot:no-data>
                                 <v-list-item>
                                   <span class="subheading">Creating new </span>
@@ -276,7 +298,8 @@
                               <template v-slot:selection="{ attrs, item }">
                                 <span
                                   v-if="typeof item === 'object'"
-                                  v-bind="attrs">
+                                  v-bind="attrs"
+                                >
                                   {{ item.data }}
                                 </span>
                                 <span v-else v-bind="attrs">
@@ -292,7 +315,8 @@
                               item-text="data"
                               item-value="id"
                               clearable
-                              :disabled="underlyingCat.length === 0">
+                              :disabled="underlyingCat.length === 0"
+                            >
                             </v-select>
                           </div>
                           <div class="Row Large">
@@ -303,7 +327,8 @@
                               label="Total value"
                               item-value="id"
                               clearable
-                              :disabled="underlyingFireAplica.length === 0">
+                              :disabled="underlyingFireAplica.length === 0"
+                            >
                             </v-select>
                           </div>
                           <div class="Row">
@@ -328,7 +353,8 @@
                           <v-icon
                             small
                             @click="removeField(index)"
-                            class="mt-4">
+                            class="mt-4"
+                          >
                             mdi-minus-circle
                           </v-icon>
                         </div>
@@ -340,7 +366,8 @@
                           text
                           rounded
                           @click="addFields()"
-                          :loading="buttonLoader">
+                          :loading="buttonLoader"
+                        >
                           <v-icon class="mr-2"> mdi-plus-circle </v-icon>
                           Add Deductible
                         </v-btn>
@@ -388,17 +415,20 @@
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
-                      min-width="auto">
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           v-model="premiumPaymentDate"
                           label="Premium payment date"
                           v-bind="attrs"
-                          v-on="on"></v-text-field>
+                          v-on="on"
+                        ></v-text-field>
                       </template>
                       <v-date-picker
                         v-model="premiumPaymentDate"
-                        @input="menu3 = false"></v-date-picker>
+                        @input="menu3 = false"
+                      ></v-date-picker>
                     </v-menu>
                   </div>
                 </div>
@@ -417,7 +447,8 @@
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
-                      min-width="auto">
+                      min-width="auto"
+                    >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           v-model="premiumPaymentDate"
@@ -425,7 +456,8 @@
                           readonly
                           disabled
                           v-bind="attrs"
-                          v-on="on"></v-text-field>
+                          v-on="on"
+                        ></v-text-field>
                       </template>
                     </v-menu>
                   </div>
@@ -452,11 +484,15 @@
             </v-stepper-content>
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
-                class="files-submit flex justify-content-start align-items-start align-content-start">
+                class="files-submit flex justify-content-start align-items-start align-content-start"
+              >
                 <AppFile
                   v-for="(item, clave) in files"
                   :key="clave"
@@ -495,7 +531,8 @@
           :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
           :color="e1 == 3 ? 'none' : '#003D6D'"
           @click="goNext(e1)"
-          :disabled="validationFirstStep">
+          :disabled="validationFirstStep"
+        >
           {{ buttonTitle }}
         </v-btn>
       </div>
@@ -758,7 +795,7 @@ export default {
                 },
               ],
           underlyingFireEcDeductibles:
-            underlyingFireECDeductibles.length> 0
+            underlyingFireECDeductibles.length > 0
               ? underlyingFireECDeductibles
               : [],
         },
@@ -812,7 +849,7 @@ export default {
     },
     cleanReport() {
       return this.endorsmentReporData &&
-        Object.keys(this.endorsmentReporData).length> 0
+        Object.keys(this.endorsmentReporData).length > 0
         ? {
             endorsmentReporData: this.endorsmentReporData,
             cartera: this.cartera,
@@ -971,12 +1008,12 @@ export default {
       }
     },
     coverB(val) {
-      if (Number(val)> Number(this.coverTwoB)) {
+      if (Number(val) > Number(this.coverTwoB)) {
         this.coverTwoB = val;
       }
     },
     hidroRisk(val) {
-      if (Number(val)> Number(this.hidroRiskTwo)) {
+      if (Number(val) > Number(this.hidroRiskTwo)) {
         this.hidroRiskTwo = val;
       }
     },
@@ -1011,7 +1048,7 @@ export default {
       const text = hasValue(itemText);
       const query = hasValue(queryText);
       return (
-        text.toString().toLowerCase().indexOf(query.toString().toLowerCase())>
+        text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) >
         -1
       );
     },
@@ -1104,7 +1141,8 @@ export default {
     async submit() {
       this.e1 = 1;
       const OriginalUnderlyingCatDeductibles =
-        this.accountComplete.technical_conditions?.deductibles?.underlyingCatDeductibles?.[0] ||
+        this.accountComplete.technical_conditions?.deductibles
+          ?.underlyingCatDeductibles?.[0] ||
         this.technicalConditions.deductibles.underlyingCatDeductibles[0] ||
         {};
       // Obteniendo los inputs del usuario
@@ -1594,5 +1632,8 @@ export default {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+}
+.report-complete {
+  overflow: auto;
 }
 </style>

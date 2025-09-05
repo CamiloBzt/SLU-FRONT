@@ -220,7 +220,9 @@
                             {{ formatCurrency(item.premiumAlop) }}
                           </div>
 
-                          <div class="table-input">{{ formatCurrency(item.premiumTotal) }}</div>
+                          <div class="table-input">
+                            {{ formatCurrency(item.premiumTotal) }}
+                          </div>
                         </div>
 
                         <!--
@@ -265,7 +267,9 @@
                             {{ formatCurrency(item.premiumAlop) }}
                           </div>
 
-                          <div class="table-input">{{ formatCurrency(item.premiumTotal) }}</div>
+                          <div class="table-input">
+                            {{ formatCurrency(item.premiumTotal) }}
+                          </div>
                         </div>
 
                         <!--
@@ -346,7 +350,10 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -1260,5 +1267,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 50px 0 20px;
+}
+.report-complete {
+  overflow: auto;
 }
 </style>

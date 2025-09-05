@@ -340,7 +340,10 @@
 
             <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -509,11 +512,10 @@ export default {
     const expiryDateReal = deductibles.expiryDate
       ? new Date(deductibles.expiryDate).toISOString().substr(0, 10)
       : "";
-    const technicalConditions =
-      this.accountComplete?.technical_conditions || {
-        deductibles: [],
-        sublime: [],
-      };
+    const technicalConditions = this.accountComplete?.technical_conditions || {
+      deductibles: [],
+      sublime: [],
+    };
 
     return {
       expiryDatetoCalc: deductibles.expiryDate || null,
@@ -687,8 +689,10 @@ export default {
           ? new Date(deductibles.expiryDate).toISOString().substr(0, 10)
           : "";
 
-        this.technicalConditions =
-          newVal?.technical_conditions || { deductibles: [], sublime: [] };
+        this.technicalConditions = newVal?.technical_conditions || {
+          deductibles: [],
+          sublime: [],
+        };
         this.technicalConditionsUpdate = _.cloneDeep(this.technicalConditions);
 
         this.clause = newVal?.cartera?.clausula || "";
@@ -1082,9 +1086,7 @@ export default {
       movementOriginal.bi = tivMovement.businessInterruptionMovement;
       movementOriginal.stocks = tivMovement.stockMovement;
       movementOriginal.total =
-        movementOriginal.damage +
-        movementOriginal.bi +
-        movementOriginal.stocks;
+        movementOriginal.damage + movementOriginal.bi + movementOriginal.stocks;
 
       const movementUsd = this.movementValues.find((el) => el.id === 2);
       movementUsd.damage = movementOriginal.damage / exchangeRate;
@@ -1718,5 +1720,8 @@ export default {
 .technical-conditions-section > div:not(.highlighted-item):hover {
   border-color: #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.report-complete {
+  overflow: auto;
 }
 </style>
