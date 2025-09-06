@@ -12,11 +12,7 @@
           Endorsement
         </v-stepper-step>
 
-        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
-          Calculate premium
-        </v-stepper-step>
-
-        <v-stepper-step step="3" color="#F59607">
+        <v-stepper-step step="2" color="#F59607">
           Admitted premium
         </v-stepper-step>
       </v-stepper-header>
@@ -145,31 +141,6 @@
             </v-stepper-content>
 
             <v-stepper-content step="2">
-              <div>
-                <Table :tableData="tableData" />
-              </div>
-
-              <div class="description-container-step2">
-                <div class="endorsement-title">Reason</div>
-
-                <div class="textArea-cont">
-                  <v-textarea
-                    v-model="detailDescription"
-                    background-color="#EDF2F8"
-                    height="180"
-                    solo
-                    flat
-                    rounded
-                    no-resize
-                    class="textArea"
-                    counter="500"
-                    readonly
-                  />
-                </div>
-              </div>
-            </v-stepper-content>
-
-            <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
               <div
                 v-if="cleanReport && cleanReport.endorsmentReporData"
@@ -204,18 +175,17 @@
       </div>
       <EndorsementDocuments
         @setEndorsementDocuments="setEndorsementDocuments"
-        v-show="e1 == 1 || e1 == 3"
+        v-show="e1 == 1 || e1 == 2"
       />
-      <!-- <AdmittedPremiumTable v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" /> -->
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
         <v-btn
-          :outlined="e1 == 3 ? false : true"
+          :outlined="e1 == 2 ? false : true"
           rounded
           large
-          :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
-          :color="e1 == 3 ? 'none' : '#003D6D'"
+          :text="e1 == 2 ? true : false"
+          :class="e1 == 2 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 2 ? 'none' : '#003D6D'"
           @click="goNext(e1)"
         >
           {{ buttonTitle }}
@@ -236,27 +206,19 @@ import AppFile from "../../components/AppFile.vue";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import ClauseSelector from "../modules/deductions-change/detail/components/ClauseSelector.vue";
 import PremiumPaymentWarranty from "../modules/deductions-change/detail/components/PremiumPaymentWarranty.vue";
-import Table from "./../modules/deductions-change/detail/components/Table.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
-import AdmittedPremiumTable from "../../components/AdmittedPremiumTable.vue";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
 import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
 /* services */
 import { getFiles } from "../../services/mock-files.service";
-import netPremium from "../services/netpremium.service";
 import EndorsementService from "../../services/endorsement.service";
 import accountCompleteService from "@/modules/home/services/account-complete.service";
 import PaymentService from "@/components/subscription/bound/services/payment.service";
-import {
-  netPremiumInclusionRisk,
-  netPremiumInclusionRiskAutoCalcs,
-} from "../class/netPremiumInclusionRisk";
+import { netPremiumInclusionRiskAutoCalcs } from "../class/netPremiumInclusionRisk";
 
 /* libs */
-import Decimal from "@/lib/decimal";
 /* utils */
 import { removeDollarSign } from "../utils";
-import { unFormatCurrency, formatCurrency } from "../../utils";
 
 export default {
   name: "ExtensionGPW",
@@ -265,9 +227,7 @@ export default {
     CurrencyInput,
     ClauseSelector,
     PremiumPaymentWarranty,
-    Table,
     InputDaysDiference,
-    AdmittedPremiumTable,
     EndorsementDocuments,
     EndorsementReportCompleteTable,
   },
@@ -315,7 +275,6 @@ export default {
           totalAlop: this.accountComplete.tiv.insurable.alopUsd,
         },
       ],
-      netPremium: {},
       subscriptionId: this.$route.params.id,
       e1: 1,
       menu: false,
@@ -347,32 +306,6 @@ export default {
         },
       ],
       insurable: [],
-      detailValues: [
-        {
-          id: 1,
-          name: "Original Currency",
-          premiumDamage: 0,
-          premiumBi: 0,
-          premiumStocks: 0,
-          premiumTotal: 0,
-          sluDamage: 0,
-          sluBi: 0,
-          sluStocks: 0,
-          sluTotal: 0,
-        },
-        {
-          id: 2,
-          name: "USD",
-          premiumDamage: 0,
-          premiumBi: 0,
-          premiumStocks: 0,
-          premiumTotal: 0,
-          sluDamage: 0,
-          sluBi: 0,
-          sluStocks: 0,
-          sluTotal: 0,
-        },
-      ],
       currentMovementEndDate: new Date(
         Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000
       )
@@ -397,36 +330,6 @@ export default {
       currentClause: "",
       additionalClause: "",
       daysNotice: "",
-      tableData: {
-        currency: {
-          total_premium: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-          premium_slu: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-        },
-        usd: {
-          total_premium: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-          premium_slu: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-        },
-      },
       allDatas: [],
       installmentsForExcel: [],
       paymentsWarranty: [],
@@ -539,7 +442,7 @@ export default {
           break;
 
         case 2:
-          this.buttonTitle = "Next";
+          this.buttonTitle = "Finalize";
           this.buttonTitleBack = "Return";
           this.deductible = Object.assign(this.accountComplete.deductibles);
           this.deductible.brokerage = this.brokerage;
@@ -551,11 +454,6 @@ export default {
           this.deductible.fronting = this.frontingFee;
           this.deductible.premiumReserve = this.premiumReserve;
           this.sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
-          this.calcPremium();
-          break;
-        case 3:
-          this.buttonTitle = "Finalize";
-          this.buttonTitleBack = "Return";
 
           // ** En este endoso no hay tivMovement, le pasamos directamente los valores de accountComplete
           const tiv = this.accountComplete.tiv;
@@ -795,87 +693,6 @@ export default {
         );
       }
     },
-    setTotalPremium({ id, value, concept }) {
-      const totalPremium = this.totalPremium.find((el) => el.id === id);
-      totalPremium[concept] = value;
-
-      if ((concept !== "premiumTotal") & (concept !== "sluTotal")) {
-        this.isEdited[concept] = true;
-      }
-    },
-
-    calcPremium() {
-      // ** En este endoso no hay tivMovement, le pasamos directamente los valores de accountComplete
-      const tiv = this.accountComplete.tiv;
-      const tivMovement = {
-        propertyDamageMovement: tiv.insurable.propertyDamage,
-        businessInterruptionMovement: tiv.insurable.businessInterruption,
-        stockMovement: tiv.insurable.stock,
-
-        propertyDamageRate: this.accountComplete.tiv.premium.propertyDamageRate,
-        businessInterruptionRate:
-          this.accountComplete.tiv.premium.businessInterruptionRate,
-        stockRate: this.accountComplete.tiv.premium.stockRate,
-        stockPercentaje:
-          (this.accountComplete.tiv.premium.stockPercentaje ||
-            this.accountComplete.tiv.insurable.porcentaje ||
-            0) / 100,
-      };
-
-      const dates = {
-        effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-          .toISOString()
-          .substring(0, 10),
-        expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-          .toISOString()
-          .substring(0, 10),
-        endormenteffetiveDate: new Date(this.effectiveDate),
-        movementEndDate: new Date(this.expiryDate),
-      };
-
-      const calcPremium = new netPremiumInclusionRisk(
-        tivMovement,
-        this.accountComplete.deductibles,
-        this.accountComplete.tiv?.boundInsurableProp.sluLine,
-        false,
-        dates
-      );
-
-      const totalPremium = this.totalPremium.find((el) => el.id === 1);
-
-      const retultTotalPremium = calcPremium.totalPremium();
-
-      totalPremium.premiumDamage = retultTotalPremium.damageTotalPremium;
-      totalPremium.premiumBi = retultTotalPremium.biTotalPremium;
-      totalPremium.premiumStocks = retultTotalPremium.stockTotalPremium;
-      totalPremium.premiumTotal = retultTotalPremium.total;
-
-      totalPremium.sluDamage = calcPremium.damagePremiumSlu();
-      totalPremium.sluBi = calcPremium.biPremiumSlu();
-      totalPremium.sluStocks = calcPremium.stocksPremiumSlu();
-      totalPremium.sluTotal = unFormatCurrency(calcPremium.totalPremiumSlu());
-
-      const netTotal = unFormatCurrency(calcPremium.netTotal());
-      this.tableData.currency.total_premium.total_premium_movement =
-        retultTotalPremium.total.toFixed(2);
-      this.tableData.currency.total_premium.premium_slu = totalPremium.sluTotal;
-      this.tableData.currency.total_premium.net_premium =
-        formatCurrency(netTotal);
-
-      this.tableData.usd.total_premium.total_premium_movement =
-        retultTotalPremium.totalUsd.toFixed(2);
-      this.tableData.usd.total_premium.premium_slu = this.toUsd(
-        totalPremium.sluTotal
-      );
-      this.tableData.usd.total_premium.net_premium = formatCurrency(
-        this.toUsd(netTotal)
-      );
-    },
-
-    toUsd(value) {
-      const exchangeRate = this.accountComplete.deductibles.exchangeRate;
-      return Decimal.div(value, exchangeRate).toNumber();
-    },
 
     async stepone() {
       this.e1 = 2;
@@ -1079,8 +896,6 @@ export default {
       if (e1 == 1) {
         this.keepDescription();
       } else if (e1 == 2) {
-        this.e1 = 3;
-      } else if (e1 == 3) {
         this.submit();
       }
     },
@@ -1091,8 +906,6 @@ export default {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
         this.e1 = 1;
-      } else if (e1 == 3) {
-        this.e1 = 2;
       }
     },
   },
