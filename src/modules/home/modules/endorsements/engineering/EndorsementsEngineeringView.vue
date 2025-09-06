@@ -841,8 +841,7 @@ export default {
         this.totalPremiumHistoryTable[0].premiumAlop = mv.alop || 0;
         this.totalPremiumHistoryTable[0].premiumTotal = mv.total || 0;
 
-        this.totalPremiumHistoryTable[1].premiumAllRisk =
-          mv.allRiskUsd || 0;
+        this.totalPremiumHistoryTable[1].premiumAllRisk = mv.allRiskUsd || 0;
         this.totalPremiumHistoryTable[1].premiumAlop = mv.alopUsd || 0;
         this.totalPremiumHistoryTable[1].premiumTotal = mv.totalUsd || 0;
 
@@ -852,12 +851,9 @@ export default {
         this.totalPremium[0].premiumAllRisk = premium.allRisk || 0;
         this.totalPremium[0].premiumAlop = premium.alop || 0;
         this.totalPremium[0].premiumTotal = premium.totalInsured || 0;
-        this.totalPremium[0].sluAllRisk =
-          netPremium.allRiskSluShare || 0;
-        this.totalPremium[0].sluAlop =
-          netPremium.alopSluShare || 0;
-        this.totalPremium[0].sluTotal =
-          netPremium.sluShareTotal || 0;
+        this.totalPremium[0].sluAllRisk = netPremium.allRiskSluShare || 0;
+        this.totalPremium[0].sluAlop = netPremium.alopSluShare || 0;
+        this.totalPremium[0].sluTotal = netPremium.sluShareTotal || 0;
       }
 
       // Invoca el  servicio para generar el excel

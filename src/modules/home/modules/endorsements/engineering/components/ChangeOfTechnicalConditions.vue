@@ -1255,7 +1255,6 @@ export default {
             admitedPremium: this.admitedPremium,
           },
         },
-        files: this.endorsementDocuments,
       });
       if (endorsementResponse?.id) {
         this.createdEndorsementId = endorsementResponse.id;
