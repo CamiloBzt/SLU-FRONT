@@ -138,7 +138,10 @@
 
             <v-stepper-content step="2">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -1169,5 +1172,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 0px 5px;
+}
+.report-complete {
+  overflow: auto;
 }
 </style>
