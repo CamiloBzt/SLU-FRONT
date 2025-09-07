@@ -10,11 +10,7 @@
           Endorsement
         </v-stepper-step>
 
-        <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
-          Calculate premium
-        </v-stepper-step>
-
-        <v-stepper-step step="3" color="#F59607">
+        <v-stepper-step step="2" color="#F59607">
           Admitted premium
         </v-stepper-step>
       </v-stepper-header>
@@ -141,32 +137,11 @@
             </v-stepper-content>
 
             <v-stepper-content step="2">
-              <div>
-                <Table :tableData="tableData" />
-              </div>
-              <div class="description-container-step2">
-                <div class="endorsement-title">Reason</div>
-
-                <div class="textArea-cont">
-                  <v-textarea
-                    v-model="detailDescription"
-                    background-color="#EDF2F8"
-                    height="180"
-                    solo
-                    flat
-                    rounded
-                    no-resize
-                    class="textArea"
-                    counter="500"
-                    readonly
-                  />
-                </div>
-              </div>
-            </v-stepper-content>
-
-            <v-stepper-content step="3">
               <div class="inner-title">Endorsement Report</div>
-              <div v-if="cleanReport && cleanReport.endorsmentReporData">
+              <div
+                v-if="cleanReport && cleanReport.endorsmentReporData"
+                class="report-complete"
+              >
                 <EndorsementReportCompleteTable :report="cleanReport" />
               </div>
               <div
@@ -199,18 +174,17 @@
         :idEndorsement="createdEndorsementId"
         :endorsementDocuments="endorsementDocuments"
         @setEndorsementDocuments="setEndorsementDocuments"
-        v-show="e1 == 1 || e1 == 3"
+        v-show="e1 == 1 || e1 == 2"
       />
-      <!-- <AdmittedPremiumTableEngineering v-if="e1 == 2" @setTotalPremium="setTotalPremium" :detailValues="totalPremium" /> -->
 
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
         <v-btn
-          :outlined="e1 == 3 ? false : true"
+          :outlined="e1 == 2 ? false : true"
           rounded
           large
-          :text="e1 == 3 ? true : false"
-          :class="e1 == 3 ? 'blue-btn' : 'clear-btn'"
-          :color="e1 == 3 ? 'none' : '#003D6D'"
+          :text="e1 == 2 ? true : false"
+          :class="e1 == 2 ? 'blue-btn' : 'clear-btn'"
+          :color="e1 == 2 ? 'none' : '#003D6D'"
           @click="goNext(e1)"
         >
           {{ buttonTitle }}
@@ -232,25 +206,17 @@ import MovementValues from "./MovementValuesEng.vue";
 import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import ClauseSelector from "../modules/deductions-change/detail/components/ClauseSelector.vue";
 import PremiumPaymentWarranty from "../modules/deductions-change/detail/components/PremiumPaymentWarranty.vue";
-import Table from "./../modules/deductions-change/detail/components/Table.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
-import AdmittedPremiumTableEngineering from "../../components/AdmittedPremiumTableEngineering.vue";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
 import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
 /* services */
 import { getFiles } from "../../services/mock-files.service";
-import netPremiumEng from "../services/netpremium.service";
 import EndorsementService from "../../services/endorsement.service";
 import accountCompleteService from "@/modules/home/services/account-complete.service";
 import PaymentService from "@/components/subscription/bound/services/payment.service";
-import {
-  netPremiumInclusionRiskEng,
-  netPremiumInclusionRiskAutoCalcs,
-} from "../class/netPremiumInclusionRiskEng";
+import { netPremiumInclusionRiskAutoCalcs } from "../class/netPremiumInclusionRiskEng";
 
 /* libs */
-import Decimal from "@/lib/decimal";
-import { unFormatCurrency, formatCurrency } from "../../utils";
 
 export default {
   name: "ExtensionGPW",
@@ -260,9 +226,7 @@ export default {
     CurrencyInput,
     ClauseSelector,
     PremiumPaymentWarranty,
-    Table,
     InputDaysDiference,
-    AdmittedPremiumTableEngineering,
     EndorsementDocuments,
     EndorsementReportCompleteTable,
   },
@@ -312,7 +276,6 @@ export default {
           totalAlop: this.accountComplete.tiv.insurable.alopUsd,
         },
       ],
-      netPremium: {},
       subscriptionId: this.$route.params.id,
       e1: 1,
       menu: false,
@@ -386,36 +349,6 @@ export default {
       currentClause: "",
       additionalClause: "",
       daysNotice: "",
-      tableData: {
-        currency: {
-          total_premium: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-          premium_slu: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-        },
-        usd: {
-          total_premium: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-          premium_slu: {
-            total_premium_movement: 0,
-            premium_slu: 0,
-            net_premium: 0,
-            total: 0,
-          },
-        },
-      },
       allDatas: [],
       installmentsForExcel: [],
       paymentsWarranty: [],
@@ -516,9 +449,8 @@ export default {
           break;
 
         case 2:
-          this.buttonTitle = "Next";
+          this.buttonTitle = "Finalize";
           this.buttonTitleBack = "Return";
-
           this.deductible = Object.assign(this.accountComplete.deductibles);
           this.deductible.brokerage = this.brokerage;
           this.deductible.taxes = this.taxes;
@@ -529,11 +461,7 @@ export default {
           this.deductible.fronting = this.frontingFee;
           this.deductible.premiumReserve = this.premiumReserve;
           this.sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
-          this.calcPremium();
-          break;
-        case 3:
-          this.buttonTitle = "Finalize";
-          this.buttonTitleBack = "Return";
+
           this.paymentsWarranty = await PaymentService.getPayments(
             this.subscriptionId
           );
@@ -609,17 +537,13 @@ export default {
           const options = {
             isEdited: this.isEdited,
             dataEdited: {
-              // totalPremium
               premiumAllRisk: this.totalPremium[0].premiumAllRisk,
               premiumAlop: this.totalPremium[0].premiumAlop,
-
-              // premiumSlu
               sluAllRisk: this.totalPremium[0].sluAllRisk,
               sluAlop: this.totalPremium[0].sluAlop,
             },
           };
 
-          // Obteniendo los calculos de Net premium
           const sluLine = this.accountComplete.tiv?.boundInsurableProp.sluLine;
           const resultOriginalCurenncy = await netPremiumInclusionRiskAutoCalcs(
             tivMovement,
@@ -629,6 +553,7 @@ export default {
             dates,
             options
           );
+
           const resultUSD = await netPremiumInclusionRiskAutoCalcs(
             tivMovement,
             this.accountComplete.deductibles,
@@ -638,7 +563,6 @@ export default {
             options
           );
 
-          // Obteniendo premium payment date
           const premiumPaymentDate = new Date(
             this.premiumPaymentDay
           ).toISOString();
@@ -671,9 +595,9 @@ export default {
               totalInsured: this.totalPremium[0].premiumTotal,
               allRiskRate: this.accountComplete.tiv.premium.allRiskRate,
               alopRate: this.accountComplete.tiv.premium.alopRate,
-              allRiskUsd: this.toUsd(this.totalPremium[0].premiumAllRisk),
-              alopUsd: this.toUsd(this.totalPremium[0].premiumAlop),
-              totalUsd: this.toUsd(this.totalPremium[0].premiumTotal),
+              allRiskUsd: premiumUSD.premiumAllRisk,
+              alopUsd: premiumUSD.premiumAlop,
+              totalUsd: premiumUSD.premiumAllRisk + premiumUSD.premiumAlop,
             },
             boundInsurableProp: this.accountComplete.tiv?.boundInsurableProp,
             deductibles: this.accountComplete.deductibles,
@@ -694,7 +618,6 @@ export default {
           this.endorsmentReporData = endorsmentReporData;
 
           try {
-            // Invoca el  servicio para generar el excel
             const fileLink = await EndorsementService.getEndorsmentReport({
               subscriptionId: this.subscriptionId,
               endorsmentType: 10,
@@ -765,79 +688,6 @@ export default {
       }
 
       this.allDatas = [installment];
-    },
-    calcPremium() {
-      const tiv = this.accountComplete.tiv;
-      const tivMovement = {
-        allRisk: tiv.insurable.allRisk,
-        alop: tiv.insurable.alop,
-
-        allRiskRate: tiv.premium.allRiskRate,
-        alopRate: tiv.premium.alopRate,
-      };
-      const dates = {
-        effetiveDate: new Date(this.accountComplete.deductibles.inceptionDate)
-          .toISOString()
-          .substring(0, 10),
-        expiryDate: new Date(this.accountComplete.deductibles.expiryDate)
-          .toISOString()
-          .substring(0, 10),
-        endormenteffetiveDate: new Date(this.effectiveDate),
-        movementEndDate: new Date(this.expiryDate),
-      };
-
-      const calcTotalPremium = new netPremiumInclusionRiskEng(
-        tivMovement,
-        this.accountComplete.deductibles,
-        this.accountComplete.tiv?.boundInsurableProp.sluLine,
-        false,
-        dates
-      );
-
-      const totalPremiumResult = calcTotalPremium.calculateTotalPremium();
-
-      const totalPremium = this.totalPremium.find((el) => el.id === 1);
-
-      totalPremium.premiumAllRisk = totalPremiumResult.allRiskTotalPremium;
-      totalPremium.premiumAlop = totalPremiumResult.alopTotalPremium;
-      totalPremium.premiumTotal = totalPremiumResult.total;
-
-      totalPremium.sluAllRisk = calcTotalPremium.allRiskPremiumSlu();
-      totalPremium.sluAlop = calcTotalPremium.alopPremiumSlu();
-      totalPremium.sluTotal = calcTotalPremium.totalPremiumSlu();
-
-      const netTotal = unFormatCurrency(
-        calcTotalPremium.netSLUExcludingSurveyFeesTotal()
-      );
-      this.tableData.currency.total_premium.total_premium_movement =
-        totalPremiumResult.total.toFixed(2);
-      this.tableData.currency.total_premium.premium_slu =
-        totalPremium.sluTotal.toFixed(2);
-      this.tableData.currency.total_premium.net_premium = netTotal;
-      //this.tableData.currency.total_premium.total = c_t_t_movement + c_t_t_slu + c_t_t_premium;
-
-      //   tableData.usd.total_premium.total_premium_movement
-      this.tableData.usd.total_premium.total_premium_movement = this.toUsd(
-        totalPremiumResult.total
-      ).toFixed(2);
-      this.tableData.usd.total_premium.premium_slu = this.toUsd(
-        totalPremium.sluTotal
-      ).toFixed(2);
-      this.tableData.usd.total_premium.net_premium = this.toUsd(netTotal);
-      //this.tableData.usd.total_premium.total = u_t_t_movement + u_t_t_slu + u_t_t_premium;
-    },
-
-    setTotalPremium({ id, value, concept }) {
-      const totalPremium = this.totalPremium.find((el) => el.id === id);
-      totalPremium[concept] = value;
-
-      if ((concept !== "premiumTotal") & (concept !== "sluTotal")) {
-        this.isEdited[concept] = true;
-      }
-    },
-    toUsd(value) {
-      const exchangeRate = this.accountComplete.deductibles.exchangeRate;
-      return Decimal.div(value, exchangeRate).toNumber();
     },
     async stepone() {
       this.e1 = 2;
@@ -1027,8 +877,6 @@ export default {
       if (e1 == 1) {
         this.keepDescription();
       } else if (e1 == 2) {
-        this.e1 = 3;
-      } else if (e1 == 3) {
         this.submit();
       }
     },
@@ -1039,8 +887,6 @@ export default {
         this.backToCreateEndorsement();
       } else if (e1 == 2) {
         this.e1 = 1;
-      } else if (e1 == 3) {
-        this.e1 = 2;
       }
     },
   },
@@ -1326,5 +1172,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 0px 5px;
+}
+.report-complete {
+  overflow: auto;
 }
 </style>

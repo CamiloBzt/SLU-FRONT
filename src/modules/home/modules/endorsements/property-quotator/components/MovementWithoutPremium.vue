@@ -50,111 +50,9 @@
                 <div class="textArea-cont">
                   <v-textarea v-model="description" background-color="#EDF2F8" height="180" solo flat rounded no-resize class="textArea" counter="500" />
                 </div>
-                <div class="input-row w-100 d-flex flex-wrap">
-                  <div class="input-col">
-                    <div class="inner-title">Additional</div>
-                    <div class="input-cont">
-                      <v-autocomplete label="Clause" v-model="clause" :items="clauseList" item-value="clause" item-text="clause" />
-                    </div>
-                  </div>
-                  <div class="input-col">
-                    <div class="inner-title" style="opacity: 0">|</div>
-                    <div class="input-cont">
-                      <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field v-model="premiumPaymentDate" label="Premium payment date" v-bind="attrs" v-on="on"></v-text-field>
-                        </template>
-                        <v-date-picker v-model="premiumPaymentDate" @input="menu3 = false"></v-date-picker>
-                      </v-menu>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
-            </v-stepper-content>
-            <!-- <v-stepper-content step="2">
-              <div class="table-container input-row justify-center">
-                <div class="table-col">
-                  <div class="table-title">Endorsement effective date</div>
-                  <div class="input-row">
-                    <div class="inner-col">
-                      <div class="table-input blue-input">
-                        {{ effectiveDate }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="table-col">
-                  <div class="table-title">Expiry date</div>
-                  <div class="input-row">
-                    <div class="inner-col">
-                      <div class="table-input blue-input">
-                        {{ expiryDate }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="description-container">
-                <div class="endorsement-title">Description</div>
-
-                <div class="textArea-cont">
-                  <v-textarea
-                    v-model="detailDescription"
-                    background-color="#EDF2F8"
-                    height="180"
-                    solo
-                    flat
-                    rounded
-                    no-resize
-                    class="textArea"
-                    counter="500"
-                    readonly
-                  />
-                </div>
-                <div class="detail-date">
-                  <div class="table-title-detail table-title-detail--large">
-                    Detail
-                  </div>
-                  <div class="container-detail">
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <v-menu
-                          v-model="menu4"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              v-model="premiumPaymentDate"
-                              label="Premium payment date"
-                              readonly
-                              disabled
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
-                          </template>
-                        </v-menu>
-                      </div>
-                    </div>
-                    <div class="input-col">
-                      <div class="input-cont">
-                        <v-autocomplete
-                          label="Clause"
-                          v-model="clause"
-                          :items="clauseList"
-                          item-value="clause"
-                          item-text="clause"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </v-stepper-content> -->
+             </v-stepper-content>
           </v-stepper-items>
         </div>
       </div>
@@ -185,7 +83,6 @@ import InputDaysDiference from "../../components/DaysDiference.vue";
 import { getFiles } from "../../services/mock-files.service";
 import AccountCompleteService from "@/modules/home/services/account-complete.service";
 import EndorsementService from "../../services/endorsement.service";
-import PaymentService from "@/modules/home/services/payments.service";
 import EndorsementDocuments from "../../components/EndorsementDocuments.vue";
 
 export default {
@@ -216,28 +113,22 @@ export default {
       e1: 1,
       menu: false,
       menu2: false,
-      menu3: false,
-      menu4: false,
-      effectiveDate: this.dateSaved,
-      expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
+        effectiveDate: this.dateSaved,
+        expiryDate: new Date(this.accountComplete.deductibles.expiryDate).toISOString().substr(0, 10),
       currentMovementEndDate: new Date(Date.now() + 31536000000 - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       effectiveDateError: false,
       endDateError: false,
       description: " ",
       detailDescription: " ",
       subscriptionId: this.$route.params.id,
-      premiumPaymentDate: new Date().toISOString().substr(0, 10),
-      cartera: {},
-      clauseList: [],
-      clause: this.accountComplete.cartera.clausula,
-      endorsementDocuments: [],
-      buttonTitle: "Finalize",
-      buttonTitleBack: "Cancel",
-    };
+        cartera: {},
+        endorsementDocuments: [],
+        buttonTitle: "Finalize",
+        buttonTitleBack: "Cancel",
+      };
   },
   async beforeMount() {
     this.files = await getFiles();
-    this.clauseList = await PaymentService.getClauses();
   },
 
   async mounted() {},
@@ -276,16 +167,12 @@ export default {
       this.endorsementDocuments = files;
     },
 
-    async submit() {
-      // Obteniendo premium payment date
-      const premiumPaymentDate = new Date(this.premiumPaymentDate).toISOString();
-      this.cartera = {
-        premiumPaymentDate,
-        clausula: this.clause,
-        description: this.description,
-        effectiveDate: this.effectiveDate,
-        endDate: this.expiryDatetoCalc,
-      };
+      async submit() {
+        this.cartera = {
+          description: this.description,
+          effectiveDate: this.effectiveDate,
+          endDate: this.expiryDatetoCalc,
+        };
 
       this.e1 = 1;
 

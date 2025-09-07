@@ -142,7 +142,7 @@ class EndorsementsService {
   /**
    * Obtiene el catalogo de los tipos de endoso
    */
-  async getEndorsementType() {
+  async getEndorsementType({ includeWorkStoppage = false } = {}) {
     try {
       const findResponse = apolloClient.query({
         query: getEndorsementType,
@@ -174,9 +174,15 @@ class EndorsementsService {
           : e;
       };
 
+      const WORK_STOPPAGE_ID = 9;
+
       return response
         .filter((e) => !excluded.includes(normalize(e.type)))
-        .map(renameCancellation);
+        .filter((e) => includeWorkStoppage || e.id !== WORK_STOPPAGE_ID)
+        .map(renameCancellation)
+        .map((e) =>
+          e.id === WORK_STOPPAGE_ID ? { ...e, type: "construction work stoppage" } : e
+        );
     } catch (error) {
       //console.log(error)
       const message = String(error);

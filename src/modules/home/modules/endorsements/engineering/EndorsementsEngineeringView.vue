@@ -904,7 +904,9 @@ export default {
   },
 
   async mounted() {
-    const endorsements = await EndorsementService.getEndorsementType();
+    const endorsements = await EndorsementService.getEndorsementType({
+      includeWorkStoppage: true,
+    });
     const normalize = (str) =>
       str
         ?.toString()

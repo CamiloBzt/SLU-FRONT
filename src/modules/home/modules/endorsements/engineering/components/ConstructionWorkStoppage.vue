@@ -1,6 +1,6 @@
 <template>
   <div class="outter-wrapper" ref="targetRef">
-    <div class="endorsement-title">Change of period</div>
+    <div class="endorsement-title">Construction work stoppage</div>
     <v-stepper v-model="e1">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1" color="#F59607">
@@ -8,7 +8,7 @@
         </v-stepper-step>
 
         <v-stepper-step :complete="e1 > 2" step="2" color="#F59607">
-          Detail
+          Calculate premium
         </v-stepper-step>
 
         <v-stepper-step step="3" color="#F59607">
