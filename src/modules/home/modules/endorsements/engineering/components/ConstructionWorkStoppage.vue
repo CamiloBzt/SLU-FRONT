@@ -201,14 +201,8 @@
               </div>
             </v-stepper-content>
             <v-stepper-content step="2">
-              <ModalEndorsement
-                v-if="modalOpen"
-                :modal="modal"
-                :actionButton1="actionButton1"
-                :actionButton2="actionButton2"
-              />
               <div class="detail-container-step2">
-                Admited premium
+                Admitted premium
                 <div class="detail-container-step2">
                   <div
                     class="input-row w-80 d-flex flex-wrap detail-subcontainer-step2"
@@ -254,18 +248,6 @@
                   </div>
                 </div>
               </div>
-              <div class="container-modify-general">
-                <div class="subcontainer-modify-general">
-                  Modify table
-                  <input
-                    @change="onChangeModifyTable($event)"
-                    :checked="checkedModifyTable"
-                    v-model="checkedModifyTable"
-                    id="checkbox"
-                    type="checkbox"
-                  />
-                </div>
-              </div>
               <div class="table-container container-input-row justify-center">
                 <div class="table-col-subtitle">
                   <div class="table-title-empty"></div>
@@ -287,26 +269,17 @@
                   <div class="input-row">
                     <div class="inner-col">
                       <div class="table-input-heigth blue-input">
-                        <div
-                          class="table-input-data"
-                          :readonly="!checkedModifyTable"
-                        >
+                        <div class="table-input-data">
                           {{ formatCurrency(totalPremium[0].premiumAllRisk) }}
                         </div>
                       </div>
                       <div class="table-input-heigth blue-input">
-                        <div
-                          class="table-input-data"
-                          :readonly="!checkedModifyTable"
-                        >
+                        <div class="table-input-data">
                           {{ formatCurrency(totalPremium[0].premiumAlop) }}
                         </div>
                       </div>
                       <div class="table-input-heigth blue-input">
-                        <div
-                          class="table-input-data"
-                          :readonly="!checkedModifyTable"
-                        >
+                        <div class="table-input-data">
                           {{ formatCurrency(totalPremium[0].premiumTotal) }}
                         </div>
                       </div>
@@ -319,26 +292,17 @@
                   <div class="input-row">
                     <div class="inner-col">
                       <div class="table-input-heigth blue-input">
-                        <div
-                          class="table-input-data"
-                          :readonly="!checkedModifyTable"
-                        >
+                        <div class="table-input-data">
                           {{ formatCurrency(totalPremium[0].sluAllRisk) }}
                         </div>
                       </div>
                       <div class="table-input-heigth blue-input">
-                        <div
-                          class="table-input-data"
-                          :readonly="!checkedModifyTable"
-                        >
+                        <div class="table-input-data">
                           {{ formatCurrency(totalPremium[0].sluAlop) }}
                         </div>
                       </div>
                       <div class="table-input-heigth blue-input">
-                        <div
-                          class="table-input-data"
-                          :readonly="!checkedModifyTable"
-                        >
+                        <div class="table-input-data">
                           {{ formatCurrency(totalPremium[0].sluTotal) }}
                         </div>
                       </div>
@@ -537,6 +501,14 @@
         v-show="e1 == 1 || e1 == 3"
       />
 
+      <AdmittedPremiumTableEngineering
+        v-if="e1 == 2"
+        @setTotalPremium="setTotalPremium"
+        :detailValues="totalPremium"
+        :exchangeRate="accountComplete.deductibles.exchangeRate"
+        :canEditTable="true"
+      />
+
       <div class="stepper-btn mt-7 mb-3 d-flex justify-end align-center">
         <v-btn
           :outlined="e1 == 3 ? false : true"
@@ -563,11 +535,10 @@
 <script>
 /* components */
 import AppFile from "../../components/AppFile.vue";
-import CurrencyInput from "@/components/CurrencyInput/CurrencyInput.vue";
 import DocumentsEndorsement from "../../components/DocumentsEndorsement.vue";
 import InputDaysDiference from "../../components/DaysDiference.vue";
-import ModalEndorsement from "../../components/ModalEndorsement.vue";
 import EndorsementReportCompleteTable from "./EndorsementReportCompleteTable.vue";
+import AdmittedPremiumTableEngineering from "../../components/AdmittedPremiumTableEngineering.vue";
 /* services */
 import EndorsementService from "../../services/endorsement.service";
 import PaymentService from "@/modules/home/services/payments.service";
@@ -585,12 +556,11 @@ export default {
   name: "constructionWorkStoppage",
   components: {
     AppFile,
-    CurrencyInput,
     DocumentsEndorsement,
     InputDaysDiference,
-    ModalEndorsement,
     EndorsementDocuments,
     EndorsementReportCompleteTable,
+    AdmittedPremiumTableEngineering,
   },
   props: {
     type: { type: String, default: "construction Work Stoppage" },
@@ -606,18 +576,6 @@ export default {
   },
   data() {
     return {
-      checkedModifyTable: false,
-      modalOpen: false,
-      modal: {
-        title: "Changes admited premium",
-        body: `If you continue, the data entered in the
-        <br />
-        admitted premium table will be taken.`,
-        Button1: "Accept",
-        Button2: "Cancel",
-        includeFooter: true,
-        includeCloseButton: false,
-      },
       endorsementDateError: false,
       expiryDatetoCalc: this.accountComplete.deductibles.expiryDate,
       subscriptionId: this.$route.params.id,
@@ -796,23 +754,18 @@ export default {
       console.log("update file");
     },
 
-    actionButton1() {
-      this.modalOpen = false;
-    },
-    actionButton2() {
-      this.checkedModifyTable = !this.checkedModifyTable;
-      document.getElementById("checkbox").checked = false;
-      this.modalOpen = false;
-    },
-    onChangeModifyTable(event) {
-      this.modalOpen = event.target.checked;
-      if (!event.target.checked) {
-        this.checkedModifyTable = false;
-      }
-    },
-
     setEndorsementDocuments({ files }) {
       this.endorsementDocuments = Array.isArray(files) ? [...files] : [];
+    },
+
+    setTotalPremium({ id, value, concept }) {
+      const totalPremium = this.totalPremium.find((el) => el.id === id);
+      if (totalPremium) {
+        totalPremium[concept] = value;
+        if (concept !== "premiumTotal" && concept !== "sluTotal") {
+          this.isEdited[concept] = true;
+        }
+      }
     },
 
     async submit() {
@@ -1144,23 +1097,6 @@ export default {
 .space-between {
   display: flex;
   justify-content: space-between;
-}
-.container-modify-general {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px;
-}
-.subcontainer-modify-general {
-  display: flex;
-  font-size: 18px;
-  font-weight: 600;
-  input {
-    cursor: pointer;
-    accent-color: #003d6d;
-    margin-left: 10px;
-    transform: scale(1.8);
-  }
 }
 .detail-container-step2 {
   font-size: 18px;
