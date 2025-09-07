@@ -12,7 +12,7 @@
         </v-stepper-step>
 
         <v-stepper-step step="3" color="#F59607">
-          Admitted premium
+          Endorsement summary
         </v-stepper-step>
       </v-stepper-header>
       <div class="endorsement-wrapper">
